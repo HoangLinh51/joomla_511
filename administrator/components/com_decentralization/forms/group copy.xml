@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<fieldset>
+		<field
+			name="id"
+			type="hidden"
+			default="0"
+			readonly="true"
+			required="true"
+		/>
+
+		<field
+			name="title"
+			type="text"
+			label="COM_DECENTRALIZATION_GROUP_TITLE_LABEL"
+			required="true"
+		/>
+
+		<field
+			name="parent_id"
+			type="OptionsGroup"
+			label="COM_DECENTRALIZATION_GROUP_CHOOSE_GROUPS_LABEL"
+			addfieldprefix="Joomla\Component\Decentralization\Administrator\Field"
+		>
+		</field>
+
+		<field
+			name="actions"
+			type="hidden"
+			multiple="true"
+		/>
+
+		<field
+			name="lft"
+			type="hidden"
+			filter="unset"
+		/>
+
+		<field
+			name="rgt"
+			type="hidden"
+			filter="unset"
+		/>
+
+	</fieldset>
+</form>

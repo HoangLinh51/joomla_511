@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="3.1" method="upgrade">
+	<name>Trình đơn các chức năng</name>
+	<author>DNICT</author>
+	<creationDate>10-01-2017</creationDate>
+	<copyright>Copyright (C) 2014 Dnict.vn</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>huenn.dnict@gmail.com</authorEmail>
+	<authorUrl>www.dnict.vn</authorUrl>
+	<version>0.0.1</version>
+	<description>Hiển thị trình đơn các chức năng theo nhóm</description>
+	<namespace path="src">Joomla\Module\Trinhdon</namespace>
+	<files>
+		<filename module="mod_trinhdon">mod_trinhdon.php</filename>
+        <filename>mod_trinhdon.xml</filename>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="advanced">
+				<field
+				    name="trinhdon"
+				    type="sql"
+				    default="0"
+				    label="Trình đơn cha"
+					description="Chọn trình đơn cha"
+		            required="true"
+		            multiple="multiple"
+				    query="SELECT id,name FROM core_menu WHERE parent_id IN (0,1) ORDER BY lft"
+				    key_field="id"
+				    value_field="name"
+				    />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

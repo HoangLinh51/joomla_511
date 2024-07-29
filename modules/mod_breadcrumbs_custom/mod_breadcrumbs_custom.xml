@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="5.0" client="site" method="upgrade">
+    <name>MOD_BREADCRUMBS_CUSTOM</name>
+    <author>HueNN</author>
+    <creationDate>2024-07-22</creationDate>
+    <description>Custom Breadcrumbs Module for Joomla 5</description>
+    <version>1.0.0</version>
+    <files>
+        <filename module="mod_breadcrumbs_custom">mod_breadcrumbs_custom.php</filename>
+        <filename>helper.php</filename>
+        <folder>tmpl</folder>
+    </files>
+    <languages>
+        <language tag="en-GB">language/en-GB/mod_breadcrumbs_custom.ini</language>
+        <language tag="en-GB">language/en-GB/mod_breadcrumbs_custom.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="show_home" type="radio" default="1" label="MOD_BREADCRUMBS_CUSTOM_SHOW_HOME" description="MOD_BREADCRUMBS_CUSTOM_SHOW_HOME_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

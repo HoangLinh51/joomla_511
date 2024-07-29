@@ -1,0 +1,3240 @@
+[
+	{
+	  "id": 150000,
+	  "level": 0,
+	  "name": "UBND tỉnh Gia Lai",
+	  "parent_id": 0,
+	  "type": "root",
+	  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND tỉnh Gia Lai",
+	  "rel": "root",
+	  "children": [
+		{
+		  "id": 154371,
+		  "level": 1,
+		  "name": "Khối Sở, ban, ngành",
+		  "parent_id": 150000,
+		  "type": "root",
+		  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Khối Sở, ban, ngành",
+		  "rel": "root",
+		  "children": [
+			{
+			  "id": 154394,
+			  "level": 2,
+			  "name": "Văn phòng UBND tỉnh Gia Lai",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Văn phòng UBND tỉnh Gia Lai",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 155662,
+				  "level": 3,
+				  "name": "Lãnh đạo UBND tỉnh",
+				  "parent_id": 154394,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Lãnh đạo UBND tỉnh",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 155663,
+				  "level": 3,
+				  "name": "Văn phòng UBND tỉnh Gia Lai",
+				  "parent_id": 154394,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Văn phòng UBND tỉnh Gia Lai",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 154383,
+			  "level": 2,
+			  "name": "Sở Nội vụ",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Nội vụ",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 154413,
+				  "level": 3,
+				  "name": "Sở Nội vụ",
+				  "parent_id": 154383,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Nội vụ",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 156830,
+			  "level": 2,
+			  "name": "Sở Giáo dục & Đào tạo",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Giáo dục & Đào tạo",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 156831,
+				  "level": 3,
+				  "name": "Sở Giáo dục & Đào tạo",
+				  "parent_id": 156830,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Giáo dục & Đào tạo",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 154387,
+			  "level": 2,
+			  "name": "Sở Thông tin và Truyền thông",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Thông tin và Truyền thông",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 154597,
+				  "level": 3,
+				  "name": "Sở Thông tin và Truyền thông",
+				  "parent_id": 154387,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Thông tin và Truyền thông",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 154384,
+			  "level": 2,
+			  "name": "Sở Nông nghiệp và Phát triển nông thôn",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Nông nghiệp và Phát triển nông thôn",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 154553,
+				  "level": 3,
+				  "name": "Sở Nông nghiệp và Phát triển Nông thôn",
+				  "parent_id": 154384,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Nông nghiệp và Phát triển Nông thôn",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157719,
+			  "level": 2,
+			  "name": "Sở Khoa học và Công nghệ",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Khoa học và Công nghệ",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157735,
+				  "level": 3,
+				  "name": "Sở Khoa học và Công nghệ",
+				  "parent_id": 157719,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Khoa học và Công nghệ",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 157771,
+				  "level": 3,
+				  "name": "Chi cục trực thuộc",
+				  "parent_id": 157719,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Chi cục trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 157773,
+					  "level": 4,
+					  "name": "Chi cục Tiêu chuẩn Đo lường Chất lượng",
+					  "parent_id": 157771,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Chi cục Tiêu chuẩn Đo lường Chất lượng",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 157720,
+			  "level": 2,
+			  "name": "Sở Tư pháp",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Tư pháp",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157736,
+				  "level": 3,
+				  "name": "Sở Tư pháp",
+				  "parent_id": 157720,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Tư pháp",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157721,
+			  "level": 2,
+			  "name": "Sở Tài chính",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Tài chính",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157737,
+				  "level": 3,
+				  "name": "Sở Tài chính",
+				  "parent_id": 157721,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Tài chính",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157722,
+			  "level": 2,
+			  "name": "Sở Xây dựng",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Xây dựng",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157738,
+				  "level": 3,
+				  "name": "Sở Xây dựng",
+				  "parent_id": 157722,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Xây dựng",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157723,
+			  "level": 2,
+			  "name": "Sở Giao thông vận tải",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Giao thông vận tải",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157739,
+				  "level": 3,
+				  "name": "Sở Giao thông Vận tải",
+				  "parent_id": 157723,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Giao thông Vận tải",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157724,
+			  "level": 2,
+			  "name": "Sở Kế hoạch và Đầu tư",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Kế hoạch và Đầu tư",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157740,
+				  "level": 3,
+				  "name": "Sở Kế hoạch và Đầu tư",
+				  "parent_id": 157724,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Kế hoạch và Đầu tư",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157725,
+			  "level": 2,
+			  "name": "Sở Ngoại vụ",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Ngoại vụ",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157741,
+				  "level": 3,
+				  "name": "Sở Ngoại vụ",
+				  "parent_id": 157725,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Ngoại vụ",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157726,
+			  "level": 2,
+			  "name": "Sở Công thương",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Công thương",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157742,
+				  "level": 3,
+				  "name": "Sở Công Thương",
+				  "parent_id": 157726,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Công Thương",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157727,
+			  "level": 2,
+			  "name": "Ban Quản lý khu kinh tế Gia Lai",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Ban Quản lý khu kinh tế Gia Lai",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157743,
+				  "level": 3,
+				  "name": "Ban Quản lý KKT Gia Lai",
+				  "parent_id": 157727,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Ban Quản lý KKT Gia Lai",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157728,
+			  "level": 2,
+			  "name": "Sở Tài nguyên và Môi trường",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Tài nguyên và Môi trường",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157744,
+				  "level": 3,
+				  "name": "Sở Tài nguyên và Môi trường",
+				  "parent_id": 157728,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Tài nguyên và Môi trường",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157729,
+			  "level": 2,
+			  "name": "Sở Lao động, Thương binh và xã hội",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Lao động, Thương binh và xã hội",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157745,
+				  "level": 3,
+				  "name": "Sở Lao động, Thương binh và xã hội",
+				  "parent_id": 157729,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Lao động, Thương binh và xã hội",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157730,
+			  "level": 2,
+			  "name": "Sở Văn hoá, Thể thao và Du lịch",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Văn hoá, Thể thao và Du lịch",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157746,
+				  "level": 3,
+				  "name": "Sở Văn hóa, Thể thao và Du lịch",
+				  "parent_id": 157730,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Văn hóa, Thể thao và Du lịch",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 157731,
+			  "level": 2,
+			  "name": "Sở Y tế",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Y tế",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157747,
+				  "level": 3,
+				  "name": "Sở Y tế",
+				  "parent_id": 157731,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Sở Y tế",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 159186,
+			  "level": 2,
+			  "name": "Tranh tra tỉnh",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Tranh tra tỉnh",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 157697,
+				  "level": 3,
+				  "name": "Thanh tra tỉnh",
+				  "parent_id": 159186,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Thanh tra tỉnh",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			},
+			{
+			  "id": 159747,
+			  "level": 2,
+			  "name": "Ban Dân tộc",
+			  "parent_id": 154371,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Ban Dân tộc",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159748,
+				  "level": 3,
+				  "name": "Ban Dân tộc",
+				  "parent_id": 159747,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Ban Dân tộc",
+				  "rel": "folder",
+				  "children": []
+				}
+			  ]
+			}
+		  ]
+		},
+		{
+		  "id": 156664,
+		  "level": 1,
+		  "name": "Khối  huyện, thị xã, thành phố",
+		  "parent_id": 150000,
+		  "type": "root",
+		  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Khối  huyện, thị xã, thành phố",
+		  "rel": "root",
+		  "children": [
+			{
+			  "id": 156742,
+			  "level": 2,
+			  "name": "TP Pleiku",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> TP Pleiku",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159750,
+				  "level": 3,
+				  "name": "UBND thành phố Pleiku",
+				  "parent_id": 156742,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thành phố Pleiku",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 156755,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 156742,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159742,
+					  "level": 4,
+					  "name": "UBND phường Đống Đa",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Đống Đa",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 158288,
+					  "level": 4,
+					  "name": "UBND phường Thắng Lợi",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Thắng Lợi",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159740,
+					  "level": 4,
+					  "name": "UBND phường Phù Đổng",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Phù Đổng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159741,
+					  "level": 4,
+					  "name": "UBND phường Chi Lăng",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Chi Lăng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159749,
+					  "level": 4,
+					  "name": "UBND phường Diên Hồng",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Diên Hồng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159751,
+					  "level": 4,
+					  "name": "UBND phường Thống Nhất",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Thống Nhất",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159976,
+					  "level": 4,
+					  "name": "UBND phường Ia Kring",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Ia Kring",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159977,
+					  "level": 4,
+					  "name": "UBND phường Trà Bá",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Trà Bá",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159978,
+					  "level": 4,
+					  "name": "UBND phường Hoa Lư",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Hoa Lư",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159979,
+					  "level": 4,
+					  "name": "UBND phường Yên Thế",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Yên Thế",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159980,
+					  "level": 4,
+					  "name": "UBND phường Hội Phú",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Hội Phú",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159981,
+					  "level": 4,
+					  "name": "UBND phường Yên Đỗ",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Yên Đỗ",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159982,
+					  "level": 4,
+					  "name": "UBND phường Tây Sơn",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Tây Sơn",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159984,
+					  "level": 4,
+					  "name": "UBND phường Hội Thương",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Hội Thương",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159985,
+					  "level": 4,
+					  "name": "UBND xã Tân Sơn",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Tân Sơn",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159986,
+					  "level": 4,
+					  "name": "UBND xã Biển Hồ",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Biển Hồ",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159987,
+					  "level": 4,
+					  "name": "UBND xã Chư Á",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Á",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159988,
+					  "level": 4,
+					  "name": "UBND xã Trà Đa",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Trà Đa",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159989,
+					  "level": 4,
+					  "name": "UBND xã Diên Phú",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Diên Phú",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159990,
+					  "level": 4,
+					  "name": "UBND xã Gào",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Gào",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159991,
+					  "level": 4,
+					  "name": "UBND xã An Phú",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã An Phú",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159992,
+					  "level": 4,
+					  "name": "UBND xã Ia Kênh",
+					  "parent_id": 156755,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Kênh",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159962,
+			  "level": 2,
+			  "name": "UBND thị xã An Khê",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị xã An Khê",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159963,
+				  "level": 3,
+				  "name": "UBND thị xã An Khê",
+				  "parent_id": 159962,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị xã An Khê",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159964,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159962,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159965,
+					  "level": 4,
+					  "name": "UBND phường An Bình",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường An Bình",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159966,
+					  "level": 4,
+					  "name": "UBND phường An Phú",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường An Phú",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159967,
+					  "level": 4,
+					  "name": "UBND phường An Phước",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường An Phước",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159968,
+					  "level": 4,
+					  "name": "UBND phường An Tân",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường An Tân",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159969,
+					  "level": 4,
+					  "name": "UBND phường Tây Sơn",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Tây Sơn",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159970,
+					  "level": 4,
+					  "name": "UBND phường Ngô Mây",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Ngô Mây",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159971,
+					  "level": 4,
+					  "name": "UBND xã Cửu An",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Cửu An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159972,
+					  "level": 4,
+					  "name": "UBND xã Song An",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Song An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159973,
+					  "level": 4,
+					  "name": "UBND xã Tú An",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Tú An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159974,
+					  "level": 4,
+					  "name": "UBND xã Thành An",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Thành An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159975,
+					  "level": 4,
+					  "name": "UBND xã Xuân An",
+					  "parent_id": 159964,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Xuân An",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159993,
+			  "level": 2,
+			  "name": "UBND thị xã Ayun Pa",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị xã Ayun Pa",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159994,
+				  "level": 3,
+				  "name": "UBND thị xã Ayun Pa",
+				  "parent_id": 159993,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị xã Ayun Pa",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159995,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159993,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159996,
+					  "level": 4,
+					  "name": "UBND phường Cheo Reo",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Cheo Reo",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159997,
+					  "level": 4,
+					  "name": "UBND phường Hòa Bình",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Hòa Bình",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159998,
+					  "level": 4,
+					  "name": "UBND phường Đoàn Kết",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Đoàn Kết",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159999,
+					  "level": 4,
+					  "name": "UBND phường Sông Bờ",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND phường Sông Bờ",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160000,
+					  "level": 4,
+					  "name": "UBND xã Chư Băh",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Băh",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160001,
+					  "level": 4,
+					  "name": "UBND xã Ia Rbol",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Rbol",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160002,
+					  "level": 4,
+					  "name": "UBND xã Ia Sao",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Sao",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160003,
+					  "level": 4,
+					  "name": "UBND xã Ia Rtô",
+					  "parent_id": 159995,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Rtô",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159904,
+			  "level": 2,
+			  "name": "UBND huyện Chư Sê",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Sê",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159905,
+				  "level": 3,
+				  "name": "UBND huyện Chư Sê",
+				  "parent_id": 159904,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Sê",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159906,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159904,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159907,
+					  "level": 4,
+					  "name": "UBND xã Kông Htok",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kông Htok",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159908,
+					  "level": 4,
+					  "name": "UBND xã Ia Pal",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Pal",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159909,
+					  "level": 4,
+					  "name": "UBND xã Bar Măih",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Bar Măih",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159910,
+					  "level": 4,
+					  "name": "UBND xã Dun",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Dun",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159911,
+					  "level": 4,
+					  "name": "UBND xã HBông",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã HBông",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159912,
+					  "level": 4,
+					  "name": "UBND xã Ia Blang",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Blang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159913,
+					  "level": 4,
+					  "name": "UBND xã Ayun",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ayun",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159914,
+					  "level": 4,
+					  "name": "UBND thị trấn Chư Sê",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Chư Sê",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159915,
+					  "level": 4,
+					  "name": "UBND xã Ia Tiêm",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Tiêm",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159916,
+					  "level": 4,
+					  "name": "UBND xã Ia Glai",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Glai",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159917,
+					  "level": 4,
+					  "name": "UBND xã Ia Ko",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Ko",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159918,
+					  "level": 4,
+					  "name": "UBND xã Bờ Ngoong",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Bờ Ngoong",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159919,
+					  "level": 4,
+					  "name": "UBND xã Ia HLốp",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia HLốp",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159920,
+					  "level": 4,
+					  "name": "UBND xã Albá",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Albá",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159921,
+					  "level": 4,
+					  "name": "UBND xã Chư Pơng",
+					  "parent_id": 159906,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Pơng",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159860,
+			  "level": 2,
+			  "name": "UBND huyện Đức Cơ",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Đức Cơ",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159861,
+				  "level": 3,
+				  "name": "UBND huyện Đức Cơ",
+				  "parent_id": 159860,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Đức Cơ",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159862,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159860,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159869,
+					  "level": 4,
+					  "name": "UBND xã Ia Kla",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Kla",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159870,
+					  "level": 4,
+					  "name": "UBND xã Ia Pnôn",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Pnôn",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159871,
+					  "level": 4,
+					  "name": "UBND xã Ia Nan",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Nan",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159872,
+					  "level": 4,
+					  "name": "UBND xã Ia Dom",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Dom",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159863,
+					  "level": 4,
+					  "name": "UBND xã Ia Din",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Din",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159864,
+					  "level": 4,
+					  "name": "UBND xã Ia Lang",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Lang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159865,
+					  "level": 4,
+					  "name": "UBND xã Ia Krêl",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Krêl",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159866,
+					  "level": 4,
+					  "name": "UBND xã Ia Kriêng",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Kriêng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159867,
+					  "level": 4,
+					  "name": "UBND thị trấn Chư Ty",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Chư Ty",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160016,
+					  "level": 4,
+					  "name": "UBND xã Ia Dơk",
+					  "parent_id": 159862,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Dơk",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159873,
+			  "level": 2,
+			  "name": "UBND huyện Đak Pơ",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Đak Pơ",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159874,
+				  "level": 3,
+				  "name": "UBND huyện Đak Pơ",
+				  "parent_id": 159873,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Đak Pơ",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159875,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159873,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159876,
+					  "level": 4,
+					  "name": "UBND xã Hà Tam",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hà Tam",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159877,
+					  "level": 4,
+					  "name": "UBND xã An Thành",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã An Thành",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159878,
+					  "level": 4,
+					  "name": "UBND xã Cư An",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Cư An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159879,
+					  "level": 4,
+					  "name": "UBND xã Tân An",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Tân An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159880,
+					  "level": 4,
+					  "name": "UBND xã Yang Bắc",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Yang Bắc",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159881,
+					  "level": 4,
+					  "name": "UBND xã Ya Hội",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ya Hội",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159882,
+					  "level": 4,
+					  "name": "UBND xã Phú An",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Phú An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159883,
+					  "level": 4,
+					  "name": "UBND thị trấn Đak Pơ",
+					  "parent_id": 159875,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Đak Pơ",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159884,
+			  "level": 2,
+			  "name": "UBND huyện Đăk Đoa",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Đăk Đoa",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159885,
+				  "level": 3,
+				  "name": "UBND huyện Đăk Đoa",
+				  "parent_id": 159884,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Đăk Đoa",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159886,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159884,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159887,
+					  "level": 4,
+					  "name": "UBND xã ADơk",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã ADơk",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159888,
+					  "level": 4,
+					  "name": "UBND xã Đak Krong",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đak Krong",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159889,
+					  "level": 4,
+					  "name": "UBND xã Đak Sơmei",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đak Sơmei",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159890,
+					  "level": 4,
+					  "name": "UBND xã Glar",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Glar",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159891,
+					  "level": 4,
+					  "name": "UBND xã Hà Bầu",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hà Bầu",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159892,
+					  "level": 4,
+					  "name": "UBND xã Hải Yang",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hải Yang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159893,
+					  "level": 4,
+					  "name": "UBND xã Ia Băng",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Băng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159894,
+					  "level": 4,
+					  "name": "UBND xã Ia Pết",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Pết",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159895,
+					  "level": 4,
+					  "name": "UBND xã Kdang",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kdang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159896,
+					  "level": 4,
+					  "name": "UBND xã Kon Gang",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kon Gang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159897,
+					  "level": 4,
+					  "name": "UBND xã Nam Yang",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Nam Yang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159898,
+					  "level": 4,
+					  "name": "UBND xã Tân Bình",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Tân Bình",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159899,
+					  "level": 4,
+					  "name": "UBND xã Hà Đông",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hà Đông",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159900,
+					  "level": 4,
+					  "name": "UBND xã Trang",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Trang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159901,
+					  "level": 4,
+					  "name": "UBND thị trấn Đak Đoa",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Đak Đoa",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159902,
+					  "level": 4,
+					  "name": "UBND xã Hnol",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hnol",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159903,
+					  "level": 4,
+					  "name": "UBND xã Hneng",
+					  "parent_id": 159886,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hneng",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159922,
+			  "level": 2,
+			  "name": "UBND huyện Chư Prông",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Prông",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159923,
+				  "level": 3,
+				  "name": "UBND huyện Chư Prông",
+				  "parent_id": 159922,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Prông",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159924,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159922,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159925,
+					  "level": 4,
+					  "name": "UBND thị trấn Chư Prông",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Chư Prông",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159926,
+					  "level": 4,
+					  "name": "UBND xã Ia Phìn",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Phìn",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159927,
+					  "level": 4,
+					  "name": "UBND xã Bình Giáo",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Bình Giáo",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159928,
+					  "level": 4,
+					  "name": "UBND xã Ia Kly",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Kly",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159929,
+					  "level": 4,
+					  "name": "UBND xã Ia Drang",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Drang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159930,
+					  "level": 4,
+					  "name": "UBND xã Ia O",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia O",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159931,
+					  "level": 4,
+					  "name": "UBND xã Ia Vê",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Vê",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159932,
+					  "level": 4,
+					  "name": "UBND xã Ia Piơr",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Piơr",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159933,
+					  "level": 4,
+					  "name": "UBND xã Ia Tôr",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Tôr",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159934,
+					  "level": 4,
+					  "name": "UBND xã Thăng Hưng",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Thăng Hưng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159935,
+					  "level": 4,
+					  "name": "UBND xã Ia Ga",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Ga",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159936,
+					  "level": 4,
+					  "name": "UBND xã Ia Mơ",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Mơ",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159937,
+					  "level": 4,
+					  "name": "UBND xã Ia Lâu",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Lâu",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159938,
+					  "level": 4,
+					  "name": "UBND xã Ia Boòng",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Boòng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159939,
+					  "level": 4,
+					  "name": "UBND xã Bàu Cạn",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Bàu Cạn",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159940,
+					  "level": 4,
+					  "name": "UBND xã Ia Bang",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Bang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159941,
+					  "level": 4,
+					  "name": "UBND xã Ia Băng",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Băng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159942,
+					  "level": 4,
+					  "name": "UBND xã Ia Pia",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Pia",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159943,
+					  "level": 4,
+					  "name": "UBND xã Ia Me",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Me",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159944,
+					  "level": 4,
+					  "name": "UBND xã Ia Púch",
+					  "parent_id": 159924,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Púch",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159945,
+			  "level": 2,
+			  "name": "UBND huyện Chư Păh",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Păh",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159946,
+				  "level": 3,
+				  "name": "UBND huyện Chư Păh",
+				  "parent_id": 159945,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Păh",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159947,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159945,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159948,
+					  "level": 4,
+					  "name": "UBND xã Ia Khươl",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Khươl",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159949,
+					  "level": 4,
+					  "name": "UBND xã Ia Phí",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Phí",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159950,
+					  "level": 4,
+					  "name": "UBND xã Ia Mơ Nông",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Mơ Nông",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159951,
+					  "level": 4,
+					  "name": "UBND xã Ia Kreng",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Kreng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159952,
+					  "level": 4,
+					  "name": "UBND xã Ia Ka",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Ka",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159953,
+					  "level": 4,
+					  "name": "UBND xã Ia Nhin",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Nhin",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159954,
+					  "level": 4,
+					  "name": "UBND xã Nghĩa Hòa",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Nghĩa Hòa",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159955,
+					  "level": 4,
+					  "name": "UBND xã Hòa Phú",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hòa Phú",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159956,
+					  "level": 4,
+					  "name": "UBND xã Nghĩa Hưng",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Nghĩa Hưng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159957,
+					  "level": 4,
+					  "name": "UBND xã Chư Đang Ya",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Đang Ya",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159958,
+					  "level": 4,
+					  "name": "UBND xã Đăk Tơ Ver",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Tơ Ver",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159959,
+					  "level": 4,
+					  "name": "UBND xã Hà Tây",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hà Tây",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159960,
+					  "level": 4,
+					  "name": "UBND Thị trấn Ia Ly",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND Thị trấn Ia Ly",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159961,
+					  "level": 4,
+					  "name": "UBND Thị trấn Phú Hòa",
+					  "parent_id": 159947,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND Thị trấn Phú Hòa",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159753,
+			  "level": 2,
+			  "name": "UBND huyện Phú Thiện",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Phú Thiện",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159752,
+				  "level": 3,
+				  "name": "UBND huyện Phú Thiện",
+				  "parent_id": 159753,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Phú Thiện",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159754,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159753,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159755,
+					  "level": 4,
+					  "name": "UBND xã Ia Sol",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Sol",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159756,
+					  "level": 4,
+					  "name": "UBND xã Ia Piar",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Piar",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159757,
+					  "level": 4,
+					  "name": "UBND xã Ia Hiao",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Hiao",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159758,
+					  "level": 4,
+					  "name": "UBND xã Ia Peng",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Peng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159759,
+					  "level": 4,
+					  "name": "UBND xã Ayun Hạ",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ayun Hạ",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159760,
+					  "level": 4,
+					  "name": "UBND xã Ia Yeng",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Yeng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159761,
+					  "level": 4,
+					  "name": "UBND xã Chư A Thai",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư A Thai",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159762,
+					  "level": 4,
+					  "name": "UBND xã Ia Ake",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Ake",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159763,
+					  "level": 4,
+					  "name": "UBND xã Chrôh Pơnan",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chrôh Pơnan",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159764,
+					  "level": 4,
+					  "name": "UBND thị trấn Phú Thiện",
+					  "parent_id": 159754,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Phú Thiện",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159765,
+			  "level": 2,
+			  "name": "UBND huyện Mang Yang",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Mang Yang",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159766,
+				  "level": 3,
+				  "name": "UBND huyện Mang Yang",
+				  "parent_id": 159765,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Mang Yang",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159767,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159765,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159768,
+					  "level": 4,
+					  "name": "UBND xã Hra",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Hra",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159769,
+					  "level": 4,
+					  "name": "UBND xã Đak Ta Ley",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đak Ta Ley",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159770,
+					  "level": 4,
+					  "name": "UBND xã Ayun",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ayun",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159771,
+					  "level": 4,
+					  "name": "UBND xã Đak Jơ Ta",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đak Jơ Ta",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159772,
+					  "level": 4,
+					  "name": "UBND xã Đăk Yă",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Yă",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159773,
+					  "level": 4,
+					  "name": "UBND thị trấn Kon Dơng",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Kon Dơng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159774,
+					  "level": 4,
+					  "name": "UBND xã Đak Djrăng",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đak Djrăng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159775,
+					  "level": 4,
+					  "name": "UBND xã Lơ Pang",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Lơ Pang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159776,
+					  "level": 4,
+					  "name": "UBND xã Kon Thụp",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kon Thụp",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159777,
+					  "level": 4,
+					  "name": "UBND xã Kon Chiêng",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kon Chiêng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159778,
+					  "level": 4,
+					  "name": "UBND xã Đăk Trôi",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Trôi",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159779,
+					  "level": 4,
+					  "name": "UBND xã Đê Ar",
+					  "parent_id": 159767,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đê Ar",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159780,
+			  "level": 2,
+			  "name": "UBND huyện Krông Pa",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Krông Pa",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159782,
+				  "level": 3,
+				  "name": "UBND huyện Krông Pa",
+				  "parent_id": 159780,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Krông Pa",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159781,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159780,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159783,
+					  "level": 4,
+					  "name": "UBND thị trấn Phú Túc",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Phú Túc",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159784,
+					  "level": 4,
+					  "name": "UBND xã Phú Cần",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Phú Cần",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159785,
+					  "level": 4,
+					  "name": "UBND xã Chư Gu",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Gu",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159786,
+					  "level": 4,
+					  "name": "UBND xã Chư Rcăm",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Rcăm",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159787,
+					  "level": 4,
+					  "name": "UBND xã Ia Rsươm",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Rsươm",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159788,
+					  "level": 4,
+					  "name": "UBND xã Ia Rmok",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Rmok",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159789,
+					  "level": 4,
+					  "name": "UBND xã Đất Bằng",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đất Bằng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159790,
+					  "level": 4,
+					  "name": "UBND xã Chư Ngọc",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Ngọc",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159791,
+					  "level": 4,
+					  "name": "UBND xã Krông Năng",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Krông Năng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159792,
+					  "level": 4,
+					  "name": "UBND xã Ia Dreh",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Dreh",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159793,
+					  "level": 4,
+					  "name": "UBND xã Ia Mlah",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Mlah",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159794,
+					  "level": 4,
+					  "name": "UBND xã Chư Drăng",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Drăng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159795,
+					  "level": 4,
+					  "name": "UBND xã Ia Rsai",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Rsai",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159796,
+					  "level": 4,
+					  "name": "UBND xã Uar",
+					  "parent_id": 159781,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Uar",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159797,
+			  "level": 2,
+			  "name": "UBND huyện Kông Chro",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Kông Chro",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159798,
+				  "level": 3,
+				  "name": "UBND huyện Kông Chro",
+				  "parent_id": 159797,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Kông Chro",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159799,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159797,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159800,
+					  "level": 4,
+					  "name": "UBND xã Đăk Pơ Pho",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Pơ Pho",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159801,
+					  "level": 4,
+					  "name": "UBND xã Đăk Pling",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Pling",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159802,
+					  "level": 4,
+					  "name": "UBND xã Ya Ma",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ya Ma",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159803,
+					  "level": 4,
+					  "name": "UBND xã Đăk Kơ Ning",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Kơ Ning",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159804,
+					  "level": 4,
+					  "name": "UBND xã Chư Krey",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Krey",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159805,
+					  "level": 4,
+					  "name": "UBND xã Yang Trung",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Yang Trung",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159806,
+					  "level": 4,
+					  "name": "UBND thị trấn Kông Chro",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Kông Chro",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159807,
+					  "level": 4,
+					  "name": "UBND xã Đăk Tơ Pang",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Tơ Pang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159808,
+					  "level": 4,
+					  "name": "UBND xã An Trung",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã An Trung",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159809,
+					  "level": 4,
+					  "name": "UBND xã Đăk Song",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Song",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159810,
+					  "level": 4,
+					  "name": "UBND xã Kông Yang",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kông Yang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159811,
+					  "level": 4,
+					  "name": "UBND xã SRó",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã SRó",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159812,
+					  "level": 4,
+					  "name": "UBND xã Chơ Glong",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chơ Glong",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159813,
+					  "level": 4,
+					  "name": "UBND xã Yang Nam",
+					  "parent_id": 159799,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Yang Nam",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159814,
+			  "level": 2,
+			  "name": "UBND huyện Kbang",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Kbang",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159815,
+				  "level": 3,
+				  "name": "UBND huyện Kbang",
+				  "parent_id": 159814,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Kbang",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159816,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159814,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159817,
+					  "level": 4,
+					  "name": "UBND xã Sơ Pai",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Sơ Pai",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159818,
+					  "level": 4,
+					  "name": "UBND xã Lơ Ku",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Lơ Ku",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159819,
+					  "level": 4,
+					  "name": "UBND xã Đăk Smar",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk Smar",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159820,
+					  "level": 4,
+					  "name": "UBND xã Krong",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Krong",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159821,
+					  "level": 4,
+					  "name": "UBND xã Kon Pne",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kon Pne",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159822,
+					  "level": 4,
+					  "name": "UBND xã Nghĩa An",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Nghĩa An",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159823,
+					  "level": 4,
+					  "name": "UBND xã Tơ Tung",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Tơ Tung",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159824,
+					  "level": 4,
+					  "name": "UBND Xã Đak Rong",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND Xã Đak Rong",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159825,
+					  "level": 4,
+					  "name": "UBND xã Kông Lơng Khơng",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kông Lơng Khơng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159826,
+					  "level": 4,
+					  "name": "UBND thị trấn Kbang",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Kbang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159827,
+					  "level": 4,
+					  "name": "UBND xã Sơn Lang",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Sơn Lang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159828,
+					  "level": 4,
+					  "name": "UBND xã Đông",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đông",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159829,
+					  "level": 4,
+					  "name": "UBND xã Kông Bơ La",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kông Bơ La",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159830,
+					  "level": 4,
+					  "name": "UBND xã Đăk HLơ",
+					  "parent_id": 159816,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Đăk HLơ",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159831,
+			  "level": 2,
+			  "name": "UBND huyện Ia Pa",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Ia Pa",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159832,
+				  "level": 3,
+				  "name": "UBND huyện Ia Pa",
+				  "parent_id": 159831,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Ia Pa",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159833,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159831,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159834,
+					  "level": 4,
+					  "name": "UBND xã Ia Mrơn",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Mrơn",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159835,
+					  "level": 4,
+					  "name": "UBND xã Chư Mố",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Mố",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159836,
+					  "level": 4,
+					  "name": "UBND xã Ia Broăi",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Broăi",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159837,
+					  "level": 4,
+					  "name": "UBND xã Ia Kdăm",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Kdăm",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159838,
+					  "level": 4,
+					  "name": "UBND xã Chư Răng",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Răng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159839,
+					  "level": 4,
+					  "name": "UBND xã Ia Trok",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Trok",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159840,
+					  "level": 4,
+					  "name": "UBND xã Kim Tân",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Kim Tân",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159841,
+					  "level": 4,
+					  "name": "UBND xã Pờ Tó",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Pờ Tó",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159842,
+					  "level": 4,
+					  "name": "UBND xã Ia Tul",
+					  "parent_id": 159833,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Tul",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 160004,
+			  "level": 2,
+			  "name": "UBND huyện Chư Pưh",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Pưh",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 160005,
+				  "level": 3,
+				  "name": "UBND huyện Chư Pưh",
+				  "parent_id": 160004,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Chư Pưh",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 160006,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 160004,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 160007,
+					  "level": 4,
+					  "name": "UBND xã Chư Don",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Chư Don",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160008,
+					  "level": 4,
+					  "name": "UBND xã Ia Phang",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Phang",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160009,
+					  "level": 4,
+					  "name": "UBND xã Ia Rong",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Rong",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160010,
+					  "level": 4,
+					  "name": "UBND xã Ia Hrú",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Hrú",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160011,
+					  "level": 4,
+					  "name": "UBND xã xã Ia Le",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã xã Ia Le",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160012,
+					  "level": 4,
+					  "name": "UBND thị trấn Nhơn Hoà",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Nhơn Hoà",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160013,
+					  "level": 4,
+					  "name": "UBND xã Ia Hla",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Hla",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160014,
+					  "level": 4,
+					  "name": "UBND xã Ia Blứ",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Blứ",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 160015,
+					  "level": 4,
+					  "name": "UBND xã Ia Dreng",
+					  "parent_id": 160006,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Dreng",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			},
+			{
+			  "id": 159843,
+			  "level": 2,
+			  "name": "UBND huyện Ia Grai",
+			  "parent_id": 156664,
+			  "type": "root",
+			  "text": "<i class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Ia Grai",
+			  "rel": "root",
+			  "children": [
+				{
+				  "id": 159845,
+				  "level": 3,
+				  "name": "UBND huyện Ia Grai",
+				  "parent_id": 159843,
+				  "type": "folder",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND huyện Ia Grai",
+				  "rel": "folder",
+				  "children": []
+				},
+				{
+				  "id": 159844,
+				  "level": 3,
+				  "name": "Các phường, xã, thị trấn trực thuộc",
+				  "parent_id": 159843,
+				  "type": "root",
+				  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> Các phường, xã, thị trấn trực thuộc",
+				  "rel": "root",
+				  "children": [
+					{
+					  "id": 159846,
+					  "level": 4,
+					  "name": "UBND thị trấn Ia Kha",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND thị trấn Ia Kha",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159847,
+					  "level": 4,
+					  "name": "UBND xã Ia Bă",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Bă",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159848,
+					  "level": 4,
+					  "name": "UBND xã Ia Chiă",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Chiă",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159849,
+					  "level": 4,
+					  "name": "UBND xã Ia Chiă",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Chiă",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159850,
+					  "level": 4,
+					  "name": "UBND xã Ia Dêr",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Dêr",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159851,
+					  "level": 4,
+					  "name": "UBND xã Ia Grăng",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Grăng",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159852,
+					  "level": 4,
+					  "name": "UBND xã Ia Hrung",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Hrung",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159853,
+					  "level": 4,
+					  "name": "UBND xã Ia Khai",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Khai",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159854,
+					  "level": 4,
+					  "name": "UBND xã Ia Krăi",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Krăi",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159855,
+					  "level": 4,
+					  "name": "UBND xã Ia O",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia O",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159856,
+					  "level": 4,
+					  "name": "UBND xã Ia Pếch",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Pếch",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159857,
+					  "level": 4,
+					  "name": "UBND xã Ia Sao",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Sao",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159858,
+					  "level": 4,
+					  "name": "UBND xã Ia Tô",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Tô",
+					  "rel": "folder",
+					  "children": []
+					},
+					{
+					  "id": 159859,
+					  "level": 4,
+					  "name": "UBND xã Ia Yok",
+					  "parent_id": 159844,
+					  "type": "folder",
+					  "text": "<i style=\"color: #218bff !important\" class=\"jstree-icon jstree-themeicon fa fa-folder text-primary jstree-themeicon-custom\" role=\"presentation\"></i> UBND xã Ia Yok",
+					  "rel": "folder",
+					  "children": []
+					}
+				  ]
+				}
+			  ]
+			}
+		  ]
+		}
+	  ]
+	}
+  ]

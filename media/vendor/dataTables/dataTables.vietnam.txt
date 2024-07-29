@@ -1,0 +1,17 @@
+{
+    "processing":   "Đang xử lý...",
+    "loadingRecords": "Đang tải dữ liệu",
+    "lengthMenu":   Hiển thị _MENU_ mục trên 1 trang",
+    "zeroRecords":  "Không tìm thấy dòng nào phù hợp",
+    "info":         "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+    "infoEmpty":    "Đang xem 0 đến 0 trong tổng số 0 mục",
+    "infoPostFix":  "",
+    "search":       "Tìm:",
+    "url":          "",
+    "paginate": {
+        "first":    "Đầu",
+        "previous": "Trước",
+        "next":     "Tiếp",
+        "last":     "Cuối"
+    }
+}

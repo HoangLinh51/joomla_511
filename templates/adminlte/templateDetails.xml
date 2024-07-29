@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.6" type="template" client="site" method="upgrade">
+	<name>AdminLTE</name>
+	<version>0.1</version>
+	<creationDate>6 august 2016</creationDate>
+	<author>Alexon Balangue</author>
+	<authorEmail>moi.sites@alexonbalangue.me</authorEmail>
+	<copyright>Copyright (C) 2014 - 2017 Alexon Balangue. All rights reserved.</copyright>
+	<description>TPL_ADMINLTE_XML_DESCRIPTION</description>
+	<files>
+		<filename>component.php</filename>
+		<filename>CoreTemplate.php</filename>
+		<filename>cpanel.php</filename>
+		<filename>favicon.ico</filename>
+		<filename>index.php</filename>
+		<filename>login.php</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<folder>assets</folder>
+		<folder>css</folder>
+		<folder>js</folder>
+		<folder>img</folder>
+		<folder>images</folder>
+		<folder>less</folder>
+		<folder>html</folder>
+		<folder>stylesheets</folder>
+		<folder>plugins</folder>
+		<folder>dist</folder>
+		<folder>language</folder>
+	</files>
+	<positions>
+	<position>banner</position>
+		<position>debug</position>
+		<position>position-0</position>
+		<position>position-1</position>
+		<position>position-2</position>
+        <position>position-3</position>
+        <position>position-4</position>
+		<position>sidebar-nav</position>
+		<position>sidebar-shortcuts</position>
+		<position>breadcrumbs</position>
+		<position>left</position>
+		<position>caydonvi-hoso</position>		
+        <position>right</position>
+        <position>copyright</position>
+        <position>copyright-cchc</position>
+		<position>footer</position>
+		<position>menu2222</position>
+		<position>position-1-cchc</position>
+		<position>right-cchc</position>
+		<position>left-cchc</position>
+
+
+		<!-- <position>menu</position>
+		<position>submenu</position>
+		<position>toolbar</position>
+		<position>title</position>
+		<position>status</position>
+		<position>icon</position>
+		<position>cp_shell</position>
+		<position>cpanel</position>
+		<position>bottom</position>
+		<position>footer</position>
+		<position>login</position>
+		<position>debug</position> -->
+	</positions>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.tpl_adminlte.ini</language>
+		<language tag="en-GB">en-GB/en-GB.tpl_adminlte.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="advanced">
+
+				<field name="templateColor" class="" type="color" default="#10223E"
+				validate="color"
+				label="TPL_ADMINLTE_COLOR_LABEL"
+				description="TPL_ADMINLTE_COLOR_DESC" />
+
+				<field name="headerColor" class="" type="color" default="#1A3867"
+				validate="color"
+				label="TPL_ADMINLTE_COLOR_HEADER_LABEL"
+				description="TPL_ADMINLTE_COLOR_HEADER_DESC" />
+
+				<field name="sidebarColor" class="" type="color" default="#0088CC"
+				validate="color"
+				label="TPL_ADMINLTE_COLOR_SIDEBAR_LABEL"
+				description="TPL_ADMINLTE_COLOR_SIDEBAR_DESC" />
+
+				<field name="linkColor" class="" type="color" default="#0088CC"
+				validate="color"
+				label="TPL_ADMINLTE_COLOR_LINK_LABEL"
+				description="TPL_ADMINLTE_COLOR_LINK_DESC" />
+
+				<field name="loginBackgroundColor" class="" type="color" default="#17568C"
+				validate="color"
+				label="TPL_ADMINLTE_COLOR_LOGIN_BACKGROUND_LABEL"
+				description="TPL_ADMINLTE_COLOR_LOGIN_BACKGROUND_DESC" />
+
+				<field name="logoFile" class="" type="media" default=""
+				label="TPL_ADMINLTE_LOGO_LABEL"
+				description="TPL_ADMINLTE_LOGO_DESC" />
+
+				<field name="loginLogoFile" class="" type="media" default=""
+				label="TPL_ADMINLTE_LOGIN_LOGO_LABEL"
+				description="TPL_ADMINLTE_LOGIN_LOGO_DESC" />
+
+				<field name="admin_menus" type="radio"
+				class="btn-group btn-group-yesno"
+				default="1"
+				label="TPL_ADMINLTE_FIELD_ADMIN_MENUS_LABEL"
+				description="TPL_ADMINLTE_FIELD_ADMIN_MENUS_DESC"
+				filter="integer">
+				<option
+					value="1">JYES</option>
+				<option
+					value="0">JNO</option>
+				</field>
+
+				<field name="displayHeader" type="radio"
+				class="btn-group btn-group-yesno"
+				default="1"
+				label="TPL_ADMINLTE_HEADER_LABEL"
+				description="TPL_ADMINLTE_HEADER_DESC"
+				filter="integer">
+				<option
+					value="1">JYES</option>
+				<option
+					value="0">JNO</option>
+				</field>
+
+				<field name="statusFixed" type="list"
+				default="1"
+				label="TPL_ADMINLTE_STATUS_LABEL"
+				description="TPL_ADMINLTE_STATUS_DESC"
+				filter="integer">
+				<option
+					value="1">TPL_ADMINLTE_STATUS_BOTTOM</option>
+				<option
+					value="0">TPL_ADMINLTE_STATUS_TOP</option>
+				</field>
+
+				<field name="stickyToolbar" type="radio"
+				class="btn-group btn-group-yesno"
+				default="1"
+				label="TPL_ADMINLTE_STICKY_LABEL"
+				description="TPL_ADMINLTE_STICKY_DESC"
+				filter="integer">
+				<option
+					value="1">JYES</option>
+				<option
+					value="0">JNO</option>
+				</field>
+
+			</fieldset>
+		</fields>
+	</config>
+	<updateservers>
+		<server type="collection" priority="1" name="Accredited by Alexon Balangue">https://jupdates.alexonbalangue.me/update/joomla/general.xml</server>
+		<server type="extension" priority="2" name="Themes - AdminTLE">https://jupdates.alexonbalangue.me/update/joomla/xml/tpl_adminlte.xml</server>
+	</updateservers>
+</extension>

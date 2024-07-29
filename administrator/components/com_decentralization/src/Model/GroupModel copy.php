@@ -1,0 +1,332 @@
+<?php
+/**
+ * @package     Joomla.Administrator
+ * @subpackage  com_users
+ *
+ * @copyright   (C) 2008 Open Source Matters, Inc. <https://www.joomla.org>
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+ namespace Joomla\Component\Decentralization\Administrator\Model;
+
+use Exception;
+use Joomla\CMS\Access\Access;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+use Joomla\CMS\MVC\Model\AdminModel;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\Table\Table;
+use stdClass;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
+/**
+ * Group model.
+ *
+ * @since  1.6
+ */
+class GroupModel extends AdminModel
+{
+    /**
+     * An item.
+     *
+     * @var    array
+     */
+    protected $_item = null;
+
+    /**
+     * Constructor.
+     *
+     * @param   array                $config   An optional associative array of configuration settings.
+     * @param   MVCFactoryInterface  $factory  The factory.
+     *
+     * @see     \Joomla\CMS\MVC\Model\BaseDatabaseModel
+     * @since   3.2
+     */
+    public function __construct($config = [], MVCFactoryInterface $factory = null)
+    {
+        parent::__construct($config, $factory);
+    }
+
+    /**
+     * Method to get a table object, load it if necessary.
+     *
+     * @param   string  $name     The table name. Optional.
+     * @param   string  $prefix   The class prefix. Optional.
+     * @param   array   $options  Configuration array for model. Optional.
+     *
+     * @return  Table  A Table object
+     *
+     * @since   3.7.0
+     * @throws  \Exception
+     */
+    public function getTable($name = 'Group', $prefix = 'Administrator', $options = [])
+    {
+        return parent::getTable($name, $prefix, $options);
+    }
+
+
+    /**
+     * Method to get the record form.
+     *
+     * @param   array    $data      An optional array of data for the form to interrogate.
+     * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+     *
+     * @return  Form|bool  A Form object on success, false on failure
+     *
+     * @since   1.6
+     */
+    public function getForm($data = [], $loadData = true)
+    {
+        // Get the form.
+        $form = $this->loadForm('com_decentralization.group', 'group', ['control' => 'jform', 'load_data' => $loadData]);
+
+        if (empty($form)) {
+            return false;
+        }
+
+        return $form;
+    }
+
+    /**
+     * Method to get the data that should be injected in the form.
+     *
+     * @return  array  The default data is an empty array.
+     *
+     * @since   3.7.0
+     */
+    protected function loadFormData()
+    {
+        // Check the session for previously entered form data.
+        $app   = Factory::getApplication();
+        $data  = $app->getUserState('com_decentralization.edit.group.data', []);
+        
+        if (empty($data)) {
+            $data = $this->getItem();
+          
+            if (!$data->id) {
+                $filters = (array) $app->getUserState('com_decentralization.groups.filter');
+
+            }
+        }
+
+        $this->preprocessData('com_decentralization.group', $data);
+        return $data;
+    }
+
+    public function getItem($pk = null)
+    {
+        $pk = (!empty($pk)) ? $pk : (int) $this->getState('group.id');
+        
+        if ($this->_item === null) {
+            $this->_item = [];
+        }
+
+        if (!isset($this->_item[$pk])) {
+            $this->_item[$pk] = parent::getItem($pk);
+        }
+
+        return $this->_item[$pk];
+    }
+
+    /**
+	 * Delete all group in core_user_action
+	 * @param number $group_id
+	 * @return mixed
+	 */
+	public function deleteAc_Us_Dv($group_id = 0){
+		$db		=	Factory::getDbo();
+        $sql_fk = $db->getQuery();
+		$sql_fk =	'DELETE FROM core_user_action_donvi WHERE group_id = '.(int)$group_id;
+		$db->setQuery($sql_fk);
+		return 	$db->execute();
+	}
+	/**
+	 * Delete ralation group and action in core_group_action
+	 * @param integer $id
+	 * @return mixed
+	 */
+	private function deleteGroup_fk($id){
+		$db		=	Factory::getDBO();
+        $sql_fk = $db->getQuery();
+		$sql_fk =	'DELETE FROM core_group_action WHERE group_id IN ('.$id.')';
+		$db->setQuery($sql_fk);
+		return 	$db->execute();
+	}
+
+    /**
+	 * 
+	 * @param number $group_id
+	 * @return array('user_id'=>'id_donvi')
+	 */
+	public function getUserDonviGroup ($group_id = 0){
+		$db		=	Factory::getDbo();
+		$sql	= 'SELECT user_id, id_donvi, iddonvi_quanly FROM jos_user_usergroup_map as a
+				LEFT JOIN core_user_donvi AS b ON a.user_id = b.id_user
+				WHERE group_id = '.(int)$group_id;
+		$db->setQuery($sql);
+		$row	=	$db->loadAssocList();
+		return $row;
+	}
+
+    /**
+	 * Lưu nhóm người dùng
+	 * @return boolean
+	 */
+	public function storeData(){
+		$flag				=	true;
+		$data  = Factory::getApplication()->getInput()->get('jform', [], 'array'); 
+		$db					=	Factory::getDbo();
+        if(isset($data['acname0'])){
+            $acname[0]			=	$data['acname0']; 
+        }
+        if (isset($data['acname1'])) {
+            $acname[1]			=	$data['acname1']; 
+        }
+        if (isset($data['acname2'])) {       
+            $acname[2]			=	$data['acname2'];
+        }
+        
+        
+		// Lấy ra array('user_id'=>'id_donvi') theo group
+		$arr_user_id		= $this->getUserDonviGroup((int)$data['id']);
+
+        // Xóa quan hệ giữa group và action trong bảng Core_group_action
+ 		$this->deleteGroup_fk($data['id']);
+		// Xóa quan hệ giữa action và user và đơn vị khi thay đổi quan hệ giữa group và action
+ 		$this->deleteAc_Us_Dv($data['id']);
+
+        /** @var \Joomla\Component\Decentralization\Administrator\Model\UsersModel $model_user */
+
+         $model_user = Factory::getApplication()->bootComponent('com_decentralization')->getMVCFactory()
+         ->createModel('Users', 'Administrator', ['ignore_request' => true]);
+		// Insert quan hệ group _ action
+		foreach ($acname as $key=>$value){
+			$object_fk_group			=	new stdClass();
+			$object_fk_group->group_id	=	$data['id'];
+			$object_fk_group->type		=	$key;
+            
+			if (count($value) > 0) {	
+               
+				for ($j = 0; $j < count($value); $j++) {
+                    
+					$object_fk_group->action_id = $value[$j];
+                    // var_dump($object_fk_group->action_id);exit;
+					$flag = $flag&&$db->insertObject('core_group_action', $object_fk_group);
+                    // Lưu cập nhật nhóm, action, user, donvi vào bảng core_user_action_donvi
+                    if ($flag && count($arr_user_id) > 0 ) {
+                        
+                        foreach ($arr_user_id as $value1){
+                            // Lấy id_donvi theo type of group
+                            // var_dump($value1['iddonvi_quanly']);exit;
+                          
+                            $id_donvi		=	$model_user->getChirl_Donvi($value1['id_donvi'], $key, $value1['iddonvi_quanly']);
+                            // var_dump($id_donvi);exit;
+                            if ((int)$id_donvi >= 0) {
+                                //for ($k = 0; $k < count($arr_id_donvi); $k++) {
+                                    $object_ac_us_dv			= new stdClass();
+                                    $object_ac_us_dv->action_id	=	$value[$j];
+                                    $object_ac_us_dv->group_id	=	$data['id'];
+                                    $object_ac_us_dv->user_id	=	(int)$value1['user_id'];
+                                    $object_ac_us_dv->iddonvi	=	$id_donvi;//[$k];
+                                    $db->insertObject('core_user_action_donvi', $object_ac_us_dv);
+                                    
+                                //}
+                                
+                            }
+                            
+                        }
+                    }
+				}
+			}
+		}
+		return $flag;
+	}
+
+    /**
+	 * Method to save the form data.
+	 *
+	 * @param   array  The form data.
+	 * @return  boolean  True on success.
+	 * @since   1.6
+	 */
+	public function save($data)
+	{
+		// Include the content plugins for events.
+		PluginHelper::importPlugin('user');
+		// Check the super admin permissions for group
+		// We get the parent group permissions and then check the group permissions manually
+		// We have to calculate the group permissions manually because we haven't saved the group yet
+		$parentSuperAdmin = Access::checkGroup($data['parent_id'], 'core.admin');
+		// Get core.admin rules from the root asset
+		$rules = Access::getAssetRules('root.1')->getData('core.admin');
+		// Get the value for the current group (will be true (allowed), false (denied), or null (inherit)
+		$groupSuperAdmin = $rules['core.admin']->allow($data['id']);
+
+		// We only need to change the $groupSuperAdmin if the parent is true or false. Otherwise, the value set in the rule takes effect.
+		if ($parentSuperAdmin === false)
+		{
+			// If parent is false (Denied), effective value will always be false
+			$groupSuperAdmin = false;
+		}
+		elseif ($parentSuperAdmin === true)
+		{
+			// If parent is true (allowed), group is true unless explicitly set to false
+			$groupSuperAdmin = ($groupSuperAdmin === false) ? false : true;
+		}
+
+		// Check for non-super admin trying to save with super admin group
+		$iAmSuperAdmin	= Factory::getUser()->authorise('core.admin');
+		if ((!$iAmSuperAdmin) && ($groupSuperAdmin))
+		{
+			try
+			{
+				throw new Exception(Text::_('JLIB_USER_ERROR_NOT_SUPERADMIN'));
+			}
+			catch (Exception $e)
+			{
+				$this->setError($e->getMessage());
+				return false;
+			}
+		}
+
+		// Check for super-admin changing self to be non-super-admin
+		// First, are we a super admin>
+		if ($iAmSuperAdmin)
+		{
+			// Next, are we a member of the current group?
+			$myGroups = Access::getGroupsByUser(Factory::getUser()->get('id'), false);
+			if (in_array($data['id'], $myGroups))
+			{
+				// Now, would we have super admin permissions without the current group?
+				$otherGroups = array_diff($myGroups, array($data['id']));
+				$otherSuperAdmin = false;
+				foreach ($otherGroups as $otherGroup)
+				{
+					$otherSuperAdmin = ($otherSuperAdmin) ? $otherSuperAdmin : Access::checkGroup($otherGroup, 'core.admin');
+				}
+				// If we would not otherwise have super admin permissions
+				// and the current group does not have super admin permissions, throw an exception
+				if ((!$otherSuperAdmin) && (!$groupSuperAdmin))
+				{
+					try
+					{
+						throw new Exception(Text::_('JLIB_USER_ERROR_CANNOT_DEMOTE_SELF'));
+					}
+					catch (Exception $e)
+					{
+						$this->setError($e->getMessage());
+						return false;
+					}
+				}
+			}
+		}
+       
+		// Proceed with the save
+		return parent::save($data);
+	}
+}

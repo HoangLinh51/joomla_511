@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form addfieldprefix="Joomla\Component\Decentralization\Administrator\Field">
+	<fieldset name="user_details" label="COM_DECENTRALIZATION_USER_ACCOUNT_DETAILS">
+		<field
+			name="name"
+			type="text"
+			label="COM_DECENTRALIZATION_USER_FIELD_NAME_LABEL"
+			required="true"
+		/>
+
+		<field
+			name="username"
+			type="text"
+			label="COM_DECENTRALIZATION_USER_FIELD_USERNAME_LABEL"
+			required="true"
+		/>
+
+		<field
+			name="password"
+			type="password"
+			label="JGLOBAL_PASSWORD"
+			rules="true"
+			autocomplete="new-password"
+			class="validate-password-strength"
+			filter="raw"
+			validate="password"
+			strengthmeter="true"
+			force="on"
+		/>
+
+		<field
+			name="password2"
+			type="password"
+			label="COM_DECENTRALIZATION_USER_FIELD_PASSWORD2_LABEL"
+			autocomplete="new-password"
+			class="validate-passwordExtra"
+			filter="raw"
+			message="COM_DECENTRALIZATION_USER_FIELD_PASSWORD1_MESSAGE"
+			validate="equals"
+			field="password"
+		/>
+
+		<field
+			name="email"
+			type="email"
+			label="JGLOBAL_EMAIL"
+			required="true"
+			validate="email"
+			validDomains="com_users.domains"
+		/>
+
+		<field
+			name="registerDate"
+			type="calendar"
+			label="COM_DECENTRALIZATION_USER_FIELD_REGISTERDATE_LABEL"
+			class="readonly"
+			readonly="true"
+			translateformat="true"
+			showtime="true"
+			filter="user_utc"
+		/>
+
+		<field
+			name="lastvisitDate"
+			type="calendar"
+			label="COM_DECENTRALIZATION_USER_FIELD_LASTVISIT_LABEL"
+			class="readonly"
+			readonly="true"
+			translateformat="true"
+			showtime="true"
+			filter="user_utc"
+		/>
+
+		<field
+			name="lastResetTime"
+			type="calendar"
+			label="COM_DECENTRALIZATION_USER_FIELD_LASTRESET_LABEL"
+			class="readonly"
+			readonly="true"
+			translateformat="true"
+			showtime="true"
+			filter="user_utc"
+		/>
+
+		<field
+			name="resetCount"
+			type="number"
+			label="COM_DECENTRALIZATION_USER_FIELD_RESETCOUNT_LABEL"
+			class="readonly"
+			default="0"
+			readonly="true"
+		/>
+
+		<field
+			name="sendEmail"
+			type="radio"
+			label="COM_DECENTRALIZATION_USER_FIELD_SENDEMAIL_LABEL"
+			default="0"
+			layout="joomla.form.field.radio.switcher"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field
+			name="block"
+			type="radio"
+			label="COM_DECENTRALIZATION_USER_FIELD_BLOCK_LABEL"
+			layout="joomla.form.field.radio.switcher"
+			default="0"
+			>
+			<option value="1">COM_DECENTRALIZATION_USER_FIELD_BLOCK</option>
+			<option value="0">COM_DECENTRALIZATION_USER_FIELD_ENABLE</option>
+		</field>
+
+		<field
+			name="requireReset"
+			type="radio"
+			label="COM_DECENTRALIZATION_USER_FIELD_REQUIRERESET_LABEL"
+			default="0"
+			layout="joomla.form.field.radio.switcher"
+			>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field
+			name="id_donvi"
+			type="text"
+			label="Tổ chức thuộc về"
+			hint="Chọn tổ chức thuộc về" 
+			autocomplete="off"
+			addfieldprefix="Joomla\Component\Decentralization\Administrator\Field"
+
+			>
+		</field>
+
+		<field
+			name="id_donviquanly"
+			type="text"
+			label="Tổ chức quản lý"
+			hint="Chọn tổ chức quản lý" 
+			autocomplete="off"
+			addfieldprefix="Joomla\Component\Decentralization\Administrator\Field"
+
+			>
+		</field>
+
+		<field
+			name="id"
+			type="text"
+			label="JGLOBAL_FIELD_ID_LABEL"
+			class="readonly"
+			default="0"
+			readonly="true"
+		/>
+		<field name="id_donvi_hidden" type="hidden" />
+		<field name="id_donviquanly_hidden" type="hidden" />
+	</fieldset>
+	<field name="groups" type="hidden" />
+
+	
+</form>

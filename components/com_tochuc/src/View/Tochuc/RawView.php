@@ -1,0 +1,173 @@
+<?php 
+/**
+ * @package     Joomla.Site
+ * @subpackage  com_tochuc
+ *
+ * @copyright   (C) 2009 Open Source Matters, Inc. <https://www.joomla.org>
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+ namespace Joomla\Component\Tochuc\Site\View\Tochuc;
+
+use Core;
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\View\GenericDataException;
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Pagination\Pagination;
+use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
+use stdClass;
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
+/**
+ * Categories view class for the Category package.
+ *
+ * @since  1.6
+ */
+class RawView extends BaseHtmlView
+{
+    /**
+     * The pagination object
+     *
+     * @var    Pagination
+     * @since  3.9.0
+     */
+    protected $pagination;
+    /**
+     * Display the view
+     *
+     * @param   string|null  $tpl  The name of the template file to parse; automatically searches through the template paths.
+     *
+     * @throws  GenericDataException
+     *
+     * @return  void
+     */ 
+    public function display($tpl = null)
+    {   
+        $layout = Factory::getApplication()->input->get('task');
+    	$layout = ($layout == null)?'default':strtoupper($layout);  
+        $this->setLayout(strtolower($layout));    
+        switch($layout){
+        case 'DETAIL':
+            $this->_getDetail();
+            break;
+        case 'EDIT_TOCHUC':
+            $this->_pageEditTochuc();
+            break;	
+        case 'THANHLAP':
+            $this->_pageQuaTrinh();
+            break;
+        case 'default':
+     		$this->_pageList();
+         	break;
+        }
+    }
+
+    private function _pageList(){   
+        $id      = Factory::getApplication()->input->getInt('id'); 
+        $rows = null;
+        if($id > 0){
+            $model = Core::model('Tochuc/Tochuc');
+            $rows = $model->read($id);
+        }
+        $caybaocao	=	$model->getCayBaocao($rows->id);
+    	$this->caybaocao = $caybaocao;
+    }
+
+    private function _getDetail(){
+        $model = Core::model('Tochuc/Tochuc');
+        $id = Factory::getApplication()->input->getInt('id');
+        $row = $model->read($id);
+        $quatrinh = $model->getAllQuaTrinhById($row->id);
+        $khenthuongkyluat = $model->getAllKhenthuongkyluatById($row->id);
+        // $quatrinh_bienche = $model->getQuatrinhBiencheByDeptId($row->id);
+                        
+  
+        $this->id =  $id;   
+        $this->row = $row; 	
+        // $this->sumBienchegiao = $model->sumBienchegiao($id); 	
+        // $this->sumBienchehienco = $model->sumBienchehienco($id); 	
+        $this->quatrinh = $quatrinh; 	
+        $this->khenthuongkyluat = $khenthuongkyluat; 	
+        // $this->quatrinh_bienche = $quatrinh_bienche; 	
+        parent::display();
+    }
+
+    private function _pageQuaTrinh(){
+    	$model = Core::model('Tochuc/Tochuc');
+        $app = Factory::getApplication()->input;
+        $id = $app->getInt('id',0);     
+    	$rows = $model->getAllQuaTrinhById($id);
+    	$item = $model->read($id);
+        $this->id = $id; 	
+        $this->rows = $rows; 	
+        $this->item = $item; 	
+        parent::display();
+    }
+
+    private function _pageEditTochuc(){
+    	$inArray = TochucHelper::collect('ins_cap', array('id','parent_id','name',"IF((rgt-lft) = 1,'item','folder') AS type"),array('status = 1'));
+    	$tree_data_ins_cap = array();
+    	TochucHelper::makeDataForTree($inArray, $tree_data_ins_cap,TochucHelper::getRootCapTochuc());
+    	unset($inArray);    	
+    	$model = Core::model('Tochuc/Tochuc');
+    	
+    	$dept_id = Factory::getApplication()->input->getInt('id',0);
+    	// $row = null;
+        $row = new stdClass();
+    	$arr_ins_created =  TochucHelper::collect('ins_dept', array('id AS value','name AS text'),array('type IN (1,3)'),'lft ASC');
+    	$arr_ins_created = array_merge(array(array('value'=>'','text'=>'')),$arr_ins_created);
+    	if((int)$dept_id > 0){
+    		$row = $model->read($dept_id);
+    	}    	
+        if ($row && (int)$row->id == 0) {
+    		$vanban_created = array();
+    		$trangthai = array();
+    		$file_created = array();
+    		$file_trangthai = array();    	
+    		$row->active = 1;
+            $row->type = Factory::getApplication()->input->getInt("type", null); // Assign null if no type is provided
+    		$linhvuc = array();
+    		$title	=	'Bổ sung đơn vị vừa tạo vào cấu hình báo cáo';
+    	}else{
+    		$vanban_created = $model->getVanbanById($row->vanban_created);
+    		$trangthai = $model->getVanbanById($row->vanban_active);
+    		$file_created = $model->getFilebyIdVanban($row->vanban_created);
+    		$file_trangthai = $model->getFilebyIdVanban($row->vanban_active);
+    		$linhvuc = $model->getLinhvucByIdDept($row->id);
+            $row->type = Factory::getApplication()->input->getInt("type", null); // Assign null if no type is provided
+    		$title	=	'Cập nhật thông tin đơn vị vào cấu hình báo cáo';
+    	}
+    	$ins_dept_vanban = $model->danhsachIns_dept_vanban($row->id);
+    	for($i=0; $i<count($ins_dept_vanban); $i++){
+            $ins_dept_vanban[$i]->taptin = $model->taptindinhkem($ins_dept_vanban[$i]->ins_vanban_id);    		
+    	}
+    	$caybaocao	=	$model->getCayBaocao($row->id);
+
+        $this->title = $title;
+        $this->caybaocao = $caybaocao;
+        $this->tree_data_ins_cap = json_encode($tree_data_ins_cap);
+        $this->row = $row;
+        $this->ins_dept_vanban = $ins_dept_vanban;
+        $this->vanban_created = $vanban_created;
+        $this->trangthai = $trangthai;
+        $this->linhvuc = $linhvuc;
+        $this->file_created = $file_created;
+        $this->file_trangthai = $file_trangthai;
+        $this->arr_ins_created = $arr_ins_created;
+        $this->loaidonvihanhchinh = Core::loadAssocList('ins_loaidonvihanhchinh', '*', 'trangthai=1', 'sapxep asc');
+        $this->phancaptochuc = Core::loadAssocList('ins_phancap', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
+        $this->hangtochuc = Core::loadAssocList('ins_hang', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
+        $this->loaihachtoan = Core::loadAssocList('ins_loaihachtoan', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
+        $this->mucdotuchu = Core::loadAssocList('ins_mucdotuchu', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
+
+        parent::display();
+    }
+
+
+   
+    
+
+}

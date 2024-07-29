@@ -1,0 +1,75 @@
+<?php
+
+// No direct access
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
+defined( '_JEXEC' ) or die( 'Truy cập không hợp lệ' );
+/** @var Joomla\Component\Decentralization\Administrator\View\Group\HtmlView $this */
+
+/** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
+$wa = $this->document->getWebAssetManager();
+$wa->useScript('keepalive')
+    ->useScript('form.validate');
+?>
+<form action="index.php?option=com_decentralization&view=group&layout=edit&id=<?php echo (int) $this->item->id ?>" method="post" name="adminForm" id="adminForm" class="form-horizontal form-validate">
+	<div class="row-fluid" style="background-color: white;padding: 15px;">
+		<div class="span12 form-horizontal">
+        <fieldset>
+
+
+		<div id="div_report_group">
+			<div class="control-group">
+				<div class="controls">
+                    <?php echo $this->form->renderField('title')?>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<div class="controls">
+					<?php echo $this->form->renderField('parent_id')?>
+				</div>
+			</div>
+		</div>       
+    </fieldset>
+    <?php 
+        $id = Factory::getApplication()->getInput()->get('id');
+        if($id > 0){  
+    ?>
+    <fieldset id="fieldset-groups" class="options-form">
+            <legend><?php echo Text::_('COM_DECENTRALIZATION_ASSIGNED_FUNCTIONS'); ?></legend>
+                <div>
+                    <?php echo $this->loadTemplate('groups'); ?>
+                </div>
+    </fieldset>
+    <?php }?>
+    </div>
+</div>
+<div class="clr"></div>
+<?php echo $this->form->renderField('id')?>
+<input type="hidden" name="task" value="" />
+<?php echo HTMLHelper::_( 'form.token' ); ?> 
+</form>
+<style>
+.dropdown{
+    display: none;
+}   
+.col-md-12{
+    padding-left: 0px;
+    padding-right: 0px;
+}    
+.pagination {
+    margin: 0px !important;
+    float: left;
+}
+.js-stools-field-list{
+    float: right;
+    display: block;
+}
+.form-select{
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+</style>
