@@ -169,49 +169,77 @@ $user = Factory::getUser();
                                 <div class="col-md-6" data-select2-id="30">
                                     <div class="form-group" data-select2-id="29">
                                         <label>Cách thức thành lập</label>
-                                        <select id="cachthucthanhlap" class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="1" tabindex="-1" aria-hidden="true">
-                                            <option selected="selected" data-select2-id="3">Alabama</option>
-                                            <option data-select2-id="35">Alaska</option>
-                                            <option data-select2-id="36">California</option>
-                                            <option data-select2-id="37">Delaware</option>
-                                        </select>
+                                        <?php 
+                                            $tableInsDeptCachthuc = Core::table('Tochuc/InsDeptCachthuc');
+                                            $type_created = $tableInsDeptCachthuc->findAllCachThucThanhLap();
+                                            $options = array();
+                                            $option[] = array('id'=>'','name'=>'');
+                                            $options = array_merge($option,$type_created);
+                                            echo HTMLHelper::_('select.genericlist',$options,'type_created', array('class'=>'form-control select2 select2-hidden-accessible', 'style'=>'width: 100%;'),'id','name','');
+                                        ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Cơ quan ban hành</label>
-                                        <select id="coquanbanhanh" class="form-control select2 select2-hidden-accessible" style="width: 100%;"  tabindex="-1" aria-hidden="true">
-                                            <option selected="selected">Alabama</option>
-                                            <option>Alaska</option>
-                                            <option>California</option>
-                                            <option>Delaware</option>
-                                            <option>Tennessee</option>
-                                            <option>Texas</option>
-                                            <option>Washington</option>
-                                        </select>
+                                        <?php echo HTMLHelper::_('select.genericlist', $this->arr_ins_created, 'vanban_created[coquan_banhanh_id]', array('class'=>'form-control select2 select2-hidden-accessible','data-placeholder'=>"Hãy chọn..."),'value','text',$this->vanban_created['coquan_banhanh_id']);?>
+                                        <input type="hidden" name="vanban_created[id]" id="vanban_created_id" value="<?php echo $this->vanban_created['id'];?>">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label>Cơ quan chủ quản</label>
-                                    <select id="coquanchuquan" class="form-control select2 select2-hidden-accessible" style="width: 100%;"  tabindex="-1" aria-hidden="true">
-                                            <option selected="selected">Alabama</option>
-                                            <option>Alaska</option>
-                                            <option>California</option>
-                                            <option>Delaware</option>
-                                            <option>Tennessee</option>
-                                            <option>Texas</option>
-                                            <option>Washington</option>
-                                    </select>
+                                    <div class="form-group">
+                                        <label>Cơ quan chủ quản</label>
+                                        <?php echo HTMLHelper::_('select.genericlist',$this->arr_ins_created,'ins_created', array('class'=>'form-control select2 select2-hidden-accessible','data-placeholder'=>"Hãy chọn..."),'value','text',$this->row->ins_created);?>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>Cấp đơn vị <span class="required">*</span></label>
-                                    <select id="capdonvi" class="form-control select2 select2-hidden-accessible" style="width: 100%;"  tabindex="-1" aria-hidden="true">
-                                            <option selected="selected">Alabama</option>
-                                            <option>Alaska</option>
-                                            <option>California</option>
-                                    </select>
+                                    <div class="form-group">
+                                        <label>Cấp đơn vị <span class="required">*</span></label>
+                                        <input type="hidden" name="ins_cap" id="ins_cap" value="<?php echo $this->row->ins_cap; ?>">
+                                        <div class="input-group date" id="" data-target-input="nearest">
+                                            <input type="text" id="ins_cap_name" name="ins_cap_name" class="form-control rounded-0"  value="<?php echo Core::loadResult('ins_cap', array('name'), array('id = '=>(int)$this->row->ins_cap))?>" readonly="readonly">
+                                            <!-- <div class="input-group-append rounded-0" data-target="#ins_cap_detail" data-toggle="collapse">
+                                                <div class="input-group-text rounded-0"><i class="fa fa-search"></i></div>
+                                            </div> -->
+                                            <div class="input-group-append rounded-0" data-target="#ins_cap_detail" data-toggle="modal">
+                                                <div class="input-group-text rounded-0"><i class="fa fa-search"></i></div>
+                                            </div>
+                                        </div>
+                                        <!-- <div id="ins_cap_detail" class="collapse">
+                                            <div id="thanhlap-tochuc-ins_cap" class="tree">ss</div>
+                                        </div> -->
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="ins_cap_detail" style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Cấp đơn vị</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>One fine body…</p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                                        <button type="button" class="btn btn-primary">Chọn</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Modal -->
+                                       
+                                        <!-- <div class="input-append">
+                                            <input type="text" id="ins_cap_name" name="ins_cap_name"  value="<?php echo Core::loadResult('ins_cap', array('name'), array('id = '=>(int)$this->row->ins_cap))?>" readonly="readonly">
+                                            <a class="btn collapse-data-btn btn-small" data-toggle="collapse" href="#ins_cap_detail"><i class="icon-search"></i></a>
+                                        </div>
+                                        <div id="ins_cap_detail" class="collapse">
+                                            <div id="thanhlap-tochuc-ins_cap" class="tree"></div>
+                                        </div> -->
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -224,12 +252,12 @@ $user = Factory::getUser();
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Date masks:</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        <label>Ngày ban hành:</label>
+                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                                <span class="input-group-text rounded-0"><i class="far fa-calendar-alt"></i></span>
                                             </div>
-                                            <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" inputmode="numeric">
+                                            <input type="text" data-target="#reservationdate" class="form-control datetimepicker-input rounded-0" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" inputmode="numeric">
                                         </div>
                                     </div>
                                 </div>
@@ -418,9 +446,16 @@ $user = Factory::getUser();
 </form>
 <script>
 jQuery(document).ready(function($) {
-    $('#cachthucthanhlap').select2();
-    $('#coquanbanhanh').select2();
-    $('#coquanchuquan').select2();
+    $('#type_created').select2({
+        placeholder: "Hãy chọn...",
+        allowClear: true
+    });
+    $('#vanban_createdcoquan_banhanh_id').select2({
+        width : "100%"
+    });
+    $('#ins_created').select2({
+        width : "100%"
+    });
     $('#capdonvi').select2();
     $('#goibienche').select2({
         width: "100%"
@@ -443,6 +478,12 @@ jQuery(document).ready(function($) {
     // $('#goibienche').select2({
     //     width: "100%"
     // });
+
+     //Date picker
+    $('#reservationdate').datetimepicker({
+       
+        format: 'L'
+    });
 
     $('#quyetdinhlienquan').on('change', function(){
         if(this.checked) {
@@ -478,5 +519,8 @@ jQuery(document).ready(function($) {
 .select2-container--default .select2-selection--single .select2-selection__rendered{
     line-height: 33px !important;
     padding-left:0px !important
+}
+.input-group-text:hover i{
+    color: black;
 }
 </style>

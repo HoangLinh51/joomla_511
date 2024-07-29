@@ -1,5 +1,8 @@
 <?php
-class Tochuc_Table_InsDeptCachthuc extends JTable{
+
+use Joomla\CMS\Table\Table;
+
+class Tochuc_Table_InsDeptCachthuc extends Table{
 	var $id = null;
 	var $name = null;
 	function __construct(&$db){

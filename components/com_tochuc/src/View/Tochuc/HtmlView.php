@@ -32,7 +32,7 @@ class HtmlView extends BaseHtmlView
             $this->_initThanhLapPage();
             break;	
         case 'default':
-     		$this->_pageList();
+     		// $this->_pageList();
          	break;
         }
         parent::display($tpl);
@@ -65,12 +65,14 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/moment.min.js');
 
+        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js');
 
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/jstree/jquery.jstree.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/chosen.jquery.min.js');
-    	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery.maskedinput.min.js');
+    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery.maskedinput.min.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/upload/jquery.iframe-transport.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/upload/jquery.fileupload.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/date-time/date.js');

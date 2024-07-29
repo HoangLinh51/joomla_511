@@ -328,8 +328,9 @@ $user_id = $user->id;
 </script>
 <style>
     #tochuc-parent-tree{
-        height: 280px;
+        /* height: 280px; */
         overflow: auto;
+        scrollbar-width: thin !important; 
     }
     .dropdown-item:focus,
     .dropdown-item:hover {
@@ -354,12 +355,12 @@ $user_id = $user->id;
     }
     #tochuc-parent-tree a{
         display: inline;
-        line-height: 16px;
-        height: 16px;
+        /* line-height: 16px;
+        height: 16px; */
         color: black !important;
         text-decoration: none;
-        padding: 1px 2px;
-        margin: 0;
+        /* padding: 1px 2px;
+        margin: 0; */
 	    white-space: normal !important;
 	    scrollbar-width: thin !important; 
     } 

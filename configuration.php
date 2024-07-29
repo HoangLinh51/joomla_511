@@ -13,10 +13,10 @@ class JConfig {
 	public $debug_lang = false;
 	public $debug_lang_const = true;
 	public $dbtype = 'mysqli';
-	public $host = 'localhost:3308';
+	public $host = 'localhost:3307';
 	public $user = 'root';
-	public $password = 'Abc123@@@';
-	public $db = 'joomla511';
+	public $password = 'Abc123@@@6789';
+	public $db = 'joomla_v5_dev';
 	public $dbprefix = 'jos_';
 	public $dbencryption = 0;
 	public $dbsslverifyservercert = false;
