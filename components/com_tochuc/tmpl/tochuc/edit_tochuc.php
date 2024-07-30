@@ -221,11 +221,11 @@ $user = Factory::getUser();
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <p>One fine body…</p>
+                                                        <div id="thanhlap-tochuc-ins_cap" data-widget="treeview" class="tree"></div>
                                                     </div>
                                                     <div class="modal-footer justify-content-between">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                                                        <button type="button" class="btn btn-primary">Chọn</button>
+                                                        <button type="button" data-id="" class="btn btn-primary btn-choncapdonvi">Chọn</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -444,7 +444,7 @@ $user = Factory::getUser();
     <input type="hidden" name="is_valid_name" id="is_valid_name" value="">
     <input type="hidden" id="is_valid_code">
 </form>
-<script>
+<script>    
 jQuery(document).ready(function($) {
     $('#type_created').select2({
         placeholder: "Hãy chọn...",
@@ -480,9 +480,12 @@ jQuery(document).ready(function($) {
     // });
 
      //Date picker
+     
     $('#reservationdate').datetimepicker({
        
-        format: 'L'
+        format: 'L',
+        language: 'vi'
+       
     });
 
     $('#quyetdinhlienquan').on('change', function(){
@@ -492,23 +495,59 @@ jQuery(document).ready(function($) {
             $('.div_quyetdinhlienquan').css('display','none');  // show the div
         }
     });
-    var treeData = <?php echo $jsTreeData; ?>;
-    jQuery('#html1').jstree({
-        "plugins" : [
-            "checkbox",
-            "contextmenu",
-            "types",
-            "conditionalselect"
-        ],
-            'core': {
-            'data': treeData
-        }
-    }).on('loaded.jstree', function(){
-        // jQuery('#html1').jstree('open_all')
-    });
+    
+    var tree_data_ins_cap = <?php echo $this->tree_data_ins_cap; ?>;		
+	var treeDataCapDonvi = new DataSourceTree({data: tree_data_ins_cap});	
+    $('#thanhlap-tochuc-ins_cap').ace_tree({
+		dataSource: treeDataCapDonvi,
+		multiSelect:false,
+		loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+		'open-icon' : 'icon-minus',
+		'close-icon' : 'icon-plus',
+		'selectable' : true,
+		'selected-icon' : 'icon-ok',
+		'unselected-icon' : 'icon-remove'
+	});
+    $('#thanhlap-tochuc-ins_cap').on('selected', function (evt, data) {
+		if(typeof data.info[0] != "undefined"){
+			$('#ins_cap').val(data.info[0].id);
+			$('#ins_cap_name').val(data.info[0].name);
+            $('.btn-choncapdonvi').attr('data-id',data.info[0].id)
+		}
+	});
+	$('#thanhlap-tochuc-ins_cap').on('unselected', function (evt, data) {			
+	    $('#ins_cap').val('');
+		$('#ins_cap_name').val('');	
+        $('.btn-choncapdonvi').attr('data-id','')
+	});
+
+    $('.btn-choncapdonvi').on('click', function() {
+            console.log($(this).data('id'))
+			if($(this).data('id') != ''){
+                $('#ins_cap_detail').modal('hide');
+            }else{
+                $.toast({
+                    heading: 'Cảnh báo',
+                    text: 'Vui lòng chọn cấp đơn vị',
+                    showHideTransition: 'fade',
+                    position: 'top-right',
+                    icon: 'warning'
+                })
+                return false;
+            }
+			
+		
+       
+    })
+
+
+
 });
 </script>
 <style>
+#ins_cap_detail{
+    padding-right: 0px !important;
+}    
 .select2-container--default .select2-selection--single .select2-selection__arrow{
     height: calc(2.25rem + 2px) !important;
 }
@@ -522,5 +561,177 @@ jQuery(document).ready(function($) {
 }
 .input-group-text:hover i{
     color: black;
+}
+.tree:after, .tree:before{
+    box-sizing: unset !important;
+}
+.tree {
+    padding-left: 9px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+}
+.tree:before {
+    display: inline-block;
+    content: "";
+    position: absolute;
+    top: -20px;
+    bottom: 16px;
+    left: 0;
+    border: 1px dotted #67b2dd;
+    border-width: 0 0 0 1px;
+    z-index: 1;
+}
+.tree .tree-folder {
+    width: auto;
+    min-height: 20px;
+    cursor: pointer;
+}
+.tree .tree-folder .tree-folder-header {
+    position: relative;
+    height: 20px;
+    line-height: 20px;
+    box-sizing: content-box !important;
+}
+.tree .tree-folder .tree-folder-header:hover { background-color: #f0f7fc }
+.tree .tree-folder .tree-folder-header .tree-folder-name, .tree .tree-item .tree-item-name {
+    display: inline;
+    z-index: 2;
+}
+.tree .tree-folder .tree-folder-header>[class*="icon-"]:first-child, .tree .tree-item>[class*="icon-"]:first-child {
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+    top: -1px;
+}
+.tree .tree-folder .tree-folder-header .tree-folder-name { margin-left: 2px }
+.tree .tree-folder .tree-folder-header>[class*="icon-"]:first-child { margin: -2px 0 0 -2px }
+.tree .tree-folder:last-child:after {
+    display: inline-block;
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 15px;
+    bottom: 0;
+    left: -15px;
+    border-left: 1px solid #FFF;
+}
+.tree .tree-folder .tree-folder-content {
+    margin-left: 23px;
+    position: relative;
+}
+.tree .tree-folder .tree-folder-content:before {
+    display: inline-block;
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: -14px;
+    bottom: 16px;
+    left: -14px;
+    border: 1px dotted #67b2dd;
+    border-width: 0 0 0 1px;
+}
+.tree .tree-item {
+    position: relative;
+    height: 20px;
+    line-height: 20px;
+    cursor: pointer;
+}
+.tree .tree-item:hover { background-color: #f0f7fc }
+.tree .tree-item .tree-item-name { margin-left: 3px }
+.tree .tree-item .tree-item-name>[class*="icon-"]:first-child { margin-right: 3px }
+.tree .tree-item>[class*="icon-"]:first-child { margin-top: -1px }
+.tree .tree-folder, .tree .tree-item { position: relative }
+.tree .tree-folder:before, .tree .tree-item:before {
+    display: inline-block;
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: -13px;
+    width: 18px;
+    height: 0;
+    border-top: 1px dotted #67b2dd;
+    z-index: 1;
+}
+.tree .tree-selected {
+    background-color: rgba(98,168,209,0.1);
+    color: #6398b0;
+}
+.tree .tree-selected:hover { background-color: rgba(98,168,209,0.1) }
+.tree .tree-item, .tree .tree-folder { border: 1px solid #FFF }
+.tree .tree-folder .tree-folder-header { border-radius: 0 }
+.tree .tree-item, .tree .tree-folder .tree-folder-header {
+    margin: 0;
+    padding: 5px;
+    color: #4d6878;
+    box-sizing: content-box !important;
+    /* padding-bottom: 15px; */
+}
+.tree .tree-item>[class*="icon-"]:first-child {
+    color: #f9e8ce;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    font-size: 11px;
+    text-align: center;
+    /* border-radius: 3px; */
+    background-color: #fafafa;
+    border: 1px solid #8baebf;
+    /* box-shadow: 0 1px 2px rgba(0,0,0,0.05); */
+    margin-left: -2px;
+}
+.tree .tree-selected>[class*="icon-"]:first-child {
+    background-color: #f9a021;
+    border-color: #f9a021;
+    color: #FFF;
+}
+.tree .icon-plus[class*="icon-"]:first-child, .tree .icon-minus[class*="icon-"]:first-child {
+    border: 1px solid #DDD;
+    vertical-align: middle;
+    height: 13px;
+    width: 13px;
+    text-align: center;
+    border: 1px solid #8baebf;
+    line-height: 11px;
+    background-color: #FFF;
+    position: relative;
+    z-index: 1;
+}
+.tree .icon-plus[class*="icon-"]:first-child:before {
+    display: block;
+    content: "+";
+    font-family: "Open Sans";
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
+}
+.tree .icon-minus[class*="icon-"]:first-child:before {
+    content: "";
+    display: block;
+    width: 7px;
+    height: 0;
+    border-top: 1px solid #4d6878;
+    position: absolute;
+    top: 5px;
+    left: 2px;
+}
+.tree .tree-unselectable .tree-item>[class*="icon-"]:first-child {
+    color: #5084a0;
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    font-size: 10px;
+    text-align: center;
+    border-radius: 0;
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+}
+.tree [class*="icon-"][class*="-down"] { transform: rotate(-45deg) }
+.tree .icon-spin { height: auto }
+.tree .tree-loading { margin-left: 36px }
+.tree img {
+    display: inline;
+    vertical-align: middle;
 }
 </style>

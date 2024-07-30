@@ -28,6 +28,9 @@ class HtmlView extends BaseHtmlView
     	$layout = ($layout == null)?'default':strtoupper($layout);  
         $this->setLayout(strtolower($layout));    
         switch($layout){
+        case 'EDIT':
+            $this->_initEditPage();
+            break;
         case 'THANHLAP':
             $this->_initThanhLapPage();
             break;	
@@ -52,30 +55,49 @@ class HtmlView extends BaseHtmlView
 
     }
 
+    private function _initDefaultPage($task){
+    	$document = Factory::getDocument();
+    	$document->addCustomTag('<link href="'.Uri::root(true).'/media/cbcc/css/jquery.fileupload.css" rel="stylesheet" />');
+    	$document->addCustomTag('<link href="'.Uri::root(true).'/media/cbcc/js/jstree/themes/default/style.css" rel="stylesheet" />');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.cookie.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.jstree.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery/chosen.jquery.min.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery.maskedinput.min.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.validate.min.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.validate.default.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery/upload/jquery.iframe-transport.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery/upload/jquery.fileupload.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/date-time/bootstrap-datepicker.min.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.vi.js');
+    	$document->addScript(Uri::root(true).'/media/cbcc/js/date-time/date.js');
+		$document->addScript(Uri::root(true) . '/media/cbcc/js/caydonvi.js' );
+    }
+
     private function _initThanhLapPage(){    	
 		$document = Factory::getDocument();
     	// $document->addCustomTag('<link href="'.Uri::base(true).'/media/cbcc/js/jstree/themes/default/style.css" rel="stylesheet" />');
     	$document->addCustomTag('<link href="'.Uri::base(true).'/media/cbcc/css/jquery.fileupload.css" rel="stylesheet" />');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
-
-    	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.validate.min.js');
-    	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.validate.default.js');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
-
+        $document->addStyleSheet(Uri::root(true).'/templates/adminlte/assets/css/font-awesome.min.css');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/ace-elements.min.js');
+        $document->addScript(Uri::root(true).'/templates/adminlte/js/adminlte.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/moment.min.js');
-
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery.maskedinput.min.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.vi.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js');
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');;
 
-    	// $document->addScript(Uri::base(true).'/media/cbcc/js/jstree/jquery.jstree.js');
-    	// $document->addScript(Uri::base(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
-    	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/chosen.jquery.min.js');
-    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery.maskedinput.min.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/upload/jquery.iframe-transport.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/upload/jquery.fileupload.js');
     	// $document->addScript(Uri::base(true).'/media/cbcc/js/date-time/date.js');
+        $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.toast.js');
+      
 		$model = Core::model('Tochuc/Tochuc');
         $app = Factory::getApplication()->input;
     	$dept_id = $app->getInt('id',0);

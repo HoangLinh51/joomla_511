@@ -34,7 +34,7 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/jqvmap/jqvmap.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/select2/css/select2.min.css');
-
+	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/toastr/toastr.min.css');
 
 	$doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
 	$doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-ui.js');
@@ -46,8 +46,7 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mapael/maps/usa_states.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/chart.js/Chart.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/select2/js/select2.min.js');
-
-	
+	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/toastr/toastr.min.js');
 
 	
 ?>
