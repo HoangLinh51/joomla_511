@@ -31,6 +31,7 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/dist/css/_all-skins.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/fontawesome-free/css/all.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');
+	
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/jqvmap/jqvmap.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/select2/css/select2.min.css');

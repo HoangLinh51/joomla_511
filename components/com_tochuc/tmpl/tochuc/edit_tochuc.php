@@ -262,6 +262,78 @@ $user = Factory::getUser();
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div id="actions" class="row"  style="">
+                                <div class="col-lg-6">
+                                    <!--begin::Form-->
+                                    <form class="form" action="#" method="post">
+                                        <!--begin::Input group-->
+                                        <div class="form-group row">
+                                            <!--begin::Label-->
+                                            <!-- <label class="col-lg-2 col-form-label">Upload Files:</label> -->
+                                            <!--end::Label-->
+
+                                            <!--begin::Col-->
+                                            <div class="col-lg-10">
+                                                <!--begin::Dropzone-->
+                                                <div class="dropzone dropzone-multi" id="kt_dropzonejs_example_3">
+                                                    <!--begin::Controls-->
+                                                    <div class="dropzone-panel mb-lg-0 mb-2">
+                                                        <a class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm quyết định</a>
+                                                    </div>
+                                                    <!--end::Controls-->
+
+                                                    <!--begin::Items-->
+                                                    <div class="dropzone-items wm-200px">
+                                                        <div class="dropzone-item" style="display:none">
+                                                            <!--begin::File-->
+                                                            <div class="dropzone-file">
+                                                                <div class="dropzone-filename" title="some_image_file_name.jpg">
+                                                                    <span data-dz-name>some_image_file_name.jpg</span>
+                                                                    <strong>(<span data-dz-size>340kb</span>)</strong>
+                                                                </div>
+
+                                                                <div class="dropzone-error" data-dz-errormessage></div>
+                                                            </div>
+                                                            <!--end::File-->
+
+                                                            <!--begin::Progress-->
+                                                            <div class="dropzone-progress">
+                                                                <div class="progress">
+                                                                    <div
+                                                                        class="progress-bar bg-primary"
+                                                                        role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--end::Progress-->
+
+                                                            <!--begin::Toolbar-->
+                                                            <div class="dropzone-toolbar">
+                                                                <span class="dropzone-delete" data-dz-remove><i class="fa fa-times"></i></span>
+                                                            </div>
+                                                            <!--end::Toolbar-->
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Items-->
+                                                </div>
+                                                <!--end::Dropzone-->
+
+                                                <!--begin::Hint-->
+                                                <span class="form-text text-muted">Kích thước tệp tối đa là 1MB và số lượng tệp tối đa là 5.</span>
+                                                <!--end::Hint-->
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                    <!--end::Input group-->
+                                    </form>
+                                    <!--end::Form-->
+                                </div>
+                            </div>
+
+
+
                             <div class="row">
                                 <div class="col-md-6 form-group" style="">
                                     <label class="control-label" for="vanban_created_mahieu">Các quyết định liên quan</label>
@@ -273,27 +345,7 @@ $user = Factory::getUser();
     
                             </div>
 
-                            <div id="actions" class="div_quyetdinhlienquan row"  style="display: none;">
-                                <div class="col-lg-6">
-                                    <div class="btn-group w-100">
-                                        <span class="btn btn-success col fileinput-button dz-clickable">
-                                            <i class="fas fa-plus"></i>
-                                            <span>Add files</span>
-                                        </span>
-                                        <button type="reset" class="btn btn-warning col cancel">
-                                            <i class="fas fa-times-circle"></i>
-                                            <span>Cancel upload</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 d-flex align-items-center">
-                                    <div class="fileupload-process w-100">
-                                        <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="opacity: 0;">
-                                            <div class="progress-bar progress-bar-success" style="width: 100%;" data-dz-uploadprogress=""></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="div_quyetdinhlienquan pull-right" style="display: none;">
@@ -481,12 +533,71 @@ jQuery(document).ready(function($) {
 
      //Date picker
      
+    // $('#reservationdate').datetimepicker({
+       
+    //     format: 'L',
+    //     language: 'vi'
+       
+    // });
+
     $('#reservationdate').datetimepicker({
-       
-        format: 'L',
-        language: 'vi'
-       
+        format: 'DD/MM/YYYY'      
     });
+
+    // set the dropzone container id
+const id = "#kt_dropzonejs_example_3";
+const dropzone = document.querySelector(id);
+
+// set the preview element template
+var previewNode = dropzone.querySelector(".dropzone-item");
+previewNode.id = "";
+var previewTemplate = previewNode.parentNode.innerHTML;
+previewNode.parentNode.removeChild(previewNode);
+
+var myDropzone = new Dropzone(id, { // Make the whole body a dropzone
+    url: "/index.php?option=com_tochuc&controller=tochuc&task=upload'); ?>", // Set the url for your upload script location
+    parallelUploads: 20,
+    maxFilesize: 1, // Max filesize in MB
+    previewTemplate: previewTemplate,
+    previewsContainer: id + " .dropzone-items", // Define the container to display the previews
+    clickable: id + " .dropzone-select" // Define the element that should be used as click trigger to select files.
+});
+
+myDropzone.on("addedfile", function (file) {
+    // Hookup the start button
+    const dropzoneItems = dropzone.querySelectorAll('.dropzone-item');
+    dropzoneItems.forEach(dropzoneItem => {
+        dropzoneItem.style.display = '';
+    });
+});
+
+// Update the total progress bar
+myDropzone.on("totaluploadprogress", function (progress) {
+    const progressBars = dropzone.querySelectorAll('.progress-bar');
+    progressBars.forEach(progressBar => {
+        progressBar.style.width = progress + "%";
+    });
+});
+
+myDropzone.on("sending", function (file) {
+    // Show the total progress bar when upload starts
+    const progressBars = dropzone.querySelectorAll('.progress-bar');
+    progressBars.forEach(progressBar => {
+        progressBar.style.opacity = "1";
+    });
+});
+
+// Hide the total progress bar when nothing"s uploading anymore
+myDropzone.on("complete", function (progress) {
+    const progressBars = dropzone.querySelectorAll('.dz-complete');
+
+    setTimeout(function () {
+        progressBars.forEach(progressBar => {
+            progressBar.querySelector('.progress-bar').style.opacity = "0";
+            progressBar.querySelector('.progress').style.opacity = "0";
+        });
+    }, 300);
+});
 
     $('#quyetdinhlienquan').on('change', function(){
         if(this.checked) {
@@ -522,8 +633,8 @@ jQuery(document).ready(function($) {
 	});
 
     $('.btn-choncapdonvi').on('click', function() {
-            console.log($(this).data('id'))
-			if($(this).data('id') != ''){
+            console.log($(this).attr('data-id'))
+			if($(this).attr('data-id') != ''){
                 $('#ins_cap_detail').modal('hide');
             }else{
                 $.toast({
@@ -547,7 +658,11 @@ jQuery(document).ready(function($) {
 <style>
 #ins_cap_detail{
     padding-right: 0px !important;
-}    
+}   
+.datetimepicker.dropdown-menu{
+    left: 0 !important;
+    top: 100% !important;
+} 
 .select2-container--default .select2-selection--single .select2-selection__arrow{
     height: calc(2.25rem + 2px) !important;
 }
@@ -733,5 +848,8 @@ jQuery(document).ready(function($) {
 .tree img {
     display: inline;
     vertical-align: middle;
+}
+a.dz-clickable:hover{
+    border-top: 3px solid transparent !important;
 }
 </style>

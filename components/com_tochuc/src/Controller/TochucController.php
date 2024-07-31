@@ -64,5 +64,33 @@ class TochucController extends BaseController
 		$newCode = $model->generateCodeTochucNew($donvi_id, '');
 		Core::PrintJson($newCode);
 	}
+
+	public function upload()
+    {
+        $app = Factory::getApplication();
+        $input = $app->input;
+        $file = $input->files->get('file', array(), 'array');
+
+        // Define upload path
+        $uploadDir = JPATH_SITE . '/uploader/';
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        // Handle file upload
+        if ($file['error'] == 0) {
+            $targetPath = $uploadDir . basename($file['name']);
+            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                echo json_encode(['success' => true, 'file' => $file['name']]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Failed to move uploaded file.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'error' => 'No file uploaded or error occurred.']);
+        }
+
+        // Prevent Joomla from rendering the rest of the page
+        $app->close();
+    }
     
 }
