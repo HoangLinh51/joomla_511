@@ -43,8 +43,22 @@ class AttachmentController extends BaseController{
     }
 
     function doattachment(){
-        $formData = Factory::getApplication()->get('post');
-        $file = $_FILES['uploadfile'];
+        // $formData = Factory::getApplication()->get('post');
+        $app = Factory::getApplication()->input;
+        $formData = array(
+            'from' => $app->getVar('from', ""),
+            'is_nogetcontent' => $app->getInt('is_nogetcontent', 0),
+            'is_new' => $app->getInt('is_new', 0),
+            'iddiv' => $app->getVar('iddiv', ""),
+            'type' => $app->getVar('type', ""),
+            'year' => $app->getVar('year', ""),
+            'idObject' => $app->getInt('idObject', 0),
+            'isTemp' => $app->getVar('isTemp', ""),
+            'pdf' => $app->getVar('pdf', "")
+        );
+        $response = [];
+        $file = $_FILES['file'];
+     
         if ($file['error'] == 0) {
             //$adapter = new Zend_File_Transfer_Adapter_Http();
             //Lay tham so nhan tu client
@@ -70,7 +84,8 @@ class AttachmentController extends BaseController{
                 $pdf = 0;
             $user = Factory::getUser();
             $mapper = Core::model('Core/Attachment');
-            $dirPath = $mapper->getTempPath();
+            $dirPath = $mapper->getDir($date['year'],$date['mon']);
+            // $dirPath = $mapper->getTempPath();
             $new_name = md5($file['name'].time());
             $data = array(
                 'folder'=> $dirPath,
@@ -83,16 +98,19 @@ class AttachmentController extends BaseController{
                 'created_by'=> $user->id,
                 'created_at'=> date('Y-m-d H:i:s')
             );
-           $mapper->create($data); 
-           $uploadfile = $dirPath .'/'. basename($new_name);
-           if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
-                $url = 'index.php?option=com_core&controller=attachment&format=raw&task=input&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type."&pdf=".$pdf."&is_nogetcontent=".$is_nogetcontent;
-                echo "<script>window.parent.loadDivFromUrl('".$iddiv."','$url"."'); </script>";
-           } else {
-               echo "Possible file upload attack!\n";
-           }
-           exit;
+           
+            $mapper->create($data); 
+            $uploadfile = $dirPath .'/'. basename($new_name);
+            if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
+                $fileUrl = "index.php?option=com_core&controller=attachment&format=raw&task=download&year=".$year."&code=".$new_name."";
+                echo json_encode(['success' => true, 'file' => $file['name'], 'fileUrl' => $fileUrl]);
+                // array_push($response, ['success' => true, 'file' => $file['name'], 'fileUrl' => $fileUrl]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Failed to move uploaded file.']);
+            
+            }
         }
+        Factory::getApplication()->close();
 
     }
 

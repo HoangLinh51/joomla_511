@@ -1,12 +1,14 @@
 <?php
 
+use Joomla\CMS\Factory;
+
 class Core_Model_Attachment {
 
     private $_tableName = 'core_attachment';
     private $_primary = 'id';
 
     public function attachment($file_id, $object_id, $type_id, $user_id) {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         //$this->deleteByObjectIdAndTypeId($object_id, $type_id);
         //$data = ;
         if (is_array($file_id)) {
@@ -48,7 +50,7 @@ class Core_Model_Attachment {
 
     public function clearTempFileByUser($user_id) {
         // Xoa file temlp
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
                 ->from($this->_tableName)
@@ -181,7 +183,7 @@ class Core_Model_Attachment {
      * @return mixed
      */
     public function getListByTypeIdAndCreatedId($type_id, $created_id) {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')->from($this->_tableName);
         $query->where('created_id = ' . $db->q($created_id));
@@ -197,7 +199,7 @@ class Core_Model_Attachment {
      * @return mixed
      */
     public function getListFile($idObject, $isTemp) {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')->from($this->_tableName);
         $query->where('object_id = ' . $db->q($idObject));
@@ -217,7 +219,7 @@ class Core_Model_Attachment {
      * @return mixed
      */
     public function getFileByIdObjectAndType($idObject, $type) {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')->from($this->_tableName);
         $query->where('object_id = ' . $db->q($idObject));
@@ -231,7 +233,7 @@ class Core_Model_Attachment {
      * @param string $code
      */
     public function deleteFileByMaso($code) {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')->from($this->_tableName)->where("code=" . $db->q($code));
         $db->setQuery($query);
@@ -253,7 +255,7 @@ class Core_Model_Attachment {
     }
 
     public function updateObjectIdAndTypeIdByCode($code, $object_id, $type_id) {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
             $db->quoteName('object_id') . ' = ' . $db->quote($object_id),
@@ -273,7 +275,7 @@ class Core_Model_Attachment {
         if ($file == null) {
             return null;
         }
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
             $db->quoteName('type_id') . ' = ' . $db->quote($type_id)
@@ -306,7 +308,7 @@ class Core_Model_Attachment {
 
     public function fixedFileNotCopy() {
         $config = Core::config();
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('a.*,YEAR(a.created_at) AS nam, MONTH(a.created_at) AS thang')
                 ->from($db->quoteName('core_attachment', 'a'))
@@ -342,7 +344,7 @@ class Core_Model_Attachment {
         exit;
     }
     public function getDanhsachAnhthe($params) {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('a.hosochinh_id, b.code,b.url')
                 ->from($db->quoteName('hosochinh_quatrinhhientai', 'a'))
@@ -358,8 +360,8 @@ class Core_Model_Attachment {
         }
     }
     public function checkQuyenBaomatTepdinhkem($idHoso,$donvi_id){
-        $db = JFactory::getDbo();
-        $user_id = JFactory::getUser()->id;
+        $db = Factory::getDbo();
+        $user_id = Factory::getUser()->id;
         $query = $db->getQuery(true);
         $query->select('COUNT(*)')->from('core_user_hoso')->where('user_id = '.$db->quote($user_id))->where('hoso_id  = '.$db->quote($idHoso));
         $db->setQuery($query);

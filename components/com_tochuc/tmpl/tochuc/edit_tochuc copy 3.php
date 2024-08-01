@@ -262,8 +262,77 @@ $user = Factory::getUser();
                                     </div>
                                 </div>
                             </div>
-                            
-                            <?php echo Core::inputAttachment('attactment_tochuc',null,1, date('Y'),-1);?>
+                            <?php echo Core::inputAttachment('attactment',null,1, date('Y'),-1);?>
+
+                            <div id="actions" class="row"  style="display: none;">
+                                <div class="col-lg-6">
+                                    <!--begin::Form-->
+                                    <form class="form" action="#" method="post">
+                                        <!--begin::Input group-->
+                                        <div class="form-group row">
+                                            <!--begin::Label-->
+                                            <!-- <label class="col-lg-2 col-form-label">Upload Files:</label> -->
+                                            <!--end::Label-->
+
+                                            <!--begin::Col-->
+                                            <div class="col-lg-10">
+                                                <!--begin::Dropzone-->
+                                                <div class="dropzone dropzone-multi" id="kt_dropzonejs_example_3">
+                                                    <!--begin::Controls-->
+                                                    <div class="dropzone-panel mb-lg-0 mb-2">
+                                                        <a class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm quyết định</a>
+                                                    </div>
+                                                    <!--end::Controls-->
+
+                                                    <!--begin::Items-->
+                                                    <div class="dropzone-items wm-200px">
+                                                        <div class="dropzone-item" style="display:none">
+                                                            <!--begin::File-->
+                                                            <div class="dropzone-file">
+                                                                <div class="dropzone-filename" title="some_image_file_name.jpg">
+                                                                    <span data-dz-name>some_image_file_name.jpg</span>
+                                                                    <strong>(<span data-dz-size>340kb</span>)</strong>
+                                                                </div>
+
+                                                                <div class="dropzone-error" data-dz-errormessage></div>
+                                                            </div>
+                                                            <!--end::File-->
+
+                                                            <!--begin::Progress-->
+                                                            <div class="dropzone-progress">
+                                                                <div class="progress">
+                                                                    <div
+                                                                        class="progress-bar bg-primary"
+                                                                        role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--end::Progress-->
+
+                                                            <!--begin::Toolbar-->
+                                                            <div class="dropzone-toolbar">
+                                                                <span class="dropzone-delete" data-dz-remove><i class="fa fa-times"></i></span>
+                                                            </div>
+                                                            <!--end::Toolbar-->
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Items-->
+                                                </div>
+                                                <!--end::Dropzone-->
+
+                                                <!--begin::Hint-->
+                                                <span class="form-text text-muted">Kích thước tệp tối đa là 1MB và số lượng tệp tối đa là 5.</span>
+                                                <!--end::Hint-->
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                    <!--end::Input group-->
+                                    </form>
+                                    <!--end::Form-->
+                                </div>
+                            </div>
+
+
 
                             <div class="row">
                                 <div class="col-md-6 form-group" style="">
