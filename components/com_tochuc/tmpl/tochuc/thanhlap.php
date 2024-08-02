@@ -92,9 +92,9 @@ $user_id = $user->id;
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal_tochuc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+<!-- <div class="modal fade" id="modal_tochuc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
     <div id="div_modal" class="modal-dialog modal-lg"></div>
-</div>
+</div> -->
 <div class="modal fade file_qdlienquan" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
     <div id="div_qllienquan" class="modal-dialog modal-lg"></div>
 </div>
@@ -124,7 +124,6 @@ $user_id = $user->id;
         //if($data != null) callback({ data: $data });
     };
     jQuery(document).ready(function($) {
-
         $('#cachthucthanhlap').select2();
         $('#coquanbanhanh').select2();
         $('#coquanchuquan').select2();

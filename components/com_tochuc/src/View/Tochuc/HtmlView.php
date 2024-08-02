@@ -46,8 +46,6 @@ class HtmlView extends BaseHtmlView
         //$doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default-dark/style.min.css');
         //$doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree/themes/default/style.css');
         $doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
-        $doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-validation/jquery.validate.min.js');
-
         $doc->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $doc->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         //$doc->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.jstree.js');
@@ -76,19 +74,18 @@ class HtmlView extends BaseHtmlView
 
     private function _initThanhLapPage(){    	
 		$document = Factory::getDocument();
+        $document->addCustomTag('<link href="'.Uri::base(true).'/media/cbcc/css/jquery.fileupload.css" rel="stylesheet" />');
+
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/global/style.bundle.css');
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/global/plugins.bundle.css');
-        $document->addCustomTag('<link href="'.Uri::base(true).'/media/cbcc/css/jquery.fileupload.css" rel="stylesheet" />');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
-        $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/moment.min.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js');
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.js');
-        // $document->addScript(Uri::base(true).'/media/cbcc/js/bootstrap/datetimepicker-vi.js');
-        
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js');
+       
+
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/dropzone/min/dropzone.min.js');
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/global/plugins.bundle.js');
     	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery.maskedinput.min.js');
@@ -97,10 +94,6 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::root(true).'/media/cbcc/js/ace-elements.min.js');
         $document->addScript(Uri::root(true).'/templates/adminlte/js/adminlte.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.validate.min.js');
-    	$document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.validate.default.js');
-        // $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-validation/jquery.validate.min.js');
-        // $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-validation/additional-methods.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.toast.js');
       
 		$model = Core::model('Tochuc/Tochuc');

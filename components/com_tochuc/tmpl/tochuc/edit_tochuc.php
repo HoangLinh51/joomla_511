@@ -225,7 +225,7 @@ $user = Factory::getUser();
                                                     </div>
                                                     <div class="modal-footer justify-content-between">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                                                        <button type="button" data-id="" class="btn btn-primary btn-choncapdonvi">Chọn</button>
+                                                        <button type="button" data-id="" class="btn btn-primary btn-choncapdonvi" data-dismiss="modal">Chọn</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -257,8 +257,7 @@ $user = Factory::getUser();
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                                 <span class="input-group-text rounded-0"><i class="far fa-calendar-alt"></i></span>
                                             </div>
-                                            <input type="text" data-target="#reservationdate" class="form-control datetimepicker-input rounded-0" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" inputmode="numeric">
-                                        </div>
+                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -463,7 +462,9 @@ jQuery(document).ready(function($) {
     });
 
     $('#reservationdate').datetimepicker({
-        format: 'DD/MM/YYYY'      
+       
+        timepicker:false,
+        format:'d.m.Y'
     });
 
     
@@ -476,9 +477,9 @@ jQuery(document).ready(function($) {
         }
     });
     $('#btn_themmoi_qdlienquan').on('click', function(){
-		$.blockUI();
+		jQuery.blockUI();
 		$('#div_qllienquan').load('/index.php?option=com_tochuc&view=tochuc&task=frmquyetdinh&format=raw', function(){
-			$.unblockUI();
+			jQuery.unblockUI();
 		});
 	});
 
