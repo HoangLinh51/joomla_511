@@ -1,6 +1,7 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Service\Provider\Database;
 
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 //require_once JPATH_LIBRARIES.DS.'cbcc'.DS.'Registry.php';
@@ -980,7 +981,7 @@ class Core{
     	$option['database'] = 'test';
     	$option['prefix']   = '';
     	
-    	$db = JDatabase::getInstance($option);
+    	$db = Database::getInstance($option);
     	
     	$query = $db->getQuery(true);
     	$query->select('mac_address')->from('license_key');
@@ -1112,14 +1113,14 @@ class Core{
 		</script>
 		';
     }
-    public static function dinhKemMotFile($iddiv,$idObject,$is_new,$year,$type,$isreadonly=0,$is_nogetcontent=0,$pdf=0)
+    public static function inputAttachmentOneFile($iddiv,$idObject,$is_new,$year,$type,$isreadonly=0,$is_nogetcontent=0,$pdf=0)
     {
         return '
 		<div id="'.$iddiv.'"></div>
 		<script type="text/javascript">
 		jQuery(function($){
-			jQuery("#'.$iddiv.'").load("index.php?option=com_core&controller=attachment&format=raw&task=dinhKemMotFile&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type.'&pdf='.$pdf.'",function(){
-				$("#'.$iddiv.' input:checkbox").attr("checked","cheched");
+			jQuery("#'.$iddiv.'").load("index.php?option=com_core&view=attachment&format=raw&task=attachmentonefile&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type.'&pdf='.$pdf.'",function(){
+			
 			});
 		});
 		</script>

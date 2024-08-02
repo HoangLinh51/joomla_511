@@ -59,6 +59,10 @@ class RawView extends BaseHtmlView
         case 'THANHLAP':
             $this->_pageQuaTrinh();
             break;
+        case 'FRMQUYETDINH':
+            $this->_formquyetdinh();
+            break;
+
         case 'default':
      		$this->_pageList();
          	break;
@@ -163,6 +167,12 @@ class RawView extends BaseHtmlView
         $this->loaihachtoan = Core::loadAssocList('ins_loaihachtoan', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
         $this->mucdotuchu = Core::loadAssocList('ins_mucdotuchu', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
 
+        parent::display();
+    }
+
+    public function _formquyetdinh(){
+        $id = Factory::getApplication()->input->getInt('id',0);
+        $this->donvi_id = $id;
         parent::display();
     }
 

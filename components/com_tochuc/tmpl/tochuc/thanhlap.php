@@ -92,10 +92,13 @@ $user_id = $user->id;
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal_tochuc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="width: 900px; left: 35%; display: none;">
-    <div id="div_modal" class="modal-dialog modal-lg">
-    </div>
+<div class="modal fade" id="modal_tochuc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div id="div_modal" class="modal-dialog modal-lg"></div>
 </div>
+<div class="modal fade file_qdlienquan" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div id="div_qllienquan" class="modal-dialog modal-lg"></div>
+</div>
+
 <script>
     var DataSourceTree = function(options) {
 	    this._data 	= options.data;

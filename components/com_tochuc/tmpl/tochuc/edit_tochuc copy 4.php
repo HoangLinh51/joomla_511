@@ -275,10 +275,51 @@ $user = Factory::getUser();
                                 </div>
                                 <div class="col-md-6 form-group div_quyetdinhlienquan" style="display: none;">
                                     <div class="d-flex justify-content-end align-items-center" style="height: 100%;">
-                                        <span data-target=".file_qdlienquan" data-toggle="modal" id="btn_themmoi_qdlienquan" class="btn btn-primary">Thêm mới</span>
+                                        <span data-target="#file_qdlienquan" data-toggle="modal" class="btn btn-primary btn_themmoi_qdlienquan">Thêm mới</span>
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="modal fade" id="file_qdlienquan" aria-hidden="true" style="display: none;">
+                                <div id="div_qllienquan"></div>
+                                <!-- <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Thêm mới quyết định liên quan</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="qdlienquan_mahieu">Số QĐ liên quan</label>
+                                                        <input type="text" class="form-control rounded-0" id="qdlienquan_mahieu" name="qdlienquan_mahieu">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="qdlienquan_mahieu">Ngày ban hành</label>
+                                                        <input type="text" class="form-control rounded-0" id="qdlienquan_mahieu" name="qdlienquan_mahieu">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="qdlienquan_mahieu">Cơ quan ban hành</label>
+                                                        <input type="text" class="form-control rounded-0" id="qdlienquan_mahieu" name="qdlienquan_mahieu">
+                                                    </div>
+                                                    <?php //echo Core::inputAttachmentOneFile('attactment_qdlienquan',null,1, date('Y'),-1) ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                            <button type="button" data-id="" class="btn btn-primary btn-saveqdlienquan">Lưu</button>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+
+
                             
                             <div class="row">
                                 <div class="col-lg-12">
@@ -461,12 +502,77 @@ jQuery(document).ready(function($) {
     $('#goivitrivieclam').select2({
         width: "100%"
     });
+    // $('#goibienche').select2({
+    //     width: "100%"
+    // });
+
+     //Date picker
+     
+    // $('#reservationdate').datetimepicker({
+       
+    //     format: 'L',
+    //     language: 'vi'
+       
+    // });
 
     $('#reservationdate').datetimepicker({
         format: 'DD/MM/YYYY'      
     });
 
-    
+    // // set the dropzone container id
+    // const id = "#kt_dropzonejs_example_3";
+    // const dropzone = document.querySelector(id);
+
+    // // set the preview element template
+    // var previewNode = dropzone.querySelector(".dropzone-item");
+    // previewNode.id = "";
+    // var previewTemplate = previewNode.parentNode.innerHTML;
+    // previewNode.parentNode.removeChild(previewNode);
+
+    // var myDropzone = new Dropzone(id, { // Make the whole body a dropzone
+    //     url: "/index.php?option=com_tochuc&controller=tochuc&task=upload'); ?>", // Set the url for your upload script location
+    //     parallelUploads: 20,
+    //     maxFilesize: 1, // Max filesize in MB
+    //     previewTemplate: previewTemplate,
+    //     previewsContainer: id + " .dropzone-items", // Define the container to display the previews
+    //     clickable: id + " .dropzone-select" // Define the element that should be used as click trigger to select files.
+    // });
+
+    // myDropzone.on("addedfile", function (file) {
+    //     // Hookup the start button
+    //     const dropzoneItems = dropzone.querySelectorAll('.dropzone-item');
+    //     dropzoneItems.forEach(dropzoneItem => {
+    //         dropzoneItem.style.display = '';
+    //     });
+    // });
+
+    // // Update the total progress bar
+    // myDropzone.on("totaluploadprogress", function (progress) {
+    //     const progressBars = dropzone.querySelectorAll('.progress-bar');
+    //     progressBars.forEach(progressBar => {
+    //         progressBar.style.width = progress + "%";
+    //     });
+    // });
+
+    // myDropzone.on("sending", function (file) {
+    //     // Show the total progress bar when upload starts
+    //     const progressBars = dropzone.querySelectorAll('.progress-bar');
+    //     progressBars.forEach(progressBar => {
+    //         progressBar.style.opacity = "1";
+    //     });
+    // });
+
+    // // Hide the total progress bar when nothing"s uploading anymore
+    // myDropzone.on("complete", function (progress) {
+    //     const progressBars = dropzone.querySelectorAll('.dz-complete');
+
+    //     setTimeout(function () {
+    //         progressBars.forEach(progressBar => {
+    //             progressBar.querySelector('.progress-bar').style.opacity = "0";
+    //             progressBar.querySelector('.progress').style.opacity = "0";
+    //         });
+    //     }, 300);
+    // });
 
     $('#quyetdinhlienquan').on('change', function(){
         if(this.checked) {
@@ -475,13 +581,14 @@ jQuery(document).ready(function($) {
             $('.div_quyetdinhlienquan').css('display','none');  // show the div
         }
     });
-    $('#btn_themmoi_qdlienquan').on('click', function(){
+
+    $('#btn_add_quyetdinh').on('click', function(){
 		$.blockUI();
 		$('#div_qllienquan').load('/index.php?option=com_tochuc&view=tochuc&task=frmquyetdinh&format=raw', function(){
 			$.unblockUI();
 		});
 	});
-
+    
     var tree_data_ins_cap = <?php echo $this->tree_data_ins_cap; ?>;		
 	var treeDataCapDonvi = new DataSourceTree({data: tree_data_ins_cap});	
     $('#thanhlap-tochuc-ins_cap').ace_tree({

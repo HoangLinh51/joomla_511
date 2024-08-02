@@ -139,7 +139,7 @@ $doc = Factory::getDocument();
 
     var myDropzone = new Dropzone(id, { // Make the whole body a dropzone
 		url: "/index.php?option=com_core&controller=attachment&format=raw&task=doattachment", // Set the url
-		paramName: "file",
+		// paramName: "file",
 		autoProcessQueue: true, // Prevent automatic file upload
 		uploadMultiple: false, // Upload files one by one
         parallelUploads: 20,
@@ -200,6 +200,7 @@ $doc = Factory::getDocument();
         }, 300);
     });	
 	
+	
 	myDropzone.on("success", function(file, response, index) {
 		var fileElement = file.previewElement;
 		var data =  JSON.parse(response)
@@ -222,15 +223,43 @@ $doc = Factory::getDocument();
 				}
 			}
 		}
-    });
+			// var data =  JSON.parse(response)
+			
+			
+			// var linkElement = document.createElement("a");
+            // // Assuming response contains the URL to the uploaded file
+			// const dropzoneItems = dropzone.querySelectorAll('.dropzone-item');
+			// 	dropzoneItems.forEach((dropzoneItem, index) => {
+			// 		console.log(index);
+			// 		var uploadLinks = document.getElementsByClassName("linkFile");
+					
+			// 		uploadLinks[index].appendChild(linkElement)
+			// 		console.log(uploadLinks[index]);
+			// 	dropzoneItem.style.display = '';
+			// });
+			// var fileElement = document.querySelector(`.dropzone-file[data-dz-name="${file.name}"]`);
+			// if (fileElement) {
+			// 	// var uploadLinks = document.getElementById("linkFile");
+			// 	var linkElement = document.createElement("a");
+			// 	linkElement.href = data.fileUrl; // Use the returned file URL
+			// 	linkElement.textContent = data.file; // Use the returned file name
+			// 	linkElement.target = "_blank"; // Open link in a new tab
+			// 	linkElement.className = "filetaga";
+			// 	// uploadLinks.textContent  = '';
+			// 	// uploadLinks.appendChild(linkElement);
+			// 	// uploadLinks.append(document.createElement("br"));
+							
+			// 	var filenameSpan = fileElement.querySelector(".dropzone-filename span[data-dz-name]");
+				
+			// 	if (filenameSpan) {
+			// 		filenameSpan.appendChild(linkElement);
+			// 	}
+			// }
+        });
 </script>
 <style>
 a.dz-clickable:hover{
     border-top: 3px solid transparent !important;
-}
-.filetaga{
-	color: #7E8299;
-
 }
 .filetaga:hover{
 	border-top: 3px solid transparent !important;
