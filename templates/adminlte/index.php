@@ -37,11 +37,14 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/select2/css/select2.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/toastr/toastr.min.css');
 
+
 	$doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
+	$doc->addScript(Uri::root(true).'/media/legacy/js/jquery-noconflict.js');
+
 	$doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-ui.js');
-	// $doc->addScript(Uri::root(true).'/media/vendor/jquery/js/jquery.min.js');
+	//$doc->addScript(Uri::root(true).'/media/vendor/jquery/js/jquery.min.js');
 	//$doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
-	$doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
+	// $doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.bundle.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mousewheel/jquery.mousewheel.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/dist/js/adminlte.js');

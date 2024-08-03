@@ -28,6 +28,9 @@ $doc = Factory::getDocument();
 	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/moment.min.js" type="text/javascript"></script>
 	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
 	<script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.js" type="text/javascript"></script>
+	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
+	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
+
 	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/plugins/global/style.bundle.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />

@@ -2,6 +2,7 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Decentralization\Administrator\View\Actions\HtmlView;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
@@ -253,11 +254,19 @@ $user = Factory::getUser();
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Ngày ban hành:</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" id="ngaybanhanh" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" inputmode="numeric">
+                                        </div>
+                                        <!-- <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                                 <span class="input-group-text rounded-0"><i class="far fa-calendar-alt"></i></span>
                                             </div>
-                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">                                        </div>
+                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">                                       
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -429,6 +438,10 @@ $user = Factory::getUser();
     <input type="hidden" name="is_valid_name" id="is_valid_name" value="">
     <input type="hidden" id="is_valid_code">
 </form>
+
+<!-- <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script> -->
+
+
 <script>    
 jQuery(document).ready(function($) {
     $('#type_created').select2({
@@ -461,27 +474,7 @@ jQuery(document).ready(function($) {
         width: "100%"
     });
 
-    $('#reservationdate').datetimepicker({
-       
-        timepicker:false,
-        format:'d.m.Y'
-    });
-
-    
-
-    $('#quyetdinhlienquan').on('change', function(){
-        if(this.checked) {
-            $('.div_quyetdinhlienquan').css('display','block');  // show the div
-        } else {
-            $('.div_quyetdinhlienquan').css('display','none');  // show the div
-        }
-    });
-    $('#btn_themmoi_qdlienquan').on('click', function(){
-		jQuery.blockUI();
-		$('#div_qllienquan').load('/index.php?option=com_tochuc&view=tochuc&task=frmquyetdinh&format=raw', function(){
-			jQuery.unblockUI();
-		});
-	});
+   
 
     var tree_data_ins_cap = <?php echo $this->tree_data_ins_cap; ?>;		
 	var treeDataCapDonvi = new DataSourceTree({data: tree_data_ins_cap});	
@@ -522,10 +515,32 @@ jQuery(document).ready(function($) {
                 })
                 return false;
             }
-			
-		
-       
     })
+
+    $('#ngaybanhanh').inputmask('dd/mm/yyyy', { 'placeholder': '__/__/____' })
+
+
+    // $('#reservationdate').datetimepicker({
+       
+    //    timepicker:false,
+    //    format:'d.m.Y'
+    // });
+
+   
+   $('#quyetdinhlienquan').on('change', function(){
+       if(this.checked) {
+           $('.div_quyetdinhlienquan').css('display','block');  // show the div
+       } else {
+           $('.div_quyetdinhlienquan').css('display','none');  // show the div
+       }
+   });
+   
+   $('#btn_themmoi_qdlienquan').on('click', function(){
+       jQuery.blockUI();
+       $('#div_qllienquan').load('/index.php?option=com_tochuc&view=tochuc&task=frmquyetdinh&format=raw', function(){
+           jQuery.unblockUI();
+       });
+   });
 
 
 

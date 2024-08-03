@@ -33,7 +33,7 @@ class HtmlView extends BaseHtmlView
             break;
         case 'THANHLAP':
             $this->_initThanhLapPage();
-            break;	
+            break;
         case 'default':
      		// $this->_pageList();
          	break;
@@ -81,20 +81,33 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
+        
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/moment.min.js');
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js');
-       
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        // $document->addScript(Uri::root(true). '/templates/adminlte/plugins/jquery/jquery-noconflict.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
+    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
 
-        $document->addScript(Uri::base(true).'/templates/adminlte/plugins/dropzone/min/dropzone.min.js');
-        $document->addScript(Uri::base(true).'/templates/adminlte/plugins/global/plugins.bundle.js');
-    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery.maskedinput.min.js');
+
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/moment.min.js');
+
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js');
+
+        
+        // $document->addScript(Uri::base(true).'/templates/adminlte/plugins/dropzone/min/dropzone.min.js');
+        // $document->addScript(Uri::base(true).'/templates/adminlte/plugins/global/plugins.bundle.js');
+    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/ace-elements.min.js');
         $document->addScript(Uri::root(true).'/templates/adminlte/js/adminlte.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.toast.js');
+
       
 		$model = Core::model('Tochuc/Tochuc');
         $app = Factory::getApplication()->input;
