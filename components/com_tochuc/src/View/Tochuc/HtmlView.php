@@ -29,28 +29,28 @@ class HtmlView extends BaseHtmlView
         $this->setLayout(strtolower($layout));    
         switch($layout){
         case 'EDIT':
-            $this->_initEditPage();
+            $this->_initDefaultPage($layout);
             break;
         case 'THANHLAP':
             $this->_initThanhLapPage();
             break;
         case 'default':
-     		// $this->_pageList();
+     		$this->_initDefaultPage($layout);
          	break;
         }
         parent::display($tpl);
 
-        $doc = Factory::getDocument();
+        // $doc = Factory::getDocument();
 
-        $doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
-        //$doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default-dark/style.min.css');
-        //$doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree/themes/default/style.css');
-        $doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
-        $doc->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
-        $doc->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
-        //$doc->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.jstree.js');
+        // $doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
+        // //$doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default-dark/style.min.css');
+        // //$doc->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree/themes/default/style.css');
+        // $doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
+        // $doc->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
+        // $doc->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
+        // //$doc->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.jstree.js');
 
-        $doc->addScript(Uri::root(true) . '/media/cbcc/js/caydonvi.js' );
+        // $doc->addScript(Uri::root(true) . '/media/cbcc/js/caydonvi.js' );
 
 
     }
@@ -81,30 +81,18 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
-        
-        $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-3.6.0.min.js');
-        // $document->addScript(Uri::root(true). '/templates/adminlte/plugins/jquery/jquery-noconflict.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
-        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
-    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js');
-        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
+        $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
 
-
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
         // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/moment.min.js');
+        // $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
 
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js');
-
-        
-        // $document->addScript(Uri::base(true).'/templates/adminlte/plugins/dropzone/min/dropzone.min.js');
-        // $document->addScript(Uri::base(true).'/templates/adminlte/plugins/global/plugins.bundle.js');
-    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/ace-elements.min.js');
-        $document->addScript(Uri::root(true).'/templates/adminlte/js/adminlte.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
+    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.toast.js');
 

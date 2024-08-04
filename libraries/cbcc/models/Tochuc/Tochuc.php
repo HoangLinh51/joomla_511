@@ -294,7 +294,6 @@ class Tochuc_Model_Tochuc {
      */
     public function saveDept($formData) {
         $table = Core::table('Tochuc/InsDept');
-        //var_dump($table);exit;
         $reference_id = (int) $formData['parent_id'];
         $data = array(
             'id' => $formData['id'],
@@ -302,11 +301,9 @@ class Tochuc_Model_Tochuc {
             'name' => $formData['name'],
             'name_dieudong' => $formData['name_dieudong'],
             's_name' => $formData['s_name'],
-            // 'ss_name' => $formData['ss_name'],
             'code' => $formData['code'],
             'ins_loaihinh' => $this->getLoaihinhByIdCap((int) $formData['ins_cap']),
             'ins_cap' => (int) $formData['ins_cap'],
-//				'ins_cap_sn'=>$formData['ins_cap_sn'],
             'number_created' => $formData['number_created'],
             'date_created' => $formData['date_created'],
             'type_created' => $formData['type_created'],
@@ -321,9 +318,6 @@ class Tochuc_Model_Tochuc {
             'goiluong' => $formData['goiluong'],
             'goichucvu' => $formData['goichucvu'],
             'type' => $formData['type'],
-//				'giao_bc'=>$formData['giao_bc'],
-//				'number_bc'=>$formData['number_bc'],
-//				'year_bc'=>$formData['year_bc'],
             'chukyso_nguoidaidien_id' => $formData['chukyso_nguoidaidien_id'],
             'chukyso_sohieu' => $formData['chukyso_sohieu'],
             'chukyso_ngaycap' => TochucHelper::strDateVntoMySql($formData['chukyso_ngaycap']),
@@ -334,8 +328,6 @@ class Tochuc_Model_Tochuc {
             'eng_name' => $formData['eng_name'],
             'fax' => $formData['fax'],
             'phucapdacthu' => $formData['phucapdacthu'],
-            // 'ins_level' => $formData['ins_level'],
-            // 'ins_level'=>$this->getHangDonviByIdGoiChucvu($formData['goichucvu']),
             'vanban_active' => $formData['vanban_active'],
             'vanban_created' => $formData['vanban_created'],
             'goihinhthuchuongluong' => $formData['goihinhthuchuongluong'],
@@ -348,7 +340,7 @@ class Tochuc_Model_Tochuc {
             'ngayhieuchinh' => date('Y-m-d'),
             'nguoihieuchinh' => Factory::getUser()->id,
         );
-//                var_dump($data);die;
+        var_dump($data);die;
         if ((int) $formData['id'] == 0) {
             // Specify where to insert the new node.
             //$reference_id = (int)$formData['parent_id'];

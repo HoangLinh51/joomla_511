@@ -1,11 +1,12 @@
 <?php
-/**
- * @package     Mywalks.Site
- * @subpackage  com_mywalks
- *
- * @copyright   Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
+/*****************************************************************************
+ * @Author                : HueNN                                            *
+ * @CreatedDate           : 2024-08-04 17:42:30                              *
+ * @LastEditors           : HueNN                                            *
+ * @LastEditDate          : 2024-08-04 17:42:30                              *
+ * @FilePath              : Joomla_511_svn/components/com_tochuc/src/Controller/DisplayController.php*
+ * @CopyRight             : Dnict                                            *
+ ****************************************************************************/
 
 namespace Joomla\Component\Tochuc\Site\Controller;
 

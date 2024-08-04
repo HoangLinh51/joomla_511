@@ -1,11 +1,12 @@
 <?php 
-/**
- * @package     Joomla.Site
- * @subpackage  com_tochuc
- *
- * @copyright   (C) 2009 Open Source Matters, Inc. <https://www.joomla.org>
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
+/*****************************************************************************
+ * @Author                : HueNN                                            *
+ * @CreatedDate           : 2024-08-04 17:29:45                              *
+ * @LastEditors           : HueNN                                            *
+ * @LastEditDate          : 2024-08-04 17:29:45                              *
+ * @FilePath              : Joomla_511_svn/components/com_tochuc/src/View/Tochucs/RawView.php*
+ * @CopyRight             : Dnict                                            *
+ ****************************************************************************/
 
  namespace Joomla\Component\Tochuc\Site\View\Tochuc;
 
@@ -62,7 +63,9 @@ class RawView extends BaseHtmlView
         case 'FRMQUYETDINH':
             $this->_formquyetdinh();
             break;
-
+        case 'ADDQUYETDINH':
+            $this->_addquyetdinh();
+            break;
         case 'default':
      		$this->_pageList();
          	break;
@@ -76,8 +79,8 @@ class RawView extends BaseHtmlView
             $model = Core::model('Tochuc/Tochuc');
             $rows = $model->read($id);
         }
-        $caybaocao	=	$model->getCayBaocao($rows->id);
-    	$this->caybaocao = $caybaocao;
+        // $caybaocao	=	$model->getCayBaocao($rows->id);
+    	// $this->caybaocao = $caybaocao;
     }
 
     private function _getDetail(){
@@ -148,10 +151,10 @@ class RawView extends BaseHtmlView
     	for($i=0; $i<count($ins_dept_vanban); $i++){
             $ins_dept_vanban[$i]->taptin = $model->taptindinhkem($ins_dept_vanban[$i]->ins_vanban_id);    		
     	}
-    	$caybaocao	=	$model->getCayBaocao($row->id);
+    	// $caybaocao	=	$model->getCayBaocao($row->id);
 
         $this->title = $title;
-        $this->caybaocao = $caybaocao;
+        // $this->caybaocao = $caybaocao;
         $this->tree_data_ins_cap = json_encode($tree_data_ins_cap);
         $this->row = $row;
         $this->ins_dept_vanban = $ins_dept_vanban;
@@ -175,6 +178,58 @@ class RawView extends BaseHtmlView
         $this->donvi_id = $id;
         parent::display();
     }
+
+    public function _addQuyetDinh() {
+        // Retrieve and sanitize GET parameters
+        $app = Factory::getApplication()->input;
+        $mahieu = htmlspecialchars($app->get('qdlienquan_mahieu'), ENT_QUOTES, 'UTF-8');
+        
+        $ngaybanhanh = $app->getVar('qdlienquan_ngaybanhanh');
+        $coquan_banhanh = htmlspecialchars($app->get('qdlienquan_coquan'), ENT_QUOTES, 'UTF-8');
+        $idFileQDlienquan = $app->get('qdlienquan_file');
+        
+        // Initialize model
+        $model = Core::model('Tochuc/Tochuc');
+        // Save document into database
+        $vanban_id = $model->saveVanban([
+            'tieude' => "Quyết định liên quan",
+            'mahieu' => $mahieu,
+            'ngaybanhanh' => $ngaybanhanh,
+            'coquan_banhanh' => $coquan_banhanh
+        ]);
+    
+        if (!$vanban_id) {
+            // Handle the error when saving the document fails
+            Core::PrintJson(['error' => 'Failed to save document']);
+            die;
+        }
+    
+        // Update attachments
+        $mapperAttachment = Core::model('Core/Attachment');
+        $fileNames = [];
+        
+        $mapperAttachment->updateTypeIdByCode($idFileQDlienquan, 1, true, $vanban_id);
+        $attachment = $model->taptindinhkem1($idFileQDlienquan);
+        
+        if ($attachment && isset($attachment[0]->filename)) {
+            $fileNames[] = $attachment[0]->filename;
+        }
+
+        // Prepare response data
+        $response = [
+            'mahieu' => $mahieu,
+            'ngaybanhanh' => $ngaybanhanh,
+            'coquan_banhanh' => $coquan_banhanh,
+            'vanban_id' => $vanban_id,
+            'tenfile' => $fileNames,
+            'code' => $idFileQDlienquan
+        ];
+    
+        // Return JSON response
+        Core::PrintJson($response);
+        die;
+    }
+    
 
 
    

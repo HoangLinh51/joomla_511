@@ -38,14 +38,15 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/toastr/toastr.min.css');
 
 
-	$doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
+	// $doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
+	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery/jquery.min.js');
 	$doc->addScript(Uri::root(true).'/media/legacy/js/jquery-noconflict.js');
-
-	$doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-ui.js');
+	// $doc->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery-ui.js');
 	//$doc->addScript(Uri::root(true).'/media/vendor/jquery/js/jquery.min.js');
 	//$doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
-	// $doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.bundle.min.js');
+	$doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
+	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
+	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.bundle.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mousewheel/jquery.mousewheel.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/dist/js/adminlte.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/raphael/raphael.min.js');
@@ -71,20 +72,56 @@ if ($coreTemplate->isLogin() == true) {
 <script>
 var app = {};
 var loadNoticeBoardSuccess = function(title,text){
-	jQuery.gritter.add({
-		title: title,
-		text: text,
-		time: '2000',
-		class_name: 'gritter-success gritter-center gritter-light'
-	});
+	// jQuery.gritter.add({
+	// 	title: title,
+	// 	text: text,
+	// 	time: '2000',
+	// 	class_name: 'gritter-success gritter-center gritter-light'
+	// });
+	toastr.error(text, title)
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": true,
+		"progressBar": true,
+		"positionClass": "toast-top-right",
+		"preventDuplicates": false,
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
 };
 var loadNoticeBoardError = function(title,text){
-	jQuery.gritter.add({
-		title: title,
-		text: text,
-		time: '2000',
-		class_name: 'gritter-error gritter-light'
-	});
+	toastr.error(text, title)
+	toastr.options = {
+		"closeButton": true,
+		"debug": false,
+		"newestOnTop": true,
+		"progressBar": true,
+		"positionClass": "toast-top-right",
+		"preventDuplicates": false,
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
+	// jQuery.gritter.add({
+	// 	title: title,
+	// 	text: text,
+	// 	time: '2000',
+	// 	class_name: 'gritter-error gritter-light'
+	// });
 };
 </script>
 <jdoc:include type="head" />
@@ -235,6 +272,9 @@ body:not(.layout-fixed) .main-sidebar {
 	background-color: rgba(255,255,255,.1) !important;
     color: #fff !important;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
+}
+.toast-top-right {
+	right: 32px !important;
 }
 </style>
 

@@ -103,7 +103,7 @@ class AttachmentController extends BaseController{
             $uploadfile = $dirPath .'/'. basename($new_name);
             if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
                 $fileUrl = "index.php?option=com_core&controller=attachment&format=raw&task=download&year=".$year."&code=".$new_name."";
-                echo json_encode(['success' => true, 'file' => $file['name'], 'fileUrl' => $fileUrl]);
+                echo json_encode(['success' => true, 'file' => $file['name'], 'fileUrl' => $fileUrl, 'code' => $new_name]);
                 // array_push($response, ['success' => true, 'file' => $file['name'], 'fileUrl' => $fileUrl]);
             } else {
                 echo json_encode(['success' => false, 'error' => 'Failed to move uploaded file.']);

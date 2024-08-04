@@ -148,11 +148,19 @@ $doc = Factory::getDocument();
 			previewsContainer: dropzoneId + " .dropzone-items", // Define the container to display the previews
 			clickable: dropzoneId + " .dropzone-select", // Define the element that should be used as click trigger to select files.
 			init: function() {
+				this.on("addedfile", function(file) {
+					// If more than one file is present, remove the old file
+					if (this.files.length > 1) {
+						this.removeFile(this.files[0]);
+					}
+				});
 				this.on("maxfilesexceeded", function(file) {
+					console.log(this.files.length);
 					// Remove the previous file if a new file is added
 					if (this.files[1] != null) {
 						this.removeFile(this.files[0]);
 					}
+					
 				});
 			}
 		});
@@ -196,8 +204,10 @@ $doc = Factory::getDocument();
 		});	
 		
 		singleFile.on("success", function(file, response) {
-			var data =  JSON.parse(response)
+			var data =  JSON.parse(response);
+			var iddiv = "<?php echo $this->iddiv ?>";
 			var uploadLinks = document.getElementById("singleFile");
+			var inputFile = document.getElementById(iddiv+"_file");
 			var linkElement = document.createElement("a");
 			linkElement.href = data.fileUrl; // Use the returned file URL
 			linkElement.textContent = data.file; // Use the returned file name
@@ -205,6 +215,16 @@ $doc = Factory::getDocument();
 			linkElement.className = "filetaga";
 			uploadLinks.textContent  = '';
 			uploadLinks.appendChild(linkElement);
+
+			// var hiddenElement = document.createElement('input');
+			// Set the attributes for the hidden input
+			// hiddenElement.type = 'hidden';
+			// hiddenElement.name = 'idFile-' + iddiv + '[]'; // Set the name attribute dynamically
+			// hiddenElement.id = 'idFile-' + iddiv; // Set the ID attribute dynamically
+			// hiddenElement.className = 'file-ids'; // Set the class attribute
+			// hiddenElement.value = data.code; // Set the value of the hidden input
+			// formName.appendChild(hiddenElement);
+			inputFile.value = data.code;
 		});
 	}
 

@@ -73,7 +73,7 @@ jQuery(document).ready(function($){
 		});	
 	};
 	$('#active_tong').on('change', function(){
-		window.location.href = '/index.php?option=com_tochuc&controller=tochuc&task=default&active='+$('#active_tong option:selected').val();
+		window.location.href = '/index.php?option=com_tochuc&controller=tochucs&task=default&active='+$('#active_tong option:selected').val();
 	})
 	var com_jstree = $('#main-content-tree').jstree({
 	  		"core":{		  		

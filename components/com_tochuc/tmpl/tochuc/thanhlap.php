@@ -35,9 +35,9 @@ $user_id = $user->id;
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <div class="dropdown-menu" role="menu" style="">
-                                <a class="dropdown-item" href="index.php?option=com_tochuc&controller=tochuc&task=orderup&id=<?php echo $this->row->id; ?>"><i class="fa fa-share-square"></i> Lưu và Tiếp tục</a>
-                                <a class="dropdown-item" href="index.php?option=com_tochuc&controller=tochuc&task=orderdown&id=<?php echo $this->row->id; ?>"><i class="fas fa-save"></i> Lưu và Thêm mới</a>
-                                <a class="dropdown-item" href="index.php?option=com_tochuc&controller=tochuc&task=orderdown&id=<?php echo $this->row->id; ?>"><i class="far fa-save"></i> Lưu và Đóng</a>
+                                <a class="dropdown-item" href="#" id="btnThanhlapSubmitAndContinue"><i class="fa fa-share-square"></i> Lưu và Tiếp tục</a>
+                                <a class="dropdown-item" href="#" id="btnThanhlapSubmitAndNew"><i class="fas fa-save"></i> Lưu và Thêm mới</a>
+                                <a class="dropdown-item" href="#" id="btnThanhlapSubmitAndClose"><i class="far fa-save"></i> Lưu và Đóng</a>
 
                             </div>
                         </div>
@@ -64,14 +64,17 @@ $user_id = $user->id;
                             <div class="input-group my-colorpicker2 colorpicker-element" data-colorpicker-id="2">
                                 <input type="text" value="<?php echo Core::loadResult('ins_dept', array('name'), array('id = ' => $this->row->parent_id)); ?>" name="parent_name" id="parent_name" readonly="readonly" class="form-control rounded-0 validNameTochuc">
                                 <div class="input-group-append">
-                                    <span class="input-group-text" data-target="#tochuc-parent-tree_detail" data-toggle="collapse"><i class="fas fa-square"></i></span>
+                                    <span class="input-group-text" data-target="#tochuc-parent-tree_detail" data-toggle="collapse" aria-expanded="false"><i class="fas fa-square"></i></span>
                                 </div>
                             </div>
-                            <div id="tochuc-parent-tree_detail" class="collapse">
-                                <div id="tochuc-parent-tree"></div>
+                            <div class="collapse" id="tochuc-parent-tree_detail" >
+                                <div id="tochuc-parent-tree">ưeqwewq</div>
                             </div>
                         </div>
                     </div>
+                    <!-- <script>
+                         $('#tochuc-parent-tree_detail1').on('expanded.lte.cardwidget');
+                    </script> -->
                     <div class="col-md-6">
                         <label class="control-label" for="name">Loại<span class="required">*</span></label>
                         <div class="controls">

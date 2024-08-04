@@ -40,7 +40,7 @@ $doc = Factory::getDocument();
 	<div id="" class="row" style="">
 		<div class="col-lg-6">
 			<!--begin::Form-->
-			<form class="form" action="#" id="my-dropzone" method="post">
+			<div class="form" action="#" id="my-dropzone" method="post">
 				<!--begin::Input group-->
 				<div class="form-group row">
 					<!--begin::Label-->
@@ -108,7 +108,7 @@ $doc = Factory::getDocument();
 				<input type="hidden" id="pdf" name="pdf" value="<?php echo $this->pdf ?>" />
 				<input type="hidden" id="is_nogetcontent" name="is_nogetcontent" value="<?php echo $this->is_nogetcontent ?>" />
 				<input type="hidden" id="id_user" name="id_user" value="<?php echo $this->id_user ?>" />
-			</form>
+			</div>
 			<!--end::Form-->
 		</div>
 	</div>
