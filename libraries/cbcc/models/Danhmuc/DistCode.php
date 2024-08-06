@@ -1,5 +1,23 @@
+
 <?php
-class Danhmuc_Model_DistCode extends JModelLegacy
+
+/**
+ * @ file: DistCode.php
+ * @ Author: huenn.dnict@gmail.com
+ * @ Create Time: 2024-06-20 11:06:53
+ * @ Modified by: Your name
+ * @ Modified time: 2024-08-06 14:07:00
+ * @ Description:
+ */
+
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Pagination\Pagination;
+use Joomla\Utilities\ArrayHelper;
+
+
+class Danhmuc_Model_DistCode extends ListModel
 {
 	/**
 	 * @param mixed $formData
@@ -49,7 +67,7 @@ class Danhmuc_Model_DistCode extends JModelLegacy
 	}
 	
 	function getTinhThanh(){
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$query = 'select code,name from city_code order by name';
 		$db->setQuery($query);
 		return $db->loadAssocList();
@@ -60,7 +78,7 @@ class Danhmuc_Model_DistCode extends JModelLegacy
 		$flag = false;
 		if (count( $cid ))
 		{
-			JArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$table = Core::table('Danhmuc/DistCode');
 			$src['status'] = $publish;
 			for ($i = 0; $i < count($cid); $i++) {
@@ -73,9 +91,9 @@ class Danhmuc_Model_DistCode extends JModelLegacy
 	function __construct(){
 		parent::__construct();
 	
-		$array = JRequest::getVar('cid',  0, '', 'array');
+		$array = Factory::getApplication()->input->getVar('cid',  0, '', 'array');
 		global $mainframe, $option;
-		$mainframe = &JFactory::getApplication();
+		$mainframe = &Factory::getApplication();
 	
 		// Get the pagination request variables
 		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
@@ -87,8 +105,8 @@ class Danhmuc_Model_DistCode extends JModelLegacy
 	}
 	
 	function _buildQuery($tb=null,$order=null){
-		$db = &JFactory::getDbo();
-		$post = JRequest::get('post');
+		$db = &Factory::getDbo();
+		$post = Factory::getApplication()->get('post');
 	
 		$query = 'SELECT * FROM '.$tb;
 		if(!empty($post['name_search'])){
@@ -116,7 +134,7 @@ class Danhmuc_Model_DistCode extends JModelLegacy
 	function getData($tb=null,$order=null)
 	{
 		// Load the data
-		$db = &JFactory::getDbo();
+		$db = &Factory::getDbo();
 		if (empty( $this->_data )) {
 			$query = $this->_buildQuery($tb,$order);
 			$this->_data =  $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
@@ -140,7 +158,7 @@ class Danhmuc_Model_DistCode extends JModelLegacy
 		if (empty($this->_pagination))
 		{
 			jimport('joomla.html.pagination');
-			$this->_pagination = new JPagination( $this->getTotal($tb,$order), $this->getState('limitstart'), $this->getState('limit') );
+			$this->_pagination = new Pagination( $this->getTotal($tb,$order), $this->getState('limitstart'), $this->getState('limit') );
 		}
 		return $this->_pagination;
 	}

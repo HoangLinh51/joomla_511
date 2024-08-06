@@ -151,10 +151,10 @@ class RawView extends BaseHtmlView
     	for($i=0; $i<count($ins_dept_vanban); $i++){
             $ins_dept_vanban[$i]->taptin = $model->taptindinhkem($ins_dept_vanban[$i]->ins_vanban_id);    		
     	}
-    	// $caybaocao	=	$model->getCayBaocao($row->id);
+    	$caybaocao	=	$model->getCayBaocao($row->id);
 
         $this->title = $title;
-        // $this->caybaocao = $caybaocao;
+        $this->caybaocao = $caybaocao;
         $this->tree_data_ins_cap = json_encode($tree_data_ins_cap);
         $this->row = $row;
         $this->ins_dept_vanban = $ins_dept_vanban;

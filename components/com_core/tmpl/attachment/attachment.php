@@ -203,6 +203,7 @@ $doc = Factory::getDocument();
 	myDropzone.on("success", function(file, response, index) {
 		var fileElement = file.previewElement;
 		var data =  JSON.parse(response)
+		var iddiv = "<?php echo $this->iddiv ?>";
 		if (fileElement) {
 			// Find the .dropzone-filename element
 			var filenameElement = fileElement.querySelector(".dropzone-filename");
@@ -211,6 +212,15 @@ $doc = Factory::getDocument();
 				linkElement.textContent = data.file; // Use the returned file name
 				linkElement.target = "_blank"; // Open link in a new tab
 				linkElement.className = "filetaga";
+
+			var hiddenElement = document.createElement('input');
+				hiddenElement.type = 'hidden';
+				hiddenElement.name = 'idFile-' + iddiv + '[]'; // Set the name attribute dynamically
+				hiddenElement.id = 'idFile-' + iddiv; // Set the ID attribute dynamically
+				hiddenElement.className = 'file-ids'; // Set the class attribute
+				hiddenElement.value = data.code; // Set the value of the hidden input
+				
+
 			if (filenameElement) {
 				// Set the data-dz-name attribute to the file name
 				var nameSpan = filenameElement.querySelector("span[data-dz-name]");
@@ -219,6 +229,7 @@ $doc = Factory::getDocument();
 					nameSpan.setAttribute('data-dz-name', file.name);
 					nameSpan.textContent  = '';
 					nameSpan.appendChild(linkElement);
+					nameSpan.appendChild(hiddenElement);
 				}
 			}
 		}

@@ -317,7 +317,7 @@ class Tochuc_Model_Tochuc {
             'goibienche' => $formData['goibienche'],
             'goiluong' => $formData['goiluong'],
             'goichucvu' => $formData['goichucvu'],
-            'type' => $formData['type'],
+            'type' => $formData['type_content'],
             'chukyso_nguoidaidien_id' => $formData['chukyso_nguoidaidien_id'],
             'chukyso_sohieu' => $formData['chukyso_sohieu'],
             'chukyso_ngaycap' => TochucHelper::strDateVntoMySql($formData['chukyso_ngaycap']),
@@ -339,8 +339,17 @@ class Tochuc_Model_Tochuc {
             'donvixuly_nghiepvu_id' => $formData['donvixuly_nghiepvu_id'],
             'ngayhieuchinh' => date('Y-m-d'),
             'nguoihieuchinh' => Factory::getUser()->id,
+            //Huệ thêm
+            'phanloaitochuc_id' => $formData['phancaptochuc_id'],
+            'hangtochuc_id' => $formData['hangtochuc_id'],
+            'tinhthanh_id' => $formData['cadc_code'],
+            'quanhuyen_id' => $formData['dist_placebirth'],
+            'phuongxa_id' => $formData['comm_placebirth'],
+            'loaihachtoan_id' => $formData['loaihachtoan_id'],
+            'mucdotuchu_id' => $formData['mucdotuchu_id'],
+            //End
         );
-        var_dump($data);die;
+
         if ((int) $formData['id'] == 0) {
             // Specify where to insert the new node.
             //$reference_id = (int)$formData['parent_id'];
@@ -1091,7 +1100,7 @@ class Tochuc_Model_Tochuc {
         $query->delete($db->quoteName('ins_dept_vanban'));
         $query->where($conditions);
         $db->setQuery($query);
-        if (!$db->query()) {
+        if (!$db->execute()) {
             return false;
         } else {
             return true;
@@ -1155,8 +1164,8 @@ class Tochuc_Model_Tochuc {
         );
         $query->insert($db->quoteName('ins_dept_vanban'));
         $query->set($fields);
-        $db->setQuery($query);
-        if (!$db->query()) {
+        $db->setQuery($query); 
+        if (!$db->execute()) {
             return false;
         } else {
             return true;

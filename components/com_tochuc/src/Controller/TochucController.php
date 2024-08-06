@@ -15,8 +15,10 @@ use Core;
 use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
+use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Session\Session;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
+use stdClass;
 
 // phpcs:disable PSR1.Files.SideEffects
 // \defined('_JEXEC') or die;
@@ -125,10 +127,17 @@ class TochucController extends BaseController
 		$app = Factory::getApplication();
         $input = $app->input;
         $formData = $input->post->getArray();
-
+		
 		try {
 			$id = $model->saveDept($formData);
-
+			// nếu là tổ chức hoặc như phòng, thì set con của nó theo trạng thái ẩn luôn
+			if($formData['type'] == 1 || $formData['type'] == 3){
+				if($formData['active']==0 || $formData['active']==2)
+				$f = new stdClass();
+				$f->parent_id = $id;
+				$f->active = $formData['active'];
+				Core::update('ins_dept',$f,'parent_id');
+			}
 			// Save to cchc_tochuc if new record and config allows
 			if ((int)$formData['id'] <= 0 && Core::config('cchc/autocchc') == 1) {
 				$modelCchc = Core::model('Danhmuccchc/Tochuc');
@@ -138,25 +147,52 @@ class TochucController extends BaseController
 
 			// 	Xử lý xóa, lưu quyết định liên quan
 			$model->xoaIns_dept_vanban($id);
-			for($i= 0; $i< count($formData['ins_vanban_id']); $i++){
-				$ins_vanban_id = $formData['ins_vanban_id'][$i];
-				if($ins_vanban_id>0) $model->luuIns_dept_vanban($id, $ins_vanban_id);
+			if (isset($formData['ins_vanban_id']) && is_array($formData['ins_vanban_id']) && count($formData['ins_vanban_id']) > 0) {
+				for($i= 0; $i< count($formData['ins_vanban_id']); $i++){
+					$ins_vanban_id = $formData['ins_vanban_id'][$i];
+					if($ins_vanban_id>0) $model->luuIns_dept_vanban($id, $ins_vanban_id);
+				}
 			}
 			// 	Hết xử lý quyết định liên quan
+
+			// Update report configuration
+			// if ($id > 0) {
+			// 	foreach ($formData['report_group_code'] as $report_group_code) {
+			// 		$data_config = [
+			// 			'report_group_code' => $report_group_code,
+			// 			'ins_dept' => $id,
+			// 			'name' => $formData['name'],
+			// 			'type' => $formData['type'],
+			// 			'ins_loaihinh' => $model->getLoaihinhByIdCap((int)$formData['ins_cap']),
+			// 		];
+
+			// 		$data_caybaocao = $model->getIdConfigBc((int)$formData['parent_id'], $data_config['report_group_code']);
+			// 		if ((int)$data_caybaocao['id'] > 0) {
+			// 			$check_data_caybaocao = $model->getIdConfigBc($id, $data_config['report_group_code']);
+			// 			$data_config['id'] = (int)$check_data_caybaocao['id'] > 0 ? (int)$check_data_caybaocao['id'] : $data_caybaocao['id'];
+			// 			$data_config['parent_id'] = $data_config['id'] > 0 ? $check_data_caybaocao['parent_id'] : $data_caybaocao['id'];
+			// 			$data_config['report_group_name'] = $data_caybaocao['report_group_name'];
+			// 			$data_config['all_chirl'] = 0;
+
+			// 			$model_config = AdminModel::getInstance('Caybaocao', 'BaocaohosoModel');
+			// 			$model_config->save($data_config);
+			// 		}
+			// 	}
+			// }
+
 		} catch (Exception $e) {
 			Factory::getApplication()->enqueueMessage($e->__toString(), 'error');
 		}
-
 		// Redirect based on action name
 		switch ($formData['action_name']) {
 			case 'SAVEANDCLOSE':
-				$this->setRedirect("index.php?option=com_tochuc&controller=tochuc&task=default");
+				$this->setRedirect("index.php?option=com_tochuc&view=tochuc&task=default");
 				break;
 			case 'SAVEANDCONTINUE':
 				$this->setRedirect("index.php?option=com_tochuc&task=thanhlap&Itemid=&id=" . $id);
 				break;
 			default:
-				$this->setRedirect("index.php?option=com_tochuc&controller=tochuc&task=thanhlap&type=" . $formData['type'] . "&parent_id=" . $formData['parent_id']);
+				$this->setRedirect("index.php?option=com_tochuc&view=tochuc&task=thanhlap&type=" . $formData['type'] . "&parent_id=" . $formData['parent_id']);
 				break;
 		}
 

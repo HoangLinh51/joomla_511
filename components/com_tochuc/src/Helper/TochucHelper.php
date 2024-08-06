@@ -445,21 +445,12 @@ abstract class TochucHelper
 		$db->setQuery($query);
 		return $db->loadResult();
 	}
-	static public function selectBox($value,$attrs,$table,$colums,$where = null,$order = null){
-		//var_dump($colums[0]);
-		if (count($colums) >= 2) {
-			
-			if (isset($table) && is_array($table)) {
-				$rows = $table;
-			}else{
-				$rows = TochucHelper::collect($table, $colums, $where);
-			}	        
-	        //var_dump($rows);exit;	
+	static public function selectBox($value,$attrs,$table,$colums,$where = null,$order = null,$optAdd = null){
+		if (count($colums) >= 2) {		
+	        $rows = TochucHelper::collect($table, $colums, $where);
 	        if (is_array($attrs)) {
+				$controlAttrs = '';
 	        	$controlName = $attrs['name'];
-	        	if ($controlName) {
-	        		$controlAttrs = " ng-model=\"".$controlName."\"";
-	        	}
 	        	unset($attrs['name']);
 	        	unset($attrs['value']);
 	        	foreach ($attrs as $key=>$val){
@@ -476,9 +467,13 @@ abstract class TochucHelper
 	        	$option = array("$colums[0]"=>'',"$colums[1]"=>'');
 	        	array_unshift($rows, $option);
 	        }
-	        	      
-	        return HTMLHelper::_('select.genericlist',$rows,$controlName, $controlAttrs, $colums[0],$colums[1],$value);
-	      //  return JHTML::_('select.genericlist',$options,$controlName, $controlAttrs, 'value','text',$value);
+			$optNull[] = HTMLHelper::_('select.option','','',$colums[0],$colums[1]);
+	        if(is_array($optAdd)){
+	        	foreach($optAdd as $key=>$val){
+	        		$optNull[] = HTMLHelper::_('select.option',$key,$val,$colums[0],$colums[1]);
+	        	}	
+	        }
+	        return HTMLHelper::_('select.genericlist',array_merge($optNull,$rows),$controlName, $controlAttrs, $colums[0],$colums[1],$value);
 		}
 		return '';
 	}
@@ -588,7 +583,7 @@ abstract class TochucHelper
 				$result .= str_repeat ( '</li></ul>', $current_depth - $node_depth ) . '</li>';
 				$current_depth = $current_depth - ($current_depth - $node_depth);
 			}
-			$result .= '<li id="c' . $node_id . '"';			
+			$result .= '<li id="c' . $node_id . '"';
 			$result .= $node_depth < 2 ? ' class="open"' : '';
 			$result .= '><a href="#"><ins>&nbsp;</ins>' . $node_name . '</a>';
 			++ $counter;

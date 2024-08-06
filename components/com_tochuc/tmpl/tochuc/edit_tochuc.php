@@ -12,6 +12,7 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Decentralization\Administrator\View\Actions\HtmlView;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
@@ -97,9 +98,9 @@ $user = Factory::getUser();
                             </div>
                             <div class="row">
                                 <div class="col-md-6 form-group">
-                                    <label class="control-label" for="diachi">Địa chỉ <span class="required">*</span></label>
+                                    <label class="control-label" for="website">Website tổ chức</label>
                                     <div class="controls">
-                                        <input class="form-control rounded-0" type="text" value="" name="diachi" id="diachi">
+                                        <input class="form-control rounded-0" type="text" value="" name="website" id="website">
                                     </div>
                                 </div>
                                 <div class="col-md-6 form-group">
@@ -144,13 +145,89 @@ $user = Factory::getUser();
                             </div>
 
                             <div class="row">
-                                <div class="col-md-12 form-group">
-                                    <label class="control-label" for="website">Website tổ chức</label>
+                                <div class="col-md-6 form-group">
+                                    <label class="control-label" for="phancaptochuc_id">Phân cấp tổ chức</label>
                                     <div class="controls">
-                                        <input class="form-control rounded-0" type="text" value="" id="website" name="website">
+                                        <?php 
+                                            $options = array();
+                                            $option[] = array('id' => '', 'ten' => '');
+                                            $options = array_merge($option, $this->phancaptochuc);
+                                            echo HTMLHelper::_('select.genericlist', $options, 'phancaptochuc_id', array('class' => 'form-control select2 select2-hidden-accessible', 'data-placeholder' => "Hãy chọn..."), 'id', 'ten', $this->row->phancaptochuc_id); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="control-label" for="hangtochuc_id">Hạng tổ chức</label>
+                                    <div class="controls">
+                                        <?php
+                                            $options = array();
+                                            $option[] = array('id' => '', 'ten' => '');
+                                            $options = array_merge($option, $this->hangtochuc); 
+                                            echo HTMLHelper::_('select.genericlist', $options, 'hangtochuc_id', array('class' => 'form-control select2 select2-hidden-accessible', 'data-placeholder' => "Hãy chọn..."), 'id', 'ten', $this->row->hangtochuc_id); ?>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="control-label" for="diachi">Địa chỉ <span class="required">*</span></label>
+                                    <!-- <div class="controls">
+                                        <input class="form-control rounded-0" type="text" value="" id="diachi" name="diachi">
+                                    </div> -->
+                                </div>
+                                <div class="<?php echo ($this->row->tinhthanh_id == -2) ? "col-md-12" : 'col-md-4'; ?> form-group">
+                                    <div class="controls">
+                                        <?php echo TochucHelper::selectBox($this->row->tinhthanh_id, array('name' => 'cadc_code', 'class' => 'chzn-select',
+											'data-placeholder' => 'Chọn tỉnh thành...'), 'city_code', array('code', 'name'), array('status = 1'), 'name COLLATE utf8_unicode_ci');
+										?>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group" <?php echo ($this->row->tinhthanh_id == -2) ? 'style="display:none;"' : ''; ?>>
+                                    <div class="controls">
+                                        <?php echo TochucHelper::selectBox($this->row->quanhuyen_id, array('name' => 'dist_placebirth', 'class' => 'chzn-select',
+											'data-placeholder' => 'Chọn quận huyện...'), 'dist_code', array('code', 'name'), array('cadc_code = "' . $this->row->tinhthanh_id . '"'));
+										?>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group" <?php echo ($this->row->tinhthanh_id == -2) ? 'style="display:none;"' : ''; ?>>
+                                    <div class="controls">
+                                        <?php echo TochucHelper::selectBox($this->row->phuongxa_id, array('name' => 'comm_placebirth', 'class' => 'chzn-select',
+										'data-placeholder' => 'Chọn phường xã...'), 'comm_code', array('code', 'name'), array('dc_code = "' . $this->row->quanhuyen_id . '"'));
+										?>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <!-- <label class="control-label" for="diachi">Địa chỉ <span class="required">*</span></label> -->
+                                    <div class="controls">
+                                        <input class="form-control rounded-0" placeholder="Chi tiết" type="text" value="" id="diachi" name="diachi">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <label class="control-label" for="loaihachtoan_id">Loại hạnh toán</label>
+                                    <div class="controls">
+                                        <?php 
+                                            $options = array();
+                                            $option[] = array('id' => '', 'ten' => '');
+                                            $options = array_merge($option, $this->loaihachtoan);
+                                            echo HTMLHelper::_('select.genericlist', $options, 'loaihachtoan_id', array('class' => 'form-control select2 select2-hidden-accessible', 'data-placeholder' => "Hãy chọn..."), 'id', 'ten', $this->row->loaihachtoan_id); 
+                                        ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <label class="control-label" for="mucdotuchu_id">Mức độ tự chủ</label>
+                                    <div class="controls">
+                                        <?php 
+                                            $options = array();
+                                            $option[] = array('id' => '', 'ten' => '');
+                                            $options = array_merge($option, $this->mucdotuchu);
+                                            echo HTMLHelper::_('select.genericlist', $options, 'mucdotuchu_id', array('class' => 'form-control select2 select2-hidden-accessible', 'data-placeholder' => "Hãy chọn..."), 'id', 'ten', $this->row->mucdotuchu_id); 
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-12 form-group">
                                     <label class="control-label" for="chucnang">Chức năng nhiệm vụ</label>
@@ -169,7 +246,7 @@ $user = Factory::getUser();
                             <div class="row">
                                 <div class="col-md-6" data-select2-id="30">
                                     <div class="form-group" data-select2-id="29">
-                                        <label>Cách thức thành lập</label>
+                                        <label for="type_created">Cách thức thành lập</label>
                                         <?php
                                         $tableInsDeptCachthuc = Core::table('Tochuc/InsDeptCachthuc');
                                         $type_created = $tableInsDeptCachthuc->findAllCachThucThanhLap();
@@ -197,7 +274,7 @@ $user = Factory::getUser();
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Cấp đơn vị <span class="required">*</span></label>
+                                        <label for="ins_cap_name">Cấp đơn vị <span class="required">*</span></label>
                                         <input type="hidden" name="ins_cap" id="ins_cap" value="<?php echo $this->row->ins_cap; ?>">
                                         <div class="input-group date" id="" data-target-input="nearest">
                                             <input type="text" id="ins_cap_name" name="ins_cap_name" class="form-control rounded-0" value="<?php echo Core::loadResult('ins_cap', array('name'), array('id = ' => (int)$this->row->ins_cap)) ?>" readonly="readonly">
@@ -259,7 +336,7 @@ $user = Factory::getUser();
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text rounded-0"><i class="far fa-calendar-alt"></i></span>
                                             </div>
-                                            <input type="text" class="form-control rounded-0" id="ngaybanhanh" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask="" inputmode="numeric">
+                                            <input type="text" class="form-control rounded-0" id="ngaybanhanh" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy">
                                         </div>
                                         <!-- <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
@@ -327,25 +404,26 @@ $user = Factory::getUser();
                         <div class="tab-custom-content">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="control-label" for="">Lĩnh vực</label>
+                                    <label class="control-label" for="ins_linhvuc">Lĩnh vực</label>
                                     <div class="controls" style="display: grid;">
-                                        <div id="html1">
+                                        <input type="hidden" id="ins_linhvuc" name="ins_linhvuc[]" />
+                                        <div id="tree_linhvuc">
                                             <?php
                                             $inArray = Core::loadAssocList('cb_type_linhvuc', array('id', 'name', 'level', 'parent_id'), array('type=' => 2), 'lft');
-                                            // // var_dump($inArray);exit;  
                                             $tree = TochucHelper::buildTree($inArray);
                                             $jsTreeData = json_encode(TochucHelper::convertToJsTreeFormat($tree));
 
+                                            //echo TochucHelper::createChk('ins_linhvuc[]', $inArray,$this->linhvuc); 
                                             // var_dump($tree);exit;
                                             //TochucHelper::printTree($tree);
-                                            //echo TochucHelper::buildTreeHtml('','cb_type_linhvuc', array('id','name','level', 'parent_id'),'type=2','lft',$current_depth = 1); 
+                                            // echo TochucHelper::buildTreeHtml('','cb_type_linhvuc', array('id','name','level', 'parent_id'),'type=2','lft',$current_depth = 1); 
                                             ?>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Gói biên chế</label>
+                                        <label for="goibienche">Gói biên chế</label>
                                         <div class="">
                                             <?php
                                             $arrTemp = Core::loadAssocList('bc_goibienche', array("id as value", "name AS text"), array('active = ' => 1), 'id');
@@ -355,7 +433,7 @@ $user = Factory::getUser();
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Gói chức vụ</label>
+                                        <label for="goichucvu">Gói chức vụ</label>
                                         <div class="">
                                             <?php
                                             $arrTemp = Core::loadAssocList('cb_goichucvu', array("id as value", "CONCAT(REPEAT('--',level), name, ' (',(select count(*) from cb_goichucvu_chucvu a where a.goichucvu_id = id), ')') AS text"), array('lft >' => 0, 'status = ' => 1), 'lft');
@@ -365,7 +443,7 @@ $user = Factory::getUser();
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Gói lương</label>
+                                        <label for="goiluong">Gói lương</label>
                                         <div class="">
                                             <?php
                                             $arrTemp = Core::loadAssocList('cb_goiluong', array("id as value", "CONCAT(REPEAT('--',level), name) AS text"), array('lft >' => 0, 'status = ' => 1), 'lft');
@@ -375,7 +453,7 @@ $user = Factory::getUser();
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Gói đào tạo</label>
+                                        <label for="goidaotao">Gói đào tạo</label>
                                         <div class="">
                                             <?php
                                             $arrTemp = Core::loadAssocList('cb_goidaotaoboiduong', array("id as value", "name AS text"), array('status = ' => 1), 'name');
@@ -385,7 +463,7 @@ $user = Factory::getUser();
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Gói hình thức hưởng lương</label>
+                                        <label for="goihinhthuchuongluong">Gói hình thức hưởng lương</label>
                                         <div class="">
                                             <?php
                                             $arrTemp = Core::loadAssocList('cb_goihinhthuchuongluong', array("id as value", "name AS text"), array('status = ' => 1), 'name');
@@ -395,7 +473,7 @@ $user = Factory::getUser();
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Gói vị trí việc làm</label>
+                                        <label for="goivitrivieclam">Gói vị trí việc làm</label>
                                         <div class="">
                                             <?php
                                             $arrTemp = Core::loadAssocList('cb_goivitrivieclam', array("id as value", "CONCAT(REPEAT('--',level), name) AS text"), array('lft >' => 0, 'status = ' => 1), 'lft');
@@ -419,21 +497,17 @@ $user = Factory::getUser();
                         </div>
                         <div class="tab-custom-content">
                             <?php
-                            // $caybaocao = $this->caybaocao;
-                            // for ($i = 0; $i < count($caybaocao); $i++) {
-                            // 
+                            $caybaocao = $this->caybaocao;
+                                for ($i = 0; $i < count($caybaocao); $i++) {
+                            
                             ?>
-                            <!-- // <div class="row-fluid">
-                                // <div class="control-group">
-                                    // <div class="controls"> -->
-                                        <!-- <input type="hidden" name="chkrep_hc_name" value="0"> -->
-                                        <!-- // <label>
-                                            // <input type="checkbox" name="report_group_code[]" <?php echo $caybaocao[$i]['checked']; ?> class="report_group_code" value="<?php echo $caybaocao[$i]['report_group_code'] ?>"><span class="lbl">&nbsp;&nbsp; <?php echo $caybaocao[$i]['name'] ?></span>
-                                            // </label>
-                                        // </div>
-                                    // </div>
-                                // </div> -->
-                            <?php //} 
+                            <div class="form-group">
+                                <div class="checkbox icheck-primary">
+                                    <input type="checkbox" <?php echo $caybaocao[$i]['checked']; ?> value="<?php echo $caybaocao[$i]['report_group_code'] ?>" id="primary_<?php echo $i+1 ?>" />
+                                    <label for="primary_<?php echo $i+1 ?>"><span class="lbl">&nbsp;&nbsp; <?php echo $caybaocao[$i]['name'] ?></span></label>
+                                </div>
+                            </div>
+                            <?php } 
                             ?>
                         </div>
                     </fieldset>
@@ -457,9 +531,12 @@ $user = Factory::getUser();
 
 <script>
     jQuery(document).ready(function($) {
+
+
+        $('.select2-container').addClass('form-control');
         $('#type_created').select2({
             placeholder: "Hãy chọn...",
-            allowClear: true
+            allowClear: true,
         });
         $('#vanban_createdcoquan_banhanh_id').select2({
             width: "100%"
@@ -468,6 +545,29 @@ $user = Factory::getUser();
             width: "100%"
         });
         $('#capdonvi').select2();
+        $('#phancaptochuc_id').select2({
+            width: "100%"
+        });
+        $('#hangtochuc_id').select2({
+            width: "100%"
+        });
+        $('#cadc_code').select2({
+            width: "100%"
+        });
+        $('#dist_placebirth').select2({
+            width: "100%"
+        });
+        $('#comm_placebirth').select2({
+            width: "100%"
+        });
+
+        $('#loaihachtoan_id').select2({
+            width: "100%"
+        });
+
+        $('#mucdotuchu_id').select2({
+            width: "100%"
+        });
         $('#goibienche').select2({
             width: "100%"
         });
@@ -487,8 +587,7 @@ $user = Factory::getUser();
             width: "100%"
         });
 
-
-
+      
         var tree_data_ins_cap = <?php echo $this->tree_data_ins_cap; ?>;
         var treeDataCapDonvi = new DataSourceTree({
             data: tree_data_ins_cap
@@ -519,7 +618,7 @@ $user = Factory::getUser();
         $('.btn-choncapdonvi').on('click', function() {
             console.log($(this).attr('data-id'))
             if ($(this).attr('data-id') != '') {
-                $('#ins_cap_detail').modal('hide');
+                // $('#ins_cap_detail').modal('hide');
             } else {
                 $.toast({
                     heading: 'Cảnh báo',
@@ -589,6 +688,32 @@ $user = Factory::getUser();
             } else alert("Vui lòng chọn mục cần xóa!!");
         });
 
+        var treeData = <?php echo $jsTreeData; ?>;
+        jQuery('#tree_linhvuc').jstree({
+            "plugins" : [
+                "checkbox",
+                "contextmenu",
+                "types",
+                "conditionalselect"
+            ],
+            'core': {
+                'data': treeData
+            },
+            "checkbox": {
+                "override_ui": false,
+                "three_state": false,
+                // "tie_selection": false, 
+                // "real_checkboxes": true,
+            },
+        }).on('loaded.jstree', function(){
+            // jQuery('#html1').jstree('open_all')
+        }).on('changed.jstree', function (e, data) {
+            var selectedNodes = data.selected.join(',');
+            $('#ins_linhvuc').val(selectedNodes);
+        });
+
+       
+
         $('#is_checkmadonvi').on('click', function() {
             console.log("fdsfsd")
             if ($('#is_checkmadonvi').is(":checked")) {
@@ -605,9 +730,9 @@ $user = Factory::getUser();
             $('#frmThanhLap a[href="#'+el.attr("id")+'"]').css("color","red");
         };
 
-        // var getTextLabel = function(id){
-        //     return $('#frmThanhLap label[for="'+id+'"]').text();
-        // };
+        var getTextLabel = function(id){
+            return $('#frmThanhLap label[for="'+id+'"]').text();
+        };
 
         // $.validator.setDefaults({ ignore: '' });
         // $.validator.addMethod("required2", function(value, element) {
@@ -619,8 +744,11 @@ $user = Factory::getUser();
         //         return true;
         //     }
         // }, "Trường này là bắt buộc");
-
+        $.validator.addMethod("requireMadonvi", function(value, element) {
+            return $('#is_checkmadonvi').is(':checked') ? $.trim(value).length > 0 : true;
+        }, "This field is required.");
         $('#frmThanhLap').validate({
+            ignore: true,
             invalidHandler: function(form, validator) {
                 var errors = validator.numberOfInvalids();
                 $('#frmThanhLap a[data-toggle="tab"]').css("color", "");
@@ -632,7 +760,10 @@ $user = Factory::getUser();
                     var errors = "";
                     if (validator.errorList.length > 0) {
                         for (x = 0; x < validator.errorList.length; x++) {
-                            errors += "<br/>\u25CF " + validator.errorList[x].message;
+                            // errors += "<br/>\u25CF " + validator.errorList[x].message;
+                            // errors += "<br/>\u25CF " + validator.errorList[x].message;
+                            errors += "<br/>\u25CF " + validator.errorList[x].message +' <b> '+ getTextLabel($(validator.errorList[x].element).attr("name")).replace(/\*/g, '')+'</b>' ;
+                            getTextTab($(validator.errorList[x].element));
                         }
                     }
                     $.toast({
@@ -640,7 +771,10 @@ $user = Factory::getUser();
                         text: message + errors,
                         showHideTransition: 'fade',
                         position: 'top-right',
-                        icon: 'error'
+                        hideAfter: false,
+                        bgColor: '#a94442',
+                        class: 'thanhlap ngx-toastr'
+                        // icon: 'error'
                     })
                 }
                 validator.focusInvalid();
@@ -650,87 +784,131 @@ $user = Factory::getUser();
             rules: {
                 "name": {
                     required: true,
-                    // validNameTochuc: true,
                 },
-                // "s_name": {
-                //     required: true
-                // },
-                // "type": {
-                //     required: true
-                // },
-                // "parent_id": {
-                //     required: true
-                // },
-                // "type_created": {
-                //     required: true
-                // },
-                // "diachi": {
-                //     required: true
-                // },
-                // "goibienche": {
-                //     required: true
-                // },
-                // "ins_cap": {
-                //     required: true
-                // },
-                // "goichucvu": {
-                //     required: true
-                // },
-                // "goidaotao": {
-                //     required: true
-                // },
-                // "goihinhthuchuongluong": {
-                //     required: true
-                // },
-                // "goiluong": {
-                //     required: true
-                // }
+                "s_name": {
+                    required: true
+                },
+                "name_dieudong": {
+                    required: true
+                },
+                "madonvi": {
+                    requireMadonvi: true
+                },
+                "vanban_created[mahieu]": {	    
+					required : function(){
+						if($('.dropzone-filename').length > 0 || $('input[name="idFile-tochuc-attachment[]"]').length > 0){
+							return true;
+						}else{
+							return false;
+						}
+					}
+			    },
+                "type": {
+                    required: true
+                },
+                "parent_id": {
+                    required: true
+                },
+                "type_created": {
+                    required : function(){
+                        var select2Container = $('#type_created').next('.select2-container');
+                        if($('#type_created').val() == ''){
+                            select2Container.addClass('was-validated');
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                },
+                "diachi": {
+                    required: true
+                },
+                "goibienche": {
+                    required: true
+                },
+                "ins_cap_name": {
+                    required: function(){
+                        if($('#ins_cap').val() == "" || $('#ins_cap').val() == null){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                },
+                "goichucvu": {
+                    required: true
+                },
+                "goidaotao": {
+                    required: true
+                },
+                "goihinhthuchuongluong": {
+                    required: true
+                },
+                "goiluong": {
+                    required: true
+                }
             },
             messages: {
                 "name": {
                     required: "Vui lòng nhập"
                 },
-                // "code": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "s_name": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "type": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "parent_id": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "type_created": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "diachi": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "goibienche": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "ins_cap": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "goichucvu": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "goidaotao": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "goihinhthuchuongluong": {
-                //     required: "Vui lòng nhập"
-                // },
-                // "goiluong": {
-                //     required: "Vui lòng nhập"
-                // }
+                "madonvi": {
+                    requireMadonvi: "Vui lòng nhập <b>Mã đơn vị</b>"
+                },
+                "vanban_created[mahieu]": {	    
+					required: "Vui lòng nhập <b>Số quyết định thành lập</b>"
+			    },
+                "s_name": {
+                    required: "Vui lòng nhập "
+                },
+                "name_dieudong": {
+                    required: "Vui lòng nhập "
+                },
+                "type": {
+                    required: "Vui lòng nhập "
+                },
+                "parent_id": {
+                    required: "Vui lòng nhập "
+                },
+                "type_created": {
+                    required: "Vui lòng nhập "
+                },
+                "diachi": {
+                    required: "Vui lòng nhập "
+                },
+                "goibienche": {
+                    required: "Vui lòng nhập "
+                },
+                "ins_cap_name": {
+                    required: "Vui lòng nhập "
+                },
+                "goichucvu": {
+                    required: "Vui lòng nhập "
+                },
+                "goidaotao": {
+                    required: "Vui lòng nhập "
+                },
+                "goihinhthuchuongluong": {
+                    required: "Vui lòng nhập "
+                },
+                "goiluong": {
+                    required: "Vui lòng nhập "
+                }
             },
             highlight: function (element, errorClass, validClass) {
+                if ($(element).hasClass('select2-hidden-accessible')) {
+                    $(element).next('span.select2').find('.select2-selection').addClass('was-validated');
+                } else {
+                    $(element).addClass('was-validated');
+                }    
                 $(element).addClass('is-invalid');
             },
             unhighlight: function (element, errorClass, validClass) {
+                if ($(element).hasClass('select2-hidden-accessible')) {
+                        $(element).next('span.select2').find('.select2-selection').removeClass('was-validated');
+                } else {
+                        $(element).removeClass('was-validated');
+                }
                 $(element).removeClass('is-invalid');
             }
         });
@@ -745,7 +923,9 @@ $user = Factory::getUser();
                     text: "Vui lòng chọn đúng Cây đơn vị cha",
                     showHideTransition: 'fade',
                     position: 'top-right',
-                    icon: 'error'
+                    icon: 'error',
+                    class: 'thanhlap ngx-toastr'
+
                 })
                 return false;
             } else {
@@ -757,6 +937,109 @@ $user = Factory::getUser();
             return false;
         });
 
+        $('body').delegate('#cadc_code', 'change', function(){
+            var token = '<?php echo Session::getFormToken(); ?>';
+
+            if($('#cadc_code').val() == -2){
+                $('.div_diachi_tochuc').hide();
+                $('#dist_placebirth').val('');
+                $('#dist_placebirth').trigger('chosen:updated');
+                $('#comm_placebirth').val('');
+                $('#comm_placebirth').trigger('chosen:updated');
+                $('.div_diachi_khac').show();
+            }else{
+                $('.div_diachi_khac').hide();
+                $('#diachi').val('');
+                $('.div_diachi_tochuc').show();
+                if($('#cadc_code').val() == ''){
+                    $('#dist_placebirth').html('<option value=""></option>');
+                    $('#dist_placebirth').trigger('chosen:updated');
+                    $('#comm_placebirth').html('<option value=""></option>');
+                    $('#comm_placebirth').trigger('chosen:updated');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'index.php',
+                        dataType: 'json',
+                        data: { option: 'com_tochuc', controller: 'ajax', task : 'getQuanhuyen', tinhthanh_id : $('#cadc_code').val(), [token]: 1  },
+                        success:function(data){
+                            var str = '<option value=""></option>';
+                            $.each(data,function(i,v){
+                                str+= "<option value='"+v.code+"'>"+v.name+"</option>";
+                            });
+                            $('#dist_placebirth').html(str);
+                            $('#dist_placebirth').trigger('chosen:updated');
+                            $('#comm_placebirth').html('<option value=""></option>');
+                            $('#comm_placebirth').trigger('chosen:updated');
+                        }
+                    });
+                }
+            }
+        });
+    $('body').delegate('#dist_placebirth', 'change', function(){
+        if($(this).val() == ''){
+            $('#comm_placebirth').html('<option value=""></option>');
+            $('#comm_placebirth').trigger('chosen:updated');
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: 'index.php',
+                data: { option: 'com_tochuc', controller: 'ajax', task : 'getPhuongxa', quanhuyen_id : $('#dist_placebirth').val() },
+                success:function(data){
+                    var str = '<option value=""></option>';
+                    $.each(data,function(i,v){
+                        str+= "<option value='"+v.code+"'>"+v.name+"</option>";
+                    });
+                    $('#comm_placebirth').html(str);
+                    $('#comm_placebirth').trigger('chosen:updated');
+                }
+            });
+        }
+    });
+	$('body').delegate('#city_peraddress', 'change', function(){
+		if($(this).val() == ''){
+			$('#dist_peraddress').html('<option value=""></option>');
+			$('#dist_peraddress').trigger('chosen:updated');
+			$('#comm_peraddress').html('<option value=""></option>');
+			$('#comm_peraddress').trigger('chosen:updated');
+		}else{
+    		$.ajax({
+    			type: 'POST',
+    			url: 'index.php',
+    			data: { option: 'com_tochuc', controller: 'ajax', task : 'getQuanhuyen', tinhthanh_id : $('#city_peraddress').val() },
+    			success:function(data){
+    				var str = '<option value=""></option>';
+    				$.each(data,function(i,v){
+    					str+= "<option value='"+v.code+"'>"+v.name+"</option>";
+    				});
+    				$('#dist_peraddress').html(str);
+    				$('#dist_peraddress').trigger('chosen:updated');
+    				$('#comm_peraddress').html('<option value=""></option>');
+    				$('#comm_peraddress').trigger('chosen:updated');
+    			}
+    		});
+		}
+	});
+	$('body').delegate('#dist_peraddress', 'change', function(){
+		if($(this).val() == ''){
+			$('#comm_peraddress').html('<option value=""></option>');
+			$('#comm_peraddress').trigger('chosen:updated');
+		}else{
+    		$.ajax({
+    			type: 'POST',
+    			url: 'index.php',
+    			data: { option: 'com_hoso', controller: 'ajax', task : 'getPhuongxa', quanhuyen_id : $('#dist_peraddress').val() },
+    			success:function(data){
+    				var str = '<option value=""></option>';
+    				$.each(data,function(i,v){
+    					str+= "<option value='"+v.code+"'>"+v.name+"</option>";
+    				});
+    				$('#comm_peraddress').html(str);
+    				$('#comm_peraddress').trigger('chosen:updated');
+    			}
+    		});
+		}
+	});
 
 
     });
@@ -1040,4 +1323,28 @@ $user = Factory::getUser();
     .modal {
         padding: 0px !important;
     }
+    .thanhlap.ngx-toastr{
+        right: -20px;
+    }
+    #tree_linhvuc a{
+        border-top: 0px solid transparent !important;
+    }
+    #tree_linhvuc a:hover{
+        border-top: 0px solid transparent !important;
+    }
+
+    .was-validated {
+            border-color: #dc3545 !important; /* Red border for error */
+    }
+    .select2-container .select2-selection--single.was-validated {
+            border: 1px solid #dc3545; /* Red border for select2 */
+    }
+    /* .select2-container--default.was-validated{
+        border: 1px solid #dc3545;
+        padding-right: 2.25rem !important;
+        background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e);
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + .1875rem) center;
+        background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+    } */
 </style>

@@ -1,7 +1,11 @@
 <?php
-class Danhmuc_Model_Ajax extends JModelLegacy{
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+
+class Danhmuc_Model_Ajax extends ListModel{
     public function getQuanHuyenByTinhThanh($tinhthanh_id, $trangthai = null){
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('a.*');
         $query->from('danhmuc_quanhuyen AS a');
@@ -14,7 +18,7 @@ class Danhmuc_Model_Ajax extends JModelLegacy{
         return $db->loadAssocList();
     }
     public function getPhuongXaByQuanHuyen($quanhuyen_id, $trangthai = null){
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('a.*');
         $query->from('danhmuc_phuongxa AS a');

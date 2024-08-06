@@ -64,7 +64,7 @@ $doc = Factory::getDocument();
 		} endif; ?>
 	<?php endif; ?>
 	</a>
-	<ul class="dropdown-menu">
+	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
 		<li class="user-header">
 			<img src="templates/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 			<p>Alexander Pierce - Web Developer<small>Member since Nov. 2012</small></p>
