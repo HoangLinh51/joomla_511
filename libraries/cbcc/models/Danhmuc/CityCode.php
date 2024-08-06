@@ -1,5 +1,17 @@
 <?php
-class Danhmuc_Model_CityCode extends JModelLegacy
+/**
+* @file: CityCode.php
+* @author: huenn.dnict@gmaill.com
+* @date: 04-08-2024
+* @company : http://dnict.vn
+* 
+**/
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\ListModel;
+use Joomla\CMS\Pagination\Pagination;
+use Joomla\Utilities\ArrayHelper;
+
+class Danhmuc_Model_CityCode extends ListModel
 {
 	/**
 	 * @param mixed $formData
@@ -13,7 +25,13 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 		$src['tt']		= $formData['tt'];
 		$src['status'] 	= $formData['status'];
 		return $table->save($src);
-	}
+	}	
+	/**
+	 * update
+	 *
+	 * @param  mixed $formData
+	 * @return void
+	 */
 	public function update($formData){
 		$table = Core::table('Danhmuc/CityCode');
 		$src['code']	= $formData['code'];
@@ -23,7 +41,13 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 		$src['tt']		= $formData['tt'];
 		$src['status'] 	= $formData['status'];
 		return $table->save($src);
-	}
+	}	
+	/**
+	 * read
+	 *
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public function read($id){
 		$table = Core::table('Danhmuc/CityCode');
 		if (!$table->load($id)) {
@@ -37,7 +61,13 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 			$data[$fields[$i]] = $table->$tmp;
 		}
 		return $data;
-	}
+	}	
+	/**
+	 * delete
+	 *
+	 * @param  mixed $cid
+	 * @return void
+	 */
 	public function delete($cid){
 		$table = Core::table('Danhmuc/CityCode');
 		if(!is_array($cid)||count($cid)==0){
@@ -50,37 +80,20 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 		return $flag;
 	}
 	
-	/* public function findAll($params = null,$order = null,$offset = null,$limit = null){
-		$table = Core::table('Danhmuc/CityCode');
-		$db = $table->getDbo();
-		$query = $db->getQuery(true);
-		$query->select(array('*'))
-			->from($table->getTableName())
-		;
-		if (isset($params['name']) && !empty($params['name'])) {
-			$query->where('name LIKE ('.$db->quote('%'.$params['name'].'%').')');
-		}
-		if ($order == null) {
-			$query->order('id');
-		}else{
-			$query->order($order);
-		}
 		
-		if($offset != null && $limit != null){
-			$db->setQuery($query,$offset,$limit);
-		}else{
-			$db->setQuery($query);
-		}
-		return $db->loadObjectList();
-	
-	} */
-	
+	/**
+	 * publish
+	 *
+	 * @param  mixed $cid
+	 * @param  mixed $publish
+	 * @return void
+	 */
 	function publish($cid = array(), $publish = 1)
 	{
 		$flag = false;
 		if (count( $cid ))
 		{
-			JArrayHelper::toInteger($cid);
+			ArrayHelper::toInteger($cid);
 			$table = Core::table('Danhmuc/CityCode');
 			$src['status'] = $publish;
 			for ($i = 0; $i < count($cid); $i++) {
@@ -89,13 +102,18 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 			}
 		}
 		return $flag;
-	}
+	}	
+	/**
+	 * __construct
+	 *
+	 * @return void
+	 */
 	function __construct(){
 		parent::__construct();
 	
-		$array = JRequest::getVar('cid',  0, '', 'array');
+		$array = Factory::getApplication()->input->getVar('cid',  0, '', 'array');
 		global $mainframe, $option;
-		$mainframe = &JFactory::getApplication();
+		$mainframe = &Factory::getApplication();
 	
 		// Get the pagination request variables
 		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
@@ -105,10 +123,17 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 		$this->setState('limit', $limit);
 		$this->setState('limitstart', $limitstart);
 	}
-	
+		
+	/**
+	 * _buildQuery
+	 *
+	 * @param  mixed $tb
+	 * @param  mixed $order
+	 * @return void
+	 */
 	function _buildQuery($tb=null,$order=null){
-		$db = &JFactory::getDbo();
-		$post = JRequest::get('post');
+		$db = &Factory::getDbo();
+		$post = Factory::getApplication()->get('post');
 	
 		$query = 'SELECT * FROM '.$tb;
 		if(!empty($post['name_search'])){
@@ -132,17 +157,31 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 		}
 	
 		return $query;
-	}
+	}	
+	/**
+	 * getData
+	 *
+	 * @param  mixed $tb
+	 * @param  mixed $order
+	 * @return void
+	 */
 	function getData($tb=null,$order=null)
 	{
 		// Load the data
-		$db = &JFactory::getDbo();
+		$db = &Factory::getDbo();
 		if (empty( $this->_data )) {
 			$query = $this->_buildQuery($tb,$order);
 			$this->_data =  $this->_getList($query, $this->getState('limitstart'), $this->getState('limit'));
 		}
 		return $this->_data;
-	}
+	}	
+	/**
+	 * getTotal
+	 *
+	 * @param  mixed $tb
+	 * @param  mixed $order
+	 * @return void
+	 */
 	function getTotal($tb=null,$order=null)
 	{
 		// Lets load the content if it doesn't already exist
@@ -152,7 +191,14 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 			$this->_total = $this->_getListCount($query);
 		}
 		return $this->_total;
-	}
+	}	
+	/**
+	 * getPagination
+	 *
+	 * @param  mixed $tb
+	 * @param  mixed $order
+	 * @return void
+	 */
 	function getPagination($tb=null,$order=null)
 	{
 	
@@ -160,10 +206,19 @@ class Danhmuc_Model_CityCode extends JModelLegacy
 		if (empty($this->_pagination))
 		{
 			jimport('joomla.html.pagination');
-			$this->_pagination = new JPagination( $this->getTotal($tb,$order), $this->getState('limitstart'), $this->getState('limit') );
+			$this->_pagination = new Pagination( $this->getTotal($tb,$order), $this->getState('limitstart'), $this->getState('limit') );
 		}
 		return $this->_pagination;
-	}
+	}	
+	/**
+	 * collect
+	 *
+	 * @param  mixed $params
+	 * @param  mixed $order
+	 * @param  mixed $offset
+	 * @param  mixed $limit
+	 * @return void
+	 */
 	public function collect($params = null,$order = null,$offset = null,$limit = null){
 		$table = Core::table('Danhmuc/CityCode');
 		$db = $table->getDbo();
