@@ -293,9 +293,24 @@ $user_id = $user->id;
             var url = 'index.php?option=com_tochuc&controller=tochuc&task=edittochuc&format=raw';
             var parent_id = <?php echo (int)$this->row->parent_id; ?>;
             var htmlLoading = '<i class="icon-spinner icon-spin blue bigger-125"></i>';
-            if (type_id == '1') {
-                url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
+            switch(type_id){
+                case '1':
+                    url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
+                    break;
+                case '0':    
+                    url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_phong&format=raw&type='+type_id+'&parent_id='+parent_id;
+                    break;
+                case '2':
+                    url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_vochua&format=raw&type='+type_id;	
+                    break;
+                default:
+                    url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type='+type_id;	
+                    break;
+
             }
+            // if (type_id == '1') {
+            //     url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
+            // }
             // }else if(type_id == '0'){
             // 	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=editphong&format=raw&type='+type_id+'&parent_id='+parent_id;	
             // }

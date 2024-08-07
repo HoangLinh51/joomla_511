@@ -336,7 +336,7 @@ $user = Factory::getUser();
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text rounded-0"><i class="far fa-calendar-alt"></i></span>
                                             </div>
-                                            <input type="text" class="form-control rounded-0" id="ngaybanhanh" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy">
+                                            <input type="text" class="form-control rounded-0" id="ngaybanhanh" name="vanban_created[ngaybanhanh]" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy">
                                         </div>
                                         <!-- <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
@@ -406,7 +406,7 @@ $user = Factory::getUser();
                                 <div class="col-md-6">
                                     <label class="control-label" for="ins_linhvuc">Lĩnh vực</label>
                                     <div class="controls" style="display: grid;">
-                                        <input type="hidden" id="ins_linhvuc" name="ins_linhvuc[]" />
+                                        <input type="hidden" id="ins_linhvuc" name="ins_linhvuc" />
                                         <div id="tree_linhvuc">
                                             <?php
                                             $inArray = Core::loadAssocList('cb_type_linhvuc', array('id', 'name', 'level', 'parent_id'), array('type=' => 2), 'lft');
@@ -503,7 +503,7 @@ $user = Factory::getUser();
                             ?>
                             <div class="form-group">
                                 <div class="checkbox icheck-primary">
-                                    <input type="checkbox" <?php echo $caybaocao[$i]['checked']; ?> value="<?php echo $caybaocao[$i]['report_group_code'] ?>" id="primary_<?php echo $i+1 ?>" />
+                                    <input name="report_group_code[]" type="checkbox" <?php echo $caybaocao[$i]['checked']; ?> value="<?php echo $caybaocao[$i]['report_group_code'] ?>" id="primary_<?php echo $i+1 ?>" />
                                     <label for="primary_<?php echo $i+1 ?>"><span class="lbl">&nbsp;&nbsp; <?php echo $caybaocao[$i]['name'] ?></span></label>
                                 </div>
                             </div>
@@ -660,7 +660,6 @@ $user = Factory::getUser();
 
 
         var row_qdlienquan = $('.div_quyetdinhlienquan > table').children('tr').length;
-        console.log(row_qdlienquan)
 
         $('#btn_xoa_quyetdinhlienquan').on('click', function() {
             var iddel = [];

@@ -127,7 +127,8 @@ class TochucController extends BaseController
 		$app = Factory::getApplication();
         $input = $app->input;
         $formData = $input->post->getArray();
-		
+		echo "<pre>";
+		var_dump($formData);exit;
 		try {
 			$id = $model->saveDept($formData);
 			// nếu là tổ chức hoặc như phòng, thì set con của nó theo trạng thái ẩn luôn
@@ -156,30 +157,101 @@ class TochucController extends BaseController
 			// 	Hết xử lý quyết định liên quan
 
 			// Update report configuration
-			// if ($id > 0) {
-			// 	foreach ($formData['report_group_code'] as $report_group_code) {
-			// 		$data_config = [
-			// 			'report_group_code' => $report_group_code,
-			// 			'ins_dept' => $id,
-			// 			'name' => $formData['name'],
-			// 			'type' => $formData['type'],
-			// 			'ins_loaihinh' => $model->getLoaihinhByIdCap((int)$formData['ins_cap']),
-			// 		];
+			if ($id > 0) {
+				foreach ($formData['report_group_code'] as $report_group_code) {
+					$data_config = [
+						'report_group_code' => $report_group_code,
+						'ins_dept' => $id,
+						'name' => $formData['name'],
+						'type' => $formData['type'],
+						'ins_loaihinh' => $model->getLoaihinhByIdCap((int)$formData['ins_cap']),
+					];
 
-			// 		$data_caybaocao = $model->getIdConfigBc((int)$formData['parent_id'], $data_config['report_group_code']);
-			// 		if ((int)$data_caybaocao['id'] > 0) {
-			// 			$check_data_caybaocao = $model->getIdConfigBc($id, $data_config['report_group_code']);
-			// 			$data_config['id'] = (int)$check_data_caybaocao['id'] > 0 ? (int)$check_data_caybaocao['id'] : $data_caybaocao['id'];
-			// 			$data_config['parent_id'] = $data_config['id'] > 0 ? $check_data_caybaocao['parent_id'] : $data_caybaocao['id'];
-			// 			$data_config['report_group_name'] = $data_caybaocao['report_group_name'];
-			// 			$data_config['all_chirl'] = 0;
+					$data_caybaocao = $model->getIdConfigBc((int)$formData['parent_id'], $data_config['report_group_code']);
+					if ((int)$data_caybaocao['id'] > 0) {
+						$check_data_caybaocao = $model->getIdConfigBc($id, $data_config['report_group_code']);
+						$data_config['id'] = (int)$check_data_caybaocao['id'] > 0 ? (int)$check_data_caybaocao['id'] : $data_caybaocao['id'];
+						$data_config['parent_id'] = $data_config['id'] > 0 ? $check_data_caybaocao['parent_id'] : $data_caybaocao['id'];
+						$data_config['report_group_name'] = $data_caybaocao['report_group_name'];
+						$data_config['all_chirl'] = 0;
 
-			// 			$model_config = AdminModel::getInstance('Caybaocao', 'BaocaohosoModel');
-			// 			$model_config->save($data_config);
-			// 		}
-			// 	}
-			// }
+						$model_config = AdminModel::getInstance('Caybaocao', 'BaocaohosoModel');
+						$model_config->save($data_config);
+					}
+				}
+			}
+			$dataLinhvuc = explode(',', $formData['ins_linhvuc']);
+			$model->saveLinhvuc($id,$dataLinhvuc);
 
+			$vanban_created = $formData['vanban_created'];
+			if (strlen($vanban_created['mahieu']) > 0 ) {
+				$vanban_created['tieude'] = 'QĐ '.TochucHelper::getNameById($formData['type_created'], 'ins_dept_cachthuc').' ,Ngày '.$formData['date_created'];
+				$vanban_id = $model->saveVanban(array(
+						'id'=>$vanban_created['id'],
+						'mahieu'=>$vanban_created['mahieu'],
+						'tieude'=>$vanban_created['tieude'],
+						'ngaybanhanh'=>$vanban_created['ngaybanhanh'],
+						'coquan_banhanh_id'=>$vanban_created['coquan_banhanh_id'],
+						'coquan_banhanh'=>$vanban_created['coquan_banhanh']
+				));
+	    		$mapperAttachment = Core::model('Core/Attachment');
+				for ($i = 0,$n=count($formData["idFile-tochuc-attachment"]); $i < $n; $i ++) {
+					$mapperAttachment->updateTypeIdByCode($formData["idFile-tochuc-attachment"][$i],1,true,$vanban_id);
+				}
+				$dataUpdate = array('vanban_created'=>$vanban_id,'id'=>$id);
+				Core::update('ins_dept', $dataUpdate, 'id');				
+			}
+
+			if ((int)$formData['id'] == 0) {
+				// them moi
+				$model->saveQuatrinh(array(
+						'quyetdinh_so'=>$formData['number_created'],
+						'quyetdinh_ngay'=>($formData['date_created']==null?date('d/m/Y'):$formData['date_created']),
+						'ghichu'=>$formData['ghichu'],
+						'chitiet'=>TochucHelper::getNameById($formData['type_created'], 'ins_dept_cachthuc').' '.$formData['name'],
+						'name'=>$formData['name_created'],
+						'hieuluc_ngay'=>($formData['date_created']==null?date('d/m/Y'):$formData['date_created']),
+						'dept_id'=>$id,
+						'cachthuc_id'=>$formData['type_created'],
+						'ordering'=>1,
+						'vanban_id'=>$vanban_id
+				));
+				$message = 'Thêm mới thành công';
+			}
+
+			// Edit 
+			if ((int)$formData['active'] != 1) {
+				$trangthai_file = $formData['trangthai_fileupload_id'];
+				$formTrangThai = $formData['trangthai'];
+				$formTrangThai['tieude'] = 'QĐ '.TochucHelper::getNameById($formData['active'], 'ins_status').' ,Ngày '.$formTrangThai['quyetdinh_ngay'];
+				$trangthai_vanban_id = $model->saveVanban(array(
+					'id'=>$formTrangThai['id'],
+					'mahieu'=>$formTrangThai['mahieu'],
+					'tieude'=>$formTrangThai['tieude'],
+					'ngaybanhanh'=>$formTrangThai['ngaybanhanh'],
+					'coquan_banhanh_id'=>$formTrangThai['coquan_banhanh_id'],
+					'coquan_banhanh'=>$formTrangThai['coquan_banhanh']
+				));
+				$mapperAttachment = Core::model('Core/Attachment');
+				for ($i = 0,$n=count($formData["idFile-trangthai-attachment"]); $i < $n; $i ++) {
+					$mapperAttachment->updateTypeIdByCode($formData["idFile-trangthai-attachment"][$i],1,true,$trangthai_vanban_id);
+				}
+				Core::update('ins_dept', array('vanban_active'=>$trangthai_vanban_id,'id'=>$id), 'id');
+				if ((int)$formData['id'] == 0) {			
+					$model->saveQuatrinh(array(
+							'quyetdinh_so'=>$formTrangThai['quyetdinh_so'],
+							'quyetdinh_ngay'=>($formTrangThai['quyetdinh_ngay']==null?date('d/m/Y'):$formTrangThai['quyetdinh_ngay']),
+							'chitiet'=>TochucHelper::getNameById($formData['active'], 'ins_status').' '.$formData['name'],
+							'name'=>$formData['name'],
+							'hieuluc_ngay'=>($formTrangThai['quyetdinh_ngay']==null?date('d/m/Y'):$formTrangThai['quyetdinh_ngay']),
+							'dept_id'=>$id,
+							'cachthuc_id'=>$formData['active'],
+							'ordering'=>99,
+							'vanban_id'=>$trangthai_vanban_id
+					));
+				}
+			}
+			Factory::getApplication()->enqueueMessage($message);
 		} catch (Exception $e) {
 			Factory::getApplication()->enqueueMessage($e->__toString(), 'error');
 		}
@@ -196,119 +268,6 @@ class TochucController extends BaseController
 				break;
 		}
 
-		// 	// Handle related decisions
-		// 	$model->xoaIns_dept_vanban($id);
-		// 	foreach ($formData['ins_vanban_id'] as $ins_vanban_id) {
-		// 		if ((int)$ins_vanban_id > 0) {
-		// 			$model->luuIns_dept_vanban($id, $ins_vanban_id);
-		// 		}
-		// 	}
-
-		// 	// Update report configuration
-		// 	// if ($id > 0) {
-		// 	// 	foreach ($formData['report_group_code'] as $report_group_code) {
-		// 	// 		$data_config = [
-		// 	// 			'report_group_code' => $report_group_code,
-		// 	// 			'ins_dept' => $id,
-		// 	// 			'name' => $formData['name'],
-		// 	// 			'type' => $formData['type'],
-		// 	// 			'ins_loaihinh' => $model->getLoaihinhByIdCap((int)$formData['ins_cap']),
-		// 	// 		];
-
-		// 	// 		$data_caybaocao = $model->getIdConfigBc((int)$formData['parent_id'], $data_config['report_group_code']);
-		// 	// 		if ((int)$data_caybaocao['id'] > 0) {
-		// 	// 			$check_data_caybaocao = $model->getIdConfigBc($id, $data_config['report_group_code']);
-		// 	// 			$data_config['id'] = (int)$check_data_caybaocao['id'] > 0 ? (int)$check_data_caybaocao['id'] : $data_caybaocao['id'];
-		// 	// 			$data_config['parent_id'] = $data_config['id'] > 0 ? $check_data_caybaocao['parent_id'] : $data_caybaocao['id'];
-		// 	// 			$data_config['report_group_name'] = $data_caybaocao['report_group_name'];
-		// 	// 			$data_config['all_chirl'] = 0;
-
-		// 	// 			$model_config = AdminModel::getInstance('Caybaocao', 'BaocaohosoModel');
-		// 	// 			$model_config->save($data_config);
-		// 	// 		}
-		// 	// 	}
-		// 	// }
-
-		// 	// Save lĩnh vực
-		// 	$model->saveLinhvuc($id, $formData['ins_linhvuc']);
-
-		// 	// Handle created document
-		// 	$vanban_created = $formData['vanban_created'];
-		// 	if (strlen($vanban_created['mahieu']) > 0) {
-		// 		$vanban_created['tieude'] = 'QĐ ' . TochucHelper::getNameById($formData['type_created'], 'ins_dept_cachthuc') . ', Ngày ' . $formData['date_created'];
-		// 		$vanban_id = $model->saveVanban($vanban_created);
-
-		// 		$mapperAttachment = Core::model('Core/Attachment');
-		// 		foreach ($formData["idFile-tochuc-attachment"] as $attachment_id) {
-		// 			$mapperAttachment->updateTypeIdByCode($attachment_id, 1, true, $vanban_id);
-		// 		}
-
-		// 		$dataUpdate = ['vanban_created' => $vanban_id, 'id' => $id];
-		// 		Core::update('ins_dept', $dataUpdate, 'id');
-		// 	}
-
-		// 	// Handle new record
-		// 	if ((int)$formData['id'] == 0) {
-		// 		$model->saveQuatrinh([
-		// 			'quyetdinh_so' => $formData['number_created'],
-		// 			'quyetdinh_ngay' => $formData['date_created'] ?? date('d/m/Y'),
-		// 			'ghichu' => $formData['ghichu'],
-		// 			'chitiet' => TochucHelper::getNameById($formData['type_created'], 'ins_dept_cachthuc') . ' ' . $formData['name'],
-		// 			'name' => $formData['name_created'],
-		// 			'hieuluc_ngay' => $formData['date_created'] ?? date('d/m/Y'),
-		// 			'dept_id' => $id,
-		// 			'cachthuc_id' => $formData['type_created'],
-		// 			'ordering' => 1,
-		// 			'vanban_id' => $vanban_id,
-		// 		]);
-		// 		$message = 'Thêm mới thành công';
-		// 	}
-
-		// 	// Handle status update
-		// 	if ((int)$formData['active'] != 1) {
-		// 		$formTrangThai = $formData['trangthai'];
-		// 		$formTrangThai['tieude'] = 'QĐ ' . TochucHelper::getNameById($formData['active'], 'ins_status') . ', Ngày ' . $formTrangThai['quyetdinh_ngay'];
-		// 		$trangthai_vanban_id = $model->saveVanban($formTrangThai);
-
-		// 		$mapperAttachment = Core::model('Core/Attachment');
-		// 		foreach ($formData["idFile-trangthai-attachment"] as $attachment_id) {
-		// 			$mapperAttachment->updateTypeIdByCode($attachment_id, 1, true, $trangthai_vanban_id);
-		// 		}
-
-		// 		Core::update('ins_dept', ['vanban_active' => $trangthai_vanban_id, 'id' => $id], 'id');
-
-		// 		if ((int)$formData['id'] == 0) {
-		// 			$model->saveQuatrinh([
-		// 				'quyetdinh_so' => $formTrangThai['quyetdinh_so'],
-		// 				'quyetdinh_ngay' => $formTrangThai['quyetdinh_ngay'] ?? date('d/m/Y'),
-		// 				'chitiet' => TochucHelper::getNameById($formData['active'], 'ins_status') . ' ' . $formData['name'],
-		// 				'name' => $formData['name'],
-		// 				'hieuluc_ngay' => $formTrangThai['quyetdinh_ngay'] ?? date('d/m/Y'),
-		// 				'dept_id' => $id,
-		// 				'cachthuc_id' => $formData['active'],
-		// 				'ordering' => 99,
-		// 				'vanban_id' => $trangthai_vanban_id,
-		// 			]);
-		// 		}
-		// 	}
-
-		// 	Factory::getApplication()->enqueueMessage($message);
-		// } catch (Exception $e) {
-		// 	Factory::getApplication()->enqueueMessage($e->__toString(), 'error');
-		// }
-
-		// // Redirect based on action name
-		// switch ($formData['action_name']) {
-		// 	case 'SAVEANDCLOSE':
-		// 		$this->setRedirect("index.php?option=com_tochuc&controller=tochuc&task=default");
-		// 		break;
-		// 	case 'SAVEANDCONTINUE':
-		// 		$this->setRedirect("index.php?option=com_tochuc&task=thanhlap&Itemid=&id=" . $id);
-		// 		break;
-		// 	default:
-		// 		$this->setRedirect("index.php?option=com_tochuc&controller=tochuc&task=thanhlap&type=" . $formData['type'] . "&parent_id=" . $formData['parent_id']);
-		// 		break;
-		// }
 	}
 
     

@@ -56,7 +56,10 @@ class RawView extends BaseHtmlView
             break;
         case 'EDIT_TOCHUC':
             $this->_pageEditTochuc();
-            break;	
+            break;
+        case 'EDIT_PHONG':
+            $this->_pageEditPhong();
+            break;     	
         case 'THANHLAP':
             $this->_pageQuaTrinh();
             break;
@@ -170,6 +173,66 @@ class RawView extends BaseHtmlView
         $this->loaihachtoan = Core::loadAssocList('ins_loaihachtoan', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
         $this->mucdotuchu = Core::loadAssocList('ins_mucdotuchu', '*', 'trangthai=1 and daxoa=0', 'sapxep asc');
 
+        parent::display();
+    }
+
+    private function _pageEditPhong(){
+    	$deptRoot = TochucHelper::getRoot();
+    	$inArray = TochucHelper::collect('ins_dept', array('id','parent_id','name',"IF((type = 1),'item','folder') AS type"),array('type IN (1,2,3)'),'lft ASC');
+    	$tree_data_ins_dept = array();
+
+    	TochucHelper::makeDataForTree($inArray, $tree_data_ins_dept);
+    	unset($inArray);
+        $this->Itemid = Factory::getApplication()->input->get('Itemid');
+    	$this->tree_data_ins_dept = json_encode($tree_data_ins_dept);
+
+    	$model = Core::model('Tochuc/Tochuc');		
+    	$dept_id = Factory::getApplication()->input->getInt('id',0);
+    	$row = new stdClass;
+    	$arr_ins_created =  TochucHelper::collect('ins_dept', array('id AS value','name AS text'),array('type IN (1,3)'),'lft ASC');
+    	$arr_ins_created = array_merge(array(array('value'=>'','text'=>'')),$arr_ins_created);
+    	if((int)$dept_id > 0){
+    		$row = $model->read($dept_id);
+    	}
+
+    	if ($row->id == null) {
+    		$vanban_created = array();
+    		$trangthai = array();
+    		$file_created = array();
+    		$file_trangthai = array();    		
+    		$row->active = 1;
+    		$row->type = Factory::getApplication()->input->getInt("type",0);
+    		$linhvuc = array();
+    		$title	=	'Bổ sung đơn vị vừa tạo vào cấu hình báo cáo';
+    	}else{
+    		$vanban_created = $model->getVanbanById($row->vanban_created);
+    		$trangthai = $model->getVanbanById($row->vanban_active);
+    		$file_created = $model->getFilebyIdVanban($row->vanban_created);
+    		$file_trangthai = $model->getFilebyIdVanban($row->vanban_active);
+    		$linhvuc = $model->getLinhvucByIdDept($row->id);
+    		$row->type = Factory::getApplication()->input->getInt("type",0);
+    		$title	=	'Cập nhật thông tin đơn vị vào cấu hình báo cáo';
+    	}
+    	
+    	$caybaocao	=	$model->getCayBaocao($row->id);
+        $this->caybaocao = $caybaocao;
+        $this->title = $title;
+        $this->row = $row;
+
+        $this->vanban_created = $vanban_created;
+        $this->trangthai = $trangthai;
+        $this->file_created = $file_created;
+        $this->file_trangthai = $file_trangthai;
+        $this->linhvuc = $linhvuc;
+        $this->arr_ins_created = $arr_ins_created;
+
+     	unset($tree_data_ins_linhvuc);    	
+    	unset($tree_data_ins_dept);
+    	unset($row);
+    	unset($vanban_created);
+    	unset($file_created);
+    	unset($trangthai);
+    	unset($file_trangthai);
         parent::display();
     }
 
