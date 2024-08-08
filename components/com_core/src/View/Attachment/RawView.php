@@ -48,20 +48,23 @@ class RawView extends BaseHtmlView
     	$layout = ($layout == null)?'default':strtoupper($layout);  
         $this->setLayout(strtolower($layout));    
         switch($layout){
-        case 'INPUT':
-            $this->_initInput();
-            break;
-        case 'ATTACHMENTONEFILE':
-            $this->_initInput();
-            break;	
-        case 'ATTACHMENT':
-            $this->_initInput();
-            break;    
-        case 'default':
-         	break;
+            case 'INPUT':
+                $this->_initInput();
+                break;
+            case 'ATTACHMENTONEFILE':
+                $this->_initInput();
+                break;	
+            case 'ATTACHMENT':
+                $this->_initInput();
+                // $this->_initAttachment();
+                break;    
+            case 'default':
+                break;
         }
         parent::display($tpl);
+
     }
+    
 
     function _initInput(){
         $isTemp = -1;
@@ -117,22 +120,14 @@ class RawView extends BaseHtmlView
         $this->isCapnhat = $isCapnhat;
         $this->id_user          = $user->id;
     }
+
+
     public function _initAttachment()
     {
         $user = Factory::getUser();
-        //Lay cac bien toan cuc
-        $year = date('Y');
-        $is_new = Factory::getApplication()->input->getVar('is_new');
-        $mapper = Core::model('Core/Attachment');
-        if($is_new == 1){
-            $idObject = $mapper->getIdTemp();
-        }else{
-
-        }
-        $this->idObject = $idObject;
-        $this->idObject         = $idObject;
+        $this->idObject = Factory::getApplication()->input->getVar('idObject');
         $this->isTemp           = Factory::getApplication()->input->getVar('isTemp');
-        $this->year             = $year;
+        $this->year             = '2015';
         $this->iddiv            = Factory::getApplication()->input->getVar('iddiv');
         $this->type             = Factory::getApplication()->input->getVar('type');
         $this->from             = Factory::getApplication()->input->getVar('from');

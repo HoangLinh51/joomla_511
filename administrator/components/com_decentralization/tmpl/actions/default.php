@@ -124,7 +124,8 @@ $mfa        = PluginHelper::isEnabled('multifactorauth');
                                 </td>
 
                                 <td class="d-none d-md-table-cell">
-                                    <?php echo $this->escape($item->status); ?>
+                                    <?php echo HTMLHelper::_('jgrid.published', $item->status, $i, 'actions.', $canChange); ?>
+                                  
                                 </td>
 
                                 <td class="d-none d-md-table-cell">

@@ -1087,13 +1087,26 @@ class Core{
     	$db->setQuery($query);
     	return $db->loadAssoc();
     }
-    public static function inputAttachment($iddiv,$idObject,$is_new,$year,$type,$isreadonly=0,$is_nogetcontent=0,$pdf=0)
+    public static function inputAttachment_new($iddiv,$idObject,$is_new,$year,$type,$isreadonly=0,$is_nogetcontent=0,$pdf=0)
     {
         return '
 		<div id="'.$iddiv.'"></div>
 		<script type="text/javascript">
 		jQuery(function($){
 			jQuery("#'.$iddiv.'").load("index.php?option=com_core&view=attachment&format=raw&task=attachment&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type.'&pdf='.$pdf.'",function(){
+				$("#'.$iddiv.' input:checkbox").attr("checked","cheched");
+			});
+		});
+		</script>
+		';
+    }
+	public static function inputAttachment($iddiv,$idObject,$is_new,$year,$type,$isreadonly=0,$is_nogetcontent=0,$pdf=0)
+    {
+        return '
+		<div id="'.$iddiv.'"></div>
+		<script type="text/javascript">
+		jQuery(function($){
+			jQuery("#'.$iddiv.'").load("index.php?option=com_core&view=attachment&format=raw&task=input&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type.'&pdf='.$pdf.'",function(){
 				$("#'.$iddiv.' input:checkbox").attr("checked","cheched");
 			});
 		});

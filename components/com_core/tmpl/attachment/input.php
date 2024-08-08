@@ -1,16 +1,40 @@
 <?php
-/**
-* @file: input.php
-* @author: huuthanh3108@gmaill.com
-* @date: 01-04-2015
-* @company : http://dnict.vn
-* 
-**/
+
+use Joomla\CMS\Uri\Uri;
+
 ?>
-	<span class="btn btn-danger btn-mini" style="line-height: 22px !important;"
-    onclick='
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery.min.js" type="text/javascript"></script>
+	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/moment.min.js" type="text/javascript"></script>
+	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
+	<script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.js" type="text/javascript"></script>
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/style.bundle.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/_all-skins.min.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte//plugins/fontawesome-free/css/all.min.css" media="screen" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+<?php
+/**
+ * @file: input.php
+ * @author: huuthanh3108@gmaill.com
+ * @date: 01-04-2015
+ * @company : http://dnict.vn
+ * 
+ **/
+if ($this->isCapnhat == 12) {
+?>
+	<span class="btn btn-danger btn-mini" style="line-height: 22px !important;" onclick='
     var ln = 0;
-	var arr = document.getElementsByName("DELidfiledk<?php echo $this->idObject?>[]");
+	var arr = document.getElementsByName("DELidfiledk<?php echo $this->idObject ?>[]");
 	for(var i = 0 ; i < arr.length ;i++ ){
 		if(arr[i].checked == true){
 			ln = 1;
@@ -24,9 +48,9 @@
 				names.push(arr[i].value);
 			}
 		}     
-			var url="index.php?option=com_core&controller=attachment&format=raw&task=delete&type=<?php echo $this->type ?>&year=<?php echo $this->year?>&iddiv=<?php echo $this->iddiv ?>&idObject=<?php echo $this->idObject?>&isTemp=<?php echo $this->isTemp ?>&from=attachment";
-   			jQuery.post(url,{"DELidfiledk<?php echo $this->idObject?>[]":names},function(resp){
-   				jQuery("#tftemp<?php echo $this->idObject?>").html(resp);
+			var url="index.php?option=com_core&controller=attachment&format=raw&task=delete&type=<?php echo $this->type ?>&year=<?php echo $this->year ?>&iddiv=<?php echo $this->iddiv ?>&idObject=<?php echo $this->idObject ?>&isTemp=<?php echo $this->isTemp ?>&from=attachment";
+   			jQuery.post(url,{"DELidfiledk<?php echo $this->idObject ?>[]":names},function(resp){
+   				jQuery("#tftemp<?php echo $this->idObject ?>").html(resp);
    			});
 		}
 	}
@@ -35,41 +59,87 @@
 		alert("Bạn phải chọn ít nhất một dòng để xóa");
 	}
     return false;
-    '
-    ><i class="icon-trash"></i></span>   
-<span class="btn btn-success btn-mini" style="line-height: 22px !important;" onclick="document.getElementById('tftemp<?php echo $this->idObject?>').style.display='';
-	document.getElementById('tftemp<?php echo $this->idObject?>').src ='index.php?option=com_core&controller=attachment&format=raw&task=attachment&type=-1&year=<?php echo $this->year?>&idObject=<?php echo $this->idObject?>&iddiv=<?php echo $this->iddiv ?>&isTemp=<?php echo $this->isTemp?>&pdf=<?php echo $this->pdf?>=&from=attachment';
-	return false;"><i class="icon-plus"></i></span>
-(<strong>Giới hạn tập tin tối đa: <?php echo (ini_get('upload_max_filesize'))?></strong>.)<br/>
+    '><i class="icon-trash"></i></span>
+<?php } ?>
+<?php if ($this->isCapnhat == 1) { ?>
+	<form name=frmUpload enctype="multipart/form-data" action="<?php echo Uri::root(true); ?>/index.php?option=com_core&controller=attachment&task=doattachment" method="post" target="tftemp<?php echo $this->idObject?>">
+	<div class="dropzone-panel mb-lg-0 mb-2">
+		<label  for="uploadfile" class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm quyết định</label >
+		<input  type="file" id="uploadfile" name="uploadfile" onchange="document.frmUpload.submit();" style="display:none;"/> 
+	</div>
+
+	<div class="progress" style="display:none; margin-top: 10px;">
+        <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+	
+	<input type="hidden" name="idObject" value="<?php echo $this->idObject?>" />
+	<input type="hidden" name="isTemp" value="<?php echo $this->isTemp?>" />
+	<input type="hidden" name="year" value="<?php echo $this->year?>" />
+	<input type="hidden" name="iddiv" value="<?php echo $this->iddiv?>" />
+	<input type="hidden" name="type" value="<?php echo $this->type?>" />
+	<input type="hidden" name="from" value="<?php echo $this->from?>" />
+	<input type="hidden" name="pdf" value="<?php echo $this->pdf?>"/>
+	<input type="hidden" name="is_nogetcontent" value="<?php echo $this->is_nogetcontent?>"/>
+	<input type="hidden" name="id_user" value="<?php echo $this->id_user?>"/>
+</form>
+<?php } ?>
+<span class="form-text text-muted">Kích thước tệp tối đa là 1MB và số lượng tệp tối đa là 5.</span>
 <?php
 //var_dump($this->data);
-	//$stt=0;
-    //for ($i=0,$n=count($this->data);$i<$n;$i++){
-        //$item = $this->data[$i];
-	//foreach ($this->data as $item)
-	//{
+$stt = 0;
+for ($i = 0, $n = count($this->data); $i < $n; $i++) {
+	$item = $this->data[$i];
+	$file =  $item['folder'].'/'.$item['code'];
+	$fileSizeMB = round( filesize($file) / 1024, 2);
 	$stt++;
 ?>
-		<?php if($this->isCapnhat == 1){ ?>  
+	<?php if ($this->isCapnhat == 1) { ?>
 		<input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>>
-		<!-- <input type="hidden" class="fileUploaded" name="idFile-dinhkemfile[]" value=<?php //echo $item['code']; ?>> -->
-		<input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> 
-		<?php }
-			else 
-			echo $stt.".";
-		?>
-		<span class="lbl"><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year;?>&code=<?php echo $item['code']?>"><?php echo $item['filename']; ?></a></span><br/>
-<?php //} ?>
-<iframe style="overflow-x:visible;display:none;" allowTransparency=true BORDER=0 scrolling=no FRAMEBORDER=no  class='iframeinputfile' id="tftemp<?php echo $this->idObject?>" 
-name="tftemp<?php echo $this->idObject?>" 
-src="" >
-</iframe>
+		<!-- <input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> -->
+	<?php } else
+		echo $stt . ".";
+	?>
+	<div class="dropzone dropzone-multi col-lg-8">
+		<div class="dropzone-items wm-200px">
+			<div class="dropzone-item">
+				<!--begin::File-->
+				<div class="dropzone-file">
+					<div class="dropzone-filename" title="some_image_file_name.jpg">
+						<span data-dz-name class="linkFile"><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span>
+						<strong>(<span data-dz-size><?php echo $fileSizeMB ?>kb</span>)</strong>
+					</div>
+
+					<div class="dropzone-error" data-dz-errormessage></div>
+				</div>
+				<!--end::File-->
+
+				<!--begin::Progress-->
+				<!-- <div class="dropzone-progress">
+					<div class="progress">
+						<div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress>
+						</div>
+					</div>
+				</div> -->
+				<!--end::Progress-->
+
+				<!--begin::Toolbar-->
+				<div class="dropzone-toolbar">
+					<span class="dropzone-delete" data-dz-remove><i class="fa fa-times"></i></span>
+				</div>
+				<!--end::Toolbar-->
+			</div>
+		</div>
+		<!--end::Items-->
+	</div>
+	<!-- <span class="lbl "><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span><br/> -->
+<?php } ?>
+<iframe style="overflow-x:visible;display:none;" id="tftemp<?php echo $this->idObject ?>" name="tftemp<?php echo $this->idObject ?>"></iframe>
 <script type="text/javascript">
-if(jQuery('.div_secured').length > 0){
-	if(jQuery('.fileUploaded').length > 0 || jQuery('.btn_remove_soqd').length > 0){
-		jQuery('.div_secured').show();
-	}else{
-		jQuery('.div_secured').hide();
+	if (jQuery('.div_secured').length > 0) {
+		if (jQuery('.fileUploaded').length > 0 || jQuery('.btn_remove_soqd').length > 0) {
+			jQuery('.div_secured').show();
+		} else {
+			jQuery('.div_secured').hide();
+		}
 	}
-}
 </script>

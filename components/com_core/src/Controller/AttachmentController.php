@@ -43,6 +43,64 @@ class AttachmentController extends BaseController{
     }
 
     function doattachment(){
+        $formData = Factory::getApplication()->input->post->getArray();
+        $file = $_FILES['uploadfile'];
+        if ($file['error'] == 0) {
+            //$adapter = new Zend_File_Transfer_Adapter_Http();
+            //Lay tham so nhan tu client
+            $date = getdate();
+            $from=$formData['from'];
+            $is_nogetcontent= $formData['is_nogetcontent'];
+            $is_new = $formData['is_new'];
+            $iddiv= $formData['iddiv'];
+          
+            $year = '2015'; //nam cua bang du lieu
+            $type = $formData['type'];
+            if(!$type)
+                $type = -1;
+            if(!$year)
+                $year = $date['year'];
+            $idObject = $formData['idObject'];//id cua doi tuong chua file dinh kem
+            if(!$idObject)
+                $idObject = 0;
+            $isTemp = $formData['isTemp'];
+            if(!$isTemp)
+                $isTemp = 0;
+            $pdf = $formData['pdf'];
+            if(!$pdf)
+                $pdf = 0;
+            $user = Factory::getUser();
+            $mapper = Core::model('Core/Attachment');
+            //$mapper = new CoreAttachment_Model_AttachmentMapper(); //doi tuong model
+            $dirPath = $mapper->getDir($date['year'],$date['mon']);
+            // $dirPath = $mapper->getTempPath();
+            $new_name = md5($file['name'].time());
+            $data = array(
+                'folder'=> $dirPath,
+                'object_id'=> $idObject,
+                'code'=> $new_name,
+                'mime'=> $file['type'],
+                'url'=> '#',
+                'filename'=> $file['name'],
+                'type_id'=> $type,
+                'created_by'=> $user->id,
+                'created_at'=> date('Y-m-d H:i:s')
+            );
+           $mapper->create($data); 
+           $uploadfile = $dirPath .'/'. basename($new_name);
+           if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
+                $url = 'index.php?option=com_core&view=attachment&format=raw&task=input&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type."&pdf=".$pdf."&is_nogetcontent=".$is_nogetcontent;
+                echo "<script>window.parent.loadDivFromUrl('".$iddiv."','$url"."'); </script>";
+           } else {
+               echo "Possible file upload attack!\n";
+           }
+
+           exit;
+        }
+
+    }
+
+    function doattachment_new(){
         // $formData = Factory::getApplication()->get('post');
         $app = Factory::getApplication()->input;
         $formData = array(

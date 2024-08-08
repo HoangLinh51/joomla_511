@@ -74,6 +74,8 @@ class HtmlView extends BaseHtmlView
     	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.toast.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/common.js');
+
 
       
 		$model = Core::model('Tochuc/Tochuc');

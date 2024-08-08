@@ -55,6 +55,8 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/chart.js/Chart.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/select2/js/select2.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/toastr/toastr.min.js');
+	$doc->addScript(Uri::root(true).'/media/cbcc/js/common.js');
+
 
 	
 ?>

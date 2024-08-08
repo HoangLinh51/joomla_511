@@ -78,7 +78,7 @@ $user_id = $user->id;
                     <div class="col-md-6">
                         <label class="control-label" for="name">Loại<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="form-control rounded-0" style="width: 100%;" id="type_content" name="type_content" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                            <select class="form-control rounded-0" style="width: 100%;" id="type_content" name="type_content" data-select2-id="1" tabindex="-1" aria-hidden="false">
                                 <option selected="selected" value="1">Tổ chức</option>
                                 <option value="0">Phòng</option>
                                 <option value="3">Tổ chức hoạt động như phòng</option>
@@ -278,7 +278,7 @@ $user_id = $user->id;
             }
             
         }).bind("uncheck_node.jstree", function(e, data) {
-            var node_id = data.node.id;
+            // var node_id = data.node.id;
             $('#parent_id_content').val('');
             $('#parent_name').val('');
             if ($('#type_content').val() == '0') {
@@ -293,33 +293,33 @@ $user_id = $user->id;
             var url = 'index.php?option=com_tochuc&controller=tochuc&task=edittochuc&format=raw';
             var parent_id = <?php echo (int)$this->row->parent_id; ?>;
             var htmlLoading = '<i class="icon-spinner icon-spin blue bigger-125"></i>';
-            switch(type_id){
-                case '1':
-                    url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
-                    break;
-                case '0':    
-                    url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_phong&format=raw&type='+type_id+'&parent_id='+parent_id;
-                    break;
-                case '2':
-                    url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_vochua&format=raw&type='+type_id;	
-                    break;
-                default:
-                    url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type='+type_id;	
-                    break;
+            // switch(type_id){
+            //     case '1':
+            //         url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
+            //         break;
+            //     case '0':    
+            //         url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_phong&format=raw&type='+type_id+'&parent_id='+parent_id;
+            //         break;
+            //     case '2':
+            //         url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_vochua&format=raw&type='+type_id;	
+            //         break;
+            //     default:
+            //         url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type='+type_id;	
+            //         break;
 
+            // }
+            if (type_id == '1') {
+                url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
+            
+            }else if(type_id == '0'){
+            	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_phong&format=raw&type='+type_id+'&parent_id='+parent_id;	
             }
-            // if (type_id == '1') {
-            //     url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
-            // }
-            // }else if(type_id == '0'){
-            // 	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=editphong&format=raw&type='+type_id+'&parent_id='+parent_id;	
-            // }
-            // else if(type_id == '2'){
-            // 	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=editvochua&format=raw&type='+type_id;	
-            // }
-            // else{
-            // 	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edittochuc&format=raw&type='+type_id;	
-            // }
+            else if(type_id == '2'){
+            	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_vochua&format=raw&type='+type_id;	
+            }
+            else{
+            	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type='+type_id;	
+            }
             jQuery.ajax({
                 type: "GET",
                 url: url,
@@ -327,11 +327,11 @@ $user_id = $user->id;
                     "id": <?php echo (int)$this->id; ?>
                 },
                 beforeSend: function() {
-                    // $.blockUI();
+                  
                     $('#content_form').empty();
                 },
                 success: function(data, textStatus, jqXHR) {
-                    //$.unblockUI();
+                  
                     $('#content_form').html(data);
                 }
             });
@@ -340,7 +340,7 @@ $user_id = $user->id;
             event.preventDefault();
             var that = $(this);
             //console.log(that.val());
-            buildForm(that.val());
+            buildForm($(this).val());
         });
         buildForm($('#type_content').val());
 

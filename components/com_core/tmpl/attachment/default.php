@@ -6,11 +6,16 @@
 * @company : http://dnict.vn
 * 
 **/
+
+use Joomla\CMS\Uri\Uri;
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery.min.js" type="text/javascript"></script>
+<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body style="background-color:transparent">
 <form name=frmUpload enctype="multipart/form-data" action="" method="post" target="tftemp<?php echo $this->idObject?>">
@@ -38,13 +43,6 @@
 	<input type="hidden" name="id_user" value="<?php echo $this->id_user?>"/>
 </form>
 <p id=lasttext></p>
-<script>
-var iframeElement = window.parent.document.getElementById('tftemp<?php echo $this->idObject?>');
-iframeElement.style.height = ""+(document.getElementById("lasttext").offsetTop+10)+"px";
-iframeElement.width = "100%"; 
-if(typeof window.parent.resetHeight == "function") {	
-	window.parent.resetHeight();
-}
-</script>
+
 </body>
 </html>

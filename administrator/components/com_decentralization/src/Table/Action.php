@@ -40,6 +40,7 @@ class Action extends Table
     public function __construct(DatabaseDriver $db)
     {
         parent::__construct('core_action', 'id', $db);
+        $this->setColumnAlias('published', 'status');
     }
 
     /**
