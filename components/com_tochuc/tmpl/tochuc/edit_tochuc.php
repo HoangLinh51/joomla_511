@@ -349,7 +349,6 @@ $user = Factory::getUser();
                             </div>
 
                             <?php echo Core::inputAttachment('attactment_tochuc', null, 1, date('Y'), -1); ?>
-
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label class="control-label" for="vanban_created_mahieu">Các quyết định liên quan</label>

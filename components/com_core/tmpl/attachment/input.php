@@ -8,10 +8,12 @@ use Joomla\CMS\Uri\Uri;
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery.min.js" type="text/javascript"></script>
-	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/moment.min.js" type="text/javascript"></script>
-	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
-	<script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.js" type="text/javascript"></script>
+	<!-- <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery.min.js" type="text/javascript"></script> -->
+	<!-- <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/moment.min.js" type="text/javascript"></script> -->
+	<!-- <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script> -->
+	<!-- <script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.js" type="text/javascript"></script> -->
+	<!-- <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jstree-3.2.1/jstree.min.js" type="text/javascript"></script> -->
+	<!-- <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/ace-elements.min.js" type="text/javascript"></script> -->
 	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/style.bundle.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />
@@ -65,7 +67,7 @@ if ($this->isCapnhat == 12) {
 	<form name=frmUpload enctype="multipart/form-data" action="<?php echo Uri::root(true); ?>/index.php?option=com_core&controller=attachment&task=doattachment" method="post" target="tftemp<?php echo $this->idObject?>">
 	<div class="dropzone-panel mb-lg-0 mb-2">
 		<label  for="uploadfile" class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm quyết định</label >
-		<input  type="file" id="uploadfile" name="uploadfile" onchange="document.frmUpload.submit();" style="display:none;"/> 
+		<input multiple type="file" id="uploadfile" name="uploadfile[]" onchange="document.frmUpload.submit();" style="display:none;"/> 
 	</div>
 
 	<div class="progress" style="display:none; margin-top: 10px;">
@@ -84,54 +86,65 @@ if ($this->isCapnhat == 12) {
 </form>
 <?php } ?>
 <span class="form-text text-muted">Kích thước tệp tối đa là 1MB và số lượng tệp tối đa là 5.</span>
+<span id="<?php echo $this->iddiv?>-error" data-dz-errormessage></span>
 <?php
-//var_dump($this->data);
 $stt = 0;
-for ($i = 0, $n = count($this->data); $i < $n; $i++) {
-	$item = $this->data[$i];
-	$file =  $item['folder'].'/'.$item['code'];
-	$fileSizeMB = round( filesize($file) / 1024, 2);
-	$stt++;
-?>
-	<?php if ($this->isCapnhat == 1) { ?>
-		<input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>>
-		<!-- <input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> -->
-	<?php } else
-		echo $stt . ".";
+$maxFiles = 5; // Maximum number of files allowed
+$maxFileSizeKB = 1024; // Maximum file size allowed (in KB)
+if (count($this->data) > $maxFiles) {
+    echo "Error: You can only upload up to $maxFiles files.";
+
+}else{
+
+	for ($i = 0, $n = count($this->data); $i < $n; $i++) {
+		$item = $this->data[$i];
+		$file =  $item['folder'].'/'.$item['code'];
+		$fileSizeMB = round( filesize($file) / 1024, 2);
+		if ($fileSizeMB > $maxFileSizeKB) {
+            echo "<div class='dropzone-error'>Error: The file {$item['filename']} exceeds the maximum allowed size of {$maxFileSizeKB}KB.</div>";
+            continue; // Skip processing this file
+        }
+		$stt++;
 	?>
-	<div class="dropzone dropzone-multi col-lg-8">
-		<div class="dropzone-items wm-200px">
-			<div class="dropzone-item">
-				<!--begin::File-->
-				<div class="dropzone-file">
-					<div class="dropzone-filename" title="some_image_file_name.jpg">
-						<span data-dz-name class="linkFile"><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span>
-						<strong>(<span data-dz-size><?php echo $fileSizeMB ?>kb</span>)</strong>
-					</div>
-
-					<div class="dropzone-error" data-dz-errormessage></div>
-				</div>
-				<!--end::File-->
-
-				<!--begin::Progress-->
-				<!-- <div class="dropzone-progress">
-					<div class="progress">
-						<div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress>
+		<?php if ($this->isCapnhat == 1) { ?>
+			<input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>>
+			<!-- <input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> -->
+		<?php } else
+			echo $stt . ".";
+		?>
+		<div class="dropzone dropzone-multi col-lg-8">
+			<div class="dropzone-items wm-200px">
+				<div class="dropzone-item">
+					<!--begin::File-->
+					<div class="dropzone-file">
+						<div class="dropzone-filename" title="some_image_file_name.jpg">
+							<span data-dz-name class="linkFile"><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span>
+							<strong>(<span data-dz-size><?php echo $fileSizeMB ?>kb</span>)</strong>
 						</div>
+						<div class="dropzone-error" data-dz-errormessage></div>
 					</div>
-				</div> -->
-				<!--end::Progress-->
+					<!--end::File-->
 
-				<!--begin::Toolbar-->
-				<div class="dropzone-toolbar">
-					<span class="dropzone-delete" data-dz-remove><i class="fa fa-times"></i></span>
+					<!--begin::Progress-->
+					<!-- <div class="dropzone-progress">
+						<div class="progress">
+							<div class="progress-bar bg-primary" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress>
+							</div>
+						</div>
+					</div> -->
+					<!--end::Progress-->
+
+					<!--begin::Toolbar-->
+					<div class="dropzone-toolbar">
+						<span class="dropzone-delete" onclick="removeFile()" data-code="<?php echo $item['code'] ?>"  name="DELidfiledk<?php echo $this->idObject ?>[]" data-dz-remove><i class="fa fa-times"></i></span>
+					</div>
+					<!--end::Toolbar-->
 				</div>
-				<!--end::Toolbar-->
 			</div>
+			<!--end::Items-->
 		</div>
-		<!--end::Items-->
-	</div>
-	<!-- <span class="lbl "><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span><br/> -->
+		<!-- <span class="lbl "><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span><br/> -->
+	<?php } ?>
 <?php } ?>
 <iframe style="overflow-x:visible;display:none;" id="tftemp<?php echo $this->idObject ?>" name="tftemp<?php echo $this->idObject ?>"></iframe>
 <script type="text/javascript">
@@ -142,4 +155,44 @@ for ($i = 0, $n = count($this->data); $i < $n; $i++) {
 			jQuery('.div_secured').hide();
 		}
 	}
+	
+
+	function removeFile() {
+		var arr = document.getElementsByName("DELidfiledk<?php echo $this->idObject ?>[]");
+
+		if (jQuery(arr).attr('data-code') != '') {
+			if (confirm("Bạn có muốn xóa không")) {
+				
+				// Build the URL and send the AJAX request
+				var url = "index.php?option=com_core&controller=attachment&format=raw&task=delete&type=<?php echo $this->type ?>&year=<?php echo $this->year ?>&iddiv=<?php echo $this->iddiv ?>&idObject=<?php echo $this->idObject ?>&isTemp=<?php echo $this->isTemp ?>&from=attachment";
+				
+				jQuery.post(url, {
+					"DELidfiledk<?php echo $this->idObject ?>[]": jQuery(arr).attr('data-code')
+				}, function(resp) {
+					jQuery("#tftemp<?php echo $this->idObject ?>").html(resp);
+				});
+			}
+		} else {
+			alert("Bạn phải chọn ít nhất một dòng để xóa");
+		}
+
+		return false;
+	}
+
 </script>
+<style>
+a.dz-clickable:hover{
+    border-top: 3px solid transparent !important;
+}
+.filetaga{
+	color: #7E8299;
+
+}
+.linkFile a:hover{
+	border-top: 3px solid transparent !important;
+
+}
+#attactment_tochuc-error{
+	color: red;
+}
+</style>

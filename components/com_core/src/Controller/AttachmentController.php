@@ -42,9 +42,67 @@ class AttachmentController extends BaseController{
         $view->display();
     }
 
-    function doattachment(){
+    function doattachment() {
         $formData = Factory::getApplication()->input->post->getArray();
+    
+        // Multiple files will be stored in an array
+        $files = $_FILES['uploadfile'];
+        $date = getdate();
+        $from = $formData['from'];
+        $is_nogetcontent = $formData['is_nogetcontent'];
+        $is_new = $formData['is_new'];
+        $iddiv = $formData['iddiv'];
+    
+        $year = $formData['year'] ?? $date['year'];
+        $type = $formData['type'] ?? -1;
+        $idObject = $formData['idObject'] ?? 0;
+        $isTemp = $formData['isTemp'] ?? 0;
+        $pdf = $formData['pdf'] ?? 0;
+        $user = Factory::getUser();
+        $mapper = Core::model('Core/Attachment');
+        $dirPath = $mapper->getDir($date['year'], $date['mon']);
+    
+        // Loop through all uploaded files
+        if(count($files['name']) <= 5){
+            for ($i = 0; $i < count($files['name']); $i++) {
+                if ($files['error'][$i] == 0) {
+                    $new_name = md5($files['name'][$i] . time());
+                    $data = array(
+                        'folder' => $dirPath,
+                        'object_id' => $idObject,
+                        'code' => $new_name,
+                        'mime' => $files['type'][$i],
+                        'url' => '#',
+                        'filename' => $files['name'][$i],
+                        'type_id' => $type,
+                        'created_by' => $user->id,
+                        'created_at' => date('Y-m-d H:i:s')
+                    );
+                    $mapper->create($data); 
+                    $uploadfile = $dirPath . '/' . basename($new_name);
+                    if (move_uploaded_file($files['tmp_name'][$i], $uploadfile)) {
+                        $url = 'index.php?option=com_core&view=attachment&format=raw&task=input&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type."&pdf=".$pdf."&is_nogetcontent=".$is_nogetcontent;
+                        echo "<script>window.parent.loadDivFromUrl('".$iddiv."','$url"."');</script>";
+                    } else {
+                        echo "Possible file upload attack on file " . $files['name'][$i] . "!\n";
+                    }
+                }
+            }
+        }else{
+            // echo  "Bạn đã đính kèm vượt quá giới hạn file cho phép";
+            echo "<script>window.parent.appendHtmlDiv('".$iddiv."-error','Bạn đã đính kèm vượt quá giới hạn file cho phép"."');</script>";
+        }
+        
+        exit;
+    }
+    
+
+    function doattachment_old(){
+        $formData = Factory::getApplication()->input->post->getArray();
+        var_dump($formData);
+       
         $file = $_FILES['uploadfile'];
+        var_dump($file);exit;
         if ($file['error'] == 0) {
             //$adapter = new Zend_File_Transfer_Adapter_Http();
             //Lay tham so nhan tu client
@@ -257,7 +315,7 @@ class AttachmentController extends BaseController{
         for($i=0 ; $i< count($arr_code);$i++){
             $mapper->deleteFileByMaso($arr_code[$i]);
         }
-        $url = Uri::root(true).'/index.php?option=com_core&controller=attachment&format=raw&task=input&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type."&pdf=".$pdf."&is_nogetcontent=".$is_nogetcontent;
+        $url = Uri::root(true).'/index.php?option=com_core&view=attachment&format=raw&task=input&iddiv='.$iddiv.'&idObject='.$idObject.'&is_new='.$is_new.'&year='.$year.'&type='.$type."&pdf=".$pdf."&is_nogetcontent=".$is_nogetcontent;
         echo "<script>window.parent.loadDivFromUrl('".$iddiv."','$url"."'); </script>";
         exit;
     }

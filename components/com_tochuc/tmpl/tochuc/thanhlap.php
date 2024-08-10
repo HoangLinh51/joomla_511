@@ -90,7 +90,7 @@ $user_id = $user->id;
             </div>
 
             <div class="card-body">
-                <div id="content_form"></div>
+                <div class="box" id="content_form"></div>
             </div>
         </div>
     </div>
@@ -278,7 +278,7 @@ $user_id = $user->id;
             }
             
         }).bind("uncheck_node.jstree", function(e, data) {
-            // var node_id = data.node.id;
+            var node_id = data.node.id;
             $('#parent_id_content').val('');
             $('#parent_name').val('');
             if ($('#type_content').val() == '0') {
@@ -290,36 +290,30 @@ $user_id = $user->id;
         
 
         var buildForm = function(type_id) {
-            var url = 'index.php?option=com_tochuc&controller=tochuc&task=edittochuc&format=raw';
-            var parent_id = <?php echo (int)$this->row->parent_id; ?>;
-            var htmlLoading = '<i class="icon-spinner icon-spin blue bigger-125"></i>';
-            // switch(type_id){
-            //     case '1':
-            //         url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
-            //         break;
-            //     case '0':    
-            //         url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_phong&format=raw&type='+type_id+'&parent_id='+parent_id;
-            //         break;
-            //     case '2':
-            //         url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_vochua&format=raw&type='+type_id;	
-            //         break;
-            //     default:
-            //         url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type='+type_id;	
-            //         break;
-
-            // }
-            if (type_id == '1') {
-                url = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type=' + type_id;
+            // Base URL for the AJAX request
+            var baseUrl = '<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&format=raw';
             
-            }else if(type_id == '0'){
-            	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_phong&format=raw&type='+type_id+'&parent_id='+parent_id;	
+            // Parent ID from PHP
+            var parent_id = <?php echo (int)$this->row->parent_id; ?>;
+            
+            // Determine the URL based on the type_id
+            var url;
+            switch (type_id) {
+                case '1':
+                    url = baseUrl + '&task=edit_tochuc&type=' + type_id;
+                    break;
+                case '0':
+                    url = baseUrl + '&task=edit_phong&type=' + type_id + '&parent_id=' + parent_id;
+                    break;
+                case '2':
+                    url = baseUrl + '&task=edit_vochua&type=' + type_id;
+                    break;
+                default:
+                    url = baseUrl + '&task=edit_tochuc&type=' + type_id;
+                    break;
             }
-            else if(type_id == '2'){
-            	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_vochua&format=raw&type='+type_id;	
-            }
-            else{
-            	url='<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw&type='+type_id;	
-            }
+            
+            // AJAX request
             jQuery.ajax({
                 type: "GET",
                 url: url,
@@ -327,22 +321,30 @@ $user_id = $user->id;
                     "id": <?php echo (int)$this->id; ?>
                 },
                 beforeSend: function() {
-                  
-                    $('#content_form').empty();
+                    // Show loading indicator
+                    $('#content_form').html('<div class="overlay"><i class="fas fa-sync-alt fa-spin"></i></div>');
                 },
                 success: function(data, textStatus, jqXHR) {
-                  
+                    // Update the content with the response
                     $('#content_form').html(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Handle errors
+                    $('#content_form').html('<p>Error loading form. Please try again later.</p>');
+                    console.error('AJAX error:', textStatus, errorThrown);
                 }
             });
-        }
-        $('#type_content').change(function(event) {
-            event.preventDefault();
-            var that = $(this);
-            //console.log(that.val());
+        };
+
+        // Initialize form based on the current value
+        buildForm($('#type_content').val());
+
+        // Update form when type_content changes
+        $('#type_content').change(function() {
             buildForm($(this).val());
         });
-        buildForm($('#type_content').val());
+
+       
 
     });
 </script>

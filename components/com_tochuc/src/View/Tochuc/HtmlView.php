@@ -60,22 +60,21 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
-        $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
+       
 
         // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
         // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         // $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
-
-        $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/ace-elements.min.js');
+        $document->addScript(Uri::base(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
+        $document->addScript(Uri::base(true).'/media/legacy/js/jquery-noconflict.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/ace-elements.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
     	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.toast.js');
-        $document->addScript(Uri::root(true).'/media/cbcc/js/common.js');
-
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jstree/jquery.cookie.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.toast.js');
 
       
 		$model = Core::model('Tochuc/Tochuc');

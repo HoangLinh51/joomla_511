@@ -159,6 +159,9 @@ function convertDateMySQLtoVN(datemysql){
 function loadDivFromUrl(iddiv,url){
 	jQuery("#"+iddiv).load(url);
 }
+function appendHtmlDiv(iddiverr,html){
+	jQuery("#" + iddiverr).html(html);
+}
 function FillComboByComboWithSel(obj,objdesc,arr,sel){
 	for (i = objdesc.length - 1; i>=0; i--) {
 		objdesc.removeChild(objdesc.options[i]);

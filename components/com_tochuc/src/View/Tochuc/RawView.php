@@ -59,6 +59,9 @@ class RawView extends BaseHtmlView
             break;
         case 'EDIT_PHONG':
             $this->_pageEditPhong();
+            break;  
+        case 'EDIT_VOCHUA':
+            $this->_pageEditVochua();
             break;     	
         case 'THANHLAP':
             $this->_pageQuaTrinh();
@@ -233,6 +236,60 @@ class RawView extends BaseHtmlView
     	unset($file_created);
     	unset($trangthai);
     	unset($file_trangthai);
+        parent::display();
+    }
+
+    private function _pageEditVochua()
+    {
+        // Get the root department using the TochucHelper class
+        $deptRoot = TochucHelper::getRoot();
+
+        // Get the application and input objects
+        $app = Factory::getApplication();
+        $input = $app->input;
+
+        // Assign Itemid to class property
+        $this->Itemid = $input->getInt('Itemid');
+
+        // Obtain the model using the new Core API
+        $model = Core::model('Tochuc/Tochuc');
+
+        // Get the department ID from the request
+        $dept_id = $input->getInt('id', 0);
+
+        $row = null;
+        if ($dept_id > 0) {
+            // Read the row data from the model
+            $row = $model->read($dept_id);
+            $row->type = $input->getInt('type', 0);
+            $title = 'Cập nhật thông tin đơn vị vào cấu hình báo cáo';
+        } else {
+            // Initialize a new row if no ID is provided
+            $row = new \stdClass(); // Create a new stdClass object if necessary
+            $row->active = 1;
+            $row->type = $input->getInt('type', 0);
+            $title = 'Bổ sung đơn vị vừa tạo vào cấu hình báo cáo';
+        }
+
+        // Get the tree structure for the report
+        $caybaocao = $model->getCayBaocao($dept_id);
+        $this->caybaocao =  $caybaocao;
+        $this->title = $title;
+
+        // Initialize arrays for additional data
+        $vanban_created = array();
+        $trangthai = array();
+        $file_created = array();
+        $file_trangthai = array();
+
+        // Assign additional data to the view
+        $this->row = $row;
+        $this->vanban_created = $vanban_created;
+        $this->trangthai = $trangthai;
+        $this->file_created = $file_created;
+        $this->file_trangthai = $file_trangthai;
+
+        // Call the parent display method
         parent::display();
     }
 
