@@ -395,6 +395,28 @@
 
 			
 	</menuitem>
+
+	<menuitem
+		title="Quản lý Danh mục"
+		type="heading"
+		icon="list"
+		class="class: fa-list-ol"
+		alias="users"
+		dashboard="users"
+		>
+
+			<menuitem
+				title="Chức vụ Đảng"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=partys"
+			/>
+			
+
+			
+	</menuitem>
+
 	<menuitem
 		title="MOD_MENU_HELP"
 		type="component"
@@ -402,4 +424,7 @@
 		class="class:info-circle"
 		link="index.php?option=com_cpanel&amp;view=cpanel&amp;dashboard=help"
 	/>
+
+
+	
 </menu>

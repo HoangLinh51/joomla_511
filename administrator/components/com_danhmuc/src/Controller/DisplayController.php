@@ -10,6 +10,7 @@
 
 namespace Joomla\Component\Danhmuc\Administrator\Controller;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -29,7 +30,7 @@ class DisplayController extends BaseController
      * @var    string
      * @since  1.6
      */
-    protected $default_view = 'chucvus';
+    protected $default_view = 'partys';
 
 
     /**

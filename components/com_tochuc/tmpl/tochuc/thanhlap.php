@@ -41,7 +41,7 @@ $user_id = $user->id;
 
                             </div>
                         </div>
-                        <a class="btn btn-small btn-info" href="<?php echo '/index.php?option=com_tochuc&controller=tochuc&task=default&Itemid=' . $this->Itemid; ?>">
+                        <a class="btn btn-small btn-info" href="<?php echo '/index.php?option=com_tochuc&view=tochuc&task=default&Itemid=' . $this->Itemid; ?>">
                             <i class="fa fa-undo"></i> Quay về</a>
 
                     </div>
@@ -322,15 +322,18 @@ $user_id = $user->id;
                 },
                 beforeSend: function() {
                     // Show loading indicator
+                    Pace.start();
                     $('#content_form').html('<div class="overlay"><i class="fas fa-sync-alt fa-spin"></i></div>');
                 },
                 success: function(data, textStatus, jqXHR) {
                     // Update the content with the response
                     $('#content_form').html(data);
+                    Pace.stop();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     // Handle errors
                     $('#content_form').html('<p>Error loading form. Please try again later.</p>');
+                    Pace.stop();
                     console.error('AJAX error:', textStatus, errorThrown);
                 }
             });

@@ -44,11 +44,15 @@ class HtmlView extends BaseHtmlView
     private function _initDefaultPage(){
     	$document = Factory::getDocument();
     	$document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
+        $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/black/pace-theme-center-simple.css');
+
         $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
 		$document->addScript(Uri::root(true) . '/media/cbcc/js/caydonvi.js' );
+        $document->addScript(Uri::base(true).'/templates/adminlte/plugins/pace-progress/pace.min.js');
+
     }
 
     private function _initThanhLapPage(){    	
@@ -60,7 +64,7 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
-       
+        $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/black/pace-theme-center-simple.css');
 
         // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
         // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
@@ -75,6 +79,8 @@ class HtmlView extends BaseHtmlView
     	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.toast.js');
+
+        $document->addScript(Uri::base(true).'/templates/adminlte/plugins/pace-progress/pace.min.js');
 
       
 		$model = Core::model('Tochuc/Tochuc');

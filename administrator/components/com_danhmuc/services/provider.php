@@ -33,16 +33,6 @@ return new class () implements ServiceProviderInterface {
        
     public function register(Container $container): void 
     {
-        // $container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\Danhmuc'));
-        // $container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\Danhmuc'));
-        // $container->set(
-        //     ComponentInterface::class,
-        //     function (Container $container) {
-        //         $component = new MVCComponent($container->get(ComponentDispatcherFactoryInterface::class));
-        //         $component->setMVCFactory($container->get(MVCFactoryInterface::class));
-        //         return $component;
-        //     }
-        // );
         $container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\Danhmuc'));
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\Danhmuc'));
         $container->registerServiceProvider(new RouterFactory('\\Joomla\\Component\\Danhmuc'));
