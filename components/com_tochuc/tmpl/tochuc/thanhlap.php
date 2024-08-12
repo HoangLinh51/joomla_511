@@ -78,12 +78,15 @@ $user_id = $user->id;
                     <div class="col-md-6">
                         <label class="control-label" for="name">Loại<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="form-control rounded-0" style="width: 100%;" id="type_content" name="type_content" data-select2-id="1" tabindex="-1" aria-hidden="false">
+                            <?php 
+                            	echo TochucHelper::selectBoxNotOptionNull($this->row->type, array('name'=>'type_content', 'class' => 'form-control rounded-0'), 'ins_type', array('id','name')); 
+                            ?>
+                            <!-- <select class="form-control rounded-0" style="width: 100%;" id="type_content" name="type_content" data-select2-id="1" tabindex="-1" aria-hidden="false">
                                 <option selected="selected" value="1">Tổ chức</option>
                                 <option value="0">Phòng</option>
                                 <option value="3">Tổ chức hoạt động như phòng</option>
                                 <option value="2">Vỏ chứa</option>
-                            </select>
+                            </select> -->
                         </div>
                     </div>
                 </div>
@@ -297,7 +300,7 @@ $user_id = $user->id;
             var parent_id = <?php echo (int)$this->row->parent_id; ?>;
             
             // Determine the URL based on the type_id
-            var url;
+			var url = 'index.php?option=com_tochuc&view=tochuc&task=edit_tochuc&format=raw';
             switch (type_id) {
                 case '1':
                     url = baseUrl + '&task=edit_tochuc&type=' + type_id;
@@ -322,13 +325,14 @@ $user_id = $user->id;
                 },
                 beforeSend: function() {
                     // Show loading indicator
-                    Pace.start();
+                    // Pace.start();
+                    $('#content_form').empty();
                     $('#content_form').html('<div class="overlay"><i class="fas fa-sync-alt fa-spin"></i></div>');
                 },
                 success: function(data, textStatus, jqXHR) {
                     // Update the content with the response
                     $('#content_form').html(data);
-                    Pace.stop();
+                    // Pace.stop();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     // Handle errors

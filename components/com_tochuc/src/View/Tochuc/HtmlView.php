@@ -47,6 +47,8 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/black/pace-theme-center-simple.css');
 
         $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
@@ -70,6 +72,9 @@ class HtmlView extends BaseHtmlView
         // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         // $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
+        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+        $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+
         $document->addScript(Uri::base(true).'/media/legacy/js/jquery-noconflict.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');

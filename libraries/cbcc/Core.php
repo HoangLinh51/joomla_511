@@ -888,7 +888,7 @@ class Core{
     		$query->where($where);
     	}
 		$db->setQuery($query);
-    	return $db->query();
+    	return $db->execute();
     }
 	public static function loadAssocListHasKey($table,$colums,$key,$where = null,$order = null,$isCache = true){
 		$db = Factory::getDbo();

@@ -127,8 +127,8 @@ class TochucController extends BaseController
 		$app = Factory::getApplication();
         $input = $app->input;
         $formData = $input->post->getArray();
-		echo "<pre>";
-		var_dump($formData);exit;
+		// echo "<pre>";
+		// var_dump($formData);exit;
 		try {
 			$id = $model->saveDept($formData);
 			// nếu là tổ chức hoặc như phòng, thì set con của nó theo trạng thái ẩn luôn
@@ -166,7 +166,7 @@ class TochucController extends BaseController
 						'type' => $formData['type'],
 						'ins_loaihinh' => $model->getLoaihinhByIdCap((int)$formData['ins_cap']),
 					];
-
+					
 					$data_caybaocao = $model->getIdConfigBc((int)$formData['parent_id'], $data_config['report_group_code']);
 					if ((int)$data_caybaocao['id'] > 0) {
 						$check_data_caybaocao = $model->getIdConfigBc($id, $data_config['report_group_code']);
@@ -174,15 +174,17 @@ class TochucController extends BaseController
 						$data_config['parent_id'] = $data_config['id'] > 0 ? $check_data_caybaocao['parent_id'] : $data_caybaocao['id'];
 						$data_config['report_group_name'] = $data_caybaocao['report_group_name'];
 						$data_config['all_chirl'] = 0;
+						
 
 						$model_config = AdminModel::getInstance('Caybaocao', 'BaocaohosoModel');
-						$model_config->save($data_config);
+						// $model_config->save($data_config);
 					}
 				}
 			}
 			$dataLinhvuc = explode(',', $formData['ins_linhvuc']);
-			$model->saveLinhvuc($id,$dataLinhvuc);
 
+			$model->saveLinhvuc($id,$dataLinhvuc);
+			
 			$vanban_created = $formData['vanban_created'];
 			if (strlen($vanban_created['mahieu']) > 0 ) {
 				$vanban_created['tieude'] = 'QĐ '.TochucHelper::getNameById($formData['type_created'], 'ins_dept_cachthuc').' ,Ngày '.$formData['date_created'];
@@ -194,6 +196,7 @@ class TochucController extends BaseController
 						'coquan_banhanh_id'=>$vanban_created['coquan_banhanh_id'],
 						'coquan_banhanh'=>$vanban_created['coquan_banhanh']
 				));
+
 	    		$mapperAttachment = Core::model('Core/Attachment');
 				for ($i = 0,$n=count($formData["idFile-tochuc-attachment"]); $i < $n; $i ++) {
 					$mapperAttachment->updateTypeIdByCode($formData["idFile-tochuc-attachment"][$i],1,true,$vanban_id);
@@ -218,7 +221,6 @@ class TochucController extends BaseController
 				));
 				$message = 'Thêm mới thành công';
 			}
-
 			// Edit 
 			if ((int)$formData['active'] != 1) {
 				$trangthai_file = $formData['trangthai_fileupload_id'];
@@ -232,10 +234,13 @@ class TochucController extends BaseController
 					'coquan_banhanh_id'=>$formTrangThai['coquan_banhanh_id'],
 					'coquan_banhanh'=>$formTrangThai['coquan_banhanh']
 				));
+				
 				$mapperAttachment = Core::model('Core/Attachment');
 				for ($i = 0,$n=count($formData["idFile-trangthai-attachment"]); $i < $n; $i ++) {
 					$mapperAttachment->updateTypeIdByCode($formData["idFile-trangthai-attachment"][$i],1,true,$trangthai_vanban_id);
 				}
+				
+
 				Core::update('ins_dept', array('vanban_active'=>$trangthai_vanban_id,'id'=>$id), 'id');
 				if ((int)$formData['id'] == 0) {			
 					$model->saveQuatrinh(array(

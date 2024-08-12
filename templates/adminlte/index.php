@@ -39,7 +39,7 @@ if ($coreTemplate->isLogin() == true) {
 
 
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery/jquery.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
+	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
 	$doc->addScript(Uri::root(true).'/media/legacy/js/jquery-noconflict.js');
 	$doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mousewheel/jquery.mousewheel.js');

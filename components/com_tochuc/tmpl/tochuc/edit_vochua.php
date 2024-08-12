@@ -101,14 +101,14 @@ $user = Factory::getUser();
 		// 	$('#btnThanhlapSubmitAndNew').unbind('click');
 		// };
 		// initPage();
-		// var getTextTab = function(elem) {
-		// 	//$("#frmThanhLap .tab-pane");
-		// 	var el = $(elem).parents('.tab-pane');
-		// 	$('#frmThanhLap a[href="#' + el.attr("id") + '"]').css("color", "red");
-		// };
-		// var getTextLabel = function(id) {
-		// 	return $('#frmThanhLap label[for="' + id + '"]').text();
-		// };
+		var getTextTab = function(elem) {
+			//$("#frmThanhLap .tab-pane");
+			var el = $(elem).parents('.tab-pane');
+			$('#frmThanhLap a[href="#' + el.attr("id") + '"]').css("color", "red");
+		};
+		var getTextLabel = function(id) {
+			return $('#frmThanhLap label[for="' + id + '"]').text();
+		};
 		// $(".chzn-select").chosen().change(function() {
 		// 	$('#frmThanhLap').validate().element(this);
 		// });
@@ -144,94 +144,126 @@ $user = Factory::getUser();
 		// 	ignore: ''
 		// });
 		
-		// $('#frmThanhLap').validate({
-		// 	invalidHandler: function(form, validator) {
-		// 		var errors = validator.numberOfInvalids();
-		// 		$('#frmThanhLap a[data-toggle="tab"]').css("color", "");
-		// 		if (errors) {
-		// 			var message = errors == 1 ?
-		// 				'Xin vui lòng hiệu chỉnh lỗi sau đây:\n' :
-		// 				'Xin vui lòng hiệu chỉnh ' + errors + ' lỗi sau đây .\n';
-		// 			var errors = "";
-		// 			if (validator.errorList.length > 0) {
-		// 				for (x = 0; x < validator.errorList.length; x++) {
-		// 					errors += "<br/>\u25CF " + validator.errorList[x].message + ' <b> ' + getTextLabel($(validator.errorList[x].element).attr("name")).replace(/\*/g, '') + '</b>';
-		// 					getTextTab($(validator.errorList[x].element));
-		// 				}
-		// 			}
-		// 			loadNoticeBoardError('Thông báo', message + errors);
-		// 		}
-		// 		validator.focusInvalid();
-		// 	},
-		// 	errorPlacement: function(error, element) {
+		$('#frmThanhLap').validate({
+			invalidHandler: function(form, validator) {
+				var errors = validator.numberOfInvalids();
+				$('#frmThanhLap a[data-toggle="tab"]').css("color", "");
+				if (errors) {
+					var message = errors == 1 ?
+						'Xin vui lòng hiệu chỉnh lỗi sau đây:\n' :
+						'Xin vui lòng hiệu chỉnh ' + errors + ' lỗi sau đây .\n';
+					var errors = "";
+					if (validator.errorList.length > 0) {
+						for (x = 0; x < validator.errorList.length; x++) {
+							errors += "<br/>\u25CF " + validator.errorList[x].message + ' <b> ' + getTextLabel($(validator.errorList[x].element).attr("name")).replace(/\*/g, '') + '</b>';
+							getTextTab($(validator.errorList[x].element));
+						}
+					}
+					$.toast({
+                        heading: 'Thông báo',
+                        text: message + errors,
+                        showHideTransition: 'fade',
+                        position: 'top-right',
+                        hideAfter: false,
+                        bgColor: '#a94442',
+                        class: 'thanhlap ngx-toastr'
+                        // icon: 'error'
+                    })
+				}
+				validator.focusInvalid();
+			},
+			errorPlacement: function(error, element) {
 
-		// 	},
-		// 	rules: {
-		// 		"name": {
-		// 			required: true
-		// 		},
-		// 		"s_name": {
-		// 			required: true
-		// 		},
-		// 		"type": {
-		// 			required: true
-		// 		},
-		// 		"parent_id": {
-		// 			required: true
-		// 		}
-		// 	}
-		// });
-		// $('#btnThanhlapSubmitAndClose').click(function() {
-		// 	$('.gritter-item-wrapper').remove();
-		// 	$.blockUI();
-		// 	$('#action_name').val('SAVEANDCLOSE');
-		// 	$('#parent_id').val($('#parent_id_content').val());
-		// 	if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
-		// 		$.unblockUI();
-		// 		loadNoticeBoardError('Thông báo', 'Vui lòng chọn Cây đơn vị cha hợp lý');
-		// 	} else {
-		// 		var flag = $('#frmThanhLap').valid();
-		// 		if (flag == true) {
-		// 			document.frmThanhLap.submit();
-		// 		} else {
-		// 			$.unblockUI();
-		// 		}
-		// 	}
-		// });
-		// $('#btnThanhlapSubmitAndNew').click(function() {
-		// 	$('.gritter-item-wrapper').remove();
-		// 	$.blockUI();
-		// 	$('#action_name').val('SAVEANDNEW');
-		// 	$('#parent_id').val($('#parent_id_content').val());
-		// 	if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
-		// 		$.unblockUI();
-		// 		loadNoticeBoardError('Thông báo', 'Vui lòng chọn Cây đơn vị cha hợp lý');
-		// 	} else {
-		// 		var flag = $('#frmThanhLap').valid();
-		// 		if (flag == true) {
-		// 			document.frmThanhLap.submit();
-		// 		} else {
-		// 			$.unblockUI();
-		// 		}
-		// 	}
-		// });
-		// $('#btnThanhlapSubmitAndContinue').click(function() {
-		// 	$('.gritter-item-wrapper').remove();
-		// 	$.blockUI();
-		// 	$('#action_name').val('SAVEANDCONTINUE');
-		// 	$('#parent_id').val($('#parent_id_content').val());
-		// 	if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
-		// 		$.unblockUI();
-		// 		loadNoticeBoardError('Thông báo', 'Vui lòng chọn Cây đơn vị cha hợp lý');
-		// 	} else {
-		// 		var flag = $('#frmThanhLap').valid();
-		// 		if (flag == true) {
-		// 			document.frmThanhLap.submit();
-		// 		} else {
-		// 			$.unblockUI();
-		// 		}
-		// 	}
-		// });
+			},
+			rules: {
+				"name": {
+					required: true
+				},
+				"s_name": {
+					required: true
+				},
+				"type": {
+					required: true
+				},
+				"parent_id": {
+					required: true
+				}
+			},
+			messages: {
+                "name": {
+                    required: "Vui lòng nhập"
+                },
+                "s_name": {
+                    required: "Vui lòng nhập"
+                },
+			},
+			highlight: function (element, errorClass, validClass) {
+               
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                
+                $(element).removeClass('is-invalid');
+            }
+		});
+		$('#btnThanhlapSubmitAndClose').click(function() {
+			$('.gritter-item-wrapper').remove();
+			$('#action_name').val('SAVEANDCLOSE');
+			$('#parent_id').val($('#parent_id_content').val());
+			if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
+				$.toast({
+                    heading: 'Thông báo',
+                    text: "Vui lòng chọn đúng Cây đơn vị cha",
+                    showHideTransition: 'fade',
+                    position: 'top-right',
+                    icon: 'error',
+                    class: 'thanhlap ngx-toastr'
+
+                })
+                return false;
+			} else {
+				var flag = $('#frmThanhLap').valid();
+				if (flag == true) {
+					document.frmThanhLap.submit();
+				} else {
+					$.unblockUI();
+				}
+			}
+		});
+		$('#btnThanhlapSubmitAndNew').click(function() {
+			$('.gritter-item-wrapper').remove();
+			$.blockUI();
+			$('#action_name').val('SAVEANDNEW');
+			$('#parent_id').val($('#parent_id_content').val());
+			if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
+				$.unblockUI();
+				loadNoticeBoardError('Thông báo', 'Vui lòng chọn Cây đơn vị cha hợp lý');
+			} else {
+				var flag = $('#frmThanhLap').valid();
+				if (flag == true) {
+					document.frmThanhLap.submit();
+				} else {
+					$.unblockUI();
+				}
+			}
+		});
+		$('#btnThanhlapSubmitAndContinue').click(function() {
+			$('.gritter-item-wrapper').remove();
+			$.blockUI();
+			$('#action_name').val('SAVEANDCONTINUE');
+			$('#parent_id').val($('#parent_id_content').val());
+			if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
+				$.unblockUI();
+				loadNoticeBoardError('Thông báo', 'Vui lòng chọn Cây đơn vị cha hợp lý');
+			} else {
+				var flag = $('#frmThanhLap').valid();
+				if (flag == true) {
+					document.frmThanhLap.submit();
+				} else {
+					$.unblockUI();
+				}
+			}
+		});
 		// $.validator.addMethod('validNameVochua', function(value, element) {
 		// 	if ($('#is_valid_name').val() == '1') {
 		// 		return false;

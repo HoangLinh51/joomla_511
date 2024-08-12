@@ -934,6 +934,52 @@ $user = Factory::getUser();
             }
             return false;
         });
+        $('#btnThanhlapSubmitAndNew').click(function(){
+            $('#action_name').val('SAVEANDNEW');
+            $('#parent_id').val($('#parent_id_content').val());
+                    if($('#parent_id').val() == <?php echo (int)$this->row->id; ?>){
+                        $.toast({
+                        heading: 'Thông báo',
+                        text: "Vui lòng chọn đúng Cây đơn vị cha",
+                        showHideTransition: 'fade',
+                        position: 'top-right',
+                        icon: 'error',
+                        class: 'thanhlap ngx-toastr'
+
+                    })
+                    return false;
+                    }
+                    else{
+                        var flag = $('#frmThanhLap').valid();
+                        if(flag == true){
+                                document.frmThanhLap.submit();
+                        }
+                    }
+            return false;
+	    });
+	$('#btnThanhlapSubmitAndContinue').click(function(){
+	 	$('#action_name').val('SAVEANDCONTINUE');
+	 	$('#parent_id').val($('#parent_id_content').val());
+                if($('#parent_id').val() == <?php echo (int)$this->row->id; ?>){
+                    $.toast({
+                        heading: 'Thông báo',
+                        text: "Vui lòng chọn đúng Cây đơn vị cha",
+                        showHideTransition: 'fade',
+                        position: 'top-right',
+                        icon: 'error',
+                        class: 'thanhlap ngx-toastr'
+
+                    })
+                    return false;
+                }
+                else{
+                    var flag = $('#frmThanhLap').valid();
+                    if(flag == true){
+                            document.frmThanhLap.submit();
+                    }
+                }
+		return false;
+	});
 
         $('body').delegate('#cadc_code', 'change', function(){
             var token = '<?php echo Session::getFormToken(); ?>';

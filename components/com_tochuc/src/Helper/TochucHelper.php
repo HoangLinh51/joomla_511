@@ -445,6 +445,45 @@ abstract class TochucHelper
 		$db->setQuery($query);
 		return $db->loadResult();
 	}
+
+	static public function selectBoxNotOptionNull($value,$attrs,$table,$colums,$where = null,$order = null){
+		//var_dump($colums[0]);
+		if (count($colums) >= 2) {
+			
+			if (isset($table) && is_array($table)) {
+				$rows = $table;
+			}else{
+				$rows = TochucHelper::collect($table, $colums, $where);
+			}	        
+	        //var_dump($rows);exit;	
+	        if (is_array($attrs)) {
+	        	$controlName = $attrs['name'];
+	        	if ($controlName) {
+	        		$controlAttrs = " ng-model=\"".$controlName."\"";
+	        	}
+	        	unset($attrs['name']);
+	        	unset($attrs['value']);
+	        	foreach ($attrs as $key=>$val){
+	        		if (is_array($val)) {
+	        			$controlAttrs .=" ".$key.'="'.implode(" ", $val).'"';
+	        		}else{
+	        			$controlAttrs .=" ".$key.'="'.$val.'"';
+	        		}        		
+	        	}
+	        }else{
+	        	$controlAttrs = $attrs;
+	        }
+	        if (isset($attrs['hasEmpty']) && $attrs['hasEmpty'] == true) {
+	        	$option = array("$colums[0]"=>'',"$colums[1]"=>'');
+	        	array_unshift($rows, $option);
+	        }
+	        	      
+	        return HTMLHelper::_('select.genericlist',$rows,$controlName, $controlAttrs, $colums[0],$colums[1],$value);
+	      //  return JHTML::_('select.genericlist',$options,$controlName, $controlAttrs, 'value','text',$value);
+		}
+		return '';
+	}
+
 	static public function selectBox($value,$attrs,$table,$colums,$where = null,$order = null,$optAdd = null){
 		if (count($colums) >= 2) {		
 	        $rows = TochucHelper::collect($table, $colums, $where);

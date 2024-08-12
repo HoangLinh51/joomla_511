@@ -317,7 +317,7 @@ class Tochuc_Model_Tochuc {
             'goibienche' => $formData['goibienche'],
             'goiluong' => $formData['goiluong'],
             'goichucvu' => $formData['goichucvu'],
-            'type' => $formData['type_content'],
+            'type'=>$formData['type'],
             'chukyso_nguoidaidien_id' => $formData['chukyso_nguoidaidien_id'],
             'chukyso_sohieu' => $formData['chukyso_sohieu'],
             'chukyso_ngaycap' => TochucHelper::strDateVntoMySql($formData['chukyso_ngaycap']),
@@ -349,7 +349,6 @@ class Tochuc_Model_Tochuc {
             'mucdotuchu_id' => $formData['mucdotuchu_id'],
             //End
         );
-
         if ((int) $formData['id'] == 0) {
             // Specify where to insert the new node.
             //$reference_id = (int)$formData['parent_id'];
