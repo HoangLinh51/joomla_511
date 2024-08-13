@@ -10,7 +10,7 @@ $user = Factory::getUser();
 <section class="content">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Lịch sử tổ chức</h3>
+            <h3 class="card-title">Quá trình khen thưởng</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-success btn-excel">
                     <i class="fa fa-file-excel"></i>
@@ -24,76 +24,62 @@ $user = Factory::getUser();
             <table class="table table-striped projects">
                 <thead>
                     <tr>
-                       
                         <th style="width: 10%; padding-left: 0.75rem;">
-                            Ngày hiệu lực
+                            Từ ngày
                         </th>
                         <th style="width: 10%">
-                            Cách thức
+                            Đến ngày
                         </th>
-                        <!-- <th style="width: 5%">
-                            Quyết định
-                        </th> -->
+                        <th style="width: 5%">
+                            Hình thức
+                        </th>
                         <th style="width: 20%" class="text-center">
                             Chi tiết
                         </th>
-                        <!-- <th style="width: 10%">
-                            Ghi chú
-                        </th> -->
                         <th style="width: 10%" class="text-right">
                             #
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php
-                    for ($i = 0; $i < count($this->rows); $i++) {
-                        $row = $this->rows[$i];
-                        $vanban = TochucHelper::getVanBanById($row['vanban_id']);
-                        if ($vanban != null) {
-                            if (Core::loadResult('core_attachment', 'COUNT(*)', array('object_id=' => $vanban['id'], 'type_id=' => 1)) > 0) {
-                                $vanban['mahieu'] = '<a href="' . Uri::root(true) . '/uploader/index.php?download=1&type_id=1&object_id=' . $vanban['id'] . '" target="_blank">' . $vanban['mahieu'] . '</a>';
-                            }
-                        } else {
-                            $vanban = array();
-                        }
-                    ?>
-                    <tr>
-                       
-                        <td style="padding-left: 0.75rem;">
-                            <?php echo ($row['hieuluc_ngay'] == '0000-00-00' ? "" : date('d/m/Y', strtotime($row['hieuluc_ngay']))); ?>
-                        </td>
-                        <td>
-                            <?php echo TochucHelper::getNameById($row['cachthuc_id'], 'ins_dept_cachthuc'); ?>
-                            <br style="<?php echo $vanban['mahieu'] == '' ? "display:none;":""  ?>">
-                            <small style="<?php echo $vanban['mahieu'] == '' ? "display:none;":""  ?>" >
-                                Số quyết định:   <?php echo $vanban['mahieu']; ?>
-                            </small>
-                            <br>
-                            <small style="" >
-                                Ngày quyết định:  <?php  echo date('d/m/Y', strtotime($row['quyetdinh_ngay'])); ?>
-                            </small>
+                
+                </tbody>
+            </table>
+        </div>
 
-                        </td>
-                        <!-- <td class="">
-                            <?php echo $vanban['mahieu']; ?>
-                            <br>
-                            <small style="<?php echo $vanban['mahieu'] == '' ? "display:none;":""  ?>" >
-                                Ngày quyết định  <?php  echo date('d/m/Y', strtotime($row['quyetdinh_ngay'])); ?>
-                            </small>
-                        </td> -->
-                        <td class="">
-                            <?php echo $row['chitiet']; ?>
-                        </td>
-                        <!-- <td class="">
-                            <?php echo $row['ghichu']; ?>
-                        </td> -->
-                        <td style="padding-right: 0.75rem;" class="project-actions text-right">
-                            <a class="btn btn-info btn-sm" href="#"><i class="fas fa-pencil-alt"></i> Sửa</a>
-                            <a class="btn btn-danger btn-sm" href="#"><i class="fas fa-trash"></i> Xóa</a>
-                        </td>
+    </div>
+
+</section>
+
+
+<section class="content">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Quá trình kỷ luật</h3>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped projects">
+                <thead>
+                    <tr>
+                        <th style="width: 10%; padding-left: 0.75rem;">
+                            Từ ngày
+                        </th>
+                        <th style="width: 10%">
+                            Đến ngày
+                        </th>
+                        <th style="width: 5%">
+                            Hình thức
+                        </th>
+                        <th style="width: 20%" class="text-center">
+                            Chi tiết
+                        </th>
+                        <th style="width: 10%" class="text-right">
+                            #
+                        </th>
                     </tr>
-                    <?php }?>
+                </thead>
+                <tbody>
+                
                 </tbody>
             </table>
         </div>
@@ -113,6 +99,8 @@ $user = Factory::getUser();
         $('.btnEditQuatrinh').on('click', function() {
             $('#div_modal').load(this.href, function() {});
         });
+       
+        // $('.input-mask-date').mask('99/99/9999');
         // $('#frmQuaTrinh').validate({
         //     ignore: [],
         //     rules: {

@@ -586,6 +586,48 @@ $user = Factory::getUser();
             width: "100%"
         });
 
+        var toggleInputTochuc = function(element){
+            if(element.value == 1){
+                $(".input-tochuc").show();
+                $(".input-phong").hide();
+            }		
+            else if(element.value == 0){
+                $(".input-phong").show();
+                $(".input-tochuc").hide();
+            }else{
+                $(".input-phong,.input-tochuc").hide();
+            }
+        };
+        var toggleInputTrangthai = function(val){
+            if(val == 1){			
+                $(".trangthai").hide();
+            }		
+            else{
+                $(".trangthai").show();
+            }		
+        };
+
+        var toggleInputTrangthai = function(val){
+            if(val == 1){			
+                $(".trangthai").hide();
+            }		
+            else{
+                $(".trangthai").show();
+            }		
+        };
+
+        $('#active').change(function(){
+            toggleInputTrangthai(this.value);
+        });
+
+
+        var initPage = function(){
+            $('#type_created').val('<?php echo $this->row->type_created>0?$this->row->type_created:1;?>');
+            toggleInputTrangthai($('#active').val());
+            $('#btnThanhlapSubmitAndClose').unbind('click');
+            $('#btnThanhlapSubmitAndNew').unbind('click');
+        };
+        initPage();
       
         var tree_data_ins_cap = <?php echo $this->tree_data_ins_cap; ?>;
         var treeDataCapDonvi = new DataSourceTree({
@@ -913,6 +955,10 @@ $user = Factory::getUser();
 
         $('#btnThanhlapSubmitAndClose').click(function(e) {
             e.preventDefault();
+            const element = document.querySelector('.thanhlap');
+            if (element) {
+                element.remove();
+            }
             $('#action_name').val('SAVEANDCLOSE');
             $('#parent_id').val($('#parent_id_content').val());
             if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
@@ -925,7 +971,8 @@ $user = Factory::getUser();
                     class: 'thanhlap ngx-toastr'
 
                 })
-                return false;
+                //return false;
+                $.unblockUI();
             } else {
                 var flag = $('#frmThanhLap').valid();
                 if (flag == true) {
@@ -934,7 +981,12 @@ $user = Factory::getUser();
             }
             return false;
         });
-        $('#btnThanhlapSubmitAndNew').click(function(){
+        $('#btnThanhlapSubmitAndNew').click(function(e){
+            e.preventDefault();
+            const element = document.querySelector('.thanhlap');
+            if (element) {
+                element.remove();
+            }
             $('#action_name').val('SAVEANDNEW');
             $('#parent_id').val($('#parent_id_content').val());
                     if($('#parent_id').val() == <?php echo (int)$this->row->id; ?>){
@@ -947,7 +999,8 @@ $user = Factory::getUser();
                         class: 'thanhlap ngx-toastr'
 
                     })
-                    return false;
+                    //return false;
+                    $.unblockUI();
                     }
                     else{
                         var flag = $('#frmThanhLap').valid();
@@ -957,7 +1010,12 @@ $user = Factory::getUser();
                     }
             return false;
 	    });
-	$('#btnThanhlapSubmitAndContinue').click(function(){
+	$('#btnThanhlapSubmitAndContinue').click(function(e){
+        e.preventDefault();
+        const element = document.querySelector('.thanhlap');
+        if (element) {
+            element.remove();
+        }
 	 	$('#action_name').val('SAVEANDCONTINUE');
 	 	$('#parent_id').val($('#parent_id_content').val());
                 if($('#parent_id').val() == <?php echo (int)$this->row->id; ?>){
@@ -970,7 +1028,8 @@ $user = Factory::getUser();
                         class: 'thanhlap ngx-toastr'
 
                     })
-                    return false;
+                    //return false;
+                    $.unblockUI();
                 }
                 else{
                     var flag = $('#frmThanhLap').valid();

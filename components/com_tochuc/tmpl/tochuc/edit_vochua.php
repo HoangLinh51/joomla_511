@@ -4,7 +4,7 @@
  * @ Author: huenn.dnict@gmail.com
  * @ Create Time: 2024-08-07 10:46:39
  * @ Modified by: huenn.dnict@gmail.com
- * @ Modified time: 2024-08-10 08:26:27
+ * @ Modified time: 2024-08-13 09:10:04
  * @ Description:
  */
 
@@ -92,17 +92,12 @@ $user = Factory::getUser();
 </form>
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
-		// var initPage = function() {
-		// 	$('.chzn-select').chosen({
-		// 		allow_single_deselect: true
-		// 	});
-		// 	$('.input-mask-date').mask('99/99/9999');
-		// 	$('#btnThanhlapSubmitAndClose').unbind('click');
-		// 	$('#btnThanhlapSubmitAndNew').unbind('click');
-		// };
-		// initPage();
+		var initPage = function() {
+			$('#btnThanhlapSubmitAndClose').unbind('click');
+			$('#btnThanhlapSubmitAndNew').unbind('click');
+		};
+		initPage();
 		var getTextTab = function(elem) {
-			//$("#frmThanhLap .tab-pane");
 			var el = $(elem).parents('.tab-pane');
 			$('#frmThanhLap a[href="#' + el.attr("id") + '"]').css("color", "red");
 		};
@@ -112,37 +107,37 @@ $user = Factory::getUser();
 		// $(".chzn-select").chosen().change(function() {
 		// 	$('#frmThanhLap').validate().element(this);
 		// });
-		// $('#name').on('blur', function() {
-		// 	var dest = $(this);
-		// 	name_tc = $.trim(dest.val());
-		// 	if (parent_id != '' && name_tc != '') {
-		// 		name_tc = name_tc.replace(/[ ]{2,}/g, ' ');
-		// 		dest.val(name_tc);
-		// 		var parent_id = $('#parent_id_content').val();
-		// 		var id = $('#id').val();
-		// 		if (($('#s_name').val()).length > 0) {} else $('#s_name').val(name_tc);
-		// 	} else {
-		// 		$('#s_name').val('');
-		// 		dest.val('');
-		// 	}
-		// 	if (parent_id != '' && name_tc != '' && name_tc.length > 5) {
-		// 		var urlCheckTochuc = '<?php echo Uri::base(true); ?>/index.php?option=com_tochuc&controller=tochuc&task=checkTochucTrung';
-		// 		$.get(urlCheckTochuc, {
-		// 			name_tc: name_tc,
-		// 			parent_id: parent_id,
-		// 			id: id
-		// 		}, function(data) {
-		// 			if (data >= 1) {
-		// 				$('#is_valid_name').val(1);
-		// 			} else {
-		// 				$('#is_valid_name').val(0);
-		// 			}
-		// 		});
-		// 	}
-		// });
-		// $.validator.setDefaults({
-		// 	ignore: ''
-		// });
+		$('#name').on('blur', function() {
+			var dest = $(this);
+			name_tc = $.trim(dest.val());
+			if (parent_id != '' && name_tc != '') {
+				name_tc = name_tc.replace(/[ ]{2,}/g, ' ');
+				dest.val(name_tc);
+				var parent_id = $('#parent_id_content').val();
+				var id = $('#id').val();
+				if (($('#s_name').val()).length > 0) {} else $('#s_name').val(name_tc);
+			} else {
+				$('#s_name').val('');
+				dest.val('');
+			}
+			// if (parent_id != '' && name_tc != '' && name_tc.length > 5) {
+			// 	var urlCheckTochuc = '<?php echo Uri::base(true); ?>/index.php?option=com_tochuc&controller=tochuc&task=checkTochucTrung';
+			// 	$.get(urlCheckTochuc, {
+			// 		name_tc: name_tc,
+			// 		parent_id: parent_id,
+			// 		id: id
+			// 	}, function(data) {
+			// 		if (data >= 1) {
+			// 			$('#is_valid_name').val(1);
+			// 		} else {
+			// 			$('#is_valid_name').val(0);
+			// 		}
+			// 	});
+			// }
+		});
+		$.validator.setDefaults({
+			ignore: ''
+		});
 		
 		$('#frmThanhLap').validate({
 			invalidHandler: function(form, validator) {
@@ -207,7 +202,11 @@ $user = Factory::getUser();
             }
 		});
 		$('#btnThanhlapSubmitAndClose').click(function() {
-			$('.gritter-item-wrapper').remove();
+			const element = document.querySelector('.thanhlap');
+            if (element) {
+                element.remove();
+            }
+			$.blockUI();
 			$('#action_name').val('SAVEANDCLOSE');
 			$('#parent_id').val($('#parent_id_content').val());
 			if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
@@ -220,7 +219,8 @@ $user = Factory::getUser();
                     class: 'thanhlap ngx-toastr'
 
                 })
-                return false;
+				//return false;
+				$.unblockUI();
 			} else {
 				var flag = $('#frmThanhLap').valid();
 				if (flag == true) {
@@ -231,13 +231,25 @@ $user = Factory::getUser();
 			}
 		});
 		$('#btnThanhlapSubmitAndNew').click(function() {
-			$('.gritter-item-wrapper').remove();
+			const element = document.querySelector('.thanhlap');
+            if (element) {
+                element.remove();
+            }
 			$.blockUI();
 			$('#action_name').val('SAVEANDNEW');
 			$('#parent_id').val($('#parent_id_content').val());
 			if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
+				$.toast({
+                    heading: 'Thông báo',
+                    text: "Vui lòng chọn đúng Cây đơn vị cha",
+                    showHideTransition: 'fade',
+                    position: 'top-right',
+                    icon: 'error',
+                    class: 'thanhlap ngx-toastr'
+
+                })
+				//return false;
 				$.unblockUI();
-				loadNoticeBoardError('Thông báo', 'Vui lòng chọn Cây đơn vị cha hợp lý');
 			} else {
 				var flag = $('#frmThanhLap').valid();
 				if (flag == true) {
@@ -248,13 +260,27 @@ $user = Factory::getUser();
 			}
 		});
 		$('#btnThanhlapSubmitAndContinue').click(function() {
-			$('.gritter-item-wrapper').remove();
+			const element = document.querySelector('.thanhlap');
+			console.log(element);
+            if (element) {
+                element.remove();
+            }
 			$.blockUI();
 			$('#action_name').val('SAVEANDCONTINUE');
 			$('#parent_id').val($('#parent_id_content').val());
 			if ($('#parent_id').val() == <?php echo (int)$this->row->id; ?>) {
+				
+				$.toast({
+                    heading: 'Thông báo',
+                    text: "Vui lòng chọn đúng Cây đơn vị cha",
+                    showHideTransition: 'fade',
+                    position: 'top-right',
+                    icon: 'error',
+                    class: 'thanhlap ngx-toastr'
+
+                })
+				//return false;
 				$.unblockUI();
-				loadNoticeBoardError('Thông báo', 'Vui lòng chọn Cây đơn vị cha hợp lý');
 			} else {
 				var flag = $('#frmThanhLap').valid();
 				if (flag == true) {

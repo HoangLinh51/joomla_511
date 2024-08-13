@@ -44,7 +44,7 @@ class HtmlView extends BaseHtmlView
     private function _initDefaultPage(){
     	$document = Factory::getDocument();
     	$document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
-        $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/black/pace-theme-center-simple.css');
+        $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
 
         $document->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
@@ -66,7 +66,7 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
-        $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/black/pace-theme-center-simple.css');
+        $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
 
         // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
         // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');

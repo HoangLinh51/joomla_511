@@ -176,8 +176,9 @@ class TochucController extends BaseController
 						$data_config['all_chirl'] = 0;
 						
 
-						$model_config = AdminModel::getInstance('Caybaocao', 'BaocaohosoModel');
-						// $model_config->save($data_config);
+						//$model_config = AdminModel::getInstance('Caybaocao', 'BaocaohosoModel');
+						$model_baocao = Core::model('Baocao/Caybaocao');
+						$model_baocao->save($data_config);
 					}
 				}
 			}

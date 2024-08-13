@@ -54,6 +54,24 @@ class RawView extends BaseHtmlView
         case 'DETAIL':
             $this->_getDetail();
             break;
+        case 'QUATRINH':
+            $this->_pageQuaTrinh();
+            break; 
+        case 'GIAOBIENCHE':
+            $this->_pageGiaobienche();
+            break;   
+        case 'KHENTHUONGKYLUAT':
+            $this->_pageKhenthuongkyluat();
+            break;
+        case 'GIAOUOCTHIDUA':
+            $this->_pageGiaouocthidua();
+            break;
+        case 'PHANHANGDONVI':
+            $this->_pagePhanhangdonvi();
+            break;
+        case 'QUYDINHCAPPHO':
+            $this->_pageQuydinhcappho();
+            break;   
         case 'EDIT_TOCHUC':
             $this->_pageEditTochuc();
             break;
@@ -120,6 +138,59 @@ class RawView extends BaseHtmlView
         parent::display();
     }
 
+    private function _pageGiaobienche(){
+    	$model = Core::model('Tochuc/Tochuc');
+        $app = Factory::getApplication()->input;
+    	$id = $app->getInt('id',0);
+
+    	$item = $model->read($id);    	
+    	$quatrinh_bienche = $model->getQuatrinhBiencheByDeptId($item->id);
+    	
+        $this->id = $id;        
+    	$this->quatrinh_bienche = $quatrinh_bienche ;
+    	$this->item = $item;
+        parent::display();
+    }
+
+    private function _pageKhenthuongkyluat(){
+    	$model = Core::model('Tochuc/Tochuc');
+        $app = Factory::getApplication()->input;
+    	$id = $app->getInt('id',0);
+    	$item = $model->read($id);    	// select * from ins_dept where id=$id
+    	$quatrinh_khenthuong = $model->getAllKhenthuongById($item->id);
+    	$quatrinh_kyluat = $model->getAllKyluatById($item->id);
+    	$this->id = $id;    	
+    	$this->quatrinh_khenthuong = $quatrinh_khenthuong;
+    	$this->quatrinh_kyluat = $quatrinh_kyluat;
+    	$this->item = $item;
+        parent::display();
+    }
+
+    public function _Pagegiaouocthidua(){
+        $app = Factory::getApplication()->input;
+    	$donvi_id = $app->getInt('id',0);
+        $datas = Core::loadAssocList('ins_dept_giaouocthidua', '*', 'donvi_id = '.(int)$donvi_id,'nam DESC');
+        $this->datas = $datas;
+        $this->donvi_id = $donvi_id;
+        parent::display();
+    }
+
+    function _pagePhanhangdonvi(){
+		$jinput = Factory::getApplication()->input;
+		$donvi_id = $jinput->get('id', 0, 'int');
+		$data = Core::loadAssocList('ins_dept_phanhangdonvi','*','donvi_id='.$donvi_id, 'ngaybatdau desc');
+		$this->data = $data;
+		$this->donvi_id = $donvi_id;
+		parent::display();
+	}
+    function _pageQuydinhcappho(){ 
+        $jinput = Factory::getApplication()->input;
+		$donvi_id = $jinput->get('id', 0, 'int');
+		$data = Core::loadAssocList('ins_dept_quydinhcappho','*','donvi_id='.$donvi_id, 'nam desc');
+		$this->data = $data;
+		$this->donvi_id = $donvi_id;
+		parent::display();
+    }
     private function _pageEditTochuc(){
     	$inArray = TochucHelper::collect('ins_cap', array('id','parent_id','name',"IF((rgt-lft) = 1,'item','folder') AS type"),array('status = 1'));
     	$tree_data_ins_cap = array();

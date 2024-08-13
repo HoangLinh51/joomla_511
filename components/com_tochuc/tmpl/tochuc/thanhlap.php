@@ -326,31 +326,33 @@ $user_id = $user->id;
                 beforeSend: function() {
                     // Show loading indicator
                     // Pace.start();
+                    $.blockUI();
                     $('#content_form').empty();
                     $('#content_form').html('<div class="overlay"><i class="fas fa-sync-alt fa-spin"></i></div>');
                 },
                 success: function(data, textStatus, jqXHR) {
                     // Update the content with the response
+                    $.unblockUI();
                     $('#content_form').html(data);
                     // Pace.stop();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     // Handle errors
+                    $.unblockUI();
                     $('#content_form').html('<p>Error loading form. Please try again later.</p>');
-                    Pace.stop();
-                    console.error('AJAX error:', textStatus, errorThrown);
+                    // Pace.stop();
+                    // console.error('AJAX error:', textStatus, errorThrown);
                 }
             });
         };
 
-        // Initialize form based on the current value
-        buildForm($('#type_content').val());
-
         // Update form when type_content changes
-        $('#type_content').change(function() {
+        $('#type_content').change(function(event) {
+            event.preventDefault();
             buildForm($(this).val());
         });
-
+        // Initialize form based on the current value
+        buildForm($('#type_content').val());
        
 
     });

@@ -101,13 +101,17 @@ $user_id = $user->id;
         <div class="card card-primary card-outline card-outline-tabs">
             <div class="card-header p-0 border-bottom-0">
                 <ul class="nav nav-tabs" id="myTab4">
-                    <li class="nav-item"><a class="nav-link active" data-tab-url="" href="#info" data-toggle="tab" href="#COM_TOCHUC_THANHLAP_TAB1">Thông tin chung</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#COM_TOCHUC_THANHLAP_TAB2">Lịch sử tổ chức</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#COM_TOCHUC_THANHLAP_TAB3">Biên chế</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#COM_TOCHUC_THANHLAP_TAB3">Khen thưởng kỷ luật</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#COM_TOCHUC_THANHLAP_TAB3">Giao ước thi đua</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#COM_TOCHUC_THANHLAP_TAB3">Phân hạng đơn vị</a></li>
-                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#COM_TOCHUC_THANHLAP_TAB3">Quy định cấp phó</a></li>
+                    <li class="nav-item active"><a class="nav-link active" data-tab-url="" href="#info" data-toggle="tab">Thông tin chung</a></li>
+                    <?php if ($this->row->type == 1 || $this->row->type == 3 || $this->row->type == 0) : ?>
+						<?php if (Core::_checkPerActionArr($user_id, 'com_tochuc', 'tochuc', array('task' => 'quatrinh', 'location' => 'site', 'non_action' => 'false'))) : ?>
+							<li class="nav-item"><a class="nav-link" data-toggle="tab" data-tab-url="index.php?option=com_tochuc&view=tochuc&task=quatrinh&format=raw&id=<?php echo $this->row->id; ?>" href="#tochuc-quatrinh">Lịch sử tổ chức</a></li>
+						<?php endif; ?>
+							<li class="nav-item"><a class="nav-link" data-toggle="tab" data-tab-url="index.php?option=com_tochuc&view=tochuc&task=giaobienche&format=raw&id=<?php echo $this->row->id; ?>" href="#bienche-quatrinh">Biên chế</a></li>
+							<li class="nav-item"><a class="nav-link" data-toggle="tab" data-tab-url="index.php?option=com_tochuc&view=tochuc&task=khenthuongkyluat&format=raw&id=<?php echo $this->row->id; ?>" href="#tochuc-quatrinh">Khen thưởng - Kỷ luật</a></li>
+							<li class="nav-item"><a class="nav-link" data-toggle="tab" data-tab-url="index.php?option=com_tochuc&view=tochuc&task=giaouocthidua&format=raw&id=<?php echo $this->row->id; ?>" href="#giaouocthidua-quatrinh">Giao ước thi đua</a></li>
+							<li class="nav-item"><a class="nav-link" data-toggle="tab" data-tab-url="index.php?option=com_tochuc&view=tochuc&task=phanhangdonvi&format=raw&id=<?php echo $this->row->id; ?>" href="#phanhangdonvi-quatrinh">Phân hạng đơn vị</a></li>
+							<li class="nav-item"><a class="nav-link" data-toggle="tab" data-tab-url="index.php?option=com_tochuc&view=tochuc&task=quydinhcappho&format=raw&id=<?php echo $this->row->id; ?>" href="#quydinhcappho-quatrinh">Quy định cấp phó</a></li>
+					<?php endif; ?>
                 </ul>
             </div>
             <div class="card-body">
@@ -213,9 +217,16 @@ $user_id = $user->id;
 							<!-- Kết thúc HTML Thông tin Đơn vị/ Phòng ban -->
 							</div>
                         </div>
+						<div id="tochuc-quatrinh" class="tab-pane"></div>
+						<div id="bienche-quatrinh" class="tab-pane"></div>
+						<div id="khenthuongkyluat-quatrinh" class="tab-pane"></div>
+						<div id="giaouocthidua-quatrinh" class="tab-pane"></div>
+						<div id="phanhangdonvi-quatrinh" class="tab-pane"></div>
+						<div id="quydinhcappho-quatrinh" class="tab-pane"></div>
                     </div>
                 </div>
             </div>
+			
         </div>
     </div>
 </div>
@@ -295,11 +306,15 @@ $user_id = $user->id;
 		// 	return false;
 		// });	
 		$('#myTab4 li').on('click', function() {
+			Pace.start()
 			var div_load = $(this).find('a').attr('href');
 			var url = $(this).find('a').data('tab-url');
+			
 			if (!$(this).hasClass('active')) {
 				$(div_load).load(url, function() {});
+				Pace.stop()
 			}
+			Pace.stop()
 		});
 		$('#btn_nghiepvu_doiten').on('click', function() {
 			$('#com_tochuc_viewdetail').hide();

@@ -61,11 +61,11 @@ jQuery(document).ready(function($){
 			  url: 'index.php?option=com_tochuc&view=tochuc&task=detail&format=raw&Itemid=<?php echo $this->Itemid;?>',
 			  data:{"id":id},
 			  beforeSend: function(){
-				  //$.blockUI();
+				//   $.blockUI();
 				  $('#com_tochuc_viewdetail').empty();				  
 				},
 			  success: function (data,textStatus,jqXHR){
-				  //$.unblockUI();
+				//   $.unblockUI();
 				  $('#com_tochuc_viewdetail').html(data);
 				  $('#com_tochuc_viewdetail').show();
 				  $('#com_tochuc_nghiepvu').hide();
