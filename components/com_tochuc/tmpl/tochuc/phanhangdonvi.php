@@ -5,6 +5,11 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
 $user = Factory::getUser();
+$data = $this->data;
+$donvi_id = $this->donvi_id;
+$hinhthucphanhang = Core::loadAssocListHasKey('danhmuc_hinhthucphanhangdonvi','*','id','trangthai =1 and daxoa=0');
+$hang = Core::loadAssocListHasKey('danhmuc_hangdonvisunghiep','*','id','trangthai=1');
+$canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('task' => 'au_add_phanhangdonvi', 'location' => 'site', 'non_action' => 'false'))
 ?>
 
 <section class="content">
@@ -12,42 +17,77 @@ $user = Factory::getUser();
         <div class="card-header">
             <h3 class="card-title">Quá trình phân hạng đơn vị</h3>
             <div class="card-tools">
-                <button type="button" class="btn btn-success btn-excel">
+                <!-- <button type="button" class="btn btn-success btn-excel">
                     <i class="fa fa-file-excel"></i>
-                </button>
-                <button type="button" class="btn btn-primary btn-themmoi">
-                    <i class="fa fa-plus"></i>
-                </button>
+                </button> -->
+                <?php if ($canNew): ?>
+                    <button type="button" id="btn_add_quatrinhphanhang" data-toggle="modal" data-target=".modal" class="btn btn-primary btn-themmoi">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                <?php endif; ?>
             </div>
         </div>
         <div class="card-body p-0">
-            <table class="table table-striped projects">
-                <thead>
-                    <tr>
-                       
-                        <th style="width: 10%; padding-left: 0.75rem;">
-                            Ngày bắt đầu -
-                            <br>
-                            Ngày kết thúc
-                        </th>
-                        <th style="width: 10%">
-                            Hình thức phân hạng
-                        </th>
-                        <th style="width: 5%">
-                            Hạng đơn vị
-                        </th>
-                        <th style="width: 20%" class="text-center">
-                            Ghi chú
-                        </th>
-                        <th style="width: 10%" class="text-right">
-                            #
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped projects" style="margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+
+                            <th style="width: 10%; padding-left: 0.75rem;">
+                                Ngày bắt đầu
+                            </th>
+                            <th style="width: 10%">
+                                Ngày kết thúc
+                            </th>
+                            <th style="width: 10%">
+                                Hình thức phân hạng
+                            </th>
+                            <th style="width: 10%">
+                                Hạng đơn vị
+                            </th>
+                            <th style="width: 10%">
+                                Số quyết định
+                            </th>
+                            <th style="width: 20%" class="text-center">
+                                Ghi chú
+                            </th>
+                            <th style="width: 10%" class="text-right">
+                                #
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        for ($i = 0; $i < count($data); $i++) {
+                            $row = $data[$i];
+                            $canEdit = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_edit_phanhangdonvi', 'location' => 'site', 'non_action' => 'false']);
+                            $canDelete = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_del_phanhangdonvi', 'location' => 'site', 'non_action' => 'false']);
+                        ?>
+                            <tr>
+                                <td><?php echo $i + 1 ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($row['ngaybatdau'])); ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($row['ngayketthuc'])); ?></td>
+                                <td><?php echo $hinhthucphanhang[$row['hinhthucphanhang_id']]['ten']; ?></td>
+                                <td><?php echo $hang[$row['hangdonvisunghiep_id']]['ten']; ?></td>
+                                <td><?php echo $row['ghichu']; ?></td>
+                                <td><?php echo $row['soqd']; ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($row['ngayqd'])); ?></td>
+                                <td><?php echo $row['coquanqd']; ?></td>
+                                <td nowrap="nowrap">
+                                    <?php if ($canEdit): ?>
+                                        <a href="index.php?option=com_tochuc&controller=tochuc&task=editphanhangdonvi&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="icon-pencil"></i></a>
+                                    <?php endif; ?>
+                                    <?php if ($canDelete): ?>
+                                        <span class="btn btn-mini btn-danger btnXoaQuaTrinhPhanHang" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delphanhangdonvi&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="icon-trash"></i></span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
@@ -65,7 +105,7 @@ $user = Factory::getUser();
         $('.btnEditQuatrinh').on('click', function() {
             $('#div_modal').load(this.href, function() {});
         });
-       
+
         // $('.input-mask-date').mask('99/99/9999');
         // $('#frmQuaTrinh').validate({
         //     ignore: [],

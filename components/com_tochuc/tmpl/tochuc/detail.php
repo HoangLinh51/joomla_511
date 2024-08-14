@@ -232,8 +232,8 @@ $user_id = $user->id;
 </div>
 
 
-<div class="modal fade" id="modal_tochuc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="width: 900px; left: 35%; display: none;">
-	<div id="div_modal" class="modal-dialog modal-lg">
+<div class="modal fade" id="modal_tochuc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+	<div id="div_modal" class="modal-dialog modal-xl">
 	</div>
 </div>
 <script>

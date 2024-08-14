@@ -23,6 +23,8 @@ $doc = Factory::getDocument();
 <script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jstree-3.2.1/jstree.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/ace-elements.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+
 <link href="<?php  echo Uri::root(true); ?>/templates/adminlte/plugins/global/style.bundle.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="<?php  echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="<?php  echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />

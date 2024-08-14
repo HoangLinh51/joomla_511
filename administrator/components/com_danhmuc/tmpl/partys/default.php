@@ -9,7 +9,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die('Restricted access');
-/** @var \Joomla\Component\Decentralization\Administrator\View\Groups\HtmlView $this */
+/** @var \Joomla\Component\Danhmuc\Administrator\View\Partys\HtmlView $this */
 
 
 /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */

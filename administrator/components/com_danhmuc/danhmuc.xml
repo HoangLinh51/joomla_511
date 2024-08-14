@@ -10,10 +10,6 @@
 	<version>4.0.0</version>
 	<description>Component for managing categories</description>
 	<namespace path="src">Joomla\Component\Danhmuc</namespace>
-	<media destination="com_danhmuc" folder="media">
-		<folder>css</folder>
-		<folder>js</folder>
-	</media>
 	<administration>
 		<files folder="admin">
 			<filename>danhmuc.xml</filename>

@@ -71,7 +71,19 @@ class RawView extends BaseHtmlView
             break;
         case 'QUYDINHCAPPHO':
             $this->_pageQuydinhcappho();
-            break;   
+            break;  
+        case 'MODAL_QUATRINH':
+            $this->_pageEditQuatrinh();
+            break;
+        case 'EDITGIAOBIENCHE':
+            //$this->_pageEditGiaobienche();
+            break;
+        case 'EDITKHENTHUONG':
+            //$this->_pageEditKhenthuong();
+            break;
+        case 'EDITKYLUAT':
+            //$this->_pageEditKyluat();
+            break;     
         case 'EDIT_TOCHUC':
             $this->_pageEditTochuc();
             break;
@@ -190,6 +202,29 @@ class RawView extends BaseHtmlView
 		$this->data = $data;
 		$this->donvi_id = $donvi_id;
 		parent::display();
+    }
+
+    private function  _pageEditQuatrinh(){
+        $model = Core::model('Tochuc/Tochuc');
+        $jinput = Factory::getApplication()->input;
+        $id = $jinput->getInt('id',0);     
+        $item = $model->getOneQuaTrinhById($id);
+        if ($item['id'] == NULL) {
+            $dept_id = $jinput->getInt('dept_id',0);
+            $dept = $model->read($dept_id);
+            $item['name'] = $dept->name;
+            $file = null;
+        }else{
+            $dept_id = $item['dept_id'];
+            $mapperFile = Core::model('Core/Attachment');
+            $file = $mapperFile->getRowByObjectIdAndTypeId($item['vanban_id'],1);
+        }
+        $this->item = $item;
+        $this->dept= $dept;
+        $this->id = $id;
+        $this->dept_id = $dept_id;
+        $this->file = $file;
+        parent::display();
     }
     private function _pageEditTochuc(){
     	$inArray = TochucHelper::collect('ins_cap', array('id','parent_id','name',"IF((rgt-lft) = 1,'item','folder') AS type"),array('status = 1'));

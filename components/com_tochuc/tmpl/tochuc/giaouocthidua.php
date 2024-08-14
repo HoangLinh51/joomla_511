@@ -12,40 +12,64 @@ $user = Factory::getUser();
         <div class="card-header">
             <h3 class="card-title">Giao ước thi đua</h3>
             <div class="card-tools">
-                <button type="button" class="btn btn-success btn-excel">
+                <!-- <button type="button" class="btn btn-success btn-excel">
                     <i class="fa fa-file-excel"></i>
-                </button>
-                <button type="button" class="btn btn-primary btn-themmoi">
+                </button> -->
+                <button type="button" id="btn_add_quatrinhgiaouoc" data-toggle="modal" data-target=".modal" class="btn btn-primary btn-themmoi">
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
         </div>
         <div class="card-body p-0">
-            <table class="table table-striped projects">
-                <thead>
-                    <tr>
-                       
-                        <th style="width: 10%; padding-left: 0.75rem;">
-                            Năm
-                        </th>
-                        <th style="width: 10%">
-                            Nội dung
-                        </th>
-                        <th style="width: 5%">
-                            Đại diện công đoàn
-                        </th>
-                        <th style="width: 20%" class="text-center">
-                            Đại diện chính quyền
-                        </th>
-                        <th style="width: 10%" class="text-right">
-                            #
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped projects" style="margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%; padding-left: 0.75rem;">
+                                Năm
+                            </th>
+                            <th style="width: 10%">
+                                Nội dung
+                            </th>
+                            <th style="width: 10%">
+                                Đại diện công đoàn
+                            </th>
+                            <th style="width: 20%" class="text-center">
+                                Đại diện chính quyền
+                            </th>
+                            <th style="width: 10%" class="text-right">
+                                #
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        for ($i = 0; $i < count($this->datas); $i++) {
+                            $row = $this->datas[$i];
+                            $canEdit = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_edit_giaouocthidua', 'location' => 'site', 'non_action' => 'false']);
+                            $canDelete = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_del_giaouocthidua', 'location' => 'site', 'non_action' => 'false']);
+                        ?>
+                            <tr>
+                                <td><?php echo $i + 1 ?></td>
+                                <td><?php echo $row['nam']; ?></td>
+                                <td><?php echo $row['noidung']; ?></td>
+                                <td><?php echo $row['daidiencongdoan']; ?></td>
+                                <td><?php echo $row['daidienchinhquyen']; ?></td>
+                                <td nowrap="nowrap">
+                                    <?php if ($canEdit): ?>                                        
+                                        <a href="index.php?option=com_tochuc&controller=tochuc&task=editgiaouoc&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="icon-pencil"></i></a>
+                                    <?php endif; ?>
+                                    <?php if ($canDelete): ?>        
+                                        <span class="btn btn-mini btn-danger btnDeleteQuatrinh" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delgiaouoc&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="icon-trash"></i></span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>
@@ -63,7 +87,7 @@ $user = Factory::getUser();
         $('.btnEditQuatrinh').on('click', function() {
             $('#div_modal').load(this.href, function() {});
         });
-       
+
         // $('.input-mask-date').mask('99/99/9999');
         // $('#frmQuaTrinh').validate({
         //     ignore: [],
