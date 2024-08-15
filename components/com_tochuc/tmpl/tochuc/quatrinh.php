@@ -105,6 +105,9 @@ $user = Factory::getUser();
 </section>
 <script type="text/javascript">
     jQuery(document).ready(function($) {
+        $('.datepicker_qd').datepicker({
+            autoclose: true
+        })
         $('#btn_export_lichsu').on('click', function() {
             document.location.assign(this.href);
             return false;

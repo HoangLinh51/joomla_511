@@ -14,7 +14,7 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
 ?>
-<form action="index.php?option=com_danhmuc&view=partys&layout=edit&id=<?php echo (int) $this->item->id ?>" method="post" name="adminForm" id="adminForm" class="form-horizontal form-validate">
+<form action="index.php?option=com_danhmuc&view=partys&layout=edit&code=<?php echo (int) $this->item->code ?>" method="post" name="adminForm" id="adminForm" class="form-horizontal form-validate">
 	<div class="row-fluid" style="background-color: white;padding: 15px;">
 		<div class="span12 form-horizontal">
         <fieldset>
@@ -43,7 +43,7 @@ $wa->useScript('keepalive')
     </div>
 </div>
 <div class="clr"></div>
-<?php echo $this->form->renderField('id')?>
+<?php echo $this->form->renderField('code')?>
 <input type="hidden" name="task" value="" />
 <?php echo HTMLHelper::_( 'form.token' ); ?> 
 </form>

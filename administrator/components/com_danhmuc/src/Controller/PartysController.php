@@ -107,12 +107,9 @@ class PartysController extends AdminController
     }
 
 
-    public function save($key = null, $urlVar = null)
+    public function save2new($key = null, $urlVar = null)
     {
-        // Check for request forgeries.
         $this->checkToken();
-
-        // Check if the user is authorized to do this.
         if (!$this->app->getIdentity()->authorise('core.admin')) {
             $this->setRedirect('index.php', Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
@@ -120,38 +117,60 @@ class PartysController extends AdminController
         }
 
         /** @var \Joomla\Component\Danhmuc\Administrator\Model\PartysModel $model */
-        // $model = $this->getModel('Partys', 'Administrator');
+        $model = $this->getModel('Partys', 'Administrator');
         $data  = $this->input->post->get('jform', [], 'array');
-
+        $code = $this->input->getInt('code');
         // Must load after serving service-requests
-        // $form = $model->getForm();
-
-        
-        // Attempt to save the configuration.
-        
-        // $return = $model->save($data);
+        $form = $model->getForm();
+        $return = $model->save($data, $code);
         
         // Cách 1
-        $model_core = Core::model('Danhmuchethong/Party_pos');
-        $return = $model_core->addparty_pos($data);
+        // $model_core = Core::model('Danhmuchethong/Party_pos');
+        // $return = $model_core->addparty_pos($data);
 
 
         // Check the return value.
         if ($return === false) {
-            /*
-            * The save method enqueued all messages for us, so we just need to redirect back.
-            */
-            
-            // Save failed, go back to the screen and display a notice.
             $this->setRedirect(Route::_('index.php?option=com_danhmuc&view=partys', false));
-
             return false;
         }
 
-        // Set the success message.
         $this->app->enqueueMessage(Text::_('Lưu thành công'), 'message');
+        switch ($this->input->getCmd('task')) {
+            case 'save2new':
+            default:
+                $this->setRedirect(Route::_('index.php?option=com_danhmuc&view=partys&layout=edit', false));
+                break;
+        }
+    }
 
-        // Set the redirect based on the task.
+    public function save($key = null, $urlVar = null)
+    {
+        $this->checkToken();
+        if (!$this->app->getIdentity()->authorise('core.admin')) {
+            $this->setRedirect('index.php', Text::_('JERROR_ALERTNOAUTHOR'), 'error');
+
+            return false;
+        }
+        /** @var \Joomla\Component\Danhmuc\Administrator\Model\PartysModel $model */
+        $model = $this->getModel('Partys', 'Administrator');
+        $data  = $this->input->post->get('jform', [], 'array');
+        $code = $this->input->getInt('code');
+        $form = $model->getForm();
+        $return = $model->save($data, $code);
+        
+        // Cách 1
+        // $model_core = Core::model('Danhmuchethong/Party_pos');
+        // $return = $model_core->addparty_pos($data);
+
+
+        if ($return === false) {
+            $this->setRedirect(Route::_('index.php?option=com_danhmuc&view=partys', false));
+            return false;
+        }
+
+        $this->app->enqueueMessage(Text::_('Lưu thành công'), 'message');
+        
         switch ($this->input->getCmd('task')) {
             case 'save':
             default:

@@ -31,7 +31,8 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/dist/css/_all-skins.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/fontawesome-free/css/all.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');
-	
+	// $doc->addStyleSheet(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
+
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/jqvmap/jqvmap.min.css');
 	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/select2/css/select2.min.css');
@@ -39,10 +40,13 @@ if ($coreTemplate->isLogin() == true) {
 
 
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery/jquery.min.js');
-	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
-	$doc->addScript(Uri::root(true).'/media/legacy/js/jquery-noconflict.js');
 	$doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-ui/jquery.blockUI.min.js');
+	// $doc->addScript(Uri::root(true).'/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js');
+	$doc->addScript(Uri::root(true).'/media/legacy/js/jquery-noconflict.js');
+
+	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
+
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mousewheel/jquery.mousewheel.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/dist/js/adminlte.js');
 	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/raphael/raphael.min.js');

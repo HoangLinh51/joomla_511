@@ -82,7 +82,7 @@ $mfa        = PluginHelper::isEnabled('multifactorauth');
                                 </td>
                                 <th scope="row">
                                     <?php if ($canEdit) : ?>
-                                        <a href="<?php echo Route::_('index.php?option=com_danhmuc&task=partys.edit&id=' . $item->code); ?>" title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->name); ?>">
+                                        <a href="<?php echo Route::_('index.php?option=com_danhmuc&view=partys&layout=edit&code=' . $item->code); ?>" title="<?php echo Text::_('JACTION_EDIT'); ?> <?php echo $this->escape($item->name); ?>">
                                             <?php echo $this->escape($item->name); ?></a>
                                     <?php else : ?>
                                         <?php echo $this->escape($item->name); ?>

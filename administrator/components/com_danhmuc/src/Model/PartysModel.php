@@ -6,6 +6,7 @@
  * Copyright (c) 2023 (C) 2008 Open Source Matters, Inc. <https://www.joomla.org>
  * GNU General Public License version 2 or later; see LICENSE.txt
  */
+
 namespace Joomla\Component\Danhmuc\Administrator\Model;
 
 use Joomla\CMS\Component\ComponentHelper;
@@ -41,8 +42,10 @@ class PartysModel extends ListModel
     {
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = [
-                'code', 'a.code',
-                'name', 'a.name'
+                'code',
+                'a.code',
+                'name',
+                'a.name'
             ];
         }
 
@@ -90,7 +93,7 @@ class PartysModel extends ListModel
         return parent::getStoreId($id);
     }
 
-	/**
+    /**
      * Method to auto-populate the model state.
      *
      * This method should only be called once per instantiation and is designed
@@ -124,59 +127,35 @@ class PartysModel extends ListModel
      *
      * @since   2.5
      */
-	protected function getListQuery()
-	{
-		// Create a new query object.
+    protected function getListQuery()
+    {
+        // Create a new query object.
         $db    = $this->getDatabase();
-		$query = $db->getQuery(true);
+        $query = $db->getQuery(true);
 
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.*'
-			)
-		);
-		$query->from($db->quoteName('party_pos_code') . ' AS a');
+        // Select the required fields from the table.
+        $query->select(
+            $this->getState(
+                'list.select',
+                'a.*'
+            )
+        );
+        $query->from($db->quoteName('party_pos_code') . ' AS a');
         $query->where('a.daxoa = 0');
-		// Filter the comments over the search string if set.
-		$search = $this->getState('filter.search');
+        // Filter the comments over the search string if set.
+        $search = $this->getState('filter.search');
 
-		if (!empty($search))
-		{
-			if (stripos($search, 'code:') === 0)
-			{
-				$query->where('a.code = ' . (int) substr($search, 3));
-			}
-			else
-			{
-				$search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
-				$query->where('a.name LIKE ' . $search);
-			}
-		}
-        // $published = (string) $this->getState('filter.published');
-        // var_dump($published);
-        // if ($published !== '*') {
-        //     if (is_numeric($published)) {
-        //         $state = (int) $published;
-        //         $query->where($db->quoteName('a.state') . ' = :state')
-        //             ->bind(':state', $state, ParameterType::INTEGER);
-        //     } elseif (!is_numeric($workflowStage)) {
-        //         $query->whereIn(
-        //             $db->quoteName('a.state'),
-        //             [
-        //                 ContentComponent::CONDITION_PUBLISHED,
-        //                 ContentComponent::CONDITION_UNPUBLISHED,
-        //             ]
-        //         );
-        //     }
-        // }
-
-		// Add the list ordering clause.
-		$query->order($db->escape($this->getState('list.ordering', 'a.code')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
-        // echo ($query);exit;
-		return $query;
-	}
+        if (!empty($search)) {
+            if (stripos($search, 'code:') === 0) {
+                $query->where('a.code = ' . (int) substr($search, 3));
+            } else {
+                $search = $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
+                $query->where('a.name LIKE ' . $search);
+            }
+        }
+        $query->order($db->escape($this->getState('list.ordering', 'a.code')) . ' ' . $db->escape($this->getState('list.direction', 'ASC')));
+        return $query;
+    }
 
     /**
      * Method to get the record form.
@@ -199,15 +178,15 @@ class PartysModel extends ListModel
 
         return $form;
     }
-    
+
     /**
      * save
      *
      * @param  mixed $data
      * @return void
      */
-    public function save($data)
-    { 
+    public function save($data, $pk = null)
+    {
         $table      = $this->getTable();
         $input      = Factory::getApplication()->getInput();
         $pk         = (!empty($data['code'])) ? $data['code'] : (int) $this->getState($this->getName() . '.code');
@@ -233,31 +212,58 @@ class PartysModel extends ListModel
         // Cách 1
 
         // Bind the data.
-        // if (!$table->bind($data)) {
-        //     $this->setError($table->getError());
+        if (!$table->bind($data)) {
+            $this->setError($table->getError());
 
-        //     return false;
-        // }
+            return false;
+        }
         // Store the data.
-        // if (!$table->store()) {
-        //     $this->setError($table->getError());
+        if (!$table->store()) {
+            $this->setError($table->getError());
 
-        //     return false;
-        // }
+            return false;
+        }
+
+
 
         // Cách 2
 
         // $db = Factory::getDbo();
-		// $query = $db->getQuery(true);
-		// $columns = ('name,level,status,daxoa');
-		// $values = array($db->quote($data['name']),$db->quote($data['level']),$db->quote($data['status']),0);
-		// $query->insert('party_pos_code')->columns($columns)->values(implode(',',$values));
-		// $db->setQuery($query);
-		// return $db->execute();
-      
+        // $query = $db->getQuery(true);
+        // $columns = ('name,level,status,daxoa');
+        // $values = array($db->quote($data['name']),$db->quote($data['level']),$db->quote($data['status']),0);
+        // $query->insert('party_pos_code')->columns($columns)->values(implode(',',$values));
+        // $db->setQuery($query);
+        // return $db->execute();
+
     }
-    
-    
+
+    public function getItem($pk = null)
+    {
+        $pk = (!empty($pk)) ? $pk : (int) Factory::getApplication()->input->getInt('code');
+        $db = Factory::getDbo();
+
+        $query = $db->getQuery(true);
+        $query->select('code, name, level, status')->from('party_pos_code')->where('code = ' . $pk);
+        $db->setQuery($query);
+        return $db->loadObject();
+    }
 
 
+    public function loadFormData()
+    {
+        $app = Factory::getApplication();
+        $pk = (int) $app->input->getInt('code', 0); // 'id' is usually used for primary key
+        if ($pk > 0) {
+            $data = $this->getItem($pk);
+            if (!$data || !$data->code) {
+                $filters = (array) $app->getUserState('com_danhmuc.partys.filter');
+                $data = (object) array_merge((array) $filters, (array) $data);
+            }
+            $this->preprocessData('com_danhmuc.partys', $data);
+        } else {
+            $data = (array) $app->getUserState('com_danhmuc.partys.filter', array());
+        }
+        return $data;
+    }
 }

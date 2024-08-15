@@ -103,13 +103,14 @@ class HtmlView extends BaseHtmlView
         $this->canDo         = HelperContentHelper::getActions('com_danhmuc');
        
 
-        $layout = Factory::getApplication()->input->get('layout');
+        $layout = Factory::getApplication()->input->get('task');
     	$layout = ($layout == null)?'default':strtoupper($layout); 
         $this->addToolbar(); 
         switch($layout){
         	case 'ADD':
             case 'EDIT':
-        		$this->setLayout('edit');   
+        		$this->setLayout('edit');
+                $this->_pageEdit();   
         		break;
             default:
                 break;
@@ -129,7 +130,7 @@ class HtmlView extends BaseHtmlView
         $user  = $this->getCurrentUser();
         // Add "Save" and "Cancel" buttons for the form view edit
         if (Factory::getApplication()->input->getCmd('layout') == 'edit') {
-            $toolbar->apply('partys.apply', 'JTOOLBAR_APPLY');
+            $toolbar->save2new('partys.save2new', 'JTOOLBAR_APPLY');
             $toolbar->save('partys.save', 'JTOOLBAR_SAVE');
             // $toolbar->cancel('partys.cancel', 'JTOOLBAR_CANCEL');
             $buttonCancel = (new LinkButton('icon'))
@@ -158,6 +159,12 @@ class HtmlView extends BaseHtmlView
             }
             
         }
+    }
+
+    public function _pageEdit(){
+        $model = $this->getModel('Partys');
+        $this->item = $model->getItem();
+        
     }
 }
 ?>
