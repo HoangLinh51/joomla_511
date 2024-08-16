@@ -38,10 +38,6 @@ class HtmlView extends BaseHtmlView
      		$this->_initDefaultPage();
          	break;
         }
-        $document = Factory::getDocument();
-        // $document->addStyleSheet(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
-        // $document->addScript(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js');
-
         parent::display($tpl);
     }
 
@@ -76,6 +72,7 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/global/style.bundle.css');
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/global/plugins.bundle.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
+        $document->addStyleSheet(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
@@ -84,7 +81,7 @@ class HtmlView extends BaseHtmlView
         // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         // $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
 
         $document->addScript(Uri::base(true).'/media/legacy/js/jquery-noconflict.js');

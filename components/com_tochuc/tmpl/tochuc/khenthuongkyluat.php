@@ -164,6 +164,20 @@ $user = Factory::getUser();
             document.location.assign(this.href);
             return false;
         });
+        $('#btnAddKhenthuong').click(function() {
+            Pace.start();
+			$("#div_modal").load('index.php?option=com_tochuc&view=tochuc&task=modal_khenthuong&format=raw&dept_id=<?php echo $this->item->id; ?>&time=<?php echo time(); ?>', function(){
+                Pace.stop();
+            });
+		});
+
+        $('#btnAddKyluat').click(function() {
+            Pace.start();
+			$("#div_modal").load('index.php?option=com_tochuc&view=tochuc&task=modal_kyluat&format=raw&dept_id=<?php echo $this->item->id; ?>&time=<?php echo time(); ?>', function(){
+                Pace.stop();
+            });
+		});
+
         $('#btn_add_quatrinh').on('click', function() {
             $('#div_modal').load('index.php?option=com_tochuc&controller=tochuc&task=editquatrinh&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {});
         });

@@ -4,7 +4,7 @@
  * @ Author: huenn.dnict@gmail.com
  * @ Create Time: 2024-08-07 09:14:13
  * @ Modified by: huenn.dnict@gmail.com
- * @ Modified time: 2024-08-13 09:16:21
+ * @ Modified time: 2024-08-16 15:00:15
  * @ Description:
  */
 
@@ -532,3 +532,8 @@ $user = Factory::getUser();
 
     }); // end document.ready
 </script>
+<style type="text/css">
+	.required {
+        color: red;
+    }
+</style>

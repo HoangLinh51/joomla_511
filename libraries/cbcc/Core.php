@@ -551,7 +551,7 @@ class Core{
         $action_id =  $db->loadRow();
         // Kiểm tra tồn tại action theo điều kiện
 		// var_dump(count($action_id));exit;
-        if (count($action_id)) {
+        if ($action_id !== null && !empty($action_id) && count($action_id) > 0) {
             if ((int)$action_id[1] == 0) {   // Action ko dc public
                 // Check per_action
                 $query_PerAction	=	$db->getQuery(true);

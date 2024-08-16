@@ -1148,6 +1148,9 @@ $user = Factory::getUser();
     });
 </script>
 <style>
+    .required {
+        color: red;
+    }
     #ins_cap_detail,
     #file_qdlienquan {
         padding-right: 0px !important;

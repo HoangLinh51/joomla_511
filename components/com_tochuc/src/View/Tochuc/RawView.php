@@ -75,6 +75,24 @@ class RawView extends BaseHtmlView
         case 'MODAL_QUATRINH':
             $this->_pageEditQuatrinh();
             break;
+        case 'MODAL_BIENCHE':
+            $this->_pageEditBienche();
+            break;
+        case 'MODAL_KHENTHUONG':
+            $this->_pageEditKhenthuong();
+            break;
+        case 'MODAL_KYLUAT':
+            $this->_pageEditKyluat();
+            break;
+        case 'MODAL_GIAOUOC':
+            $this->_pageEditGiaouoc();
+            break;
+        case 'MODAL_PHANHANG':
+            $this->_pageEditPhanhang();
+            break;
+        case 'MODAL_QUYDINHCAPPHO':
+            $this->_pageEditQuydinhcappho();
+            break;
         case 'EDITGIAOBIENCHE':
             //$this->_pageEditGiaobienche();
             break;
@@ -107,6 +125,7 @@ class RawView extends BaseHtmlView
          	break;
         }
     }
+
 
     private function _pageList(){   
         $id      = Factory::getApplication()->input->getInt('id'); 
@@ -163,6 +182,76 @@ class RawView extends BaseHtmlView
     	$this->item = $item;
         parent::display();
     }
+
+    private function  _pageEditKhenthuong(){
+    	$model = Core::model('Tochuc/Tochuc');
+        $jinput = Factory::getApplication()->input;
+    	$id = $jinput->getInt('id',0);
+    	$item = $model->getEditKhenthuongById($id);
+    	if ($id != NULL )
+    		$dept_id = $item[0]->iddonvi_kt;
+    	else{
+    		$dept_id = $jinput->getInt('dept_id',0);
+    	}
+    	$this->item = $item;
+    	$this->id = $id;
+    	$this->dept_id = $dept_id;
+        parent::display();
+    }
+
+    private function  _pageEditKyluat(){
+    	$model = Core::model('Tochuc/Tochuc');
+        $jinput = Factory::getApplication()->input;
+    	$id = $jinput->getInt('id',0);
+    	$item = $model->getEditKyluatById($id);
+    	if ($id != NULL )
+    		$dept_id = $item[0]->iddonvi_kl;
+    	else{
+    		$dept_id = $jinput->getInt('dept_id',0);
+    	}
+    	$this->item = $item;
+    	$this->id = $id;
+    	$this->dept_id = $dept_id;
+        parent::display();
+    }
+
+    public function _pageEditGiaouoc(){
+        $jinput = Factory::getApplication()->input;
+    	$id = $jinput->getInt('id',0);
+        $donvi_id = $jinput->getVar('donvi_id');
+		$data = Core::loadAssoc('ins_dept_giaouocthidua','*','id='.(int)$id);
+		$fk = Core::loadColumn('ins_dept_giaouocthidua_fk_attachment', '*', 'ins_dept_giaouocthidua_id = '.(int)$id);
+        if(count($fk)>0) $fks = implode(',', $fk);
+        $files = Core::loadAssocList('core_attachment','*','object_id IN (0'.$fks.') and type_id = 14');
+        $this->files = $files;
+        $this->donvi_id = $donvi_id;
+        $this->data = $data;
+        parent::display();
+    }
+
+    function _pageEditPhanhang(){
+		$jinput = Factory::getApplication()->input;
+		$donvi_id = $jinput->get('donvi_id', 0, 'int');
+		$id = $jinput->get('id', 0, 'int');
+		$data = Core::loadAssoc('ins_dept_phanhangdonvi','*','id='.$id);
+		$fk = Core::loadColumn('ins_dept_phanhangdonvi_fk_attachment', '*', 'ins_dept_phanhangdonvi_id = '.(int)$id);
+        if(count($fk)>0) $fks = implode(',', $fk);
+        $files = Core::loadAssocList('core_attachment','*','object_id IN (0'.$fks.') and type_id = 15');
+        $this->files =  $files;
+		$this->donvi_id = $donvi_id;
+		$this->data = $data;
+		parent::display();
+	}
+
+    function _pageEditQuydinhcappho(){
+		$jinput = Factory::getApplication()->input;
+		$donvi_id = $jinput->get('donvi_id', 0, 'int');
+		$id = $jinput->get('id', 0, 'int');
+		$data = Core::loadAssoc('ins_dept_quydinhcappho','*','id='.$id);
+		$this->donvi_id = $donvi_id;
+		$this->data = $data;
+		parent::display();
+	}
 
     private function _pageKhenthuongkyluat(){
     	$model = Core::model('Tochuc/Tochuc');
@@ -226,6 +315,34 @@ class RawView extends BaseHtmlView
         $this->file = $file;
         parent::display();
     }
+
+    private function  _pageEditBienche(){
+    	$model = Core::model('Tochuc/Tochuc');
+        $jinput = Factory::getApplication()->input;
+        $id = $jinput->getInt('id',0);   
+    	$item = $model->getQuatrinhBiencheById($id);
+       
+    	if ($item->id == NULL) {
+    		$dept_id = $jinput->getInt('dept_id',0);    		
+    		$dept = $model->read($dept_id);
+    		$hinhthuc_bienche =  $model->getHinhThucBienche($dept->goibienche);
+    		$file = null;
+    	}else{
+    		$hinhthuc_bienche =  $model->getHinhThucBienCheByQuatrinh($id);
+            $phanloai           = Core::loadAssoc('ins_dept_quatrinh_bienche_chitiet_phanloai', '*', 'quatrinh_id ='.(int)$id);
+    		$dept_id = $item->dept_id;
+    		$mapperFile = Core::model('Core/Attachment');
+    		$file = $mapperFile->getRowByObjectIdAndTypeId($item->vanban_id,1);
+    	}
+        $this->phanloai = $phanloai;
+    	$this->hinhthuc_bienche = $hinhthuc_bienche;
+    	$this->item = $item;
+    	$this->id = $id;
+    	$this->dept_id = $dept_id;
+    	$this->file = $file;
+        parent::display();
+    }
+    
     private function _pageEditTochuc(){
     	$inArray = TochucHelper::collect('ins_cap', array('id','parent_id','name',"IF((rgt-lft) = 1,'item','folder') AS type"),array('status = 1'));
     	$tree_data_ins_cap = array();

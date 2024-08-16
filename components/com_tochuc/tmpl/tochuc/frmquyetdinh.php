@@ -57,6 +57,11 @@ use Joomla\CMS\Uri\Uri;
 </form>
 <!-- <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.js"></script> -->
 <style>
+   
+.required {
+    color: red;
+}
+
 a.dz-clickable{
     border-top: 3px !important ;
 }      

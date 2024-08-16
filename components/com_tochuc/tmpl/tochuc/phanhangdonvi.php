@@ -99,6 +99,12 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
             document.location.assign(this.href);
             return false;
         });
+        $('#btn_add_quatrinhphanhang').on('click', function() {
+            Pace.start();
+            $('#div_modal').load('index.php?option=com_tochuc&view=tochuc&task=modal_phanhang&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {
+                Pace.stop();
+            });
+        });
         $('#btn_add_quatrinh').on('click', function() {
             $('#div_modal').load('index.php?option=com_tochuc&controller=tochuc&task=editquatrinh&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {});
         });

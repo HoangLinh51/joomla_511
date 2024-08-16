@@ -350,6 +350,9 @@ $user_id = $user->id;
 	});
 </script>
 <style>
+.required {
+	color: red;
+}	
 .dropdown-item:focus, .dropdown-item:hover {
     color: #16181b;
     text-decoration: none;

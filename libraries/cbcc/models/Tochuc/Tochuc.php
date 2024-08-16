@@ -1437,4 +1437,36 @@ class Tochuc_Model_Tochuc {
         return $db->insertId();
     }
 
+    function savequydinhcappho($formData) {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $fields = array(
+            $db->quoteName('nam') . '=' . $db->quote($formData['nam']),
+            $db->quoteName('soluong') . '=' . $db->quote($formData['soluong']),
+            $db->quoteName('ghichu') . '=' . $db->quote($formData['ghichu']),
+            $db->quoteName('hinhthuc_id') . '=' . $db->quote($formData['hinhthuc_id']),
+            $db->quoteName('donvi_id') . '=' . $db->quote($formData['donvi_id']),
+        );
+        if (isset($formData['id']) && $formData['id'] > 0) {
+            $conditions = array(
+                $db->quoteName('id') . '=' . $db->quote($formData['id'])
+            );
+            array_push($fields, $db->quoteName('ngayhieuchinh') . ' = NOW()');
+            array_push($fields, $db->quoteName('nguoihieuchinh') . ' = ' . Factory::getUser()->id);
+            $query->update($db->quoteName('ins_dept_quydinhcappho'))->set($fields)->where($conditions);
+            $id = $formData['id'];
+            $db->setQuery($query);
+            $db->execute();
+        } else {
+            array_push($fields, $db->quoteName('ngaytao') . ' = NOW()');
+            array_push($fields, $db->quoteName('nguoitao') . ' = ' . Factory::getUser()->id);
+            $query->insert($db->quoteName('ins_dept_quydinhcappho'));
+            $query->set($fields);
+            $db->setQuery($query);
+            $db->execute();
+            $id = $db->insertId();
+        }
+        return $id;
+    }
+
 }

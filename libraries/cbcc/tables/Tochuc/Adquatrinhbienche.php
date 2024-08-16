@@ -1,5 +1,8 @@
 <?php
-class Tochuc_Table_Adquatrinhbienche extends JTable{
+
+use Joomla\CMS\Table\Table;
+
+class Tochuc_Table_Adquatrinhbienche extends Table{
 	// Your properties and methods go here.
 	var $id = null;
 	var $quyetdinh_so = null;

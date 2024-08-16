@@ -9,6 +9,10 @@ $item = $this->item[0];
 ?>
 
 <meta>
+
+<script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/moment/moment.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>
+
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 
@@ -28,7 +32,7 @@ $item = $this->item[0];
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Thông tin quá trình lịch sử</h4>
+                <h4 class="modal-title">Thông tin quá trình khen thưởng</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -37,76 +41,71 @@ $item = $this->item[0];
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="cachthuc_id">Cách thức <span class="required">*</span></label>
+                            <label for="cachthuc_id">Từ ngày đến ngày <span class="required">*</span></label>
+                            <div class="controls">
+                                <input type="text" autocomplete="off" class="form-control rounded-0" id="kt_daterangepicker_2" name="name">                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Hình thức</label>
                             <div class="controls">
                                 <?php
-                                echo TochucHelper::selectBox($this->item['cachthuc_id'], array('name' => 'cachthuc_id', 'hasEmpty' => true), 'ins_dept_cachthuc', array('id', 'name'));
+	                	            echo TochucHelper::selectBox($item->rew_code_kt, array('name'=>'rew_code_kt','hasEmpty'=>true), 'ins_dmkhenthuongkyluat', array('id','name'), array('status = 1','type="KT"')); 
                                 ?>
-                            </div>
-                        </div>
+                            </div>                          
+                        </div>              
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name">Tên tổ chức theo quyết định</label>
+                            <label for="reason_kt">Lý do <span class="required">*</span></label>
                             <div class="input-group">
-                                <input type="text" autocomplete="off" class="form-control rounded-0" id="name" name="name">                                
+                                <input type="text" autocomplete="off" class="form-control rounded-0" id="reason_kt" name="reason_kt">                                
                             </div> 
                         </div>
-                        <div class="form-group clearfix">
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" class="" name="is_changename" id="checkboxPrimary1" value="1">      
-                                <label for="checkboxPrimary1">  Sử dụng làm tên chính thức </label>                                                
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name">Số quyết định</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="name" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Ngày quyết định</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="datepicker_qd" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="form-group">
-                        <?php echo Core::inputAttachmentOneFile('attactment_history', null, 1, date('Y'), -1) ?>
-                        </div>
+                            <label for="approv_date_kt">Ngày quyết định <span class="required">*</span></label>
+                            <div class="controls">
+                                <input type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="approv_date_kt" name="approv_date_kt">                                
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="datepicker_hl">Ngày có hiệu lực</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="datepicker_hl" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name">Nội dung chi tiết</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="name" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        </div>
-                       
+                            </div>                          
+                        </div>              
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label for="qdlienquan_mahieu">Ghi chú</label>
-                            <textarea class="form-control rounded-0" id="quatrinh_coquan" name="quatrinh_coquan"></textarea>
+                            <label for="reason_kt">Số quyết định <span class="required">*</span></label>
+                            <div class="input-group">
+                                <input type="text" autocomplete="off" class="form-control rounded-0" id="reason_kt" name="reason_kt">                                
+                            </div> 
                         </div>
-                        <input type="hidden" class="form-control rounded-0" id="attactment_quatrinh_file" name="quatrinh_file">
-                        <?php //echo Core::inputAttachmentOneFile('attactment_qdlienquan', null, 1, date('Y'), -1) 
-                        ?>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="approv_unit_kt">Cơ quan ra quyết định <span class="required">*</span></label>
+                            <div class="controls">
+                                <input type="text" autocomplete="off" class="form-control rounded-0" id="approv_unit_kt" name="approv_unit_kt">                                
+
+                            </div>                          
+                        </div>              
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="approv_per_kt">Người ký <span class="required">*</span></label>
+                            <div class="input-group">
+                                <input type="text" autocomplete="off" class="form-control rounded-0" id="approv_per_kt" name="approv_per_kt">                                
+                            </div> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,18 +138,29 @@ $item = $this->item[0];
 <script type="text/javascript">
     
     jQuery(document).ready(function($) {
-        $('#sandbox-container input').datepicker({
-        });
-        $('#datepicker_qd').datepicker({
-            autoclose: true,
-            language: 'vi'
-        });
-        $('#datepicker_hl').datepicker({
-            autoclose: true,
-            language: 'vi'
-        })
 
-        $('#cachthuc_id').select2({
+        $('#kt_daterangepicker_2').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        $('#kt_daterangepicker_2').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
+
+        $('#kt_daterangepicker_2').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+        
+        $('.datepicker').datepicker({
+            autoclose: true,
+            language: 'vi'
+        });
+        
+
+        $('#rew_code_kt').select2({
             placeholder: "Hãy chọn...",
             allowClear: true,
             width: "100%"

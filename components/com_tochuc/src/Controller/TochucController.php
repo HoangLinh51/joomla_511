@@ -276,5 +276,19 @@ class TochucController extends BaseController
 
 	}
 
+	public function savequydinhcappho(){
+		Session::checkToken() or die( 'Invalid Token' );
+		$model = Core::model('Tochuc/Tochuc');
+		$frm  = Factory::getApplication()->input->post->getArray();
+		$formData = array();
+		parse_str($frm['frmQuydinhcappho'], $formData);
+		$giaouoc_id = $model->savequydinhcappho($formData);
+		return Core::printJson($giaouoc_id>0);
+	}
+	public function delquydinhcappho(){
+		$id = Factory::getApplication()->input->getVar('id',0);
+		Core::delete('ins_dept_quydinhcappho', 'id='.(int)$id);
+		Core::printJson(true);
+	}
     
 }

@@ -138,8 +138,8 @@ $user = Factory::getUser();
             document.location.assign(this.href);
             return false;
         });
-        $('#btn_add_quatrinh').on('click', function() {
-            $('#div_modal').load('index.php?option=com_tochuc&controller=tochuc&task=editquatrinh&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {});
+        $('#btn_add_giaobienche').on('click', function() {
+            $('#div_modal').load('index.php?option=com_tochuc&view=tochuc&task=modal_bienche&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {});
         });
         $('.btnEditQuatrinh').on('click', function() {
             $('#div_modal').load(this.href, function() {});

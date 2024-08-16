@@ -5,7 +5,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
 $user = Factory::getUser();
-$item = $this->item[0];
+$item = $this->item;
 ?>
 
 <meta>
@@ -20,103 +20,133 @@ $item = $this->item[0];
 
 </meta>
 <form class="form-horizontal" id="frmQuaTrinh" name="frmQuaTrinh" method="post">
-   
+
 
     <input type="hidden" name="dept_id" value="<?php echo $this->dept_id; ?>">
-    <input type="hidden" name="id" value="<?php echo $this->item['id']; ?>" id="quatrinh_id">
-    <input type="hidden" name="vanban_id" value="<?php echo $this->item['vanban_id']; ?>" id="vanban_id">
+    <input type="hidden" name="id" value="<?php echo $this->item->id; ?>" id="quatrinh_id">
+    <input type="hidden" name="vanban_id" value="<?php echo $this->item->vanban_id; ?>" id="vanban_id">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Thông tin quá trình lịch sử</h4>
+                <h4 class="modal-title">Thông tin biên chế</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label for="cachthuc_id">Cách thức <span class="required">*</span></label>
+                            <label for="nghiepvu_id">Nghiệp vụ <span class="required">*</span></label>
                             <div class="controls">
                                 <?php
-                                echo TochucHelper::selectBox($this->item['cachthuc_id'], array('name' => 'cachthuc_id', 'hasEmpty' => true), 'ins_dept_cachthuc', array('id', 'name'));
+                                echo TochucHelper::selectBox($this->item->nghiepvu_id, array('name' => 'nghiepvu_id', 'hasEmpty' => true), 'ins_nghiepvu_bienche', array('id', 'nghiepvubienche'));
                                 ?>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name">Tên tổ chức theo quyết định</label>
-                            <div class="input-group">
-                                <input type="text" autocomplete="off" class="form-control rounded-0" id="name" name="name">                                
-                            </div> 
-                        </div>
-                        <div class="form-group clearfix">
-                            <div class="icheck-primary d-inline">
-                                <input type="checkbox" class="" name="is_changename" id="checkboxPrimary1" value="1">      
-                                <label for="checkboxPrimary1">  Sử dụng làm tên chính thức </label>                                                
+                            <label for="nam">Năm <span class="required">*</span></label>
+                            <div class="controls">
+                                <input type="text" autocomplete="off" class="form-control rounded-0" name="nam" id="nam" value="" />
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name">Số quyết định</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="name" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="">Ngày quyết định</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="datepicker_qd" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                        <?php echo Core::inputAttachmentOneFile('attactment_history', null, 1, date('Y'), -1) ?>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="datepicker_hl">Ngày có hiệu lực</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="datepicker_hl" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name">Nội dung chi tiết</label>
-                                    <div class="input-group">
-                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="name" name="name">                                
-                                    </div> 
-                                </div>
-                            </div>
-                        </div>
-                       
-                        <div class="form-group">
-                            <label for="qdlienquan_mahieu">Ghi chú</label>
-                            <textarea class="form-control rounded-0" id="quatrinh_coquan" name="quatrinh_coquan"></textarea>
-                        </div>
-                        <input type="hidden" class="form-control rounded-0" id="attactment_quatrinh_file" name="quatrinh_file">
-                        <?php //echo Core::inputAttachmentOneFile('attactment_qdlienquan', null, 1, date('Y'), -1) 
-                        ?>
                     </div>
                 </div>
-            </div>
 
+                <fieldset>
+                    <div>
+                        <p class="lead mb-0">Số lượng biên chế</p>
+                    </div>
+                    <div class="tab-custom-content">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="bienche">Biến chế hành chính</label>
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="bienche" name="bienche[]">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="bienche">Hợp đồng theo NĐ 68 (giao chỉ tiêu)</label>
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="bienche" name="bienche[]">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="bienche">Tập sự (Công chức)</label>
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="bienche" name="bienche[]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <div>
+                        <p class="lead mb-0">Văn bản kèm theo</p>
+                    </div>
+                    <div class="tab-custom-content">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="quyetdinh_so">Nghị quyết</label>
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" class="form-control rounded-0" id="quyetdinh_so" name="naquyetdinh_some">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="quyetdinh_ngay">Ngày quyết định</label>
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="quyetdinh_ngay" name="quyetdinh_ngay">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="hieuluc_ngay">Ngày hiệu lực</label>
+                                    <div class="input-group">
+                                        <input type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="hieuluc_ngay" name="hieuluc_ngay">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <?php echo Core::inputAttachmentOneFile('attactment_history', null, 1, date('Y'), -1) ?>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="hieuluc_ngay">Ghi chú</label>
+                                    <div class="input-group">
+                                        <textarea  autocomplete="off" class="form-control rounded-0" id="hieuluc_ngay" name="hieuluc_ngay"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                 <button type="button" data-id="" class="btn btn-primary btn-saveqdlienquan">Lưu</button>
             </div>
         </div>
     </div>
+    
 </form>
 <style>
     .required {
@@ -137,10 +167,8 @@ $item = $this->item[0];
     }
 </style>
 <script type="text/javascript">
-    
     jQuery(document).ready(function($) {
-        $('#sandbox-container input').datepicker({
-        });
+
         $('#datepicker_qd').datepicker({
             autoclose: true,
             language: 'vi'
@@ -148,9 +176,20 @@ $item = $this->item[0];
         $('#datepicker_hl').datepicker({
             autoclose: true,
             language: 'vi'
+        });
+
+        $('#nam').datepicker({
+            format: " yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            language: 'vi'
         })
 
-        $('#cachthuc_id').select2({
+        $('.datepicker').datepicker({
+            language: 'vi'
+        })
+
+        $('#nghiepvu_id').select2({
             placeholder: "Hãy chọn...",
             allowClear: true,
             width: "100%"
