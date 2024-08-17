@@ -1,6 +1,7 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
@@ -32,14 +33,16 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
                 <table class="table table-striped projects" style="margin-bottom: 0px;">
                     <thead>
                         <tr>
-
-                            <th style="width: 10%; padding-left: 0.75rem;">
+                            <th class="text-center" style="width: 1%;padding-left: 0.75rem;">
+                                #
+                            </th>
+                            <th class="text-center" style="width: 10%;">
                                 Ngày bắt đầu
                             </th>
-                            <th style="width: 10%">
+                            <th class="text-center" style="width: 10%">
                                 Ngày kết thúc
                             </th>
-                            <th style="width: 10%">
+                            <th style="width: 12%">
                                 Hình thức phân hạng
                             </th>
                             <th style="width: 10%">
@@ -48,11 +51,11 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
                             <th style="width: 10%">
                                 Số quyết định
                             </th>
-                            <th style="width: 20%" class="text-center">
+                            <th style="width: 20%">
                                 Ghi chú
                             </th>
-                            <th style="width: 10%" class="text-right">
-                                #
+                            <th style="width: 1%;padding-right: 0.75rem;" class="text-center">
+                                Hành động
                             </th>
                         </tr>
                     </thead>
@@ -64,21 +67,20 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
                             $canDelete = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_del_phanhangdonvi', 'location' => 'site', 'non_action' => 'false']);
                         ?>
                             <tr>
-                                <td><?php echo $i + 1 ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($row['ngaybatdau'])); ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($row['ngayketthuc'])); ?></td>
+                                <td class="text-center" style="padding-left: 0.75rem;"><?php echo $i + 1 ?></td>
+                                <td class="text-center"><?php echo date('d/m/Y', strtotime($row['ngaybatdau'])); ?></td>
+                                <td class="text-center"><?php echo date('d/m/Y', strtotime($row['ngayketthuc'])); ?></td>
                                 <td><?php echo $hinhthucphanhang[$row['hinhthucphanhang_id']]['ten']; ?></td>
                                 <td><?php echo $hang[$row['hangdonvisunghiep_id']]['ten']; ?></td>
-                                <td><?php echo $row['ghichu']; ?></td>
+                                
                                 <td><?php echo $row['soqd']; ?></td>
-                                <td><?php echo date('d/m/Y', strtotime($row['ngayqd'])); ?></td>
-                                <td><?php echo $row['coquanqd']; ?></td>
-                                <td nowrap="nowrap">
+                                <td><?php echo $row['ghichu']; ?></td>
+                                <td class="text-center" style="padding-right: 0.75rem;" nowrap="nowrap">
                                     <?php if ($canEdit): ?>
-                                        <a href="index.php?option=com_tochuc&controller=tochuc&task=editphanhangdonvi&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="icon-pencil"></i></a>
+                                        <a href="<?php echo Route::_('index.php'); ?>?view=tochuc&task=modal_phanhang&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="fas fa-pencil-alt"></i></a>
                                     <?php endif; ?>
                                     <?php if ($canDelete): ?>
-                                        <span class="btn btn-mini btn-danger btnXoaQuaTrinhPhanHang" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delphanhangdonvi&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="icon-trash"></i></span>
+                                        <span class="btn btn-mini btn-danger btnXoaQuaTrinhPhanHang" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delphanhangdonvi&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="fas fa-trash"></i></span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -101,7 +103,7 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
         });
         $('#btn_add_quatrinhphanhang').on('click', function() {
             Pace.start();
-            $('#div_modal').load('index.php?option=com_tochuc&view=tochuc&task=modal_phanhang&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {
+            $('#div_modal').load('<?php echo Route::_('index.php') ?>?view=tochuc&task=modal_phanhang&format=raw&donvi_id=<?php echo $this->donvi_id; ?>', function() {
                 Pace.stop();
             });
         });
@@ -112,19 +114,7 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
             $('#div_modal').load(this.href, function() {});
         });
 
-        // $('.input-mask-date').mask('99/99/9999');
-        // $('#frmQuaTrinh').validate({
-        //     ignore: [],
-        //     rules: {
-        //         cachthuc_id: {
-        //             required: true,
-        //         },
-        //         quyetdinh_ngay: {
-        //             required: true,
-        //             dateVN: true
-        //         }
-        //     }
-        // });
+        
         $('.btnDeleteQuatrinh').click(function() {
             if (confirm('Bạn có muốn xóa không?')) {
                 $.ajax({
@@ -139,7 +129,7 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
                                 url: 'index.php?option=com_tochuc&task=quatrinh&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
                                 success: function(data, textStatus, jqXHR) {
                                     $.unblockUI();
-                                    $('#tochuc-quatrinh').html(data);
+                                    $('#phanhangdonvi-quatrinh').html(data);
                                 }
                             });
                         } else {

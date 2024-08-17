@@ -1,11 +1,14 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
 $user = Factory::getUser();
-$item = $this->item[0];
+$item = $this->data;
+$donvi_id = $this->donvi_id;
 ?>
 
 <meta>
@@ -16,7 +19,6 @@ $item = $this->item[0];
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 
-<!-- <script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/select2/js/select2.min.js" type="text/javascript"></script> -->
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
@@ -24,11 +26,10 @@ $item = $this->item[0];
 
 </meta>
 <form class="form-horizontal" id="frmQuaTrinh" name="frmQuaTrinh" method="post">
-   
-
+    <?php echo HTMLHelper::_('form.token'); ?>
     <input type="hidden" name="dept_id" value="<?php echo $this->dept_id; ?>">
-    <input type="hidden" name="id" value="<?php echo $this->item['id']; ?>" id="quatrinh_id">
-    <input type="hidden" name="vanban_id" value="<?php echo $this->item['vanban_id']; ?>" id="vanban_id">
+	<input type="hidden" name="id" value="<?php echo $item['id']; ?>" id="id">
+	<input type="hidden" id="donvi_id" name="donvi_id" value="<?php echo $donvi_id ?>">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -43,7 +44,7 @@ $item = $this->item[0];
                         <div class="form-group">
                             <label for="ngaybatdau">Từ ngày<span class="required">*</span></label>
                             <div class="controls">
-                                <input type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="ngaybatdau" name="ngaybatdau">                                
+                                <input value="<?php if ($item['ngaybatdau'] != '' && $item['ngaybatdau'] != '0000-00-00') echo date('d/m/Y', strtotime($item['ngaybatdau'])); ?>" type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="ngaybatdau" name="ngaybatdau">                                
                             </div>
                         </div>
                     </div>
@@ -52,7 +53,7 @@ $item = $this->item[0];
                         <div class="form-group">
                             <label for="ngayketthuc">Đến ngày</label>
                             <div class="controls">
-                                <input type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="ngayketthuc" name="ngayketthuc">                                
+                                <input value="<?php if ($item['ngayketthuc'] != '' && $item['ngayngayketthucqd'] != '0000-00-00') echo date('d/m/Y', strtotime($item['ngayketthuc'])); ?>" type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="ngayketthuc" name="ngayketthuc">                                
                             </div>
                         </div>
                     </div>
@@ -60,7 +61,7 @@ $item = $this->item[0];
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name">Hình thức</label>
+                            <label for="hinhthucphanhang_id">Hình thức</label>
                             <div class="controls">
                                 <?php $hinhthuc = Core::loadAssocList('danhmuc_hinhthucphanhangdonvi', '*', 'trangthai=1'); ?>
                                 <select class="form-control rounded-0 select2" name="hinhthucphanhang_id">
@@ -74,7 +75,7 @@ $item = $this->item[0];
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="reason_kt">Hạng <span class="required">*</span></label>
+                            <label for="hangdonvisunghiep_id">Hạng <span class="required">*</span></label>
                             <div class="controls">
                                 <?php $hang = Core::loadAssocList('danhmuc_hangdonvisunghiep', '*', 'trangthai=1'); ?>
                                 <select class="form-control rounded-0 select2" name="hangdonvisunghiep_id">
@@ -86,23 +87,32 @@ $item = $this->item[0];
                             </div> 
                         </div>
                     </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="ghichu">Ghi chú</label>
+                            <div class="input-group">
+                                <textarea type="text" autocomplete="off" class="form-control rounded-0" id="ghichu" name="ghichu"><?php echo $item['ghichu'] ?></textarea>                              
+                            </div> 
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="reason_kt">Số quyết định <span class="required">*</span></label>
+                            <label for="soqd">Số quyết định <span class="required">*</span></label>
                             <div class="input-group">
-                                <input type="text" autocomplete="off" class="form-control rounded-0" id="reason_kt" name="reason_kt">                                
+                                <input value="<?php echo $item['soqd']; ?>" type="text" autocomplete="off" class="form-control rounded-0" id="soqd" name="soqd">                                
                             </div> 
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="approv_date_kt">Ngày quyết định <span class="required">*</span></label>
+                            <label for="ngayqd">Ngày quyết định <span class="required">*</span></label>
                             <div class="controls">
-                                <input type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="approv_date_kt" name="approv_date_kt">                                
+                                <input value="<?php if ($item['ngayqd'] != '' && $item['ngayqd'] != '0000-00-00') echo date('d/m/Y', strtotime($item['ngayqd'])); ?>" type="text" autocomplete="off" class="form-control rounded-0 datepicker" id="ngayqd" name="ngayqd">                                
 
                             </div>                          
                         </div>              
@@ -112,9 +122,9 @@ $item = $this->item[0];
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="approv_unit_kt">Cơ quan ra quyết định <span class="required">*</span></label>
+                            <label for="coquanqd">Cơ quan ra quyết định <span class="required">*</span></label>
                             <div class="controls">
-                                <input type="text" autocomplete="off" class="form-control rounded-0" id="approv_unit_kt" name="approv_unit_kt">                                
+                                <input value="<?php echo $item['coquanqd']; ?>" type="text" autocomplete="off" class="form-control rounded-0" id="coquanqd" name="coquanqd">                                
 
                             </div>                          
                         </div>              
@@ -122,13 +132,40 @@ $item = $this->item[0];
                 </div>
 
                 <div class="form-group">
-                    <?php echo Core::inputAttachmentOneFile('attactment_phanhang', null, 1, date('Y'), -1) ?>         
+                    <?php echo Core::inputAttachmentOneFile('attactment_phanhang', null, 1, date('Y'), -1) ?>     
+                    <?php
+                    for ($i = 0, $n = count($this->files); $i < $n; $i++) {
+                        $item = $this->files[$i];
+                    ?>
+                    <div class="dropzone dropzone-multi col-lg-8">
+                        <div class="dropzone-items wm-200px">
+                            <div class="dropzone-item">
+                                <!--begin::File-->
+                                <div class="dropzone-file">
+                                    <div class="dropzone-filename" title="some_image_file_name.jpg">
+                                        <span data-dz-name class="linkFile"><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span>
+                                        <strong>(<span data-dz-size><?php echo $fileSizeMB ?>kb</span>)</strong>
+                                    </div>
+                                    <div class="dropzone-error" data-dz-errormessage></div>
+                                </div>
+                                <!--end::File-->
+
+                                <!--begin::Toolbar-->
+                                <div class="dropzone-toolbar">
+                                    <span class="dropzone-delete" onclick="removeFile()" data-code="<?php echo $item['code'] ?>"  name="DELidfiledk<?php echo $this->idObject ?>[]" data-dz-remove><i class="fa fa-times"></i></span>
+                                </div>
+                                <!--end::Toolbar-->
+                            </div>
+                        </div>
+                        <!--end::Items-->
+                    </div>
+	                <?php } ?>
                 </div>
             </div>
 
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                <button type="button" data-id="" class="btn btn-primary btn-saveqdlienquan">Lưu</button>
+                <button type="submit" id="btnAddQuaTrinh" data-id="" class="btn btn-primary btn-saveqdlienquan">Lưu</button>
             </div>
         </div>
     </div>
@@ -181,8 +218,10 @@ $item = $this->item[0];
             allowClear: true,
             width: "100%"
         })
-        // $('#qdlienquan_ngaybanhanh').inputmask('dd/mm/yyyy', { 'placeholder': '__/__/____' });
-        $('#form_quyetdinh').validate({
+        var getTextLabel = function(id){
+            return $('#frmQuaTrinh label[for="'+id+'"]').text();
+        };
+        $('#frmQuaTrinh').validate({
             ignore: true,
             invalidHandler: function(form, validator) {
                 var errors = validator.numberOfInvalids();
@@ -194,7 +233,7 @@ $item = $this->item[0];
                     var errors = "";
                     if (validator.errorList.length > 0) {
                         for (x = 0; x < validator.errorList.length; x++) {
-                            errors += "<br/>\u25CF " + validator.errorList[x].message;
+                            errors += "<br/>\u25CF " + validator.errorList[x].message +' <b> '+ getTextLabel($(validator.errorList[x].element).attr("name")).replace(/\*/g, '')+'</b>' ;
                         }
                     }
                     $.toast({
@@ -204,87 +243,142 @@ $item = $this->item[0];
                         position: 'top-right',
                         icon: 'error'
                     })
-                    // loadNoticeBoardError('Thông báo', message + errors);
                 } else {
                     $(this).removeClass("is-invalid");
                 }
-                // validator.focusInvalid();
+                validator.focusInvalid();
             },
             errorPlacement: function(error, element) {},
             rules: {
-                'qdlienquan_mahieu': {
+                'hinhthucphanhang_id': {
                     required: true
                 },
-                // 'qdlienquan_ngaybanhanh': {
-                //     required: true
-                // },
-                'qdlienquan_coquanbanhanh': {
+                'ngaybatdau': {
+                    required: true
+                },
+                'hangdonvisunghiep_id': {
+                    required: true
+                },
+                'soqd': {
+                    required: true
+                },
+                'ngayqd': {
+                    required: true
+                },
+                'coquanqd': {
                     required: true
                 }
             },
             messages: {
-                'qdlienquan_mahieu': {
-                    required: "Vui lòng nhập số QĐ liên quan"
+                'hinhthucphanhang_id': {
+                    required: "Vui lòng nhập"
                 },
-                // 'qdlienquan_ngaybanhanh': {
-                //     required: "Vui lòng nhập ngày ban hành"
-                // },
-                'qdlienquan_coquanbanhanh': {
-                    required: "Vui lòng nhập cơ quan ban hành"
+                'ngaybatdau': {
+                    required: "Vui lòng nhập"
+                },
+                'hangdonvisunghiep_id': {
+                    required: "Vui lòng nhập"
+                },
+                'soqd': {
+                    required: "Vui lòng nhập"
+                },
+                'ngayqd': {
+                    required: "Vui lòng nhập"
+                },
+                'coquanqd': {
+                    required: "Vui lòng nhập"
                 }
             },
-            // errorElement: 'span',
-            // errorPlacement: function (error, element) {
-            //     error.addClass('invalid-feedback');
-            //     element.closest('.form-group').append(error);
-            // },
             highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
             unhighlight: function(element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
-            }
-        })
-
-        $('.btn-saveqdlienquan').on('click', function() {
-            var form = $('#form_quyetdinh');
-            if (form.valid()) {
-                var formData = $("#form_quyetdinh").serialize();
-                console.log(formData);
-                $.blockUI();
+            },
+            submitHandler: function() {
+                var frmQuaTrinh = $('#frmQuaTrinh').serialize();
                 $.ajax({
-                    type: 'get',
-                    url: '/index.php?option=com_tochuc&view=tochuc&task=addquyetdinh&format=raw&' + formData,
-                    success: function(data) {
-                        console.log(data);
-                        var year = <?php echo date('Y'); ?>;
-                        var xhtml = '';
-                        xhtml += '<tr id="row' + data.vanban_id + '">';
-                        xhtml += '<td><input type="hidden" name="ins_vanban_id[]" value="' + data.vanban_id + '"><input type="checkbox" class="ck_quyetdinhlienquan" value="' + data.vanban_id + '"><span class="lbl"></span></td>';
-                        xhtml += '<td>' + data.mahieu + '</td>';
-                        xhtml += '<td>' + data.ngaybanhanh + '</td>';
-                        xhtml += '<td>' + data.coquan_banhanh + '</td>';
-                        xhtml += '<td>';
-                        if (data.tenfile != null) {
-                            var list_dinhkem = data.code;
-                            var list_tenfile = data.tenfile;
-                            xhtml += '<a href="/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' + year + '&code=' + list_dinhkem + '">' + list_tenfile + '</a><br/>';
-                        }
-                        xhtml += '</td>';
-                        xhtml += '</tr>';
-                        $('.file_qdlienquan').modal('hide');
-                        $('.modal-backdrop').remove();
-
-                        $('#tbl_quyetdinhkemtheo').append(xhtml);
-                        if (data.mahieu != '') {
-                            $('#btn_xoa_qdlienquan').css('display', 'block')
-                        }
-                        $.unblockUI();
-                    }
-                });
+					type: 'POST',
+					url: 'index.php?option=com_tochuc&controller=tochuc&task=savephanhangdonvi',
+					data: {
+						frmQuaTrinh: frmQuaTrinh,
+						'<?php echo Session::getFormToken() ?>': 1
+					},
+					success: function(data) {
+						if (data == true) {
+                            $.toast({
+                                heading: 'Thông báo',
+                                text: "Thao tác thành công!",
+                                showHideTransition: 'fade',
+                                position: 'top-right',
+                                icon: 'success'
+                            });
+							$.blockUI();
+							jQuery.ajax({
+								type: "GET",
+								url: '?view=tochuc&task=phanhangdonvi&format=raw&id=<?php echo $donvi_id; ?>',
+								success: function(data, textStatus, jqXHR) {
+									$.unblockUI();
+									$('#modal_tochuc').modal('hide');
+									$('#phanhangdonvi-quatrinh').html(data);
+								}
+							});
+						} else
+                            $.toast({
+                                heading: 'Thông báo',
+                                text: "Có lỗi xảy ra, vui lòng liên hệ quản trị viên!",
+                                showHideTransition: 'fade',
+                                position: 'top-right',
+                                icon: 'error'
+                            });
+					},
+					error: function() {
+						$.blockUI();
+                        $.toast({
+                            heading: 'Thông báo',
+                            text: "Có lỗi xảy ra, vui lòng liên hệ quản trị viên!",
+                            showHideTransition: 'fade',
+                            position: 'top-right',
+                            icon: 'error'
+                        });
+					}
+				});
             }
-            return false;
-        })
+        });
+
+
+        //Xóa file
+
+        $('.btn_remove_soqd').on('click', function() {
+			if (!confirm('Bạn có chắc chắn xóa tập tin này?')) {
+				return false;
+			} else {
+				var idFile = $(this).data('code');
+				$.ajax({
+					type: "POST",
+					url: "<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&controller=tochuc&task=deletefilevanban",
+					data: {
+						idFile: idFile
+					},
+					beforeSend: function() {
+						$.blockUI();
+					},
+					success: function(data) {
+						if (data == '1') {
+							loadNoticeBoardSuccess('Thông báo', 'Xử lý thành công.');
+							$('#li_' + idFile).remove();
+						} else {
+							loadNoticeBoardError('Thông báo', 'Xử lý không thành công. Vui lòng liên hệ quản trị viên!');
+						}
+						$.unblockUI();
+					},
+					error: function() {
+						$.blockUI();
+						loadNoticeBoardError('Thông báo', 'Có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
+					}
+				});
+			}
+		});
 
     });
 </script>

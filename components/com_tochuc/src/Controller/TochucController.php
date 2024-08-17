@@ -290,5 +290,26 @@ class TochucController extends BaseController
 		Core::delete('ins_dept_quydinhcappho', 'id='.(int)$id);
 		Core::printJson(true);
 	}
+	
+	/**
+     * Save phan hang don vi
+     *
+     * @return  boolean  True if saved successfully
+     */
+	public function savephanhangdonvi(){
+		Session::checkToken() or die( 'Invalid Token' );
+		$model = Core::model('Tochuc/Tochuc');
+		$frmQuaTrinh  = Factory::getApplication()->input->post->getArray();
+		$formData = array();
+		parse_str($frmQuaTrinh['frmQuaTrinh'], $formData);
+		$giaouoc_id = $model->savephanhangdonvi($formData);
+		$mapperAttachment = Core::model('Core/Attachment');
+		for ($i = 0,$n=count($formData["idFile-attactment_phanhang"]); $i < $n; $i ++) {
+			$idfk = $model->luuFkPhanHangDonVi($giaouoc_id, $formData["idFile-attactment_phanhang"][$i]);
+			$mapperAttachment->updateTypeIdByCode($formData["idFile-attactment_phanhang"][$i], 15,true,$idfk);
+		}
+		$model->updateHangHienTaiDonVi($formData['donvi_id']);
+		return Core::printJson(true);
+	}
     
 }

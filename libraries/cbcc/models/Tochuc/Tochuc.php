@@ -1392,17 +1392,16 @@ class Tochuc_Model_Tochuc {
             $query->update($db->quoteName('ins_dept_phanhangdonvi'))->set($fields)->where($conditions);
             $id = $formData['id'];
             $db->setQuery($query);
-            $db->query();
+            $db->execute();
         } else {
             array_push($fields, $db->quoteName('ngaytao') . ' = NOW()');
             array_push($fields, $db->quoteName('nguoitao') . ' = ' . Factory::getUser()->id);
             $query->insert($db->quoteName('ins_dept_phanhangdonvi'));
             $query->set($fields);
             $db->setQuery($query);
-            $db->query();
+            $db->execute();
             $id = $db->insertId();
         }
-        // echo $query;
         return $id;
     }
     function updateHangHienTaiDonVi($donvi_id){
@@ -1433,7 +1432,7 @@ class Tochuc_Model_Tochuc {
         $query->insert($db->quoteName('ins_dept_phanhangdonvi_fk_attachment'));
         $query->set($fields);
         $db->setQuery($query);
-        $db->query();
+        $db->execute();
         return $db->insertId();
     }
 
