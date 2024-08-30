@@ -1,6 +1,7 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
@@ -31,17 +32,26 @@ $user = Factory::getUser();
                             <th style="width: 10%">
                                 Đến ngày
                             </th>
-                            <th style="width: 5%">
+                            <th style="width: 20%">
                                 Hình thức
                             </th>
-                            <th style="width: 45%" class="text-center">
+                            <th style="width: 20%">
                                 Lý do
                             </th>
                             <th style="width: 5%">
                                 Số QĐ
                             </th>
-                            <th style="width: 5%" class="text-right">
-                                #
+                            <th style="width: 15%">
+                                Cơ quan QĐ
+                            </th>
+                            <th style="width: 10%">
+                                Người ký
+                            </th>
+                            <th style="width: 10%">
+                                Ngày ký
+                            </th>
+                            <th style="width: 10%; padding-right: 0.75rem;">
+                                Hành động
                             </th>
                         </tr>
                     </thead>
@@ -55,7 +65,7 @@ $user = Factory::getUser();
 
                         ?>
                             <tr>
-                                <td><?php echo date('d/m/Y', strtotime($row->start_date_kt)); ?></td>
+                                <td style="padding-left: 0.75rem;"><?php echo date('d/m/Y', strtotime($row->start_date_kt)); ?></td>
                                 <td><?php if ((isset($row->end_date_kt)) && ($row->end_date_kt != null) && ($row->end_date_kt != '0000-00-00')) echo date('d/m/Y', strtotime($row->end_date_kt)); ?></td>
                                 <td><?php echo $row->hinhthuc; ?></td>
                                 <td><?php echo $row->reason_kt; ?></td>
@@ -63,12 +73,12 @@ $user = Factory::getUser();
                                 <td><?php echo $row->approv_unit_kt; ?></td>
                                 <td><?php echo $row->approv_per_kt; ?></td>
                                 <td><?php if ((isset($row->approv_date_kt)) && ($row->approv_date_kt != null)) echo date('d/m/Y', strtotime($row->approv_date_kt)); ?></td>
-                                <td nowrap="nowrap">
+                                <td style="padding-right: 0.75rem;" nowrap="nowrap">
                                     <?php if ($canEdit): ?>
-                                        <span class="btn btn-mini btn-info btnEditQuatrinh" data-toggle="modal" data-target=".modal" href="index.php?option=com_tochuc&controller=tochuc&task=editkhenthuong&format=raw&id=<?php echo $row->id_kt ?>"><i class="icon-pencil"></i></span>
+                                        <a href="<?php echo Uri::base(true); ?>/index.php/component/tochuc?view=tochuc&task=modal_khenthuong&format=raw&id=<?php echo $row->id_kt ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditKhenthuong"><i class="fas fa-pencil-alt"></i> Sửa</a>
                                     <?php endif; ?>
                                     <?php if ($canDelete): ?>
-                                        <span class="btn btn-mini btn-danger btnDeleteQuatrinh" task="removekhenthuong" id_qt="<?php echo $row->id_kt ?>"><i class="icon-trash"></i></span>
+                                        <span class="btn btn-mini btn-danger btnDeleteQuatrinh" task="removekhenthuong" id_qt="<?php echo $row->id_kt ?>"><i class="fas fa-trash"></i> Xóa</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -106,31 +116,40 @@ $user = Factory::getUser();
                             <th style="width: 10%">
                                 Đến ngày
                             </th>
-                            <th style="width: 5%">
+                            <th style="width: 20%">
                                 Hình thức
                             </th>
-                            <th style="width: 45%" class="text-center">
+                            <th style="width: 20%">
                                 Lý do
                             </th>
                             <th style="width: 5%">
                                 Số QĐ
                             </th>
-                            <th style="width: 5%" class="text-right">
-                                #
+                            <th style="width: 15%">
+                                Cơ quan QĐ
+                            </th>
+                            <th style="width: 10%">
+                                Người ký
+                            </th>
+                            <th style="width: 10%">
+                                Ngày ký
+                            </th>
+                            <th style="width: 10%; padding-right: 0.75rem;">
+                                Hành động
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php
-                        $totalItems = count($this->quatrinh_khenthuong);
-                        for ($i = 0; $i < $totalItems; $i++) {
-                            $row = $this->quatrinh_khenthuong[$i];
+                        $totalKyluat = count($this->quatrinh_kyluat);
+                        for ($i = 0; $i < $totalKyluat; $i++) {
+                            $row = $this->quatrinh_kyluat[$i];
                             $canEdit = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_edit_kyluat', 'location' => 'site', 'non_action' => 'false']);
                             $canDelete = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_del_kyluat', 'location' => 'site', 'non_action' => 'false']);
 
                         ?>
                             <tr>
-                                <td><?php echo date('d/m/Y', strtotime($row->start_date_kl)); ?></td>
+                                <td style="padding-left: 0.75rem;"><?php echo date('d/m/Y', strtotime($row->start_date_kl)); ?></td>
                                 <td><?php if ((isset($row->end_date_kl)) && ($row->end_date_kl != null) && ($row->end_date_kl != '0000-00-00')) echo date('d/m/Y', strtotime($row->end_date_kl)); ?></td>
                                 <td><?php echo $row->hinhthuc; ?></td>
                                 <td><?php echo $row->reason_kl; ?></td>
@@ -138,12 +157,12 @@ $user = Factory::getUser();
                                 <td><?php echo $row->approv_unit_kl; ?></td>
                                 <td><?php echo $row->approv_per_kl; ?></td>
                                 <td><?php if ((isset($row->approv_date_kl)) && ($row->approv_date_kl != null)) echo date('d/m/Y', strtotime($row->approv_date_kl)); ?></td>
-                                <td nowrap="nowrap">
+                                <td style="padding-right: 0.75rem;" nowrap="nowrap">
                                     <?php if ($canEdit): ?>
-                                        <span class="btn btn-mini btn-info btnEditQuatrinh" data-toggle="modal" data-target=".modal" href="index.php?option=com_tochuc&controller=tochuc&task=editkyluat&format=raw&ht=2&id=<?php echo $row->id_kl ?>"><i class="icon-pencil"></i></span>
+                                        <a href="<?php echo Uri::base(true); ?>/index.php/component/tochuc?view=tochuc&task=modal_kyluat&format=raw&id=<?php echo $row->id_kl ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditKyluat"><i class="fas fa-pencil-alt"></i> Sửa</a>
                                     <?php endif; ?>
                                     <?php if ($canDelete): ?>
-                                        <span class="btn btn-mini btn-danger btnDeleteQuatrinh" task="removekyluat" id_qt="<?php echo $row->id_kl ?>"><i class="icon-trash"></i></span>
+                                        <span class="btn btn-mini btn-danger btnDeleteQuatrinh" task="removekyluat" id_qt="<?php echo $row->id_kl ?>"><i class="fas fa-trash"></i> Xóa</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -166,8 +185,10 @@ $user = Factory::getUser();
         });
         $('#btnAddKhenthuong').click(function() {
             Pace.start();
+            $.blockUI();
 			$("#div_modal").load('index.php?option=com_tochuc&view=tochuc&task=modal_khenthuong&format=raw&dept_id=<?php echo $this->item->id; ?>&time=<?php echo time(); ?>', function(){
                 Pace.stop();
+                $.unblockUI();
             });
 		});
 
@@ -178,46 +199,47 @@ $user = Factory::getUser();
             });
 		});
 
-        $('#btn_add_quatrinh').on('click', function() {
-            $('#div_modal').load('index.php?option=com_tochuc&controller=tochuc&task=editquatrinh&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {});
-        });
-        $('.btnEditQuatrinh').on('click', function() {
-            $('#div_modal').load(this.href, function() {});
+       
+        $('.btnEditKhenthuong').on('click', function() {
+            $.blockUI();
+            $('#div_modal').load(this.href, function() {
+                $.unblockUI();
+            });
         });
 
-        // $('.input-mask-date').mask('99/99/9999');
-        // $('#frmQuaTrinh').validate({
-        //     ignore: [],
-        //     rules: {
-        //         cachthuc_id: {
-        //             required: true,
-        //         },
-        //         quyetdinh_ngay: {
-        //             required: true,
-        //             dateVN: true
-        //         }
-        //     }
-        // });
+        $('.btnEditKyluat').on('click', function() {
+            $.blockUI();
+            $('#div_modal').load(this.href, function() {
+                $.unblockUI();
+            });
+        });
+
+        
         $('.btnDeleteQuatrinh').click(function() {
             if (confirm('Bạn có muốn xóa không?')) {
+                var id_qt = $(this).attr('id_qt');
+				var task = $(this).attr('task');
                 $.ajax({
-                    url: '<?php echo Uri::base(true); ?>' + $(this).attr('href'),
+                    url: '<?php echo Uri::base(true); ?>/index.php?option=com_tochuc&controller=tochuc&format=raw&task=' + task,
                     type: "POST",
+					data: {
+						id: id_qt
+					},
                     success: function(data) {
                         if (data == true) {
-                            loadNoticeBoardSuccess('Thông báo', 'Thao tác thành công!');
+                            
                             $.blockUI();
                             jQuery.ajax({
                                 type: "GET",
-                                url: 'index.php?option=com_tochuc&task=quatrinh&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
+                                url: 'index.php?option=com_tochuc&view=tochuc&task=khenthuongkyluat&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
                                 success: function(data, textStatus, jqXHR) {
                                     $.unblockUI();
-                                    $('#tochuc-quatrinh').html(data);
+                                    loadNoticeBoardSuccess('Thông báo', 'Thao tác thành công!');
+                                    $('#khenthuongkyluat-quatrinh').html(data);
                                 }
                             });
                         } else {
                             loadNoticeBoardError('Thông báo', 'Có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
-                            console.log(data);
                         }
                     }
                 });

@@ -35,14 +35,14 @@ $user = Factory::getUser();
                             <th style="width: 10%">
                                 Nghị quyết
                             </th>
-                            <th style="width: 30%" class="text-center">
+                            <th style="width: 30%">
                                 Chi tiết
                             </th>
-                            <th style="width: 30%" class="text-center">
+                            <th style="width: 30%">
                                 Ghi chú
                             </th>
-                            <th style="width: 10%" class="text-right">
-                                #
+                            <th style="width: 10%" class="text-center">
+                                Hành động
                             </th>
                         </tr>
                     </thead>
@@ -58,24 +58,30 @@ $user = Factory::getUser();
                             
                             // Fetch the document details by ID
                             $vanban = TochucHelper::getVanBanById($row['vanban_id']);
-                            
+                            $file = TochucHelper::geFileById($row['vanban_id']);
+
                             if ($vanban !== null) {
-                                // Check if there are attachments for this document
-                                $hasAttachment = Core::loadResult('core_attachment', 'COUNT(*)', [
-                                    'object_id' => $vanban['id'],
-                                    'type_id'   => 1
-                                ]) > 0;
                                 
+                                // Check if there are attachments for this document
+                                $hasAttachment = Core::loadResult('core_attachment', 'COUNT(*)',  [
+                                    'object_id = ' => $vanban['id'],
+                                    'type_id = '   => 1
+                                ]) > 0;
+                              
                                 if ($hasAttachment) {
                                     // Set default label if 'mahieu' is empty
                                     $vanban['mahieu'] = $vanban['mahieu'] ?: 'Tập tin đính kèm';
                                     
+                                    $downloadUrl = sprintf(
+                                        '%s/index.php?option=com_core&controller=attachment&task=download&code='.$file['code'],
+                                        Uri::root(true),
+                                        $vanban['id']
+                                    );
                                     // Create a download link for the document
                                     $vanban['mahieu'] = sprintf(
-                                        '<a href="%s/uploader/index.php?download=1&type_id=1&object_id=%d" target="_blank">%s</a>',
-                                        Uri::root(true),
-                                        $vanban['id'],
-                                        htmlspecialchars($vanban['mahieu'])
+                                        "<a href='%s' target='_blank'>%s</a>",
+                                        htmlspecialchars($downloadUrl, ENT_QUOTES, 'UTF-8'),
+                                        htmlspecialchars($vanban['mahieu'], ENT_QUOTES, 'UTF-8')
                                     );
                                 }
                             } else {
@@ -94,9 +100,9 @@ $user = Factory::getUser();
                         ?>
 
                             <tr>
-                                <td nowrap="nowrap"><?php echo htmlspecialchars($row['nam'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td style="padding-left: 0.75rem;" nowrap="nowrap"><?php echo htmlspecialchars($row['nam'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td nowrap="nowrap"><?php echo htmlspecialchars($nghiepvuName, ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td nowrap="nowrap"><?php echo htmlspecialchars($vanban['mahieu'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td nowrap="nowrap"><?php echo isset($vanban['mahieu']) ? $vanban['mahieu'] : ''; ?></td>
                                 <td nowrap="nowrap">
                                     <ol>
                                         <?php foreach ($biencheDetails as $detail): ?>
@@ -106,15 +112,15 @@ $user = Factory::getUser();
                                     <!-- Commented-out details removed -->
                                 </td>
                                 <td><?php echo htmlspecialchars($row['ghichu'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td nowrap="nowrap">
+                                <td class="text-center" style="padding-right: 0.75rem;" nowrap="nowrap">
                                     <?php if ($canEdit): ?>
-                                        <a class="btn btn-mini btn-info btnEditQuatrinh" data-toggle="modal" data-target=".modal" href="index.php?option=com_tochuc&controller=tochuc&task=editgiaobienche&format=raw&id=<?php echo urlencode($row['id']); ?>">
-                                            <i class="icon-pencil"></i>
+                                        <a class="btn btn-mini btn-info btnEditQuatrinh" data-toggle="modal" data-target=".modal" href="index.php?option=com_tochuc&view=tochuc&task=modal_bienche&format=raw&id=<?php echo urlencode($row['id']); ?>">
+                                            <i class="fas fa-pencil-alt"></i> Sửa
                                         </a>
                                     <?php endif; ?>
                                     <?php if ($canDelete): ?>
                                         <span class="btn btn-mini btn-danger btnDeleteQuatrinh" href="index.php?option=com_tochuc&controller=tochuc&task=delgiaobienche&id=<?php echo urlencode($row['id']); ?>">
-                                            <i class="icon-trash"></i>
+                                            <i class="fas fa-trash"></i> Xóa
                                         </span>
                                     <?php endif; ?>
                                 </td>
@@ -144,34 +150,21 @@ $user = Factory::getUser();
         $('.btnEditQuatrinh').on('click', function() {
             $('#div_modal').load(this.href, function() {});
         });
-        // $('.input-mask-date').mask('99/99/9999');
-        // $('#frmQuaTrinh').validate({
-        //     ignore: [],
-        //     rules: {
-        //         cachthuc_id: {
-        //             required: true,
-        //         },
-        //         quyetdinh_ngay: {
-        //             required: true,
-        //             dateVN: true
-        //         }
-        //     }
-        // });
         $('.btnDeleteQuatrinh').click(function() {
             if (confirm('Bạn có muốn xóa không?')) {
                 $.ajax({
                     url: '<?php echo Uri::base(true); ?>' + $(this).attr('href'),
                     type: "POST",
                     success: function(data) {
-                        if (data == true) {
-                            loadNoticeBoardSuccess('Thông báo', 'Thao tác thành công!');
+                        if (data == true) {                        
                             $.blockUI();
                             jQuery.ajax({
                                 type: "GET",
-                                url: 'index.php?option=com_tochuc&task=quatrinh&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
+                                url: 'index.php?option=com_tochuc&view=tochuc&task=giaobienche&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
                                 success: function(data, textStatus, jqXHR) {
                                     $.unblockUI();
-                                    $('#tochuc-quatrinh').html(data);
+                                    loadNoticeBoardSuccess('Thông báo', 'Thao tác thành công!');
+                                    $('#bienche-quatrinh').html(data);
                                 }
                             });
                         } else {

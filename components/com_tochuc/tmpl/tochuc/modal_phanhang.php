@@ -30,6 +30,9 @@ $donvi_id = $this->donvi_id;
     <input type="hidden" name="dept_id" value="<?php echo $this->dept_id; ?>">
 	<input type="hidden" name="id" value="<?php echo $item['id']; ?>" id="id">
 	<input type="hidden" id="donvi_id" name="donvi_id" value="<?php echo $donvi_id ?>">
+    <div class="overlay" style="display: none;">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -139,7 +142,7 @@ $donvi_id = $this->donvi_id;
                     ?>
                     <div class="dropzone dropzone-multi col-lg-8">
                         <div class="dropzone-items wm-200px">
-                            <div class="dropzone-item">
+                            <div class="dropzone-item" id="div_<?php echo $item['code'] ?>">
                                 <!--begin::File-->
                                 <div class="dropzone-file">
                                     <div class="dropzone-filename" title="some_image_file_name.jpg">
@@ -152,7 +155,7 @@ $donvi_id = $this->donvi_id;
 
                                 <!--begin::Toolbar-->
                                 <div class="dropzone-toolbar">
-                                    <span class="dropzone-delete" onclick="removeFile()" data-code="<?php echo $item['code'] ?>"  name="DELidfiledk<?php echo $this->idObject ?>[]" data-dz-remove><i class="fa fa-times"></i></span>
+                                    <span class="dropzone-delete" id="btn_remove_soqd" data-code="<?php echo $item['code'] ?>"  name="DELidfiledk<?php echo $this->idObject ?>[]" data-dz-remove><i class="fa fa-times"></i></span>
                                 </div>
                                 <!--end::Toolbar-->
                             </div>
@@ -187,25 +190,13 @@ $donvi_id = $this->donvi_id;
         line-height: 26px !important;
         padding-left: 0px !important
     }
+    .modal{
+        padding-right: 0px !important;
+    }
 </style>
 <script type="text/javascript">
     
     jQuery(document).ready(function($) {
-
-        $('#kt_daterangepicker_2').daterangepicker({
-            autoUpdateInput: false,
-            locale: {
-                cancelLabel: 'Clear'
-            }
-        });
-
-        $('#kt_daterangepicker_2').on('apply.daterangepicker', function(ev, picker) {
-            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-        });
-
-        $('#kt_daterangepicker_2').on('cancel.daterangepicker', function(ev, picker) {
-            $(this).val('');
-        });
         
         $('.datepicker').datepicker({
             autoclose: true,
@@ -236,13 +227,7 @@ $donvi_id = $this->donvi_id;
                             errors += "<br/>\u25CF " + validator.errorList[x].message +' <b> '+ getTextLabel($(validator.errorList[x].element).attr("name")).replace(/\*/g, '')+'</b>' ;
                         }
                     }
-                    $.toast({
-                        heading: 'Thông báo',
-                        text: message + errors,
-                        showHideTransition: 'fade',
-                        position: 'top-right',
-                        icon: 'error'
-                    })
+                    loadNoticeBoardError('Thông báo', message + errors);
                 } else {
                     $(this).removeClass("is-invalid");
                 }
@@ -304,43 +289,28 @@ $donvi_id = $this->donvi_id;
 						frmQuaTrinh: frmQuaTrinh,
 						'<?php echo Session::getFormToken() ?>': 1
 					},
+                    beforeSend: function() {
+                        $('.overlay').removeAttr('style');
+                    },
 					success: function(data) {
 						if (data == true) {
-                            $.toast({
-                                heading: 'Thông báo',
-                                text: "Thao tác thành công!",
-                                showHideTransition: 'fade',
-                                position: 'top-right',
-                                icon: 'success'
-                            });
+                            loadNoticeBoardSuccess('Thông báo', 'Xử lý thành công.');
 							$.blockUI();
 							jQuery.ajax({
 								type: "GET",
-								url: '?view=tochuc&task=phanhangdonvi&format=raw&id=<?php echo $donvi_id; ?>',
+								url: '<?php echo Uri::root(true) ?>/index.php/component/tochuc?view=tochuc&task=phanhangdonvi&format=raw&id=<?php echo $donvi_id; ?>',
 								success: function(data, textStatus, jqXHR) {
 									$.unblockUI();
 									$('#modal_tochuc').modal('hide');
 									$('#phanhangdonvi-quatrinh').html(data);
 								}
 							});
-						} else
-                            $.toast({
-                                heading: 'Thông báo',
-                                text: "Có lỗi xảy ra, vui lòng liên hệ quản trị viên!",
-                                showHideTransition: 'fade',
-                                position: 'top-right',
-                                icon: 'error'
-                            });
+						} else loadNoticeBoardError('Thông báo', 'Xử lý không thành công. Vui lòng liên hệ quản trị viên!');
 					},
 					error: function() {
-						$.blockUI();
-                        $.toast({
-                            heading: 'Thông báo',
-                            text: "Có lỗi xảy ra, vui lòng liên hệ quản trị viên!",
-                            showHideTransition: 'fade',
-                            position: 'top-right',
-                            icon: 'error'
-                        });
+						
+                        loadNoticeBoardError('Thông báo', 'Vui lòng liên hệ quản trị viên!');
+                      
 					}
 				});
             }
@@ -349,14 +319,15 @@ $donvi_id = $this->donvi_id;
 
         //Xóa file
 
-        $('.btn_remove_soqd').on('click', function() {
+        $('#btn_remove_soqd').on('click', function() {
 			if (!confirm('Bạn có chắc chắn xóa tập tin này?')) {
 				return false;
 			} else {
 				var idFile = $(this).data('code');
+                console.log('<?php echo Uri::root(true) ?>');
 				$.ajax({
 					type: "POST",
-					url: "<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&controller=tochuc&task=deletefilevanban",
+					url: "<?php echo Uri::root(true) ?>/index.php?option=com_tochuc&controller=tochuc&task=deleteFileVanban",
 					data: {
 						idFile: idFile
 					},
@@ -366,7 +337,7 @@ $donvi_id = $this->donvi_id;
 					success: function(data) {
 						if (data == '1') {
 							loadNoticeBoardSuccess('Thông báo', 'Xử lý thành công.');
-							$('#li_' + idFile).remove();
+							$('#div_' + idFile).remove();
 						} else {
 							loadNoticeBoardError('Thông báo', 'Xử lý không thành công. Vui lòng liên hệ quản trị viên!');
 						}

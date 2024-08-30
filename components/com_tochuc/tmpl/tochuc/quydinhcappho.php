@@ -53,28 +53,30 @@ $hinhthuc = array(
                     </thead>
                     <tbody>
                     <?php    
-                        for ($i = 0; $i < count($data); $i++) {
-                            $row = $data[$i];
-                            $canEdit = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_edit_quydinhcappho', 'location' => 'site', 'non_action' => 'false']);
-                            $canDelete = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_del_quydinhcappho', 'location' => 'site', 'non_action' => 'false']);
-                            ?>
-                            <tr>
-                                <td style="padding-left: 0.75rem;"><?php echo $i+1?></td>
-                                <td><?php echo $row['nam'];?></td>
-                                <td><?php echo $hinhthuc[$row['hinhthuc_id']]['ten'];?></td>
-                                <td><?php echo $row['soluong'];?></td>
-                                <td><?php echo $row['ghichu'];?></td>
-                                <td nowrap="nowrap" class="text-center">
-                                    <?php //if ($canEdit): ?>
-                                        <a href="<?php echo Route::_('index.php'); ?>?view=tochuc&task=modal_quydinhcappho&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="fas fa-pencil-alt"></i> Sửa</a>
-                                    <?php // endif; ?>
-                                    <?php //if ($canDelete): ?>
-                                        <span class="btn btn-mini btn-danger btnXoaQuydinhcappho" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delquydinhcappho&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="fas fa-trash"></i> Xóa</span>
-                                    <?php //endif; ?>
-                                </td>
-                            </tr>
-                            <?php 
-                        } 
+                        if(count($data) > 0) {
+                            for ($i = 0; $i < count($data); $i++) {
+                                $row = $data[$i];
+                                $canEdit = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_edit_quydinhcappho', 'location' => 'site', 'non_action' => 'false']);
+                                $canDelete = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_del_quydinhcappho', 'location' => 'site', 'non_action' => 'false']);
+                                ?>
+                                <tr>
+                                    <td style="padding-left: 0.75rem;"><?php echo $i+1?></td>
+                                    <td><?php echo $row['nam'];?></td>
+                                    <td><?php echo $hinhthuc[$row['hinhthuc_id']]['ten'];?></td>
+                                    <td><?php echo $row['soluong'];?></td>
+                                    <td><?php echo $row['ghichu'];?></td>
+                                    <td nowrap="nowrap" class="text-center">
+                                        <?php //if ($canEdit): ?>
+                                            <a href="<?php echo Route::_('index.php'); ?>?view=tochuc&task=modal_quydinhcappho&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="fas fa-pencil-alt"></i> Sửa</a>
+                                        <?php // endif; ?>
+                                        <?php //if ($canDelete): ?>
+                                            <span class="btn btn-mini btn-danger btnXoaQuydinhcappho" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delquydinhcappho&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="fas fa-trash"></i> Xóa</span>
+                                        <?php //endif; ?>
+                                    </td>
+                                </tr>
+                                <?php 
+                            } 
+                        }
                         ?>
                     </tbody>
                 </table>
@@ -119,7 +121,7 @@ $hinhthuc = array(
                             $.blockUI();
                             jQuery.ajax({
                                 type: "GET",
-                                url: '<?php echo Route::_('index.php'); ?>?view=tochuc&task=quydinhcappho&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
+                                url: '<?php echo Route::_('index.php'); ?>?view=tochuc&task=quydinhcappho&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $donvi_id;?>',
                                 success: function(data, textStatus, jqXHR) {
                                     $.unblockUI();
                                     $('#modal_tochuc').modal('hide');

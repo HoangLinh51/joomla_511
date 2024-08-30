@@ -543,15 +543,18 @@ class Core{
         ->where(' component = '.$db->q($component))
         ->where(' tasks = '.$db->q($task))
         ;
+		
         if ($controller != null) {
             $query_action->where('controllers = '.$db->q($controller));
         }
         // echo $query_action->__toString();exit;
         $db->setQuery( $query_action,0,1 );
         $action_id =  $db->loadRow();
+		$action_id = is_array($action_id) ? $action_id : array(); // Ensure it's an array
+
         // Kiểm tra tồn tại action theo điều kiện
-		// var_dump(count($action_id));exit;
-        if ($action_id !== null && !empty($action_id) && count($action_id) > 0) {
+		//var_dump(count($action_id));exit;
+        if (count($action_id)) {
             if ((int)$action_id[1] == 0) {   // Action ko dc public
                 // Check per_action
                 $query_PerAction	=	$db->getQuery(true);
@@ -564,6 +567,7 @@ class Core{
                 // echo $query_PerAction->__toString();exit;
                 $db->setQuery($query_PerAction, 0 ,1);
                 $arr_iddonvi	=	$db->loadRow();
+				$arr_iddonvi = is_array($arr_iddonvi) ? $arr_iddonvi : array(); // Ensure it's an array
 				// var_dump(count($arr_iddonvi));exit;
                 // Kiểm tra phân quyền user
                 if (count($arr_iddonvi) > 0) {
@@ -585,7 +589,6 @@ class Core{
     			    		->where(' id = '.$db->quote($iddonvi));
     			    		 
     			    		$db->setQuery($quer_donvi, 0 ,1);
-    			    		// echo $quer_donvi->__toString();exit;
     			    		if ($db->loadResult()) {
     			    		    return true;
     			    		}else {

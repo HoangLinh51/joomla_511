@@ -1,5 +1,9 @@
 <?php
-class Tochuc_Table_Advanban extends JTable
+
+use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseDriver;
+
+class Tochuc_Table_Advanban extends Table
 {
 	var $id = null;
 	var $mahieu = null;
@@ -13,7 +17,7 @@ class Tochuc_Table_Advanban extends JTable
 	var $ngaytao = null;
 	var $nguoitao = 0;
 	
-	function __construct(&$db)
+	function __construct(DatabaseDriver $db)
 	{
 		parent::__construct( 'ins_vanban', 'id', $db );
 	}

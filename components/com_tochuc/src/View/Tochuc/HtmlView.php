@@ -43,6 +43,7 @@ class HtmlView extends BaseHtmlView
 
     private function _initDefaultPage(){
     	$document = Factory::getDocument();
+        $document->addStyleSheet(Uri::base(true).'/media/cbcc/js/jquery/jquery_upload/css/jquery.fileupload.css');
         $document->addCustomTag('<link href="'.Uri::base(true).'/media/cbcc/css/jquery.fileupload.css" rel="stylesheet" />');
         $document->addCustomTag('<link href="'.Uri::base(true).'/templates/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css" rel="stylesheet" />');
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/global/style.bundle.css');
@@ -54,6 +55,9 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+
+
+
         $document->addScript(Uri::base(true).'/media/legacy/js/jquery-noconflict.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/jstree/jquery.cookie.js');
@@ -61,7 +65,9 @@ class HtmlView extends BaseHtmlView
 		$document->addScript(Uri::root(true) . '/media/cbcc/js/caydonvi.js' );
         $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/pace-progress/pace.min.js');
-
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery_upload/js/vendor/jquery.ui.widget.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery_upload/js/jquery.iframe-transport.js');
+    	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery_upload/js/jquery.fileupload.js');
 
     }
 
@@ -93,8 +99,8 @@ class HtmlView extends BaseHtmlView
     	$document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.toast.js');
-
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/pace-progress/pace.min.js');
+
 
       
 		$model = Core::model('Tochuc/Tochuc');

@@ -1,6 +1,7 @@
 <?php
 
 use Joomla\CMS\Table\Table;
+use Joomla\Database\DatabaseDriver;
 
 class Tochuc_Table_Adquatrinhbienche extends Table{
 	// Your properties and methods go here.
@@ -18,7 +19,7 @@ class Tochuc_Table_Adquatrinhbienche extends Table{
 	var $nam = null;
 		
 
-	function __construct(&$db)
+	function __construct(DatabaseDriver $db)
 	{
 		parent::__construct( 'ins_dept_quatrinh_bienche', 'id', $db );
 	}

@@ -96,10 +96,11 @@ abstract class TochucHelper
 	static public function getQuatrinhBiencheChiTietByQuatrinhId($quatrinh_id){
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select(array('a.hinhthuc_id','a.bienche','b.name as name'))->from($db->quoteName('ins_dept_quatrinh_bienche_chitiet','a'))
+		$query->select(array('a.hinhthuc_id','a.bienche','b.name as name'))
+				->from($db->quoteName('ins_dept_quatrinh_bienche_chitiet','a'))
 				->join('INNER', 'bc_hinhthuc b ON a.hinhthuc_id = b.ID')
-					->where('a.quatrinh_id = '.$db->q($quatrinh_id));
-		$db->setQuery($query);
+				->where('a.quatrinh_id = '.$db->q($quatrinh_id));
+		$db->setQuery($query); 
 		return $db->loadAssocList();
 	}
 	static public function collect($table,$colums,$where = null,$order = null,$isCache = true){	
@@ -172,6 +173,18 @@ abstract class TochucHelper
 		$db->setQuery($query);
 		return $db->loadAssoc();
 	}
+
+	static public function geFileById($id){
+		$db = Factory::getDbo();
+		$rows = array();
+		$query = $db->getQuery(true);
+		$query->select('*')
+				->from($db->quoteName('core_attachment'))				
+				->where($db->quoteName('object_id').' = '.$db->q($id));
+		$db->setQuery($query);
+		return $db->loadAssoc();
+	}
+
 	static public function getLinhvucById($id){
 		$db = Factory::getDbo();
 			$query = 'SELECT n.id,n.name

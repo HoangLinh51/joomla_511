@@ -93,15 +93,24 @@ class RawView extends BaseHtmlView
         case 'MODAL_QUYDINHCAPPHO':
             $this->_pageEditQuydinhcappho();
             break;
-        case 'EDITGIAOBIENCHE':
-            //$this->_pageEditGiaobienche();
+        case 'NGHIEPVU_DOITEN':
+            $this->_pageNghiepvudoiten();
+            break; 
+        case 'NGHIEPVU_SAPNHAP':
+            $this->_pageNghiepvusapnhap();
+            break; 
+        case 'NGHIEPVU_HOPNHAT':
+            $this->_pageNghiepvuhopnhat();
+            break; 
+        case 'NGHIEPVU_CHIATACH':
+            $this->_pageNghiepvuchiatach();
             break;
-        case 'EDITKHENTHUONG':
-            //$this->_pageEditKhenthuong();
-            break;
-        case 'EDITKYLUAT':
-            //$this->_pageEditKyluat();
-            break;     
+        case 'NGHIEPVU_GIAITHE':
+            $this->_pageNghiepvugiaithe();
+            break; 
+        case 'NGHIEPVU_DOICHUQUAN':
+            $this->_pageNghiepvudoichuquan();
+            break;  
         case 'EDIT_TOCHUC':
             $this->_pageEditTochuc();
             break;
@@ -258,8 +267,8 @@ class RawView extends BaseHtmlView
         $app = Factory::getApplication()->input;
     	$id = $app->getInt('id',0);
     	$item = $model->read($id);    	// select * from ins_dept where id=$id
-    	$quatrinh_khenthuong = $model->getAllKhenthuongById($item->id);
-    	$quatrinh_kyluat = $model->getAllKyluatById($item->id);
+    	$quatrinh_khenthuong = $model->getAllKhenthuongById($id);
+    	$quatrinh_kyluat = $model->getAllKyluatById($id);
     	$this->id = $id;    	
     	$this->quatrinh_khenthuong = $quatrinh_khenthuong;
     	$this->quatrinh_kyluat = $quatrinh_kyluat;
@@ -329,17 +338,19 @@ class RawView extends BaseHtmlView
     		$file = null;
     	}else{
     		$hinhthuc_bienche =  $model->getHinhThucBienCheByQuatrinh($id);
-            $phanloai           = Core::loadAssoc('ins_dept_quatrinh_bienche_chitiet_phanloai', '*', 'quatrinh_id ='.(int)$id);
+            // $phanloai = Core::loadAssoc('ins_dept_quatrinh_bienche_chitiet_phanloai', '*', 'quatrinh_id ='.(int)$id);
     		$dept_id = $item->dept_id;
     		$mapperFile = Core::model('Core/Attachment');
-    		$file = $mapperFile->getRowByObjectIdAndTypeId($item->vanban_id,1);
+            $files = Core::loadAssocList('core_attachment','*','object_id IN ('.$item->vanban_id.') and type_id = 1');
+
+            
     	}
-        $this->phanloai = $phanloai;
+        // $this->phanloai = $phanloai;
     	$this->hinhthuc_bienche = $hinhthuc_bienche;
     	$this->item = $item;
     	$this->id = $id;
     	$this->dept_id = $dept_id;
-    	$this->file = $file;
+    	$this->files = $files;
         parent::display();
     }
     
@@ -573,7 +584,84 @@ class RawView extends BaseHtmlView
         die;
     }
     
+    public function _pageNghiepvudoiten(){
+    	$formData = Factory::getApplication()->input->post->getArray();
+        $this->type = $formData['type'];
+        $this->donvi_id = $formData['id'];
+        $this->donvi_name = TochucHelper::getNameById($formData['id'], 'ins_dept');
+		parent::display();
+    }
 
+    public function _pageNghiepvusapnhap(){
+        $formData = Factory::getApplication()->input;
+        $type = $formData->getVar('type', '0');
+        $donvi_id = $formData->getInt('id', 0);
+        $model = Core::model('Tochuc/Nghiepvu');
+        if($type==0) $q = ' and p.parent_id = (select parent_id from ins_dept where id ='.$donvi_id.')';
+        $cboTochuc = $model->getCbo('ins_dept p', 'p.id, name, p.type', 'p.active = 1 and p.type='.$type.' and id !='.$donvi_id. $q, 'p.lft asc', '0', '-- Vui lòng chọn '.TochucHelper::getNameById($type, 'ins_type').' --', 'id', 'name', '', 'tochuc_id[]', 'chosen', array('type'=>'type'));
+        $this->cboTochuc = $cboTochuc;
+        $this->cboTochucAdd = json_encode($cboTochuc);
+        $this->type = $type;
+        $this->donvi_id = $donvi_id;
+        $this->donvi_name = TochucHelper::getNameById($donvi_id, 'ins_dept');
+        parent::display();
+    }
+
+    public function _pageNghiepvuhopnhat(){
+        $formData = Factory::getApplication()->input;
+        $type = $formData->getVar('type', '0');
+        $donvi_id = $formData->getInt('id', 0);
+        $model = Core::model('Tochuc/Nghiepvu');
+        if($type==0) $q = ' and p.parent_id = (select parent_id from ins_dept where id ='.$donvi_id.')';
+        $cboTochuc_cu = $model->getCbo('ins_dept p', 'p.id, name, p.type', 'p.active = 1 and p.type='.$type. $q, 'p.lft asc', 0, 'Chọn '.TochucHelper::getNameById($type, 'ins_type'), 'id', 'name', $donvi_id, 'tochuc_id[]', 'chosen', array('type'=>'type'));
+        $cboTochuc = $model->getCbo('ins_dept p', 'p.id, name, p.type', 'p.active = 1 and p.type='.$type. $q, 'p.lft asc', 0, 'Chọn '.TochucHelper::getNameById($type, 'ins_type'), 'id', 'name', '', 'tochuc_id[]', 'chosen', array('type'=>'type'));
+        $this->cboTochuc = $cboTochuc_cu;
+        $this->cboTochucAdd = json_encode($cboTochuc);
+        $this->type = $type;
+        parent::display();
+    }
+
+    public function _pageNghiepvugiaithe(){
+        $formData = Factory::getApplication()->input;
+        $type = $formData->getVar('type', '0');
+        $donvi_id = $formData->getInt('id', 0);
+        if($type==0)
+            $sumHoso = Core::loadResult('hosochinh_quatrinhhientai', 'count(hosochinh_id)', 'congtac_phong_id = '.(int)$donvi_id.' AND hoso_trangthai ="00"');
+        else 
+            $sumHoso = Core::loadResult('hosochinh_quatrinhhientai', 'count(hosochinh_id)', 'congtac_donvi_id = '.(int)$donvi_id
+                .' AND hoso_trangthai ="00"');
+        $this->type = $type;
+        $this->donvi_id =  $donvi_id;
+        $this->sumHoso = $sumHoso;
+        $this->donvi_name = TochucHelper::getNameById($donvi_id, 'ins_dept');
+        parent::display();
+    }
+    public function _pageNghiepvuchiatach(){
+        $formData = Factory::getApplication()->input;
+        $type = $formData->getVar('type', '0');
+        $donvi_id = $formData->getInt('id', 0);
+        if($type==0)
+            $sumHoso = Core::loadResult('hosochinh_quatrinhhientai', 'count(hosochinh_id)', 'congtac_phong_id = '.(int)$donvi_id.' AND hoso_trangthai ="00"');
+        else 
+            $sumHoso = Core::loadResult('hosochinh_quatrinhhientai', 'count(hosochinh_id)', 'congtac_donvi_id = '.(int)$donvi_id
+                .' AND hoso_trangthai ="00"');
+        $this->sumHoso = $sumHoso;        
+        $this->type = $type;
+        $this->donvi_id =  $donvi_id;
+        $this->donvi_name = TochucHelper::getNameById($donvi_id, 'ins_dept');
+        parent::display();
+    }
+
+    function _pageNghiepvudoichuquan(){
+        $formData = Factory::getApplication()->input;
+        $type = $formData->getVar('type', '0');
+        $donvi_id = $formData->getInt('id', 0);
+        $model = Core::model('Tochuc/Tochuc');
+        $this->type = $type;
+        $this->donvi_id =  $donvi_id;
+        parent::display();
+    }
+    
 
    
     

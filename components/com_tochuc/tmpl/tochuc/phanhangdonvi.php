@@ -77,10 +77,10 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
                                 <td><?php echo $row['ghichu']; ?></td>
                                 <td class="text-center" style="padding-right: 0.75rem;" nowrap="nowrap">
                                     <?php if ($canEdit): ?>
-                                        <a href="<?php echo Route::_('index.php'); ?>?view=tochuc&task=modal_phanhang&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="fas fa-pencil-alt"></i></a>
+                                        <a href="<?php echo Route::_('index.php'); ?>?view=tochuc&task=modal_phanhang&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="fas fa-pencil-alt"></i> Sửa</a>
                                     <?php endif; ?>
                                     <?php if ($canDelete): ?>
-                                        <span class="btn btn-mini btn-danger btnXoaQuaTrinhPhanHang" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delphanhangdonvi&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="fas fa-trash"></i></span>
+                                        <span class="btn btn-mini btn-danger" id="btnXoaQuaTrinhPhanHang" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delphanhangdonvi&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="fas fa-trash"></i> Xóa</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -115,7 +115,7 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
         });
 
         
-        $('.btnDeleteQuatrinh').click(function() {
+        $('#btnXoaQuaTrinhPhanHang').click(function() {
             if (confirm('Bạn có muốn xóa không?')) {
                 $.ajax({
                     url: '<?php echo Uri::base(true); ?>' + $(this).attr('href'),
@@ -126,15 +126,16 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
                             $.blockUI();
                             jQuery.ajax({
                                 type: "GET",
-                                url: 'index.php?option=com_tochuc&task=quatrinh&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
+                                url: '<?php echo Route::_('index.php'); ?>?view=tochuc&task=phanhangdonvi&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
                                 success: function(data, textStatus, jqXHR) {
                                     $.unblockUI();
+                                    $('#modal_tochuc').modal('hide');
+                                    $(this).closest('tr').remove();
                                     $('#phanhangdonvi-quatrinh').html(data);
                                 }
                             });
                         } else {
                             loadNoticeBoardError('Thông báo', 'Có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
-                            console.log(data);
                         }
                     }
                 });
@@ -143,18 +144,5 @@ $canNew = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', array('tas
         });
     });
 
-    function deleteFileById(id, url) {
-        if (confirm('Bạn có muốn xóa không?')) {
-            jQuery.ajax({
-                type: "DELETE",
-                url: url,
-                success: function(data, textStatus, jqXHR) {
-                    var element = document.getElementById('file_' + id);
-                    element.parentNode.removeChild(element);
-                    //console.log(data);
-                }
-            });
-        }
-        return false;
-    }
+    
 </script>

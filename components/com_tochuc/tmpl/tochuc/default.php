@@ -19,7 +19,7 @@ $active_tong = $session->get('active_tong');
 	<div class="content-header">
 		<div class="container-fluid">
 			
-				<div class="row mb-2">
+				<div class="row">
 					<div class="col-sm-6">
 						<h4><span class="span6" id="tochuc_current">Quản lý tổ chức <small><i class="icon-double-angle-right"></i> </small></span></h4>
 					</div>
@@ -41,7 +41,7 @@ $active_tong = $session->get('active_tong');
 
 	<div class="content" style="padding-bottom:1px;">
 		<div class="container-fluid">
-			
+			<div class="card card-default" id="com_tochuc_thongbao"></div>
 			<div class="card card-default" id="com_tochuc_viewdetail"></div>
 			<div class="card card-default" id="com_tochuc_nghiepvu"></div>
 			
@@ -61,11 +61,11 @@ jQuery(document).ready(function($){
 			  url: 'index.php?option=com_tochuc&view=tochuc&task=detail&format=raw&Itemid=<?php echo $this->Itemid;?>',
 			  data:{"id":id},
 			  beforeSend: function(){
-				//   $.blockUI();
+				  $.blockUI();
 				  $('#com_tochuc_viewdetail').empty();				  
 				},
 			  success: function (data,textStatus,jqXHR){
-				//   $.unblockUI();
+				  $.unblockUI();
 				  $('#com_tochuc_viewdetail').html(data);
 				  $('#com_tochuc_viewdetail').show();
 				  $('#com_tochuc_nghiepvu').hide();
@@ -82,7 +82,7 @@ jQuery(document).ready(function($){
 					'url': 'index.php?option=com_core&controller=ajax&format=raw&task=getTree&act=tochuc',
                     'data': function(node) {					
 					 	return {
-                            "id" :  node['li_attr'] ? node['li_attr']['id'].replace("node_", "") : node.id,
+                            "id" : node.id,
                             'active': $('#active_tong option:selected').val()
                         };  
                     }
@@ -121,10 +121,10 @@ jQuery(document).ready(function($){
             data.instance.select_node(rootNode);
         }
     }).bind("select_node.jstree", function (event, data) {
-		 var id = data.node.id;
-		 _initViewDetailPage(id);
-		 dept_id = id;		
-		 var selectedNodes = data.selected;
+		var id = data.node.id;
+		_initViewDetailPage(id);
+		dept_id = id;		
+		var selectedNodes = data.selected;
 		data.instance.toggle_node(data.node);
 		$('#tochuc_current').html('<small>Quản lý tổ chức  <i class="fa fa-angle-double-right"></i> '+$.trim(data.node.text)+'</small>');		
   });

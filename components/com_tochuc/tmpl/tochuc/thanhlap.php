@@ -164,7 +164,8 @@ $user_id = $user->id;
         var root_id = <?php echo ($this->row->id) ? $this->row->id : 0; ?>;
         var parent_id = <?php echo ($this->row->parent_id) ? $this->row->parent_id : 0; ?>;
 
-
+        console.log(root_id);
+        console.log(parent_id);
         $('#tochuc-parent-tree').jstree({
             "plugins": ["themes", "json_data","checkbox", "ui","types", "wholerow"],
             "core": {

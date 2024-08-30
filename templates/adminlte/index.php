@@ -275,10 +275,38 @@ body:not(.layout-fixed) .main-sidebar {
 	box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
 }
 .toast-top-right {
-	right: 32px !important;
+	/* right: 30px !important; */
 }
-.jq-toast-wrap.top-right{
+/* .jq-toast-wrap.top-right{
 	right: 20px !important;
+} */
+#toast-container .toast-success{
+	background-color:#3c763d;
+	box-shadow: none;
+	opacity: 100;
+} 
+#toast-container .toast-error{
+	background-color:#a94442;
+	box-shadow: none;
+	opacity: 100;
+}
+#toast-container > div:hover{
+	box-shadow: none;
+	opacity: 100;
+}
+.close-jq-toast-single {
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.blockUI > h2{
+	margin-top: 1.5rem !important;
+	margin-bottom: 1.5rem !important;
+}
+#system-message-container .alert-success{
+	border-radius: 0px !important;
 }
 </style>
 

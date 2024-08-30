@@ -107,6 +107,7 @@ if (count($this->data) > $maxFiles) {
 		$stt++;
 	?>
 		<?php if ($this->isCapnhat == 1) { ?>
+			<input type="hidden" name="fileupload_id[]" value="<?php echo $item['id']; ?>">
 			<input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>>
 			<!-- <input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> -->
 		<?php } else
@@ -118,7 +119,7 @@ if (count($this->data) > $maxFiles) {
 					<!--begin::File-->
 					<div class="dropzone-file">
 						<div class="dropzone-filename" title="some_image_file_name.jpg">
-							<span data-dz-name class="linkFile"><a target="_blank" href="index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span>
+							<span data-dz-name class="linkFile"><a target="_blank" href="<?php echo Uri::root(true) ?>index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span>
 							<strong>(<span data-dz-size><?php echo $fileSizeMB ?>kb</span>)</strong>
 						</div>
 						<div class="dropzone-error" data-dz-errormessage></div>

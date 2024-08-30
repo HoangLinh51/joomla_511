@@ -7,6 +7,8 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
+use Joomla\CMS\Language\Text;
+
 defined('_JEXEC') or die;
 
 $msgList = $displayData['msgList'];
@@ -19,7 +21,7 @@ $alert = array('error' => 'alert-error', 'warning' => '', 'notice' => 'alert-inf
 			<div class="alert <?php echo isset($alert[$type]) ? $alert[$type] : 'alert-' . $type; ?>">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<?php if (!empty($msgs)) : ?>
-					<h4 class="alert-heading"><?php echo JText::_($type); ?></h4>
+					<h4 class="alert-heading"><?php echo Text::_($type); ?></h4>
 					<?php foreach ($msgs as $msg) : ?>
 						<div class="alert-message"><?php echo $msg; ?></div>
 					<?php endforeach; ?>

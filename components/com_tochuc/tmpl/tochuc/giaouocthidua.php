@@ -1,6 +1,7 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
@@ -25,7 +26,10 @@ $user = Factory::getUser();
                 <table class="table table-striped projects" style="margin-bottom: 0px;">
                     <thead>
                         <tr>
-                            <th style="width: 10%; padding-left: 0.75rem;">
+                            <th class="text-center" style="width: 1%;padding-left: 0.75rem;">
+                                #
+                            </th>
+                            <th style="width: 5%;" class="text-center">
                                 Năm
                             </th>
                             <th style="width: 10%">
@@ -34,11 +38,11 @@ $user = Factory::getUser();
                             <th style="width: 10%">
                                 Đại diện công đoàn
                             </th>
-                            <th style="width: 20%" class="text-center">
+                            <th style="width: 20%">
                                 Đại diện chính quyền
                             </th>
-                            <th style="width: 10%" class="text-right">
-                                #
+                            <th style="width: 1%;padding-right: 0.75rem;" class="text-center">
+                                Hành động
                             </th>
                         </tr>
                     </thead>
@@ -50,17 +54,17 @@ $user = Factory::getUser();
                             $canDelete = Core::_checkPerActionArr($user->id, 'com_tochuc', 'tochuc', ['task' => 'au_del_giaouocthidua', 'location' => 'site', 'non_action' => 'false']);
                         ?>
                             <tr>
-                                <td><?php echo $i + 1 ?></td>
-                                <td><?php echo $row['nam']; ?></td>
+                                <td class="text-center" style="padding-left: 0.75rem;"><?php echo $i + 1 ?></td>
+                                <td class="text-center"><?php echo $row['nam']; ?></td>
                                 <td><?php echo $row['noidung']; ?></td>
                                 <td><?php echo $row['daidiencongdoan']; ?></td>
                                 <td><?php echo $row['daidienchinhquyen']; ?></td>
-                                <td nowrap="nowrap">
-                                    <?php if ($canEdit): ?>                                        
-                                        <a href="index.php?option=com_tochuc&controller=tochuc&task=editgiaouoc&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="icon-pencil"></i></a>
+                                <td class="text-center" style="padding-right: 0.75rem;" nowrap="nowrap">
+                                    <?php if ($canEdit): ?> 
+                                        <a href="<?php echo Route::_('index.php'); ?>?view=tochuc&task=modal_giaouoc&format=raw&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id ?>" data-toggle="modal" data-target=".modal" class="btn btn-mini btn-info" id="btnEditQuatrinh" data-quatrinh-id="<?php echo $row['id'] ?>"><i class="fas fa-pencil-alt"></i> Sửa</a>                                    
                                     <?php endif; ?>
                                     <?php if ($canDelete): ?>        
-                                        <span class="btn btn-mini btn-danger btnDeleteQuatrinh" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delgiaouoc&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="icon-trash"></i></span>
+                                        <span class="btn btn-mini btn-danger" id="btnXoaGiaoUoc" href="index.php?option=com_tochuc&controller=tochuc&format=raw&task=delgiaouoc&id=<?php echo $row['id'] ?>&donvi_id=<?php echo $this->donvi_id; ?>"><i class="fas fa-trash"></i> Xóa</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -82,33 +86,21 @@ $user = Factory::getUser();
             return false;
         });
         $('#btn_add_quatrinhgiaouoc').on('click', function(){
-            $.blockUI();
+            Pace.start();
             $('#div_modal').load('index.php?option=com_tochuc&view=tochuc&task=modal_giaouoc&format=raw&donvi_id=<?php echo $this->donvi_id;?>', function(){
+                Pace.stop();
+            });
+        });
+
+        $('#btnEditQuatrinh').on('click', function() {
+            $.blockUI();
+            console.log(this.href);
+            $('#div_modal').load(this.href, function() {
                 $.unblockUI();
             });
         });
 
-        $('#btn_add_quatrinh').on('click', function() {
-            $('#div_modal').load('index.php?option=com_tochuc&controller=tochuc&task=editquatrinh&format=raw&dept_id=<?php echo $this->item->id; ?>', function() {});
-        });
-        $('.btnEditQuatrinh').on('click', function() {
-            $('#div_modal').load(this.href, function() {});
-        });
-
-        // $('.input-mask-date').mask('99/99/9999');
-        // $('#frmQuaTrinh').validate({
-        //     ignore: [],
-        //     rules: {
-        //         cachthuc_id: {
-        //             required: true,
-        //         },
-        //         quyetdinh_ngay: {
-        //             required: true,
-        //             dateVN: true
-        //         }
-        //     }
-        // });
-        $('.btnDeleteQuatrinh').click(function() {
+        $('#btnXoaGiaoUoc').click(function() {
             if (confirm('Bạn có muốn xóa không?')) {
                 $.ajax({
                     url: '<?php echo Uri::base(true); ?>' + $(this).attr('href'),
@@ -119,10 +111,10 @@ $user = Factory::getUser();
                             $.blockUI();
                             jQuery.ajax({
                                 type: "GET",
-                                url: 'index.php?option=com_tochuc&task=quatrinh&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
+                                url: '<?php echo Route::_('index.php'); ?>?view=tochuc&task=giaouocthidua&format=raw&Itemid=<?php echo $this->Itemid; ?>&id=<?php echo $this->item->id; ?>',
                                 success: function(data, textStatus, jqXHR) {
                                     $.unblockUI();
-                                    $('#tochuc-quatrinh').html(data);
+                                    $('#giaouocthidua-quatrinh').html(data);
                                 }
                             });
                         } else {
@@ -144,7 +136,6 @@ $user = Factory::getUser();
                 success: function(data, textStatus, jqXHR) {
                     var element = document.getElementById('file_' + id);
                     element.parentNode.removeChild(element);
-                    //console.log(data);
                 }
             });
         }

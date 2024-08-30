@@ -1,6 +1,7 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\BaseModel;
 use Joomla\CMS\Table\Table;
 use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
@@ -9,17 +10,23 @@ use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
  * Date created: May 12, 2015
  * Company: DNICT
  */
-class Tochuc_Model_Tochuc {
+class Tochuc_Model_Tochuc extends BaseModel
+{
 
     /**
      * Lấy all quá trình khen thưởng theo đơn vị id
      * @param int $donvi_id
      * @return array
      */
-    public function getAllKhenthuongById($donvi_id) {
-        return $this->getThongtin('a.*, b.name as hinhthuc', 'ins_quatrinhkhenthuong a', 
-                array('left' => 'ins_dmkhenthuongkyluat b ON b.id=a.rew_code_kt'), array("iddonvi_kt= " . Factory::getDbo()->quote($donvi_id)), 
-                'start_date_kt desc');
+    public function getAllKhenthuongById($donvi_id)
+    {
+        return $this->getThongtin(
+            'a.*, b.name as hinhthuc',
+            'ins_quatrinhkhenthuong a',
+            array('left' => 'ins_dmkhenthuongkyluat b ON b.id=a.rew_code_kt'),
+            array("iddonvi_kt= " . Factory::getDbo()->quote($donvi_id)),
+            'start_date_kt desc'
+        );
     }
 
     /**
@@ -27,10 +34,15 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi_id
      * @return array
      */
-    public function getAllKyluatById($donvi_id) {
-        return $this->getThongtin('a.*, b.name as hinhthuc', 'ins_quatrinhkyluat a', 
-                array('left' => 'ins_dmkhenthuongkyluat b ON b.id=a.rew_code_kl'), array("a.iddonvi_kl= " . Factory::getDbo()->quote($donvi_id)), 
-                'a.start_date_kl desc');
+    public function getAllKyluatById($donvi_id)
+    {
+        return $this->getThongtin(
+            'a.*, b.name as hinhthuc',
+            'ins_quatrinhkyluat a',
+            array('left' => 'ins_dmkhenthuongkyluat b ON b.id=a.rew_code_kl'),
+            array("a.iddonvi_kl= " . Factory::getDbo()->quote($donvi_id)),
+            'a.start_date_kl desc'
+        );
     }
 
     /**
@@ -38,7 +50,8 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi_id
      * @return array
      */
-    public function getAllKhenthuongkyluatById($donvi_id) {
+    public function getAllKhenthuongkyluatById($donvi_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query = "  select 
@@ -66,8 +79,9 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi_id
      * @return array
      */
-    public function getEditKhenthuongById($id_kt) {
-        return $this->getThongtin('*', 'ins_quatrinhkhenthuong', null, array("id_kt= ".Factory::getDbo()->quote($id_kt)), null);
+    public function getEditKhenthuongById($id_kt)
+    {
+        return $this->getThongtin('*', 'ins_quatrinhkhenthuong', null, array("id_kt= " . Factory::getDbo()->quote($id_kt)), null);
     }
 
     /**
@@ -75,11 +89,13 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi_id
      * @return array
      */
-    public function getEditKyluatById($id_kl) {
-        return $this->getThongtin('*', 'ins_quatrinhkyluat', null, array("id_kl= ".Factory::getDbo()->quote($id_kl)), null);
+    public function getEditKyluatById($id_kl)
+    {
+        return $this->getThongtin('*', 'ins_quatrinhkyluat', null, array("id_kl= " . Factory::getDbo()->quote($id_kl)), null);
     }
 
-    function saveBiencheChitietPhanloai($quatrinh_id, $id, $bienchelanhdao, $bienchechuyenmon, $bienche68) {
+    function saveBiencheChitietPhanloai($quatrinh_id, $id, $bienchelanhdao, $bienchechuyenmon, $bienche68)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -99,7 +115,7 @@ class Tochuc_Model_Tochuc {
         }
         $db->setQuery($query);
         // echo $query;die;
-        if (!$db->query()) {
+        if (!$db->execute()) {
             return false;
         } else {
             return true;
@@ -111,7 +127,8 @@ class Tochuc_Model_Tochuc {
      * @param array $formData
      * @return boolean
      */
-    public function saveKhenthuong($formData) {
+    public function saveKhenthuong($formData)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -135,7 +152,7 @@ class Tochuc_Model_Tochuc {
             $query->set($fields);
         }
         $db->setQuery($query);
-        if (!$db->query()) {
+        if (!$db->execute()) {
             return false;
         } else {
             return true;
@@ -147,7 +164,8 @@ class Tochuc_Model_Tochuc {
      * @param unknown $formData
      * @return boolean
      */
-    public function saveKyluat($formData) {
+    public function saveKyluat($formData)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -171,7 +189,7 @@ class Tochuc_Model_Tochuc {
             $query->set($fields);
         }
         $db->setQuery($query);
-        if (!$db->query()) {
+        if (!$db->execute()) {
             return false;
         } else {
             return true;
@@ -183,7 +201,8 @@ class Tochuc_Model_Tochuc {
      * @param int $id_kt
      * @return boolean
      */
-    public function removeKhenthuong($id_kt) {
+    public function removeKhenthuong($id_kt)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $conditions = array(
@@ -192,7 +211,7 @@ class Tochuc_Model_Tochuc {
         $query->delete($db->quoteName('ins_quatrinhkhenthuong'));
         $query->where($conditions);
         $db->setQuery($query);
-        if (!$db->query()) {
+        if (!$db->execute()) {
             Error::raiseError(500, $db->getErrorMsg());
             return false;
         } else {
@@ -205,7 +224,8 @@ class Tochuc_Model_Tochuc {
      * @param int $id_kl
      * @return boolean
      */
-    public function removeKyluat($id_kl) {
+    public function removeKyluat($id_kl)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $conditions = array(
@@ -214,7 +234,7 @@ class Tochuc_Model_Tochuc {
         $query->delete($db->quoteName('ins_quatrinhkyluat'));
         $query->where($conditions);
         $db->setQuery($query);
-        if (!$db->query()) {
+        if (!$db->execute()) {
             Error::raiseError(500, $db->getErrorMsg());
             return false;
         } else {
@@ -231,29 +251,31 @@ class Tochuc_Model_Tochuc {
      * @param string $order
      * @return objectlist
      */
-    function getThongtin($field, $table, $arrJoin = null, $where = null, $order = null) {
+    function getThongtin($field, $table, $arrJoin = null, $where = null, $order = null)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select($field)
-              ->from($table);
+            ->from($table);
         if (!empty($arrJoin) && is_array($arrJoin)) {
             foreach ($arrJoin as $key => $val) {
                 $query->join($key, $val);
             }
         }
-        if(!empty($where)){
+        if (!empty($where)) {
             $query->where($where);
         }
         if (!empty($order)) {
             $query->order($order);
         }
-    
+
         $db->setQuery($query);
         return $db->loadObjectList();
-    }    
+    }
 
     //----------------------------------------- model
-    public function __construct() {
+    public function __construct()
+    {
         Table::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
     }
 
@@ -263,7 +285,8 @@ class Tochuc_Model_Tochuc {
      * @param type $name
      * @return type
      */
-    public function changeName($dept_id, $name) {
+    public function changeName($dept_id, $name)
+    {
         return Core::update('ins_dept', array('id' => $dept_id, 'name' => $name), 'id');
     }
 
@@ -272,7 +295,8 @@ class Tochuc_Model_Tochuc {
      * @param unknown $id
      * @return boolean
      */
-    public function deleteDept($id) {
+    public function deleteDept($id)
+    {
         $table = Core::table('Tochuc/InsDept');
         $a = $table->load($id);
 
@@ -292,7 +316,8 @@ class Tochuc_Model_Tochuc {
      * @param type $formData
      * @return type
      */
-    public function saveDept($formData) {
+    public function saveDept($formData)
+    {
         $table = Core::table('Tochuc/InsDept');
         $reference_id = (int) $formData['parent_id'];
         $data = array(
@@ -317,7 +342,7 @@ class Tochuc_Model_Tochuc {
             'goibienche' => $formData['goibienche'],
             'goiluong' => $formData['goiluong'],
             'goichucvu' => $formData['goichucvu'],
-            'type'=>$formData['type'],
+            'type' => $formData['type'],
             'chukyso_nguoidaidien_id' => $formData['chukyso_nguoidaidien_id'],
             'chukyso_sohieu' => $formData['chukyso_sohieu'],
             'chukyso_ngaycap' => TochucHelper::strDateVntoMySql($formData['chukyso_ngaycap']),
@@ -392,7 +417,8 @@ class Tochuc_Model_Tochuc {
      * @param type $dept_id
      * @param type $arrLinhvuc
      */
-    public function saveLinhvuc($dept_id, $arrLinhvuc = array()) {
+    public function saveLinhvuc($dept_id, $arrLinhvuc = array())
+    {
         $table = Core::table('Tochuc/Adtochuclinhvuc');
         Core::delete('ins_dept_linhvuc', array('ins_dept_id = ' => $dept_id));
         for ($i = 0; $i < count($arrLinhvuc); $i++) {
@@ -412,7 +438,8 @@ class Tochuc_Model_Tochuc {
      * @param type $dept_id
      * @return type
      */
-    public function getLinhvucByIdDept($dept_id) {
+    public function getLinhvucByIdDept($dept_id)
+    {
         return Core::loadColumn('ins_dept_linhvuc', array('linhvuc_id'), array('ins_dept_id = ' => (int) $dept_id));
     }
 
@@ -421,7 +448,8 @@ class Tochuc_Model_Tochuc {
      * @param type $formData
      * @return vanban.id
      */
-    public function saveVanban($formData) {
+    public function saveVanban($formData)
+    {
         $table = Core::table('Tochuc/Advanban');
         $data = array(
             'id' => (int) $formData['id'],
@@ -430,13 +458,13 @@ class Tochuc_Model_Tochuc {
             'trichdan' => $formData['trichdan'],
             'ngaybanhanh' => $formData['ngaybanhanh'],
             'nguoiky' => $formData['nguoiky'],
-            'ordering' => $formData['ordering'],
-            'coquan_banhanh_id' => $formData['coquan_banhanh_id'],
+            'ordering' => (int) $formData['ordering'],
+            'coquan_banhanh_id' => (int) $formData['coquan_banhanh_id'],
             'coquan_banhanh' => $formData['coquan_banhanh'],
             'ngaytao' => date('Y-m-d H:i:s'),
             'nguoitao' => Factory::getUser()->id
         );
-        //var_dump($data);
+        
         $table->bind($data);
         $table->check();
         $table->store();
@@ -448,7 +476,8 @@ class Tochuc_Model_Tochuc {
      * @param type $vanban_id
      * @param type $fileupload_id
      */
-    public function saveTaptin($vanban_id, $fileupload_id) {
+    public function saveTaptin($vanban_id, $fileupload_id)
+    {
         $user = Factory::getUser();
         $mapper = Core::model('Core/Attachment');
         $type_id = 1;
@@ -469,7 +498,8 @@ class Tochuc_Model_Tochuc {
      * @param type $quatrinh_id
      * @return boolean
      */
-    public function delQuaTrinh($quatrinh_id) {
+    public function delQuaTrinh($quatrinh_id)
+    {
         $type_id = 1;
         $attachmentMapper = Core::model('Core/Attachment');
         $flag = false;
@@ -487,7 +517,8 @@ class Tochuc_Model_Tochuc {
      * @param array $formData
      * @return id_quatrinh
      */
-    public function saveQuatrinh($formData) {
+    public function saveQuatrinh($formData)
+    {
         $table = Core::table('Tochuc/Adquatrinh');
         if (strlen($formData['hieuluc_ngay']) <= 0)
             $hieuluc_ngay = date('Y-m-d');
@@ -525,7 +556,8 @@ class Tochuc_Model_Tochuc {
      * @param array $formData
      * @return id_quatrinh
      */
-    public function saveLogNghiepVu($formData) {
+    public function saveLogNghiepVu($formData)
+    {
         $table = Core::table('Tochuc/Nghiepvulogs');
         $data = array(
             'id' => (int) $formData['id'],
@@ -551,13 +583,14 @@ class Tochuc_Model_Tochuc {
         return $table->id;
     }
 
-    public function copyTochuc($donvi_id, $name) {
+    public function copyTochuc($donvi_id, $name)
+    {
         $db = Factory::getDbo();
         $query = "INSERT INTO ins_dept 
                         (parent_id,name,s_name,ins_loaihinh,ins_cap,active,ins_created,goibienche,goiluong,goichucvu,type,level,
                         lft,rgt,ins_level,goihinhthuchuongluong,goidaotao,chucnang,goivitrivieclam,donvixuly_nghiepvu_id,type_created)
                     SELECT 
-                        parent_id,".$db->quote($name).",".$db->quote($name).",ins_loaihinh,ins_cap,active,ins_created,goibienche,goiluong,goichucvu,type,level,
+                        parent_id," . $db->quote($name) . "," . $db->quote($name) . ",ins_loaihinh,ins_cap,active,ins_created,goibienche,goiluong,goichucvu,type,level,
                         lft,rgt,ins_level,goihinhthuchuongluong,goidaotao,chucnang,goivitrivieclam,donvixuly_nghiepvu_id,type_created 
                     FROM ins_dept 
                     WHERE id = " . $db->quote($donvi_id);
@@ -572,9 +605,10 @@ class Tochuc_Model_Tochuc {
      * @param type $dept_id
      * @param type $parent_id
      */
-    public function updatePhanQuyen($dept_id, $parent_id) {
+    public function updatePhanQuyen($dept_id, $parent_id)
+    {
         $db = Factory::getDbo();
-        $query = "UPDATE cb_detail_groups_actions SET iddonvi=CONCAT(iddonvi,'".$db->quote($dept_id)."','') WHERE iddonvi LIKE CONCAT('%','".$db->quote($parent_id)."','%'))";
+        $query = "UPDATE cb_detail_groups_actions SET iddonvi=CONCAT(iddonvi,'" . $db->quote($dept_id) . "','') WHERE iddonvi LIKE CONCAT('%','" . $db->quote($parent_id) . "','%'))";
         $db->setQuery($query);
         $db->query();
     }
@@ -584,7 +618,8 @@ class Tochuc_Model_Tochuc {
      * @param type $id
      * @return type
      */
-    public function read($id) {
+    public function read($id)
+    {
         $table = Core::table('Tochuc/InsDept');
         $table->load($id);
         return $table;
@@ -595,12 +630,13 @@ class Tochuc_Model_Tochuc {
      * @param type $quatrinh_id
      * @return type
      */
-    public function getOneQuaTrinhById($quatrinh_id) {
+    public function getOneQuaTrinhById($quatrinh_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('ins_dept_quatrinh')
-                ->where('id = ' . $db->quote($quatrinh_id));
+            ->from('ins_dept_quatrinh')
+            ->where('id = ' . $db->quote($quatrinh_id));
         $db->setQuery($query);
         return $db->loadAssoc();
     }
@@ -610,13 +646,14 @@ class Tochuc_Model_Tochuc {
      * @param type $dept_id
      * @return type
      */
-    public function getAllQuaTrinhById($dept_id) {
+    public function getAllQuaTrinhById($dept_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('*')
-                ->from('ins_dept_quatrinh')
-                ->where('dept_id = ' . $db->quote($dept_id))
-                ->order('hieuluc_ngay DESC, id desc')
+            ->from('ins_dept_quatrinh')
+            ->where('dept_id = ' . $db->quote($dept_id))
+            ->order('hieuluc_ngay DESC, id desc')
         ;
         $db->setQuery($query);
         return $db->loadAssocList();
@@ -627,18 +664,21 @@ class Tochuc_Model_Tochuc {
      * @param type $vanban_id
      * @return type
      */
-    public function getVanbanById($vanban_id) {
-        return Core::loadAssoc('ins_vanban', array('id',
-                    'mahieu',
-                    'tieude',
-                    'trichdan',
-                    'ngaybanhanh',
-                    'nguoiky',
-                    'ordering',
-                    'coquan_banhanh_id',
-                    'coquan_banhanh',
-                    'ngaytao',
-                    'nguoitao'), array('id = ' => (int) $vanban_id));
+    public function getVanbanById($vanban_id)
+    {
+        return Core::loadAssoc('ins_vanban', array(
+            'id',
+            'mahieu',
+            'tieude',
+            'trichdan',
+            'ngaybanhanh',
+            'nguoiky',
+            'ordering',
+            'coquan_banhanh_id',
+            'coquan_banhanh',
+            'ngaytao',
+            'nguoitao'
+        ), array('id = ' => (int) $vanban_id));
     }
 
     /**
@@ -646,7 +686,8 @@ class Tochuc_Model_Tochuc {
      * @param type $vanban_id
      * @return type
      */
-    public function getFilebyIdVanban($vanban_id) {
+    public function getFilebyIdVanban($vanban_id)
+    {
         // Type_id đối chiếu table type_filedinhkem
         return Core::loadAssocList('core_attachment', array('*'), array('type_id = ' => 1, 'object_id = ' => $vanban_id));
     }
@@ -657,7 +698,8 @@ class Tochuc_Model_Tochuc {
      * @param type $active
      * @return type
      */
-    public function saveChangeActive($dept_id, $active) {
+    public function saveChangeActive($dept_id, $active)
+    {
         $table = Core::table('Tochuc/InsDept');
         $table->load($dept_id);
         $table->active = $active;
@@ -672,13 +714,14 @@ class Tochuc_Model_Tochuc {
      * @return boolean
      */
 
-    public function tranferHosoTwoTochuc($dept_from_id, $dept_to_id) {
+    public function tranferHosoTwoTochuc($dept_from_id, $dept_to_id)
+    {
         $db = Factory::getDbo();
         //lay tat ca cac hoso thuoc don vi co id dept_from_id 
         $query = $db->getQuery(true);
         $query->select(array('lft', 'rgt'))
-                ->from('ins_dept')
-                ->where('id = ' . $db->quote($dept_from_id));
+            ->from('ins_dept')
+            ->where('id = ' . $db->quote($dept_from_id));
         $db->setQuery($query);
         $node = $db->loadResult();
         if ($node != null) {
@@ -702,7 +745,8 @@ class Tochuc_Model_Tochuc {
      * @param type $formData
      * @return type
      */
-    public function saveSapnhap($formData) {
+    public function saveSapnhap($formData)
+    {
         $table = Core::table('Tochuc/Adsapnhap');
         $data = array(
             'dept_chinh_id' => $formData['dept_chinh_id'],
@@ -724,7 +768,8 @@ class Tochuc_Model_Tochuc {
      * @param int $id
      * @return array
      */
-    public function getQuatrinhBiencheById($id) {
+    public function getQuatrinhBiencheById($id)
+    {
         $table = Core::table('Tochuc/Adquatrinhbienche');
         $table->load($id);
         return $table;
@@ -735,12 +780,13 @@ class Tochuc_Model_Tochuc {
      * @param array $formData
      * @return boolean
      */
-    public function saveQuatrinhBienche($formData) {
+    public function saveQuatrinhBienche($formData)
+    {
         $table = Core::table('Tochuc/Adquatrinhbienche');
         $data = array(
             'id' => $formData['id'],
             'quyetdinh_so' => $formData['quyetdinh_so'],
-            'quyetdinh_ngay' => $formData['quyetdinh_ngay'],
+            'quyetdinh_ngay' => TochucHelper::strDateVntoMySql($formData['quyetdinh_ngay']),
             'hieuluc_ngay' => TochucHelper::strDateVntoMySql($formData['hieuluc_ngay']),
             'user_id' => Factory::getUser()->id,
             'ghichu' => $formData['ghichu'],
@@ -751,9 +797,16 @@ class Tochuc_Model_Tochuc {
             'ordering' => 99,
             'nam' => $formData['nam']
         );
+
+
         $table->bind($data);
-        $table->check();
-        $table->store();
+
+        if (!$table->check()) {
+            throw new RuntimeException("Data store failed: " . implode(', ', $table->getErrors()));
+        }
+        if (!$table->store()) {
+            throw new RuntimeException("Data store failed: " . implode(', ', $table->getErrors()));
+        }
         return $table->id;
     }
 
@@ -762,7 +815,8 @@ class Tochuc_Model_Tochuc {
      * @param int $quatrinh_id
      * @return boolean
      */
-    public function delQuaTrinhGiaoBienche($quatrinh_id) {
+    public function delQuaTrinhGiaoBienche($quatrinh_id)
+    {
         $flag = false;
         $tableQuatrinhbienche = Core::table('Tochuc/Adquatrinhbienche');
         $tableVanban = Core::table('Tochuc/Advanban');
@@ -786,7 +840,8 @@ class Tochuc_Model_Tochuc {
      * @param int $bienche
      * @return boolean
      */
-    public function saveQuatrinhBiencheChitiet($quatrinh_id, $hinhthuc_id, $bienche) {
+    public function saveQuatrinhBiencheChitiet($quatrinh_id, $hinhthuc_id, $bienche)
+    {
         $table = Core::table('Tochuc/Adquatrinhbienchechitiet');
         return $table->save(array('quatrinh_id' => $quatrinh_id, 'hinhthuc_id' => $hinhthuc_id, 'bienche' => $bienche));
     }
@@ -796,15 +851,16 @@ class Tochuc_Model_Tochuc {
      * @param int $dept_id
      * @return array
      */
-    public function getQuatrinhBiencheByDeptId($dept_id) {
+    public function getQuatrinhBiencheByDeptId($dept_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         // $query->select(array('fk.*,a.*'))->from('ins_dept_quatrinh_bienche a')
         //         ->join('left', 'ins_dept_quatrinh_bienche_chitiet_phanloai fk ON fk.quatrinh_id = a.id')
         //         ->where('a.dept_id = ' . $db->quote($dept_id))->order('a.nam desc'); 
         $query->select(array('a.*'))->from('ins_dept_quatrinh_bienche a')
-                // ->join('left', 'ins_dept_quatrinh_bienche_chitiet_phanloai fk ON fk.quatrinh_id = a.id')
-                ->where('a.dept_id = ' . $db->quote($dept_id))->order('a.nam desc');
+            // ->join('left', 'ins_dept_quatrinh_bienche_chitiet_phanloai fk ON fk.quatrinh_id = a.id')
+            ->where('a.dept_id = ' . $db->quote($dept_id))->order('a.nam desc');
         $db->setQuery($query);
         // echo $query;
         return $db->loadAssocList();
@@ -815,7 +871,8 @@ class Tochuc_Model_Tochuc {
      * @param int $quatrinh_id
      * @return array
      */
-    public function getHinhThucBienCheByQuatrinh($quatrinh_id) {
+    public function getHinhThucBienCheByQuatrinh($quatrinh_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query = 'SELECT b.id,b.name,a.bienche,a.quatrinh_id 
@@ -831,12 +888,13 @@ class Tochuc_Model_Tochuc {
      * @param int $goibienche_id
      * @return array
      */
-    public function getHinhThucBienche($goibienche_id) {
+    public function getHinhThucBienche($goibienche_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select(array('a.id', 'a.name'))->from($db->quoteName('bc_hinhthuc', 'a'))
-                ->join('INNER', 'bc_goibienche_hinhthuc AS b ON a.id = b.hinhthuc_id')
-                ->where('b.goibienche_id = ' . $db->quote($goibienche_id))->order('a.name ASC');
+            ->join('INNER', 'bc_goibienche_hinhthuc AS b ON a.id = b.hinhthuc_id')
+            ->where('b.goibienche_id = ' . $db->quote($goibienche_id))->order('a.name ASC');
         //$query->select(array('a.ID','a.NAME'))->from($db->quoteName('bc_hinhthuc','a'));
         $db->setQuery($query);
         return $db->loadAssocList();
@@ -847,7 +905,8 @@ class Tochuc_Model_Tochuc {
      * @param int $goichucvu_id
      * @return array
      */
-    public function getHangDonviByIdGoiChucvu($goichucvu_id) {
+    public function getHangDonviByIdGoiChucvu($goichucvu_id)
+    {
         return Core::loadResult('cb_goichucvu', array('ins_level_id'), array('id = ' => (int) $goichucvu_id));
     }
 
@@ -856,7 +915,8 @@ class Tochuc_Model_Tochuc {
      * @param int $ins_cap_id
      * @return int
      */
-    public function getLoaihinhByIdCap($ins_cap_id) {
+    public function getLoaihinhByIdCap($ins_cap_id)
+    {
         /**
          *  lay node cha cua ins_cap
          * 1: Hanh chinh
@@ -879,7 +939,8 @@ class Tochuc_Model_Tochuc {
      * @param int $id_donvi
      * @return int
      */
-    public function sumBienchegiao($id_donvi) {
+    public function sumBienchegiao($id_donvi)
+    {
         $year = date("Y");
         $db = Factory::getDbo();
         // Tổng biên chế của tất cả đơn vị con
@@ -904,7 +965,8 @@ class Tochuc_Model_Tochuc {
      * @param int $id_donvi
      * @return int
      */
-    public function sumBienchehienco($id_donvi) {
+    public function sumBienchehienco($id_donvi)
+    {
         $db = Factory::getDbo();
         $query = 'SELECT count(hs.hosochinh_id) 
                     FROM hosochinh_quatrinhhientai as hs
@@ -923,12 +985,13 @@ class Tochuc_Model_Tochuc {
      * @param int $ins_dept
      * @return array
      */
-    public function getCayBaocao1($ins_dept = 0) {
+    public function getCayBaocao1($ins_dept = 0)
+    {
         $db = Factory::getDbo();
         if ((int) $ins_dept > 0) {
             $query = 'SELECT bc.`name`,bc.report_group_code,
                             IF (bc.report_group_code IN (SELECT cf.report_group_code
-                                                            FROM config_donvi_bc AS cf WHERE cf.ins_dept = '.$db->quote($ins_dept).'), "checked","") AS checked
+                                                            FROM config_donvi_bc AS cf WHERE cf.ins_dept = ' . $db->quote($ins_dept) . '), "checked","") AS checked
                         FROM config_donvi_bc AS bc
                         WHERE bc.report_group_code IS NOT NULL AND bc.report_group_code <> ""
                         GROUP BY bc.report_group_code
@@ -951,7 +1014,8 @@ class Tochuc_Model_Tochuc {
      * @param int $ins_dept
      * @return array
      */
-    public function getCaybaocao($ins_dept = 0) {
+    public function getCaybaocao($ins_dept = 0)
+    {
         // get all
         $db = Factory::getDbo();
         $query = 'SELECT `name`, report_group_code, if(report_group_code = "thongkenhanh" , \'checked = "checked"\', "") as checked 
@@ -960,12 +1024,12 @@ class Tochuc_Model_Tochuc {
                     GROUP BY report_group_code
                     ORDER BY report_group_name';
         $db->setQuery($query);
-        
+
         $data = $db->loadAssocList();
         if ($ins_dept > 0) {
             $query = "SELECT cf.report_group_code 
                         FROM config_donvi_bc AS cf 
-                        WHERE cf.ins_dept = ".$db->quote($ins_dept);
+                        WHERE cf.ins_dept = " . $db->quote($ins_dept);
             $db->setQuery($query);
             $checked = $db->loadColumn();
             if (count($checked) > 0) {
@@ -984,7 +1048,8 @@ class Tochuc_Model_Tochuc {
      * @param string $report_group_code
      * @return array
      */
-    public function getIdConfigBc($ins_dept, $report_group_code) {
+    public function getIdConfigBc($ins_dept, $report_group_code)
+    {
         $db = Factory::getDbo();
         $query = 'SELECT id, parent_id, ins_dept, report_group_name
                     FROM config_donvi_bc 
@@ -1001,7 +1066,8 @@ class Tochuc_Model_Tochuc {
      * @param int $parent_id 
      * @return int
      */
-    public function checkTochucTrung() {
+    public function checkTochucTrung()
+    {
         $app = Factory::getApplication()->input;
         $name_tc = $app->getVar('name_tc');
         $id = $app->getVar('id');
@@ -1009,9 +1075,9 @@ class Tochuc_Model_Tochuc {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('count(id)')->from('ins_dept')
-                ->where('LOWER(name) = LOWER(' . $db->quote($name_tc) . ')')
-                ->where('parent_id = ' . $db->quote($parent_id))
-                ->where('id != ' . $db->quote($id));
+            ->where('LOWER(name) = LOWER(' . $db->quote($name_tc) . ')')
+            ->where('parent_id = ' . $db->quote($parent_id))
+            ->where('id != ' . $db->quote($id));
         $db->setQuery($query);
         return $db->loadResult();
     }
@@ -1024,7 +1090,8 @@ class Tochuc_Model_Tochuc {
      * @param string $valueUpdate
      * @param string $valueWhere
      */
-    public function changeNameUpdated($table, $fieldUpdate, $fieldWhere, $valueUpdate, $valueWhere) {
+    public function changeNameUpdated($table, $fieldUpdate, $fieldWhere, $valueUpdate, $valueWhere)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -1043,13 +1110,14 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi_id
      * @return object
      */
-    public function danhsachIns_dept_vanban($donvi_id = -1) {
+    public function danhsachIns_dept_vanban($donvi_id = -1)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('vb.mahieu, vb.ngaybanhanh, vb.coquan_banhanh,  vb2.ins_vanban_id')
-                ->from('ins_vanban vb')
-                ->join('inner', 'ins_dept_vanban vb2 ON vb2.ins_vanban_id = vb.id')
-                ->where('vb2.ins_dept_id = ' . $db->quote($donvi_id));
+            ->from('ins_vanban vb')
+            ->join('inner', 'ins_dept_vanban vb2 ON vb2.ins_vanban_id = vb.id')
+            ->where('vb2.ins_dept_id = ' . $db->quote($donvi_id));
         $db->setQuery($query);
         // echo $query;
         return $db->loadObjectList();
@@ -1060,12 +1128,13 @@ class Tochuc_Model_Tochuc {
      * @param int $vanban_id
      * @return object
      */
-    public function taptindinhkem($vanban_id = -1) {
+    public function taptindinhkem($vanban_id = -1)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('code, filename')
-                ->from('core_attachment')
-                ->where('object_id = ' . $db->quote($vanban_id));
+            ->from('core_attachment')
+            ->where('object_id = ' . $db->quote($vanban_id));
         $db->setQuery($query);
         return $db->loadObjectList();
     }
@@ -1075,12 +1144,13 @@ class Tochuc_Model_Tochuc {
      * @param strong $code
      * @return object
      */
-    public function taptindinhkem1($code = -1) {
+    public function taptindinhkem1($code = -1)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('filename')
-                ->from('core_attachment')
-                ->where('code = ' . $db->quote($code));
+            ->from('core_attachment')
+            ->where('code = ' . $db->quote($code));
         $db->setQuery($query);
         return $db->loadObjectList();
     }
@@ -1090,7 +1160,8 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi_id
      * @return boolean
      */
-    public function xoaIns_dept_vanban($donvi_id) {
+    public function xoaIns_dept_vanban($donvi_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $conditions = array(
@@ -1111,7 +1182,8 @@ class Tochuc_Model_Tochuc {
      * @param int $vanban_id
      * @return boolean
      */
-    public function xoaCore_attachment($vanban_id) {
+    public function xoaCore_attachment($vanban_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $conditions = array(
@@ -1132,7 +1204,8 @@ class Tochuc_Model_Tochuc {
      * @param int $vanban_id
      * @return boolean
      */
-    public function xoaIns_vanban($vanban_id) {
+    public function xoaIns_vanban($vanban_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $conditions = array(
@@ -1154,7 +1227,8 @@ class Tochuc_Model_Tochuc {
      * @param int $vanban_id
      * @return boolean
      */
-    public function luuIns_dept_vanban($donvi_id, $vanban_id) {
+    public function luuIns_dept_vanban($donvi_id, $vanban_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -1163,7 +1237,7 @@ class Tochuc_Model_Tochuc {
         );
         $query->insert($db->quoteName('ins_dept_vanban'));
         $query->set($fields);
-        $db->setQuery($query); 
+        $db->setQuery($query);
         if (!$db->execute()) {
             return false;
         } else {
@@ -1176,18 +1250,19 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi_id
      * @return string
      */
-    public function generateCodeTochucNew($donvi_id) {
+    public function generateCodeTochucNew($donvi_id)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $donvi_id = $db->quote($donvi_id);
         $query = "SELECT
                     CONCAT(
-                        (SELECT CODE FROM ins_dept WHERE id = ".$db->quote($donvi_id)."),'.',
-                        (IF(MAX(CAST(REPLACE(CODE,CONCAT((SELECT CODE FROM ins_dept WHERE id = ".$db->quote($donvi_id)." ),'.',''),'') AS UNSIGNED)) >0,
-                            MAX(CAST(REPLACE(CODE,CONCAT((SELECT CODE FROM ins_dept WHERE id = ".$db->quote($donvi_id)." ),'.',''),'') AS UNSIGNED)) ,0)+1)
+                        (SELECT CODE FROM ins_dept WHERE id = " . $db->quote($donvi_id) . "),'.',
+                        (IF(MAX(CAST(REPLACE(CODE,CONCAT((SELECT CODE FROM ins_dept WHERE id = " . $db->quote($donvi_id) . " ),'.',''),'') AS UNSIGNED)) >0,
+                            MAX(CAST(REPLACE(CODE,CONCAT((SELECT CODE FROM ins_dept WHERE id = " . $db->quote($donvi_id) . " ),'.',''),'') AS UNSIGNED)) ,0)+1)
                     )
                     FROM ins_dept
-                    WHERE parent_id = ".$db->quote($donvi_id);
+                    WHERE parent_id = " . $db->quote($donvi_id);
         $db->setQuery($query);
         return $db->loadResult();
     }
@@ -1197,7 +1272,8 @@ class Tochuc_Model_Tochuc {
      * @param string $code
      * @return int
      */
-    public function checkMasoTrung($code) {
+    public function checkMasoTrung($code)
+    {
         $db = Factory::getDbo();
         $query = 'SELECT COUNT(*)
                     FROM ins_dept
@@ -1211,17 +1287,19 @@ class Tochuc_Model_Tochuc {
      * @param int $donvi
      * @return int
      */
-    public function checkSoluongHosoByDonvi($donvi) {
+    public function checkSoluongHosoByDonvi($donvi)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select('COUNT(*)')->from('hosochinh_quatrinhhientai')
-                ->where('hoso_trangthai = "00"')
-                ->where('( congtac_donvi_id = ' . $db->quote($donvi) . ' OR congtac_phong_id= ' . $db->quote($donvi) . ')');
+            ->where('hoso_trangthai = "00"')
+            ->where('( congtac_donvi_id = ' . $db->quote($donvi) . ' OR congtac_phong_id= ' . $db->quote($donvi) . ')');
         $db->setQuery($query);
         return $db->loadResult();
     }
 
-    function luucauhinh() {
+    function luucauhinh()
+    {
         $db = Factory::getDbo();
         $app = Factory::getApplication()->input;
         $formData = $app->getVar('cauhinh');
@@ -1261,7 +1339,8 @@ class Tochuc_Model_Tochuc {
         return $db->query();
     }
 
-    function xoacauhinh() {
+    function xoacauhinh()
+    {
         $db = Factory::getDbo();
         $app = Factory::getApplication()->input;
         $formData = $app->getVar('cauhinh');
@@ -1275,14 +1354,15 @@ class Tochuc_Model_Tochuc {
         return $db->query();
     }
 
-    public function getCboMauxuatquyetdinh($donvi_id, $loaiquyetdinh_id, $ngachtuongduong, $selected = null, $id = null) {
+    public function getCboMauxuatquyetdinh($donvi_id, $loaiquyetdinh_id, $ngachtuongduong, $selected = null, $id = null)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $query->select(array('id', 'CONCAT("Từ ", date_format(ngaybatdau,"%d/%m/%Y"), if(ngayketthuc="0000-00-00"," đến nay",CONCAT(" đến ", date_format(ngayketthuc,"%d/%m/%Y")))) as name'))
-                ->from($db->quoteName('nghiepvu_mauxuatquyetdinh', 'a'))
-                ->where('donvi_id = ' . $donvi_id)
-                ->where('loaiquyetdinh_id=' . $loaiquyetdinh_id)
-                ->where('ngachtuongduong=' . $ngachtuongduong);
+            ->from($db->quoteName('nghiepvu_mauxuatquyetdinh', 'a'))
+            ->where('donvi_id = ' . $donvi_id)
+            ->where('loaiquyetdinh_id=' . $loaiquyetdinh_id)
+            ->where('ngachtuongduong=' . $ngachtuongduong);
         $query->order('ngaybatdau DESC');
         $db->setQuery($query);
         $tmp = $db->loadObjectList();
@@ -1309,7 +1389,8 @@ class Tochuc_Model_Tochuc {
         return $result = HtmlSelect::genericlist($data, $id, $options);
     }
 
-    function savegiaouoc($formData) {
+    function savegiaouoc($formData)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -1328,20 +1409,21 @@ class Tochuc_Model_Tochuc {
             $query->update($db->quoteName('ins_dept_giaouocthidua'))->set($fields)->where($conditions);
             $id = $formData['id'];
             $db->setQuery($query);
-            $db->query();
+            $db->execute();
         } else {
             array_push($fields, $db->quoteName('ngaytao') . ' = NOW()');
             array_push($fields, $db->quoteName('nguoitao') . ' = ' . Factory::getUser()->id);
             $query->insert($db->quoteName('ins_dept_giaouocthidua'));
             $query->set($fields);
             $db->setQuery($query);
-            $db->query();
+            $db->execute();
             $id = $db->insertId();
         }
         return $id;
     }
 
-    function xoagiaouoc() {
+    function xoagiaouoc()
+    {
         $db = Factory::getDbo();
         $app = Factory::getApplication()->input;
         $id = $app->getVar('id');
@@ -1352,10 +1434,11 @@ class Tochuc_Model_Tochuc {
         $query->delete($db->quoteName('ins_dept_giaouocthidua'));
         $query->where($conditions);
         $db->setQuery($query);
-        return $db->query();
+        return $db->execute();
     }
 
-    public function luuFkGiaoUoc($giaouoc_id, $code) {
+    public function luuFkGiaoUoc($giaouoc_id, $code)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -1365,11 +1448,12 @@ class Tochuc_Model_Tochuc {
         $query->insert($db->quoteName('ins_dept_giaouocthidua_fk_attachment'));
         $query->set($fields);
         $db->setQuery($query);
-        $db->query();
+        $db->execute();
         return $db->insertId();
     }
 
-    function savephanhangdonvi($formData) {
+    function savephanhangdonvi($formData)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -1404,9 +1488,10 @@ class Tochuc_Model_Tochuc {
         }
         return $id;
     }
-    function updateHangHienTaiDonVi($donvi_id){
-        $hanghientai = Core::loadAssocList('ins_dept_phanhangdonvi','hangdonvisunghiep_id','donvi_id = '.(int)$donvi_id,' ngayqd DESC');
-        Core::update('ins_dept',array('hangdonvisunghiep_id'=>$hanghientai[0]['hangdonvisunghiep_id'],'id'=>(int)$donvi_id),'id');
+    function updateHangHienTaiDonVi($donvi_id)
+    {
+        $hanghientai = Core::loadAssocList('ins_dept_phanhangdonvi', 'hangdonvisunghiep_id', 'donvi_id = ' . (int)$donvi_id, ' ngayqd DESC');
+        Core::update('ins_dept', array('hangdonvisunghiep_id' => $hanghientai[0]['hangdonvisunghiep_id'], 'id' => (int)$donvi_id), 'id');
         return true;
     }
     // function xoaphanhangdonvi() {
@@ -1422,7 +1507,8 @@ class Tochuc_Model_Tochuc {
     //     return $db->query();
     // }
 
-    public function luuFkPhanHangDonVi($giaouoc_id, $code) {
+    public function luuFkPhanHangDonVi($giaouoc_id, $code)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -1436,7 +1522,8 @@ class Tochuc_Model_Tochuc {
         return $db->insertId();
     }
 
-    function savequydinhcappho($formData) {
+    function savequydinhcappho($formData)
+    {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $fields = array(
@@ -1467,5 +1554,4 @@ class Tochuc_Model_Tochuc {
         }
         return $id;
     }
-
 }

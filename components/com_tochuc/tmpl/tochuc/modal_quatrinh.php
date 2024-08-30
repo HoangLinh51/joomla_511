@@ -25,6 +25,9 @@ $item = $this->item[0];
     <input type="hidden" name="dept_id" value="<?php echo $this->dept_id; ?>">
     <input type="hidden" name="id" value="<?php echo $this->item['id']; ?>" id="quatrinh_id">
     <input type="hidden" name="vanban_id" value="<?php echo $this->item['vanban_id']; ?>" id="vanban_id">
+    <div class="overlay" style="display: none;">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -134,6 +137,9 @@ $item = $this->item[0];
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 26px !important;
         padding-left: 0px !important
+    }
+    .modal{
+        padding-right: 0px !important;
     }
 </style>
 <script type="text/javascript">

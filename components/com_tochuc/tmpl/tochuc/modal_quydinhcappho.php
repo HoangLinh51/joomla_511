@@ -29,6 +29,9 @@ $donvi_id = $this->donvi_id;
 <form enctype="multipart/form-data" class="form-horizontal" id="frmQuydinhcappho" name="frmQuydinhcappho" method="post">
 	<input type="hidden" name="id" value="<?php echo $item['id']; ?>" id="id">
 	<input type="hidden" id="donvi_id" name="donvi_id" value="<?php echo $donvi_id ?>">
+    <div class="overlay" style="display: none;">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -49,7 +52,7 @@ $donvi_id = $this->donvi_id;
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name">Hình thức <span class="required">*</span></label>
+                            <label for="hinhthuc_id">Hình thức <span class="required">*</span></label>
                             <div class="controls">
                                 <?php
                                     $hinhthuc = array(
@@ -114,33 +117,24 @@ $donvi_id = $this->donvi_id;
         line-height: 26px !important;
         padding-left: 0px !important
     }
+    .modal{
+        padding-right: 0px !important;
+    }
 </style>
 <script type="text/javascript">
     
     jQuery(document).ready(function($) {
 
-        $('#kt_daterangepicker_2').daterangepicker({
-            autoUpdateInput: false,
-            locale: {
-                cancelLabel: 'Clear'
-            }
-        });
-
-        $('#kt_daterangepicker_2').on('apply.daterangepicker', function(ev, picker) {
-            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-        });
-
-        $('#kt_daterangepicker_2').on('cancel.daterangepicker', function(ev, picker) {
-            $(this).val('');
-        });
-        
         $('.datepicker').datepicker({
             format: " yyyy",
             viewMode: "years",
             minViewMode: "years",
             language: 'vi'
         });
-        
+
+        var getTextLabel = function(id){
+            return $('#frmQuydinhcappho label[for="'+id+'"]').text();
+        };
        
         $('#frmQuydinhcappho').validate({
             ignore: true,
@@ -157,13 +151,7 @@ $donvi_id = $this->donvi_id;
                             errors += "<br/>\u25CF " + validator.errorList[x].message +' <b> '+ getTextLabel($(validator.errorList[x].element).attr("name")).replace(/\*/g, '')+'</b>' ;
                         }
                     }
-                    $.toast({
-                        heading: 'Thông báo',
-                        text: message + errors,
-                        showHideTransition: 'fade',
-                        position: 'top-right',
-                        icon: 'error'
-                    })
+                    loadNoticeBoardError('Thông báo', message + errors);
                 } else {
                     $(this).removeClass("is-invalid");
                 }
@@ -207,45 +195,28 @@ $donvi_id = $this->donvi_id;
 						frmQuydinhcappho: frmQuydinhcappho,
 						'<?php echo Session::getFormToken() ?>': 1
 					},
+                    beforeSend: function() {
+                        $.blockUI();
+                        $('.overlay').removeAttr('style');
+                    },
 					success: function(data) {
 						if (data == true) {
-                            $.toast({
-                                heading: 'Thông báo',
-                                text: "Thao tác thành công!",
-                                showHideTransition: 'fade',
-                                position: 'top-right',
-                                icon: 'success'
-                            });
-							// loadNoticeBoardSuccess('Thông báo', 'Thao tác thành công!');
+							loadNoticeBoardSuccess('Thông báo', 'Thao tác thành công!');
 							$.blockUI();
 							jQuery.ajax({
 								type: "GET",
-								url: '?view=tochuc&task=quydinhcappho&format=raw&id=<?php echo $donvi_id; ?>',
+								url: '<?php echo Uri::root(true) ?>/index.php/component/tochuc?view=tochuc&task=quydinhcappho&format=raw&id=<?php echo $donvi_id; ?>',
 								success: function(data, textStatus, jqXHR) {
 									$.unblockUI();
 									$('#modal_tochuc').modal('hide');
 									$('#quydinhcappho-quatrinh').html(data);
 								}
 							});
-						} else //loadNoticeBoardError('Thông báo', 'Có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
-                            $.toast({
-                                heading: 'Thông báo',
-                                text: "Có lỗi xảy ra, vui lòng liên hệ quản trị viên!",
-                                showHideTransition: 'fade',
-                                position: 'top-right',
-                                icon: 'error'
-                            });
+						} else loadNoticeBoardError('Thông báo', 'Có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
 					},
 					error: function() {
 						$.blockUI();
-                        $.toast({
-                            heading: 'Thông báo',
-                            text: "Có lỗi xảy ra, vui lòng liên hệ quản trị viên!",
-                            showHideTransition: 'fade',
-                            position: 'top-right',
-                            icon: 'error'
-                        });
-						// loadNoticeBoardError('Thông báo', 'Có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
+						loadNoticeBoardError('Thông báo', 'Có lỗi xảy ra, vui lòng liên hệ quản trị viên!');
 					}
 				});
             }
