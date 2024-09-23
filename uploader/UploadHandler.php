@@ -1055,6 +1055,17 @@ class UploadHandler
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
             $index = null, $content_range = null) {
+        $is_image = false;
+    	switch ($type) {
+    		case 'image/jpeg':
+    		case 'image/png':
+    		case 'image/gif':    		
+    			$is_image = true;
+    			break;    				
+    		default:
+    			$is_image = false;
+    			break;
+    	}        
         $file = new \stdClass();
         $file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
             $index, $content_range);
@@ -1090,7 +1101,15 @@ class UploadHandler
             }
             $file_size = $this->get_file_size($file_path, $append_file);
             if ($file_size === $file->size) {
-                $file->url = $this->get_download_url($file->name);
+
+                if($is_image == true){
+            		$this->options['download_via_php'] = false;
+            		$file->url = $this->get_download_url($file->name);
+            	}else{
+            		$file->url = $this->get_download_url($file->name);
+            	}
+
+                // $file->url = $this->get_download_url($file->name);
                 if ($this->is_valid_image_file($file_path)) {
                     $this->handle_image_file($file_path, $file);
                 }

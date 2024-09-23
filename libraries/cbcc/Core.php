@@ -1,6 +1,7 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Service\Provider\Database;
 
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
@@ -720,7 +721,7 @@ class Core{
     public static function insert($table_name,$data,$primary_name = null,$nulls = false,$option = array()){
     	$db = Factory::getDBO();
     	//Create data object
-    	$row = new JObject();
+    	$row = new CMSObject();
     	//Record to update
     	foreach ($data as $key=>$value){
     		$row->$key = $value;

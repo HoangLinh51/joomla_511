@@ -1,6 +1,9 @@
 <?php
 
+use Joomla\CMS\Application\AdministratorApplication;
+use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Factory;
+use Joomla\Session\SessionInterface;
 
 define('_JEXEC', 1);
 // Fix magic quotes.
@@ -22,23 +25,46 @@ if (!file_exists(JPATH_LIBRARIES . '/vendor/autoload.php') || !is_dir(JPATH_PUBL
 
     exit;
 }
-
-require_once JPATH_BASE . '/includes/framework.php';
-require_once JPATH_LIBRARIES.'/cbcc/Core.php';
 /**
  * Import the Framework. This file is usually in JPATH_LIBRARIES
 */
 
-// require_once JPATH_LIBRARIES . '/bootstrap.php';
-// require_once JPATH_LIBRARIES . '/cms.php';
-// require_once JPATH_LIBRARIES . '/cbcc/Core.php';
-// require_once JPATH_CONFIGURATION . '/configuration.php';
-// require_once JPATH_LIBRARIES .'/cms/application/cms.php';
-// require_once JPATH_BASE . '/includes/framework.php';
+require_once JPATH_LIBRARIES . '/bootstrap.php';
+require_once JPATH_BASE . '/includes/framework.php';
+require_once JPATH_LIBRARIES.'/cbcc/Core.php';
+require_once JPATH_CONFIGURATION . '/configuration.php';
 
-// Initialize Joomla application
-// $app = Factory::getApplication('site');
-// $app->initialise();
+
+
+$container = Factory::getContainer();
+$container->alias(SessionInterface::class, 'session.web.site');
+$app = $container->get(SiteApplication::class);
+\Joomla\CMS\Factory::$application = $app;
+
+if (Factory::$application === null) {
+    Factory::$application = $app;
+}
+
+// $userSession = \Joomla\CMS\Factory::getApplication()->getSession();
+$user = \Joomla\CMS\Factory::getApplication()->getSession()->get('user');
+// $user = Factory::getUser();
+
+// Check if the user is not logged in
+if ((int)$user->id === 0) {
+    $app = $container->get(AdministratorApplication::class);
+    
+    if (Factory::$application === null) {
+        Factory::$application = $app;
+    }
+
+    $user = \Joomla\CMS\Factory::getApplication()->getSession()->get('user');
+    // $user = Factory::getUser(); 
+    
+    if ((int)$user->id === 0) {
+        echo 'Liên hệ với quản trị hệ thống';
+        exit;
+    }
+}
 
 // Include the UploadHandler class
 require_once 'UploadHandler.php';  // Ensure correct path and use require_once to prevent multiple inclusions
@@ -55,69 +81,116 @@ class CustomUploadHandler extends UploadHandler
         $file->object_id = @$_REQUEST['object_id'][$index];
     }
 
-    protected function handle_file_upload(
-        $uploaded_file,
-        $name,
-        $size,
-        $type,
-        $error,
-        $index = null,
-        $content_range = null
-    ) {
-        $file = new \stdClass();
-        $file->name = $this->get_file_name(
-            $uploaded_file,
-            $name,
-            $size,
-            $type,
-            $error,
-            $index,
-            $content_range
-        );
-        $file->size = $this->fix_integer_overflow((int)$size);
-        $file->type = $type;
-        if ($this->validate($uploaded_file, $file, $error, $index)) {
-            $this->handle_form_data($file, $index);
-            $upload_dir = $this->get_upload_path();
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, $this->options['mkdir_mode'], true);
-            }
-            $file_path = $this->get_upload_path($file->name);
-            $append_file = $content_range && is_file($file_path) &&
-                $file->size > $this->get_file_size($file_path);
-            if ($uploaded_file && is_uploaded_file($uploaded_file)) {
-                // multipart/formdata uploads (POST method uploads)
-                if ($append_file) {
-                    file_put_contents(
-                        $file_path,
-                        fopen($uploaded_file, 'r'),
-                        FILE_APPEND
-                    );
-                } else {
-                    move_uploaded_file($uploaded_file, $file_path);
-                }
-            } else {
-                // Non-multipart uploads (PUT method support)
-                file_put_contents(
-                    $file_path,
-                    fopen($this->options['input_stream'], 'r'),
-                    $append_file ? FILE_APPEND : 0
+    protected function handle_file_upload($uploaded_file, $name, $size, $type, $error, $index = null, $content_range = null) {
+       
+        $container = Factory::getContainer();
+        $container->alias(SessionInterface::class, 'session.web.site');
+        $app = $container->get(SiteApplication::class);
+        if (Factory::$application === null) {
+            Factory::$application = $app;
+        }
+        $user 		= Factory::getUser();
+       
+        // Use the native mime_content_type function if available
+        if (!function_exists('mime_content_type')) {
+            function custom_mime_content_type($filename) {
+                $mime_types = array(
+                    'txt' => 'text/plain',
+                    'htm' => 'text/html',
+                    'html' => 'text/html',
+                    'php' => 'text/html',
+                    'css' => 'text/css',
+                    'js' => 'application/javascript',
+                    'json' => 'application/json',
+                    'xml' => 'application/xml',
+                    'swf' => 'application/x-shockwave-flash',
+                    'flv' => 'video/x-flv',
+                    // images
+                    'png' => 'image/png',
+                    'jpe' => 'image/jpeg',
+                    'jpeg' => 'image/jpeg',
+                    'jpg' => 'image/jpeg',
+                    'gif' => 'image/gif',
+                    'bmp' => 'image/bmp',
+                    'ico' => 'image/vnd.microsoft.icon',
+                    'tiff' => 'image/tiff',
+                    'tif' => 'image/tiff',
+                    'svg' => 'image/svg+xml',
+                    'svgz' => 'image/svg+xml',
+                    // archives
+                    'zip' => 'application/zip',
+                    'rar' => 'application/x-rar-compressed',
+                    'exe' => 'application/x-msdownload',
+                    'msi' => 'application/x-msdownload',
+                    'cab' => 'application/vnd.ms-cab-compressed',
+                    // audio/video
+                    'mp3' => 'audio/mpeg',
+                    'qt' => 'video/quicktime',
+                    'mov' => 'video/quicktime',
+                    // adobe
+                    'pdf' => 'application/pdf',
+                    'psd' => 'image/vnd.adobe.photoshop',
+                    'ai' => 'application/postscript',
+                    'eps' => 'application/postscript',
+                    'ps' => 'application/postscript',
+                    // ms office
+                    'doc' => 'application/msword',
+                    'rtf' => 'application/rtf',
+                    'xls' => 'application/vnd.ms-excel',
+                    'ppt' => 'application/vnd.ms-powerpoint',
+                    // open office
+                    'odt' => 'application/vnd.oasis.opendocument.text',
+                    'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
                 );
+               
+                $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                return $mime_types[$ext] ?? (function_exists('finfo_open') ? finfo_file(finfo_open(FILEINFO_MIME), $filename) : 'application/octet-stream');
             }
-            $file_size = $this->get_file_size($file_path, $append_file);
-            if ($file_size === $file->size) {
-                $file->url = $this->get_download_url($file->name);
-                if ($this->is_valid_image_file($file_path)) {
-                    $this->handle_image_file($file_path, $file);
+        }
+       
+        $is_image = false;
+        switch ($type) {
+            case 'image/jpeg':
+            case 'image/png':
+            case 'image/gif':
+                $name = str_replace(" ", "_", $name);
+                $new_name = time() . $name;
+                $ext = mime_content_type($uploaded_file);
+                $is_image = in_array($ext, ['image/png', 'image/jpeg', 'image/gif']);
+                if (!$is_image) {
+                    echo 'Vui lòng liên hệ Quản trị viên';
+                    exit;
                 }
-            } else {
-                $file->size = $file_size;
-                if (!$content_range && $this->options['discard_aborted_uploads']) {
-                    unlink($file_path);
-                    $file->error = $this->get_error_message('abort');
-                }
-            }
-            $this->set_additional_file_properties($file);
+                break;
+            default:
+                $name = str_replace(" ", "_", $name);
+                $new_name = md5(time() . $name);
+                break;
+        }
+
+        $file = parent::handle_file_upload($uploaded_file, $new_name, $size, $type, $error, $index, $content_range);
+        if (empty($file->error)) {
+            $file->type_id = $file->type_id ?? -1;
+            $file->object_id = $file->object_id ?? 0;
+            $file->created_by = $user->id;
+            $file->folder = $file->folder ?? 'uploader/files/' . $user->id . '/';
+            $file->filename = $file->filename ?? $name;
+
+            $mapper = Core::model('Core/Attachment');
+            $file->code = $new_name;
+            $formData = [
+                'folder' => $file->folder,
+                'object_id' => $file->object_id,
+                'code' => $new_name,
+                'mime' => $file->type,
+                'url' => $is_image ? $file->url : $file->url . '&download=1',
+                'filename' => $name,
+                'type_id' => $file->type_id,
+                'created_by' => $file->created_by,
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+            $file->id = $mapper->create($formData);
+            $file->url = $formData['url'];
         }
         return $file;
     }
