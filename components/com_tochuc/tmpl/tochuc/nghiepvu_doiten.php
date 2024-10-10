@@ -4,7 +4,7 @@
  * @ Author: huenn.dnict@gmail.com
  * @ Create Time: 2024-08-07 09:14:13
  * @ Modified by: huenn.dnict@gmail.com
- * @ Modified time: 2024-09-23 16:09:13
+ * @ Modified time: 2024-09-24 10:26:07
  * @ Description:
  */
 
@@ -16,13 +16,14 @@ use Joomla\Component\Tochuc\Site\Helper\TochucHelper;
 
 $user = Factory::getUser();
 ?>
+
 <form class="form-horizontal row-fluid" name="frmThanhLap" id="frmThanhLap" method="post" action="<?php echo Route::_('index.php?option=com_tochuc&controller=tochuc&task=savethanhlap') ?>" enctype="multipart/form-data">
     <input type="hidden" value="" name="id" id="id">
     <input type="hidden" value="" name="parent_id" id="parent_id">
     <input type="hidden" value="" name="type" id="type">
     <div class="">
         <div class="card-header">
-            <h3 class="card-title" style="vertical-align: middle;padding-top: 10px;">Nghiệp vụ đổi tên</h3>
+            <h3 class="card-title" style="vertical-align: middle;padding-top: 10px;">Nghiệp vụ đổi tên <?php echo TochucHelper::getNameById($this->type, 'ins_type');?></h3>
             <div class="card-tools" style="margin: unset;">
                 <div class="btn-group" id="">
                     <?php //if (Core::_checkPerActionArr($user_id, 'com_tochuc', 'tochuc', array('task' => 'edit', 'location' => 'site', 'non_action' => 'false'))) { 
@@ -48,16 +49,18 @@ $user = Factory::getUser();
                     <div class="tab-custom-content">
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <label class="control-label" for="name">Tên phòng cũ <span class="required">*</span></label>
+                                <label class="control-label" for="name">Tên <?php echo TochucHelper::getNameById($this->type, 'ins_type');?> cũ <span class="required">*</span></label>
                                 <div class="controls">
-                                    <input type="text" value="" readonly name="name" id="name" class="form-control rounded-0 validNamePhong">
+                                    <input type="hidden" value="<?php echo $this->type?>" readonly="readonly" name="type">
+                                    <input type="hidden" value="<?php echo $this->donvi_id?>" readonly="readonly" name="donvi_id">
+                                    <input type="text" value="<?php echo $this->donvi_name?>" readonly name="name" id="name" class="form-control rounded-0 validNamePhong">
                                 </div>
                             </div>
 
                             <div class="col-md-6 form-group">
-                                <label class="control-label" for="s_name">Tên phòng mới <span class="required">*</span></label>
+                                <label class="control-label" for="name_moi">Tên <?php echo TochucHelper::getNameById($this->type, 'ins_type');?> mới <span class="required">*</span></label>
                                 <div class="controls">
-                                    <input type="text" value="" name="s_name" id="s_name" class="form-control rounded-0">
+                                    <input type="text" value="" name="name_moi" id="name_moi" class="form-control rounded-0">
                                 </div>
                             </div>
                         </div>
@@ -189,6 +192,8 @@ $user = Factory::getUser();
         return false;
     }
     jQuery(document).ready(function($) {
+
+        $('#com_tochuc_thongbao').html('<div style="margin-bottom:0px;" class="alert alert-warning alert-dismissible "><b>Chú ý:</b> Sau khi thao tác nghiệp vụ đổi tên tổ chức, toàn bộ dữ liệu trong hệ thống sẽ được cập nhật dựa theo ngày quyết định (bao gồm tên đơn vị, các quá trình công tác của CBCCVC).</div>');
         $('#fileupload_quatrinh').fileupload({
             url: '<?php echo Uri::root(true) ?>/uploader/index.php',
             dataType: 'json',

@@ -585,7 +585,7 @@ class RawView extends BaseHtmlView
     }
     
     public function _pageNghiepvudoiten(){
-    	$formData = Factory::getApplication()->input->post->getArray();
+    	$formData = Factory::getApplication()->input->get->getArray();
         $this->type = $formData['type'];
         $this->donvi_id = $formData['id'];
         $this->donvi_name = TochucHelper::getNameById($formData['id'], 'ins_dept');
