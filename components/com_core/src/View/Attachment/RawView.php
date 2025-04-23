@@ -136,9 +136,4 @@ class RawView extends BaseHtmlView
         $this->is_new           = Factory::getApplication()->input->getVar('is_new');    
         $this->id_user          = $user->id;
     }
-
-
-   
-    
-
 }

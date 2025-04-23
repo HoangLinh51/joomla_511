@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Administrator
  * @subpackage  Template.Isis
@@ -15,7 +16,7 @@ $msgList = $displayData['msgList'];
 
 $alert = array('error' => 'alert-error', 'warning' => '', 'notice' => 'alert-info', 'message' => 'alert-success');
 ?>
-<div id="system-message-container">
+<!-- <div id="system-message-container">
 	<?php if (is_array($msgList) && $msgList) : ?>
 		<?php foreach ($msgList as $type => $msgs) : ?>
 			<div class="alert <?php echo isset($alert[$type]) ? $alert[$type] : 'alert-' . $type; ?>">
@@ -29,4 +30,4 @@ $alert = array('error' => 'alert-error', 'warning' => '', 'notice' => 'alert-inf
 			</div>
 		<?php endforeach; ?>
 	<?php endif; ?>
-</div>
+</div> -->

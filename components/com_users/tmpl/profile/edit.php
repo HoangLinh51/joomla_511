@@ -28,22 +28,30 @@ $wa->useScript('keepalive')
     ->useScript('form.validate');
 
 ?>
-<div class="com-users-profile__edit profile-edit">
-    <?php if ($this->params->get('show_page_heading')) : ?>
+<div class="com-users-profile__edit profile-edit" style="padding: 10px 20px;">
+    <!-- <?php if ($this->params->get('show_page_heading')) : ?>
         <div class="page-header">
             <h1>
                 <?php echo $this->escape($this->params->get('page_heading')); ?>
             </h1>
         </div>
-    <?php endif; ?>
+    <?php endif; ?> -->
+
+    <img id="avatar-preview" src="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>"
+        alt="Avatar" style="width: 115px; height: 150px;">
+    <!-- upload avatar -->
+    <?php echo Core::inputAttachmentOneFile('uploadAvatar', null, 1, date('Y'), -1);
+    ?>
 
     <form id="member-profile" action="<?php echo Route::_('index.php?option=com_users'); ?>" method="post" class="com-users-profile__edit-form form-validate form-horizontal well" enctype="multipart/form-data">
-        <?php // Iterate through the form fieldsets and display each one. ?>
+        <?php // Iterate through the form fieldsets and display each one. 
+        ?>
         <?php foreach ($this->form->getFieldsets() as $group => $fieldset) : ?>
             <?php $fields = $this->form->getFieldset($group); ?>
             <?php if (count($fields)) : ?>
                 <fieldset>
-                    <?php // If the fieldset has a label set, display it as the legend. ?>
+                    <?php // If the fieldset has a label set, display it as the legend. 
+                    ?>
                     <?php if (isset($fieldset->label)) : ?>
                         <legend>
                             <?php echo Text::_($fieldset->label); ?>
@@ -54,7 +62,8 @@ $wa->useScript('keepalive')
                             <?php echo $this->escape(Text::_($fieldset->description)); ?>
                         </p>
                     <?php endif; ?>
-                    <?php // Iterate through the fields in the set and display them. ?>
+                    <?php // Iterate through the fields in the set and display them. 
+                    ?>
                     <?php foreach ($fields as $field) : ?>
                         <?php echo $field->renderField(); ?>
                     <?php endforeach; ?>
@@ -73,11 +82,11 @@ $wa->useScript('keepalive')
             <div class="controls">
                 <button type="submit" class="btn btn-primary validate" name="task" value="profile.save">
                     <span class="icon-check" aria-hidden="true"></span>
-                    <?php echo Text::_('JSAVE'); ?>
+                    <?php echo Text::_('Lưu'); ?>
                 </button>
                 <button type="submit" class="btn btn-danger" name="task" value="profile.cancel" formnovalidate>
                     <span class="icon-times" aria-hidden="true"></span>
-                    <?php echo Text::_('JCANCEL'); ?>
+                    <?php echo Text::_('Hủy'); ?>
                 </button>
                 <input type="hidden" name="option" value="com_users">
             </div>

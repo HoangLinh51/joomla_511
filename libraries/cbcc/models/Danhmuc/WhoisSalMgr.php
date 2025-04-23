@@ -1,31 +1,62 @@
 <?php
-class Danhmuc_Model_WhoisSalMgr extends JModelLegacy
+use Joomla\CMS\Factory;
+use Joomla\CMS\MVC\Model\BaseModel;
+
+class WhoisSalMgr  extends BaseModel
+
 {
-	/**
-	 * @param mixed $formData
-	 * @return boolean True on success
-	 */
-	public function create($formData){
-		$table = Core::table('Danhmuc/WhoisSalMgr');
-		$src['name'] 				= $formData['name'];
-		$src['status'] 				= $formData['status'];
-		$src['is_nangluonglansau']	= $formData['is_nangluonglansau'];
-		$src['is_nhaptien'] 		= $formData['is_nhaptien'];
-		$src['is_nhapngaynangluong']= $formData['is_nhapngaynangluong'];
-		$src['phantramsotienhuong']	= $formData['phantramsotienhuong'];
-		return $table->save($src);
-	}
-	public function update($formData){
-		$table = Core::table('Danhmuc/WhoisSalMgr');
-		$src['id'] 					= $formData['id'];
-		$src['name'] 				= $formData['name'];
-		$src['status'] 				= $formData['status'];
-		$src['is_nangluonglansau']	= $formData['is_nangluonglansau'];
-		$src['is_nhaptien'] 		= $formData['is_nhaptien'];
-		$src['is_nhapngaynangluong']= $formData['is_nhapngaynangluong'];
-		$src['phantramsotienhuong']	= $formData['phantramsotienhuong'];
-		return $table->save($src);
-	}
+    /**
+     * @param mixed $formData
+     * @return boolean True on success
+     */
+    public function getTable($type = 'Bangluong', $prefix = 'Joomla\\Component\\Dmluong\\Administrator\\Table\\', $config = [])
+    {
+        return Table::getInstance($type, $prefix, $config);
+    }
+    public function getModel($name = 'Bangluong', $prefix = 'Danhmuc', $config = ['ignore_request' => true])
+    {
+        return parent::getModel($name, $prefix, $config);
+    }
+
+    public function create($data)
+    {
+        $table = $this->getTable();
+        var_dump($table);exit;
+        // Prepare the data array
+        $src = [
+            'name' => $data['name'],
+            'status' => $data['status'],
+           
+        ];
+
+        // Save the new record
+        return $table->save($src);
+    }
+
+    public function update($formData)
+    {
+        // Get the table instance
+        $table = $this->getTable();
+
+        // Load the existing record based on the ID
+        if (!$table->load($formData['id'])) {
+            throw new \RuntimeException(Text::_('Record not found'));
+        }
+
+        // Prepare the data array
+        $src = [
+            'id' => $formData['id'],
+            'name' => $formData['name'],
+            'status' => $formData['status'],
+            'is_nangluonglansau' => $formData['is_nangluonglansau'],
+            'is_nhaptien' => $formData['is_nhaptien'],
+            'is_nhapngaynangluong' => $formData['is_nhapngaynangluong'],
+            'phantramsotienhuong' => $formData['phantramsotienhuong']
+        ];
+
+        // Update and save the existing record
+        return $table->save($src);
+    }
 	public function read($id){
 		$table = Core::table('Danhmuc/WhoisSalMgr');
 		if (!$table->load($id)) {

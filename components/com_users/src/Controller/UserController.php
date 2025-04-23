@@ -38,6 +38,7 @@ class UserController extends BaseController
      */
     public function login()
     {
+
         $this->checkToken('post');
 
         $input = $this->input->getInputForRequestMethod();
@@ -49,6 +50,13 @@ class UserController extends BaseController
         $data['username']  = $input->get('username', '', 'USERNAME');
         $data['password']  = $input->get('password', '', 'RAW');
         $data['secretkey'] = $input->get('secretkey', '', 'RAW');
+        $data['captcha'] = $input->get('captcha', '', 'RAW');
+
+        if ($data['captcha'] != $_SESSION['valid_captcha']) {
+            $this->app->enqueueMessage(Text::_('Mã xác thực không đúng.'), 'error');
+            $this->app->setUserState('users.login.form.data', $data);
+            $this->app->redirect(Route::_('index.php?option=com_users&view=login', false));
+        }
 
         // Check for a simple menu item id
         if (is_numeric($data['return'])) {
@@ -94,8 +102,11 @@ class UserController extends BaseController
             $data['username']  = '';
             $data['password']  = '';
             $data['secretkey'] = '';
-            $this->app->setUserState('users.login.form.data', $data);
-            $this->app->redirect(Route::_('index.php?option=com_users&view=login', false));
+
+
+            $this->app->enqueueMessage(Text::_('Tài khoản hoặc mật khẩu không đúng.'), 'error');
+            // $this->app->setUserState('users.login.form.data', $data);
+            // $this->app->redirect(Route::_('index.php?option=com_users&view=login', false));
         }
 
         // Success

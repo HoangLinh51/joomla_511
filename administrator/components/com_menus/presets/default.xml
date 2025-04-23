@@ -412,10 +412,118 @@
 				class="class:core"
 				link="index.php?option=com_danhmuc&amp;view=partys"
 			/>
+				<menuitem
+				title="Loại biên chế"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=bienches"
+			/>
+	<menuitem
+				title="Danh mục thông tin cá nhân"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view="
+			>
+			<menuitem
+				title="Danh mục giới tính"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=gioitinh"
+			/>
+				<menuitem
+				title="Danh mục dân tộc"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=dantoc"
+			/>
+			
+				<menuitem
+				title="Danh mục hạng thương binh"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=hangthuongbinh"
+			/>
+			<menuitem
+				title="Danh mục tình trạng sức khỏe"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=suckhoe"
+			/>
+			<menuitem
+				title="Danh mục nhóm máu"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=nhommau"
+			/>
+			<menuitem
+				title="Danh mục tình trạng hôn nhân"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=honnhan"
+			/>
+				<menuitem
+				title="Danh mục tôn giáo"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=tongiao"
+			/>
+			<menuitem
+				title="Danh mục thành phân xuất thân"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=tpxuatthan"
+			/>
+				<menuitem
+				title="Danh mục đối tượng hưởng chính sách"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=doituonghuongcs"
+			/>
+			<menuitem
+				title="Danh mục danh hiệu phong tặng"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=danhhieuphongtang"
+			/>
+				<menuitem
+				title="Danh mục quan hệ gia đình"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=quanhegd"
+			/>
+	</menuitem>
+
+			<menuitem
+				title="Hình thức nâng lương"
+				type="component"
+				element="com_danhmuc"
+				class="class:core"
+				link="index.php?option=com_danhmuc&amp;view=bangluong"
+			/>
+			<menuitem
+				title="Bảng lương"
+				type="component"
+				element="com_dmluong"
+				class="class:core"
+				link="index.php?option=com_dmluong&amp;view=bangluong"
+			/>
+	</menuitem>
 			
 
 			
-	</menuitem>
 
 	<menuitem
 		title="MOD_MENU_HELP"

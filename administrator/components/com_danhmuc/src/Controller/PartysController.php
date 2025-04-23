@@ -67,7 +67,7 @@ class PartysController extends AdminController
     /**
      * Removes an item.
      *
-     * Overrides Joomla\CMS\MVC\Controller\FormController::delete to check the core.admin permission.
+     * Overrides Joomla\CMS\MVC\Controller\FormController::delete to check the core.create permission.
      *
      * @return  void
      *
@@ -81,7 +81,7 @@ class PartysController extends AdminController
         $ids = (array) $this->input->get('cid', [], 'int');
         // Remove zero values resulting from input filter
         $ids = array_filter($ids);
-        if (!$this->app->getIdentity()->authorise('core.admin', $this->option)) {
+        if (!$this->app->getIdentity()->authorise('core.create', $this->option)) {
             throw new NotAllowed(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
 
@@ -110,7 +110,7 @@ class PartysController extends AdminController
     public function save2new($key = null, $urlVar = null)
     {
         $this->checkToken();
-        if (!$this->app->getIdentity()->authorise('core.admin')) {
+        if (!$this->app->getIdentity()->authorise('core.create')) {
             $this->setRedirect('index.php', Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return false;
@@ -147,7 +147,7 @@ class PartysController extends AdminController
     public function save($key = null, $urlVar = null)
     {
         $this->checkToken();
-        if (!$this->app->getIdentity()->authorise('core.admin')) {
+        if (!$this->app->getIdentity()->authorise('core.create')) {
             $this->setRedirect('index.php', Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 
             return false;

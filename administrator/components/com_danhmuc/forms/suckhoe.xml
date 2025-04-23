@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form addfieldprefix="Joomla\Component\Danhmuc\Administrator\Field">
+	<fieldset>
+		<field
+			name="code"
+			type="hidden"
+			default="0"
+			required="true"
+			readonly="true"
+		/>
+
+		<field
+			name="name"
+			type="text"
+			label="COM_DANHMUC_TINHTRANGSUCKHOE_TITLE_LABEL"
+			required="true"
+		/>
+
+		<field
+			name="level"
+			type="text"
+			label="COM_DANHMUC_TINHTRANGSUCKHOE_MUCTUONGDUONG_LABEL"
+			required="true"
+		/>
+
+		<field
+			name="status"
+			type="radio"
+			label="COM_DANHMUC_TINHTRANGSUCKHOE_STATUS_LABEL"
+			layout="joomla.form.field.radio.switcher"
+			default="1"
+			>
+			<option value="0">Không sử dụng</option>
+			<option value="1">Sử dụng</option>
+		</field>
+
+
+		<field
+			name="suckhoe"
+			type="hidden"
+			filter="unset"
+		/>
+
+	</fieldset>
+</form>

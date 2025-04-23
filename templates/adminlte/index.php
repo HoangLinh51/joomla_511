@@ -6,15 +6,15 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Session\Session;
 
-require_once (JPATH_THEMES.'/adminlte/CoreTemplate.php');
+require_once(JPATH_THEMES . '/adminlte/CoreTemplate.php');
 $coreTemplate = new CoreTemplate();
 
 if ($coreTemplate->isLogin() == true) {
-	require_once (JPATH_THEMES.'/adminlte/login.php');
-}else{
+	require_once(JPATH_THEMES . '/adminlte/login.php');
+} else {
 	$user = Factory::getUser();
 	if ($user->id == null) {
-		if($return==false){
+		if ($return == false) {
 			$url = Route::_('index.php?option=com_users&view=login');
 			$message = 'Bạn cần đăng nhập vào hệ thống.';
 			Factory::getApplication()->enqueueMessage($message);
@@ -25,290 +25,265 @@ if ($coreTemplate->isLogin() == true) {
 	$app = Factory::getApplication();
 	$doc = Factory::getDocument();
 
-	
+
 	// $doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/dist/css/adminlte.min.css');
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/dist/css/adminltev3.css');
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/dist/css/_all-skins.min.css');
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/fontawesome-free/css/all.min.css');
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');
-	
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/jqvmap/jqvmap.min.css');
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/select2/css/select2.min.css');
-	$doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/plugins/toastr/toastr.min.css');
-    $doc->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/adminltev3.css');
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/_all-skins.min.css');
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/fontawesome-free/css/all.min.css');
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');
+
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/jqvmap/jqvmap.min.css');
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/css/select2.min.css');
+	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.css');
+	$doc->addStyleSheet(Uri::root(true) . '/media/cbcc/css/jquery.toast.css');
 
 
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery/jquery.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery/jquery.min.js');
 	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
-	$doc->addScript(Uri::root(true).'/media/legacy/js/jquery-noconflict.js');
-	$doc->addScript(Uri::root(true).'/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-ui/jquery.blockUI.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mousewheel/jquery.mousewheel.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/dist/js/adminlte.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/raphael/raphael.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mapael/jquery.mapael.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/jquery-mapael/maps/usa_states.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/chart.js/Chart.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/select2/js/select2.min.js');
-	$doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/toastr/toastr.min.js');
-	$doc->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.toast.js');
+	$doc->addScript(Uri::root(true) . '/media/legacy/js/jquery-noconflict.js');
+	$doc->addScript(Uri::root(true) . '/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery-ui/jquery.blockUI.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery-mousewheel/jquery.mousewheel.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/dist/js/adminlte.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/raphael/raphael.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery-mapael/jquery.mapael.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery-mapael/maps/usa_states.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/chart.js/Chart.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/js/select2.min.js');
+	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.js');
+	$doc->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.toast.js');
 
-	$doc->addScript(Uri::root(true).'/media/cbcc/js/common.js');
+	$doc->addScript(Uri::root(true) . '/media/cbcc/js/common.js');
 
 
-	
+
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="description" content="overview &amp; stats" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>AdminLTE 3 | Dashboard</title>
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome Icons -->
-<script>
-var app = {};
-var loadNoticeBoardSuccess = function(title,text){
-	// jQuery.gritter.add({
-	// 	title: title,
-	// 	text: text,
-	// 	time: '2000',
-	// 	class_name: 'gritter-success gritter-center gritter-light'
-	// });
-	toastr.success(text, title)
-	toastr.options = {
-		"closeButton": true,
-		"debug": false,
-		"newestOnTop": true,
-		"progressBar": true,
-		"positionClass": "toast-top-right",
-		"preventDuplicates": false,
-		"onclick": null,
-		"showDuration": "300",
-		"hideDuration": "1000",
-		"timeOut": "5000",
-		"extendedTimeOut": "1000",
-		"showEasing": "swing",
-		"hideEasing": "linear",
-		"showMethod": "fadeIn",
-		"hideMethod": "fadeOut"
-	}
-};
-var loadNoticeBoardError = function(title,text){
-	toastr.error(text, title)
-	toastr.options = {
-		"closeButton": true,
-		"debug": false,
-		"newestOnTop": true,
-		"progressBar": true,
-		"positionClass": "toast-top-right",
-		"preventDuplicates": false,
-		"onclick": null,
-		"showDuration": "300",
-		"hideDuration": "1000",
-		"timeOut": "5000",
-		"extendedTimeOut": "1000",
-		"showEasing": "swing",
-		"hideEasing": "linear",
-		"showMethod": "fadeIn",
-		"hideMethod": "fadeOut"
-	}
-	// jQuery.gritter.add({
-	// 	title: title,
-	// 	text: text,
-	// 	time: '2000',
-	// 	class_name: 'gritter-error gritter-light'
-	// });
-};
-</script>
-<jdoc:include type="head" />
-</head>
-<body class="sidebar-mini layout-fixed">
-<div class="wrapper">
-	<div class="preloader flex-column justify-content-center align-items-center" style="height: 0px;">
-		<img class="animation__shake" src="templates/adminlte/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60" style="display: none;">
-	</div>
-	<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+	<!DOCTYPE html>
+	<html lang="en">
 
-		<ul class="navbar-nav">
-			<li class="nav-item">
-				<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-			</li>
-			<li class="nav-item d-none d-sm-inline-block">
-				<a href="index3.html" class="nav-link">Home</a>
-			</li>
-			<li class="nav-item d-none d-sm-inline-block">
-				<a href="#" class="nav-link">Contact</a>
-			</li>
-		</ul>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>AdminLTE 3 | Dashboard</title>
+		<!-- Google Font: Source Sans Pro -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+		<!-- Font Awesome Icons -->
+		<script>
+			var app = {};
+			var loadNoticeBoardSuccess = function(title, text) {
+				// jQuery.gritter.add({
+				// 	title: title,
+				// 	text: text,
+				// 	time: '2000',
+				// 	class_name: 'gritter-success gritter-center gritter-light'
+				// });
+				toastr.success(text, title)
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-top-right",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "5000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+			};
+			var loadNoticeBoardError = function(title, text) {
+				toastr.error(text, title)
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-top-right",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "5000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+				// jQuery.gritter.add({
+				// 	title: title,
+				// 	text: text,
+				// 	time: '2000',
+				// 	class_name: 'gritter-error gritter-light'
+				// });
+			};
+		</script>
+		<jdoc:include type="head" />
+	</head>
 
-		<ul class="navbar-nav ml-auto">
-			<jdoc:include type="modules" name="sidebar-right" />
-			<!-- <li class="nav-item">
-				<a class="nav-link" data-widget="navbar-search" href="#" role="button">
-					<i class="fas fa-search"></i>
-				</a>
-				<div class="navbar-search-block">
-					<form class="form-inline">
-						<div class="input-group input-group-sm">
-							<input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-							<div class="input-group-append">
-								<button class="btn btn-navbar" type="submit">
-									<i class="fas fa-search"></i>
-								</button>
-								<button class="btn btn-navbar" type="button" data-widget="navbar-search">
-									<i class="fas fa-times"></i>
-								</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</li> -->
-		</ul>
-	</nav>
-	<aside class="main-sidebar sidebar-dark-primary elevation-4">
-
-		<a href="index.php" class="brand-link">
-			<img src="templates/adminlte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-			<span class="brand-text font-weight-light">AdminLTE 3</span>
-		</a>
-
-		<div class="sidebar">
-
-			<div class="user-panel mt-3 pb-3 mb-3 d-flex">
-				<div class="image">
-					<img src="templates/adminlte/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-				</div>
-				<div class="info">
-					<a href="#" class="d-block">Alexander Pierce</a>
-				</div>
-			</div>
-
-			<div class="form-inline">
-				
-				<div class="input-group" data-widget="sidebar-search">
-					<input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-					<div class="input-group-append">
-						<button class="btn btn-sidebar">
-							<i class="fas fa-search fa-fw"></i>
-						</button>
-					</div>
-				</div>
-				<div class="sidebar-search-results">
-				
-					<div class="list-group">
-						<a href="#" class="list-group-item">
-							<div class="search-title"><strong class="text-light">							
-								</strong>N<strong class="text-light"></strong>o<strong class="text-light"></strong> <strong class="text-light"></strong>e<strong class="text-light">
-								</strong>l<strong class="text-light"></strong>e<strong class="text-light"></strong>m<strong class="text-light"></strong>e<strong class="text-light">								
-								</strong>n<strong class="text-light"></strong>t<strong class="text-light"></strong> <strong class="text-light"></strong>f<strong class="text-light">								
-								</strong>o<strong class="text-light"></strong>u<strong class="text-light"></strong>n<strong class="text-light"></strong>d<strong class="text-light">
-								</strong>!<strong class="text-light"></strong></div><div class="search-path">
-							</div>
-						</a>
-					</div>
-					
-				</div>
-			</div>
-
-			<nav class="mt-2">
-				<div class="sidebar-menu tree" id="main-tree"></div>
-				<jdoc:include type="modules" name="sidebar-nav" style="xhtml" />
+	<body class="sidebar-mini layout-fixed">
+		<div class="wrapper">
+			<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+					</li>
+				</ul>
+				<ul class="navbar-nav ml-auto">
+					<jdoc:include type="modules" name="sidebar-right" />
+				</ul>
 			</nav>
 
+			<aside class="main-sidebar sidebar-dark-primary elevation-4">
+				<a href="index.php" class="d-flex align-items-center gap-3 logo-brand">
+					<img src="/images/banners/logoDnict.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 m-0">
+					<h3 class="m-0 brand-text ">DNICT</h3>
+				</a>
+				<div class="line"></div>
+
+				<!-- Sidebar Content -->
+				<div class="sidebar">
+					<!-- Search -->
+					<div class="input-group" data-widget="sidebar-search">
+						<input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+						<div class="input-group-append">
+							<button class="btn btn-sidebar"><i class="fas fa-search fa-fw"></i></button>
+						</div>
+					</div>
+
+					<!-- Results -->
+					<div class="sidebar-search-results">
+						<div class="list-group">
+							<a href="#" class="list-group-item">
+								<div class="search-title text-light"></div>
+								<div class="search-path text-muted"></div>
+							</a>
+						</div>
+					</div>
+
+					<!-- Sidebar Navigation -->
+					<nav class="mt-2">
+						<div class="sidebar-menu tree" id="main-tree"></div>
+						<jdoc:include type="modules" name="sidebar-nav" style="xhtml" />
+					</nav>
+				</div>
+			</aside>
+
+			<div class="content-wrapper">
+				<jdoc:include type="message" />
+				<jdoc:include type="component" style="xhtml" />
+			</div>
+
+			<!-- Footer -->
+			<footer class="main-footer">
+				<div class="pull-right hidden-xs">
+					<b>Version</b> 2.4.13
+				</div>
+				<strong>Copyright © 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rightsreserved.
+			</footer>
+
+			<jdoc:include type="modules" name="debug" style="none" />
+
 		</div>
-	</aside>
+	</body>
 
-	<div class="content-wrapper">	
-		<!-- <table width="100%"> -->
-			<!-- <tr>
-				<td style="vertical-align:top; padding:0;">
-					<a class="menu-toggler" id="menu-toggler" href="#">
-						<span class="menu-text"></span>
-					</a> -->
-					<!-- <div class="main-content"> -->
-						<!-- <section class="">
-							<ol class="breadcrumb" style="">
-								<jdoc:include type="modules" name="breadcrumbs" style="xhtml" />
-								
-							</ol>
-						</section> -->
-						<!-- <section class="content"> -->
-							<jdoc:include type="message" />
-							<jdoc:include type="component" style="xhtml"/>
-						<!-- </section> -->
+	</html>
+	<style>
+		body:not(.layout-fixed) .main-sidebar {
+			height: inherit !important;
+			min-height: 100% !important;
+			position: absolute !important;
+			top: 0 !important;
+		}
 
-					<!-- </div>	 -->
-					<!--/.main-content-->		
-				<!-- </td>
-			</tr>
-		</table> -->
-	</div>
+		.nav-link.menu-open {
+			background-color: rgba(255, 255, 255, .1) !important;
+			color: #fff !important;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
+		}
 
-	<!-- Footer -->
-	<footer class="main-footer">
-		<div class="pull-right hidden-xs">
-			<b>Version</b> 2.4.13
-		</div>
-		<strong>Copyright © 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rightsreserved.
-	</footer>
+		#toast-container .toast-success {
+			background-color: #3c763d;
+			box-shadow: none;
+			opacity: 100;
+		}
 
-	<jdoc:include type="modules" name="debug" style="none" />
+		#toast-container .toast-error {
+			background-color: #a94442;
+			box-shadow: none;
+			opacity: 100;
+		}
 
-</div>
-</body>
-</html>
-<style >
-body:not(.layout-fixed) .main-sidebar {
-    height: inherit !important;
-    min-height: 100% !important;
-    position: absolute !important;
-    top: 0 !important;
-}
-.nav-link.menu-open{
-	background-color: rgba(255,255,255,.1) !important;
-    color: #fff !important;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
-}
-.toast-top-right {
-	/* right: 30px !important; */
-}
-/* .jq-toast-wrap.top-right{
-	right: 20px !important;
-} */
-#toast-container .toast-success{
-	background-color:#3c763d;
-	box-shadow: none;
-	opacity: 100;
-} 
-#toast-container .toast-error{
-	background-color:#a94442;
-	box-shadow: none;
-	opacity: 100;
-}
-#toast-container > div:hover{
-	box-shadow: none;
-	opacity: 100;
-}
-.close-jq-toast-single {
-    position: absolute;
-    top: 3px;
-    right: 7px;
-    font-size: 14px;
-    cursor: pointer;
-}
-.blockUI > h2{
-	margin-top: 1.5rem !important;
-	margin-bottom: 1.5rem !important;
-}
-#system-message-container .alert-success{
-	border-radius: 0px !important;
-}
-</style>
+		#toast-container>div:hover {
+			box-shadow: none;
+			opacity: 100;
+		}
+
+		.close-jq-toast-single {
+			position: absolute;
+			top: 3px;
+			right: 7px;
+			font-size: 14px;
+			cursor: pointer;
+		}
+
+		.blockUI>h2 {
+			margin-top: 1.5rem !important;
+			margin-bottom: 1.5rem !important;
+		}
+
+		#system-message-container .alert-success {
+			border-radius: 0px !important;
+		}
+
+		.logo-brand {
+			height: 56px;
+			padding: 10px;
+			color: #fff;
+			font-weight: 500;
+		}
+
+		.logo-brand:hover {
+			color: #fff;
+		}
+
+		.logo-brand .brand-image {
+			height: 90%;
+		}
+
+		.line {
+			height: 1px;
+			background-color: #d7d7d7;
+			width: 100%;
+			margin-bottom: 10px;
+		}
+
+		.sidebar-hidden .main-sidebar {
+			display: none !important;
+		}
+
+		.sidebar-hidden .content-wrapper {
+			margin-left: 0 !important;
+		}
+	</style>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const toggleBtn = document.querySelector('[data-widget="pushmenu"]');
+			toggleBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				document.body.classList.toggle('sidebar-hidden');
+			});
+		});
+	</script>
 
 <?php
 }

@@ -1,0 +1,90 @@
+    /*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 17, 2019, 9:56:36 AM
+    Author     : Ashley
+*/
+.clearfix{
+    clear:both;
+}
+.head_content{
+    height:50px;
+    border-bottom: 2px solid #a6a6a6;
+}
+    .title{
+        float:left;
+        padding-top:15px;
+        font-size:15px;
+    }
+        .title h2{
+            border-bottom:none;
+        }
+    .button_right{
+        float:right;
+    }
+        .button_right .btn{
+            padding: 7px 15px;
+            font-size:13px;
+            font-weight:bold;
+        }
+.button_find{
+   clear:both;
+   margin-bottom:10px;
+   font-size:14px;
+}
+    .button_find a{
+        text-decoration: none;
+        padding:2px;
+        background-color:white;
+        color:blue;
+    }
+    .button_find a:hover{
+        color:white;
+        text-decoration: none;
+        background-color: blue;
+    }
+        .button_find .panel-body{
+            padding: 0 3%;
+            border: 1px solid #bfbfbf;
+            padding-top:2%;
+        }
+            .button_find .top-panel p{
+                float:left;
+                margin: 5px 30px;
+                font-size:13px;
+            }
+            .button_find .top-panel input{
+                float:left;
+                width:200px;
+            }
+            .button_find .bot-panel{
+                padding: 2% 37%;
+            }
+i{
+    margin-right:5px;
+}
+#nghenghiep{
+    font-size:14px;
+}
+    #nghenghiep a{
+        text-decoration: none;
+        padding:2px 4px;
+    }
+    #nghenghiep a:hover{
+        color:white;
+        text-decoration: none;
+    }
+    #nghenghiep .trash{
+        color:red;
+    }
+    #nghenghiep a:hover .trash{
+        color:white;
+    }
+.nav_item a{
+    font-size:14px;
+}
+
+

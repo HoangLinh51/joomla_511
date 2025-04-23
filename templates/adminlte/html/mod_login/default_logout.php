@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Site
  * @subpackage  mod_login
@@ -26,43 +27,72 @@ $doc = Factory::getDocument();
 // $doc->addStyleSheet('/templates/aadminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css');
 
 ?>
+<li class="nav-item dropdown">
+	<a class="nav-link" data-toggle="dropdown" href="#">
+		<i class="far fa-bell" style="font-size: 20px"></i>
+		<span class="badge badge-warning navbar-badge">15</span>
+	</a>
+	<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+		<span class="dropdown-header">15 Notifications</span>
+		<div class="dropdown-divider"></div>
+		<a href="#" class="dropdown-item">
+			<i class="fas fa-envelope mr-2"></i> 4 new messages
+			<span class="float-right text-muted text-sm">3 mins</span>
+		</a>
+		<div class="dropdown-divider"></div>
+		<a href="#" class="dropdown-item">
+			<i class="fas fa-users mr-2"></i> 8 friend requests
+			<span class="float-right text-muted text-sm">12 hours</span>
+		</a>
+		<div class="dropdown-divider"></div>
+		<a href="#" class="dropdown-item">
+			<i class="fas fa-file mr-2"></i> 3 new reports
+			<span class="float-right text-muted text-sm">2 days</span>
+		</a>
+		<div class="dropdown-divider"></div>
+		<a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+	</div>
+</li>
+
 <li class="dropdown user user-menu open">
 	<a data-toggle="dropdown" href="#" class="dropdown-toggle" style="background: rgba(0, 0, 0, 0)">
-	<?php
+		<?php
 		// if ($user->hoso_id === null) {
-			$db = Factory::getDbo();
-			$query = 'SELECT b.url FROM core_user_hoso a INNER JOIN core_attachment b ON b.object_id = a.hoso_id AND b.type_id = 2 WHERE a.user_id ='.$db->quote($user->id);
-			$db->setQuery($query);
-			$image_url = $db->loadResult();
-			if ($image_url == null) {
-				?>
-				<img class="user-image nav-user-photo" src="<?php echo Uri::root(true)?>/images/headers/user2-160x160.jpg" />
-				<?php
-			}else{
-				?>
-				<img class="nav-user-photo" src="<?php echo Uri::root(true)?>/timthumb.php?w=36&h=36&base64=1&src=<?php echo base64_encode($image_url)?>" />
-				<?php 
-			} 
+		$db = Factory::getDbo();
+		$query = 'SELECT b.url FROM core_user_hoso a INNER JOIN core_attachment b ON b.object_id = a.hoso_id AND b.type_id = 2 WHERE a.user_id =' . $db->quote($user->id);
+		$db->setQuery($query);
+		$image_url = $db->loadResult();
+		if ($image_url == null) {
+		?>
+			<img class="user-image nav-user-photo" src="<?php echo Uri::root(true) ?>/images/headers/user2-160x160.jpg" />
+		<?php
+		} else {
+		?>
+			<img class="nav-user-photo" src="<?php echo Uri::root(true) ?>/timthumb.php?w=36&h=36&base64=1&src=<?php echo base64_encode($image_url) ?>" />
+		<?php
+		}
 		//} 
-	?>
-		
-	<?php if ($params->get('greeting')) : ?>
-	<?php if ($params->get('name') == 0) : { ?>
-		<span class="user-info">
-			<small><?php echo Text::sprintf('MOD_LOGIN_HINAME',''); ?></small>
-			<?php echo htmlspecialchars($user->get('name')); ?>
-		</span>
-	
-	<?php 	//echo JText::sprintf('MOD_LOGIN_HINAME', htmlspecialchars($user->get('name')));
-		} else : { ?>
-		<span class="user-info">
-			<small><?php echo Text::sprintf('MOD_LOGIN_HINAME',''); ?>,</small>
-			<?php echo htmlspecialchars($user->get('username')); ?>
-		</span>
-		<!-- <i class="icon-caret-down"></i> -->
-	<?php 	//echo JText::sprintf('MOD_LOGIN_HINAME', htmlspecialchars($user->get('username')));
-		} endif; ?>
-	<?php endif; ?>
+		?>
+
+		<?php if ($params->get('greeting')) : ?>
+			<?php if ($params->get('name') == 0) : { ?>
+					<span class="user-info">
+						<small><?php echo Text::sprintf('MOD_LOGIN_HINAME', ''); ?></small>
+						<?php echo htmlspecialchars($user->get('name')); ?>
+					</span>
+
+				<?php 	//echo JText::sprintf('MOD_LOGIN_HINAME', htmlspecialchars($user->get('name')));
+				}
+			else : { ?>
+					<span class="user-info">
+						<small><?php echo Text::sprintf('MOD_LOGIN_HINAME', ''); ?>,</small>
+						<?php echo htmlspecialchars($user->get('username')); ?>
+					</span>
+					<!-- <i class="icon-caret-down"></i> -->
+			<?php 	//echo JText::sprintf('MOD_LOGIN_HINAME', htmlspecialchars($user->get('username')));
+				}
+			endif; ?>
+		<?php endif; ?>
 	</a>
 	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
 		<li class="user-header">
@@ -71,17 +101,17 @@ $doc = Factory::getDocument();
 		</li>
 		<li class="user-footer">
 			<div class="pull-left" style="float: left;">
-			<a href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
-				<i class="icon-key"></i>
-				<?php echo Route::_('Thay đổi mật khẩu'); ?>
-			</a>
+				<a href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
+					<i class="icon-key"></i>
+					<?php echo Route::_('Thay đổi mật khẩu'); ?>
+				</a>
 			</div>
-		
+
 			<div class="pull-right" style="float: right;">
-			<a href="#" onclick="document.getElementById('login-form').submit();">
-				<i class="icon-off"></i>
-				<?php echo Text::_('JLOGOUT'); ?>
-			</a>
+				<a href="#" onclick="document.getElementById('login-form').submit();">
+					<i class="icon-off"></i>
+					<?php echo Text::_('JLOGOUT'); ?>
+				</a>
 			</div>
 		</li>
 	</ul>
@@ -93,3 +123,9 @@ $doc = Factory::getDocument();
 	<input type="hidden" name="return" value="<?php echo $return; ?>" />
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
+
+<style>
+	.navbar-badge {
+		top: 3px;
+	}
+</style>

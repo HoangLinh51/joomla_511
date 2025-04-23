@@ -19,6 +19,7 @@ $wa->useScript('table.columns')
 $user       = Factory::getUser();
 $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
+
 $loggeduser = Factory::getUser();
 $saveOrder  = $listOrder == 'a.id';
 $mfa        = PluginHelper::isEnabled('multifactorauth');
@@ -69,7 +70,7 @@ $mfa        = PluginHelper::isEnabled('multifactorauth');
 
 
                             // If this group is super admin and this user is not super admin, $canEdit is false
-                            if (!Factory::getUser()->authorise('core.admin')) {
+                            if (!Factory::getUser()->authorise('core.create')) {
                                 $canEdit   = false;
                                 $canChange = false;
                             }
