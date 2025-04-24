@@ -13,10 +13,10 @@ class JConfig {
 	public $debug_lang = false;
 	public $debug_lang_const = true;
 	public $dbtype = 'mysqli';
-	public $host = '10.49.45.172:3308';
-	public $user = 'dba';
-	public $password = 'Abc123@@@';
-	public $db = 'joomla511';
+	public $host = '10.49.41.247:3306';
+	public $user = 'pxdnict';
+	public $password = 'PX@2024!@#';
+	public $db = 'phuongxa_2025';
 	// public $host = '10.49.45.13:3306';
 	// public $user = 'cbccdang';
 	// public $password = 'cbccdang';

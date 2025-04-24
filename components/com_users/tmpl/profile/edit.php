@@ -13,6 +13,8 @@ defined('_JEXEC') or die;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 /** @var Joomla\Component\Users\Site\View\Profile\HtmlView $this */
 
@@ -28,20 +30,34 @@ $wa->useScript('keepalive')
     ->useScript('form.validate');
 
 ?>
-<div class="com-users-profile__edit profile-edit" style="padding: 10px 20px;">
-    <!-- <?php if ($this->params->get('show_page_heading')) : ?>
-        <div class="page-header">
-            <h1>
-                <?php echo $this->escape($this->params->get('page_heading')); ?>
-            </h1>
-        </div>
-    <?php endif; ?> -->
 
+<?php
+$db = Factory::getDbo(); // Lấy đối tượng database của Joomla
+$base_url = Uri::root(true); // Lấy URL gốc của trang web
+$avatar_id = !empty($this->data->avatar_id) ? $this->data->avatar_id : null; // Lấy avatar_id từ dữ liệu
+$avatar_url = $base_url . "/images/avatars/noimage.png"; // Mặc định ảnh
+
+if (!empty($avatar_id)) {
+    // Tạo truy vấn lấy dữ liệu từ bảng core_attachment dựa vào id
+    $query = $db->getQuery(true)
+        ->select($db->quoteName('code')) // Chỉ lấy cột "code"
+        ->from($db->quoteName('core_attachment'))
+        ->where($db->quoteName('object_id') . ' = ' . $db->quote($avatar_id))
+        ->order($db->quoteName('created_at') . ' DESC');
+    $db->setQuery($query); // Thi hành truy vấn
+    $result = $db->loadObject(); // Lấy kết quả dưới dạng object
+
+    // Kiểm tra xem có dữ liệu không
+    if (!empty($result) && !empty($result->code)) {
+        $avatar_url = $base_url . "/uploader/get_image.php?code=" . $result->code;
+    }
+}
+?>
+<div class="com-users-profile__edit profile-edit" style="padding: 10px 20px;">
+    <!-- upload avatar -->
     <img id="avatar-preview" src="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>"
         alt="Avatar" style="width: 115px; height: 150px;">
-    <!-- upload avatar -->
-    <?php echo Core::inputAttachmentOneFile('uploadAvatar', null, 1, date('Y'), -1);
-    ?>
+    <?php echo Core::inputAvatar('uploadAvatar', null, 1, date('Y'), -1); ?>
 
     <form id="member-profile" action="<?php echo Route::_('index.php?option=com_users'); ?>" method="post" class="com-users-profile__edit-form form-validate form-horizontal well" enctype="multipart/form-data">
         <?php // Iterate through the form fieldsets and display each one. 
@@ -70,13 +86,6 @@ $wa->useScript('keepalive')
                 </fieldset>
             <?php endif; ?>
         <?php endforeach; ?>
-
-        <?php if ($this->mfaConfigurationUI) : ?>
-            <fieldset class="com-users-profile__multifactor">
-                <legend><?php echo Text::_('COM_USERS_PROFILE_MULTIFACTOR_AUTH'); ?></legend>
-                <?php echo $this->mfaConfigurationUI ?>
-            </fieldset>
-        <?php endif; ?>
 
         <div class="com-users-profile__edit-submit control-group">
             <div class="controls">

@@ -2,7 +2,7 @@
 <form>
 	<fields name="params">
 		<!--  Backend user account settings. -->
-		<fieldset name="params" label="COM_USERS_SETTINGS_FIELDSET_LABEL">
+		<!-- <fieldset name="params" label="COM_USERS_SETTINGS_FIELDSET_LABEL">
 			<field
 				name="admin_style"
 				type="templatestyle"
@@ -22,6 +22,6 @@
 				>
 				<option value="">JOPTION_USE_DEFAULT</option>
 			</field>
-		</fieldset>
+		</fieldset> -->
 	</fields>
 </form>
