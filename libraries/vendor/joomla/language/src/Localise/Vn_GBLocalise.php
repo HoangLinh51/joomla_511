@@ -10,10 +10,10 @@
 namespace Joomla\Language\Localise;
 
 /**
- * en-GB localisation handler class
+ * vn-GB localisation handler class
  *
  * @since  2.0.0-alpha
  */
-class En_GBLocalise extends AbstractLocalise
+class Vn_GBLocalise extends AbstractLocalise
 {
 }

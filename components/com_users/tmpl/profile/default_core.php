@@ -14,7 +14,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 
 ?>
-<fieldset id="users-profile-core" class="com-users-profile__core">
+<fieldset id="users-profile-core" class="my-profile">
     <legend>
         <?php echo Text::_('COM_USERS_PROFILE_CORE_LEGEND'); ?>
     </legend>
@@ -51,3 +51,8 @@ use Joomla\CMS\Language\Text;
         <?php endif; ?>
     </dl>
 </fieldset>
+<style>
+    .my-profile {
+        padding: 10px 15px;
+    }
+</style>

@@ -41,7 +41,7 @@ class LanguageFactoryProvider implements ServiceProviderInterface
                 $config = $container->get('config');
 
                 $baseLangDir = $config->get('language.basedir');
-                $defaultLang = $config->get('language.default', 'en-GB');
+                $defaultLang = $config->get('language.default', 'vn-GB');
 
                 if ($baseLangDir) {
                     $factory->setLanguageDirectory($baseLangDir);

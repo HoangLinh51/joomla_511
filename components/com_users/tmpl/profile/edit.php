@@ -13,6 +13,8 @@ defined('_JEXEC') or die;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 /** @var Joomla\Component\Users\Site\View\Profile\HtmlView $this */
 
@@ -27,70 +29,137 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('keepalive')
     ->useScript('form.validate');
 
+$user = Factory::getUser();
 ?>
-<div class="com-users-profile__edit profile-edit" style="padding: 10px 20px;">
-    <!-- <?php if ($this->params->get('show_page_heading')) : ?>
-        <div class="page-header">
-            <h1>
-                <?php echo $this->escape($this->params->get('page_heading')); ?>
-            </h1>
-        </div>
-    <?php endif; ?> -->
 
-    <img id="avatar-preview" src="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>"
-        alt="Avatar" style="width: 115px; height: 150px;">
+<?php
+$db = Factory::getDbo();
+$base_url = Uri::root(true);
+$avatar_id = $user->avatar_id;
+$avatar_url = $base_url . "/uploader/defaultImage.png";
+
+if (!empty($avatar_id)) {
+    $query = $db->getQuery(true)
+        ->select($db->quoteName('code'))
+        ->from($db->quoteName('core_attachment'))
+        ->where($db->quoteName('object_id') . ' = ' . $db->quote($avatar_id))
+        ->order($db->quoteName('created_at') . ' DESC');
+    $db->setQuery($query);
+    $result = $db->loadObject();
+
+    if (!empty($result) && !empty($result->code)) {
+        $avatar_url = $base_url . "/uploader/get_image.php?code=" . $result->code;
+    }
+}
+?>
+<div class="com-users-profile__edit " style="padding: 10px 20px;">
+    <h3>Chỉnh sửa thông tin cá nhân</h3>
     <!-- upload avatar -->
-    <?php echo Core::inputAttachmentOneFile('uploadAvatar', null, 1, date('Y'), -1);
-    ?>
-
-    <form id="member-profile" action="<?php echo Route::_('index.php?option=com_users'); ?>" method="post" class="com-users-profile__edit-form form-validate form-horizontal well" enctype="multipart/form-data">
-        <?php // Iterate through the form fieldsets and display each one. 
-        ?>
-        <?php foreach ($this->form->getFieldsets() as $group => $fieldset) : ?>
-            <?php $fields = $this->form->getFieldset($group); ?>
-            <?php if (count($fields)) : ?>
-                <fieldset>
-                    <?php // If the fieldset has a label set, display it as the legend. 
-                    ?>
-                    <?php if (isset($fieldset->label)) : ?>
-                        <legend>
-                            <?php echo Text::_($fieldset->label); ?>
-                        </legend>
-                    <?php endif; ?>
-                    <?php if (isset($fieldset->description) && trim($fieldset->description)) : ?>
-                        <p>
-                            <?php echo $this->escape(Text::_($fieldset->description)); ?>
-                        </p>
-                    <?php endif; ?>
-                    <?php // Iterate through the fields in the set and display them. 
-                    ?>
-                    <?php foreach ($fields as $field) : ?>
-                        <?php echo $field->renderField(); ?>
-                    <?php endforeach; ?>
-                </fieldset>
-            <?php endif; ?>
-        <?php endforeach; ?>
-
-        <?php if ($this->mfaConfigurationUI) : ?>
-            <fieldset class="com-users-profile__multifactor">
-                <legend><?php echo Text::_('COM_USERS_PROFILE_MULTIFACTOR_AUTH'); ?></legend>
-                <?php echo $this->mfaConfigurationUI ?>
-            </fieldset>
-        <?php endif; ?>
-
-        <div class="com-users-profile__edit-submit control-group">
-            <div class="controls">
-                <button type="submit" class="btn btn-primary validate" name="task" value="profile.save">
-                    <span class="icon-check" aria-hidden="true"></span>
-                    <?php echo Text::_('Lưu'); ?>
-                </button>
-                <button type="submit" class="btn btn-danger" name="task" value="profile.cancel" formnovalidate>
-                    <span class="icon-times" aria-hidden="true"></span>
-                    <?php echo Text::_('Hủy'); ?>
-                </button>
-                <input type="hidden" name="option" value="com_users">
-            </div>
+    <div class="profile-edit">
+        <div class="upload-avatar">
+            <img id="avatar-preview" src="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>"
+                alt="Avatar" style="width: 132px; height: 150px; margin-bottom: 5px">
+            <?php echo Core::inputAvatar('uploadAvatar', null, 1, date('Y'), -1); ?>
         </div>
-        <?php echo HTMLHelper::_('form.token'); ?>
-    </form>
+
+        <form id="member-profile" action="<?php echo Route::_('index.php?option=com_users'); ?>" method="post" class="com-users-profile__edit-form form-validate form-horizontal well" enctype="multipart/form-data">
+            <?php // Iterate through the form fieldsets and display each one. 
+            ?>
+            <?php foreach ($this->form->getFieldsets() as $group => $fieldset) : ?>
+                <?php $fields = $this->form->getFieldset($group); ?>
+                <?php if (count($fields)) : ?>
+                    <fieldset>
+                        <?php // If the fieldset has a label set, display it as the legend. 
+                        ?>
+                        <?php if (isset($fieldset->label)) : ?>
+                            <legend>
+                                <?php echo Text::_($fieldset->label); ?>
+                            </legend>
+                        <?php endif; ?>
+                        <?php if (isset($fieldset->description) && trim($fieldset->description)) : ?>
+                            <p>
+                                <?php echo $this->escape(Text::_($fieldset->description)); ?>
+                            </p>
+                        <?php endif; ?>
+                        <?php // Iterate through the fields in the set and display them. 
+                        ?>
+                        <?php foreach ($fields as $field) : ?>
+                            <?php echo $field->renderField(); ?>
+                        <?php endforeach; ?>
+                    </fieldset>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <div class="com-users-profile__edit-submit control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary validate" name="task" value="profile.save">
+                        <span class="icon-check" aria-hidden="true"></span>
+                        <?php echo Text::_('Lưu'); ?>
+                    </button>
+                    <button type="submit" class="btn btn-danger" name="task" value="profile.cancel" formnovalidate>
+                        <span class="icon-times" aria-hidden="true"></span>
+                        <?php echo Text::_('Hủy'); ?>
+                    </button>
+                    <input type="hidden" name="option" value="com_users">
+                </div>
+            </div>
+            <?php echo HTMLHelper::_('form.token'); ?>
+        </form>
+    </div>
 </div>
+<style>
+    .profile-edit {
+        display: flex;
+        justify-content: space-evenly;
+        padding: 15px 0px;
+    }
+
+    form.form-validate,
+    fieldset {
+        display: flex;
+        flex-direction: column;
+        gap: 10px
+    }
+
+    form.form-validate {
+        gap: 20px;
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .control-group .control-label {
+        width: 150px;
+        text-align: right;
+        font-weight: bold;
+    }
+
+    .control-group .controls {
+        width: 450px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .profile-edit {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form.form-validate {
+            width: 100%;
+        }
+
+        .control-group .control-label {
+            max-width: 150px;
+            min-width: 80px;
+            text-align: left;
+        }
+
+        .control-group .controls {
+            max-width: 600px;
+            min-width: 300px;
+        }
+    }
+</style>

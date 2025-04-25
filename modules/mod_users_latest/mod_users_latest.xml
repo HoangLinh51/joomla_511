@@ -16,8 +16,8 @@
 		<folder>tmpl</folder>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB/mod_users_latest.ini</language>
-		<language tag="en-GB">language/en-GB/mod_users_latest.sys.ini</language>
+		<language tag="vn-GB">language/vn-GB/mod_users_latest.ini</language>
+		<language tag="vn-GB">language/vn-GB/mod_users_latest.sys.ini</language>
 	</languages>
 	<help key="Site_Modules:_Latest_Users" />
 	<config>

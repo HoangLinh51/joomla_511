@@ -66,7 +66,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
         $objWriter->writeAttribute('val', 0);
         $objWriter->endElement();
         $objWriter->startElement('c:lang');
-        $objWriter->writeAttribute('val', "en-GB");
+        $objWriter->writeAttribute('val', "vn-GB");
         $objWriter->endElement();
         $objWriter->startElement('c:roundedCorners');
         $objWriter->writeAttribute('val', 0);

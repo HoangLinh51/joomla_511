@@ -19,13 +19,27 @@ HTMLHelper::_('behavior.keepalive');
 $user = Factory::getUser();
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
-// $doc->addStyleSheet('/templates/aadminlte/dist/css/adminlte.min.css');
-// $doc->addStyleSheet('/templates/aadminlte/plugins/fontawesome-free/css/all.min.css');
-// $doc->addStyleSheet('/templates/aadminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');
-// $doc->addStyleSheet('/templates/aadminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
-// $doc->addStyleSheet('/templates/aadminlte/plugins/jqvmap/jqvmap.min.css');
-// $doc->addStyleSheet('/templates/aadminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css');
 
+?>
+<?php
+$db = Factory::getDbo();
+$base_url = Uri::root(true);
+$avatar_id = $user->avatar_id;
+$avatarUrl = $base_url . "/uploader/defaultImage.png";
+
+if (!empty($avatar_id)) {
+	$query = $db->getQuery(true)
+		->select($db->quoteName('code'))
+		->from($db->quoteName('core_attachment'))
+		->where($db->quoteName('object_id') . ' = ' . $db->quote($avatar_id))
+		->order($db->quoteName('created_at') . ' DESC');
+	$db->setQuery($query);
+	$result = $db->loadObject();
+
+	if (!empty($result) && !empty($result->code)) {
+		$avatarUrl = $base_url . "/uploader/get_image.php?code=" . $result->code;
+	}
+}
 ?>
 <li class="nav-item dropdown">
 	<a class="nav-link" data-toggle="dropdown" href="#">
@@ -56,23 +70,8 @@ $doc = Factory::getDocument();
 
 <li class="dropdown user user-menu open">
 	<a data-toggle="dropdown" href="#" class="dropdown-toggle" style="background: rgba(0, 0, 0, 0)">
-		<?php
-		// if ($user->hoso_id === null) {
-		$db = Factory::getDbo();
-		$query = 'SELECT b.url FROM core_user_hoso a INNER JOIN core_attachment b ON b.object_id = a.hoso_id AND b.type_id = 2 WHERE a.user_id =' . $db->quote($user->id);
-		$db->setQuery($query);
-		$image_url = $db->loadResult();
-		if ($image_url == null) {
-		?>
-			<img class="user-image nav-user-photo" src="<?php echo Uri::root(true) ?>/images/headers/user2-160x160.jpg" />
-		<?php
-		} else {
-		?>
-			<img class="nav-user-photo" src="<?php echo Uri::root(true) ?>/timthumb.php?w=36&h=36&base64=1&src=<?php echo base64_encode($image_url) ?>" />
-		<?php
-		}
-		//} 
-		?>
+		<img src="<?php echo htmlspecialchars($avatarUrl, ENT_QUOTES, 'UTF-8'); ?>"
+			alt="Avatar" class="img-circle" style="width: 35px; height: 35px;">
 
 		<?php if ($params->get('greeting')) : ?>
 			<?php if ($params->get('name') == 0) : { ?>
@@ -80,24 +79,29 @@ $doc = Factory::getDocument();
 						<small><?php echo Text::sprintf('MOD_LOGIN_HINAME', ''); ?></small>
 						<?php echo htmlspecialchars($user->get('name')); ?>
 					</span>
-
-				<?php 	//echo JText::sprintf('MOD_LOGIN_HINAME', htmlspecialchars($user->get('name')));
+				<?php
 				}
 			else : { ?>
 					<span class="user-info">
 						<small><?php echo Text::sprintf('MOD_LOGIN_HINAME', ''); ?>,</small>
 						<?php echo htmlspecialchars($user->get('username')); ?>
 					</span>
-					<!-- <i class="icon-caret-down"></i> -->
-			<?php 	//echo JText::sprintf('MOD_LOGIN_HINAME', htmlspecialchars($user->get('username')));
+			<?php
 				}
 			endif; ?>
 		<?php endif; ?>
 	</a>
 	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
 		<li class="user-header">
-			<img src="templates/adminlte/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-			<p>Alexander Pierce - Web Developer<small>Member since Nov. 2012</small></p>
+			<img src="<?php echo htmlspecialchars($avatarUrl, ENT_QUOTES, 'UTF-8'); ?>" class="img-circle" alt="User Image">
+			<p><?php echo $user->name ?></p>
+			<p>Tham gia từ
+				<?php
+				$date = new DateTime($user->registerDate);
+				echo $date->format('d-m-Y');
+				?>
+			</p>
+
 		</li>
 		<li class="user-footer">
 			<div class="pull-left" style="float: left;">

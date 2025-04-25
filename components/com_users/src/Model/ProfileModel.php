@@ -140,7 +140,7 @@ class ProfileModel extends FormModel
         if ($isUsernameCompliant && !ComponentHelper::getParams('com_users')->get('change_login_name')) {
             $form->setFieldAttribute('username', 'class', '');
             $form->setFieldAttribute('username', 'filter', '');
-            $form->setFieldAttribute('username', 'description', 'COM_USERS_PROFILE_NOCHANGE_USERNAME_DESC');
+            $form->setFieldAttribute('username', 'description', '');
             $form->setFieldAttribute('username', 'validate', '');
             $form->setFieldAttribute('username', 'message', '');
             $form->setFieldAttribute('username', 'readonly', 'true');

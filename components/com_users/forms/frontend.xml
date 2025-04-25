@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form>
-	<fields name="params">
-		<!--  Basic user account settings. -->
+	<!-- <fields name="params">
 		<fieldset name="params" label="COM_USERS_SETTINGS_FIELDSET_LABEL">
 			<field
 				name="editor"
@@ -45,5 +44,5 @@
 				<option value="dark">COM_USERS_USER_COLORSCHEME_OPTION_DARK</option>
 			</field>
 		</fieldset>
-	</fields>
-</form>
+	</fields> -->
+
