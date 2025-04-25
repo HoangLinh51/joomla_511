@@ -1195,7 +1195,6 @@ class Core
 			<script type="text/javascript">
 					jQuery(function($){
 							jQuery("#' . $iddiv . '").load("index.php?option=com_core&view=attachment&format=raw&task=uploadAvatar&iddiv=' . $iddiv . '&idObject=' . $idObject . '&is_new=' . $is_new . '&year=' . $year . '&type=' . $type . '&pdf=' . $pdf . '", function(){
-									$("#' . $iddiv . ' input:checkbox").attr("checked","cheched");
 							});
 					});
 			</script>

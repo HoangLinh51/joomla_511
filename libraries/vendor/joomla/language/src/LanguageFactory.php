@@ -22,7 +22,7 @@ class LanguageFactory
      * @var    string
      * @since  1.3.0
      */
-    private $defaultLanguage = 'en-GB';
+    private $defaultLanguage = 'vn-GB';
 
     /**
      * Path to the directory containing the application's language folder
@@ -94,7 +94,7 @@ class LanguageFactory
          * Look for a language specific localise class
          *
          * LocaliseInterface classes are searched for in the global namespace and are named based
-         * on the language code, replacing hyphens with underscores (i.e. en-GB looks for En_GBLocalise)
+         * on the language code, replacing hyphens with underscores (i.e. vn-GB looks for Vn_GBLocalise)
          */
         $class = str_replace('-', '_', $lang . 'Localise');
 
@@ -131,7 +131,7 @@ class LanguageFactory
         }
 
         // Return the en_GB class if no specific instance is found
-        return new Localise\En_GBLocalise();
+        return new Localise\Vn_GBLocalise();
     }
 
     /**

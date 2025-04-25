@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form>
-	<fieldset name="core" label="COM_USERS_PROFILE_DEFAULT_LABEL">
+	<fieldset name="core">
 		<field
 			name="id"
 			type="hidden"
@@ -43,7 +43,6 @@
 			filter="raw"
 			size="30"
 			validate="password"
-			strengthmeter="true"
 			rules="true"
 			force="on"
 		/>

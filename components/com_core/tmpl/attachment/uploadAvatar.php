@@ -13,12 +13,8 @@ use Joomla\CMS\Uri\Uri;
   <link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/_all-skins.min.css" media="screen" rel="stylesheet" type="text/css" />
   <link href="<?php echo Uri::root(true); ?>/templates/adminlte//plugins/fontawesome-free/css/all.min.css" media="screen" rel="stylesheet" type="text/css" />
-
-
-
-
 </head>
-<?php 
+<?php
 /**
  * @file: input.php
  * @author: huuthanh3108@gmaill.com
@@ -52,7 +48,7 @@ if ($this->isCapnhat == 12): ?>
   </form>
 <?php endif; ?>
 
-<span class="form-text text-muted mb-2">Kích thước tệp tối đa là 1MB.</span>
+<span class="form-text text-muted mb-2">Kích thước tối đa là 1MB.</span>
 <iframe style="display:none;" id="tftemp<?php echo $this->idObject ?>" name="tftemp<?php echo $this->idObject ?>"></iframe>
 
 <script>
@@ -67,7 +63,9 @@ if ($this->isCapnhat == 12): ?>
 
     if (confirm("Bạn có muốn xóa không")) {
       const url = `index.php?option=com_core&controller=attachment&format=raw&task=delete&type=<?php echo $this->type ?>&year=<?php echo $this->year ?>&iddiv=<?php echo $this->iddiv ?>&idObject=${objectId}&isTemp=<?php echo $this->isTemp ?>&from=attachment`;
-      jQuery.post(url, { [`DELidfiledk${objectId}[]`]: selected }, function(resp) {
+      jQuery.post(url, {
+        [`DELidfiledk${objectId}[]`]: selected
+      }, function(resp) {
         jQuery(`#tftemp${objectId}`).html(resp);
       });
     }
@@ -77,7 +75,9 @@ if ($this->isCapnhat == 12): ?>
   function removeFile(code) {
     if (confirm("Bạn có muốn xóa không")) {
       const url = `index.php?option=com_core&controller=attachment&format=raw&task=delete&type=<?php echo $this->type ?>&year=<?php echo $this->year ?>&iddiv=<?php echo $this->iddiv ?>&idObject=<?php echo $this->idObject ?>&isTemp=<?php echo $this->isTemp ?>&from=attachment`;
-      jQuery.post(url, { [`DELidfiledk<?php echo $this->idObject ?>[]`]: code }, function(resp) {
+      jQuery.post(url, {
+        [`DELidfiledk<?php echo $this->idObject ?>[]`]: code
+      }, function(resp) {
         jQuery("#tftemp<?php echo $this->idObject ?>").html(resp);
       });
     }

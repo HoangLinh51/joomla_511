@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension client="site" type="language" method="upgrade">
-	<name>English (en-GB)</name>
-	<tag>en-GB</tag>
+	<name>Vietnamese (vn-GB)</name>
+	<tag>vn-GB</tag>
 	<version>5.1.1</version>
 	<creationDate>2024-05</creationDate>
 	<author>Joomla! Project</author>
@@ -9,7 +9,7 @@
 	<authorUrl>www.joomla.org</authorUrl>
 	<copyright>(C) 2013 Open Source Matters, Inc.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
-	<description>en-GB site language</description>
+	<description>vn-GB site language</description>
 	<files>
 		<folder>/</folder>
 		<filename file="meta">install.xml</filename>

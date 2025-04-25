@@ -30,7 +30,7 @@ class Language
      * @var    string
      * @since  1.0
      */
-    protected $default = 'en-GB';
+    protected $default = 'vn-GB';
 
     /**
      * An array of orphaned text.
