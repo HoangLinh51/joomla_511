@@ -19,8 +19,8 @@
 			<folder>tmpl</folder>
 		</files>
 		<languages folder="admin">
-			<language tag="en-GB">language/en-GB/com_core.ini</language>
-			<language tag="en-GB">language/en-GB/com_core.sys.ini</language>
+			<language tag="vn-GB">language/vn-GB/com_core.ini</language>
+			<language tag="vn-GB">language/vn-GB/com_core.sys.ini</language>
 		</languages>
 	</administration>
 	<files folder="site">

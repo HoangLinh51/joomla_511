@@ -114,7 +114,7 @@ class HelpModel extends BaseDatabaseModel
 
             if (!is_dir(JPATH_BASE . '/help/' . $this->lang_tag)) {
                 // Use English as fallback
-                $this->lang_tag = 'en-GB';
+                $this->lang_tag = 'vn-GB';
             }
         }
 

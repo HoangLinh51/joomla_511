@@ -183,12 +183,12 @@ if ($coreTemplate->isLogin() == true) {
 			</div>
 
 			<!-- Footer -->
-			<footer class="main-footer">
+			<!-- <footer class="main-footer">
 				<div class="pull-right hidden-xs">
 					<b>Version</b> 2.4.13
 				</div>
 				<strong>Copyright © 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rightsreserved.
-			</footer>
+			</footer> -->
 
 			<jdoc:include type="modules" name="debug" style="none" />
 
