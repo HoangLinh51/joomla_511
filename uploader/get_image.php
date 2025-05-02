@@ -17,7 +17,8 @@ if (!file_exists($filePath)) {
 }
 
 // 🔥 Lấy MIME Type từ Database (Ví dụ: image/jpeg)
-$mysqli = new mysqli("10.49.41.247", "pxdnict", "PX@2024!@#", "phuongxa_2025");
+// $mysqli = new mysqli("10.49.41.247", "pxdnict", "PX@2024!@#", "phuongxa_2025");
+$mysqli = new mysqli("localhost:3306", "pxdnict", "PX@2024!@#", "phuongxa_2025");
 if ($mysqli->connect_error) {
     die("Kết nối database thất bại: " . $mysqli->connect_error);
 }

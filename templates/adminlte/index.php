@@ -142,10 +142,10 @@ if ($coreTemplate->isLogin() == true) {
 				</ul>
 			</nav>
 
-			<aside class="main-sidebar sidebar-dark-primary elevation-4">
+			<aside class="main-sidebar sidebar-light-primary elevation-4">
 				<a href="index.php" class="d-flex align-items-center gap-3 logo-brand">
 					<img src="/images/banners/logoDnict.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 m-0">
-					<h3 class="m-0 brand-text ">DNICT</h3>
+					<h3 style="color: #343a40; font-weight: 600;margin: 0; margin-left: 5px;">DNICT</h3>
 				</a>
 				<div class="line"></div>
 

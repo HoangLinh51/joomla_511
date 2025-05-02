@@ -19,7 +19,8 @@ class JConfig {
 	// public $password = 'Abc123@@@';
 	// public $db = 'joomla511';
 
-	public $host = '10.49.41.247:3306';
+	public $host = 'localhost:3306';
+	// public $host = '10.49.41.247:3306';
 	public $user = 'pxdnict';
 	public $password = 'PX@2024!@#';
 	public $db = 'phuongxa_2025';
