@@ -25,7 +25,7 @@ $is_quyen = $db->loadResult();
 						<a href="index.php?option=com_vptk&view=nhk&task=chonfile" class="btn btn-success" style="font-size:16px;">
 							<i class="fas fa-file-download"></i> Import Excel
 						</a>
-						<a href="index.php?option=com_vptk&view=nhk&task=addnhk" class="btn btn-primary" style="font-size:16px;width:136px">
+						<a href="index.php?option=com_vptk&view=nhk&task=add_nhk" class="btn btn-primary" style="font-size:16px;width:136px">
 							<i class="fas fa-plus"></i> Thêm mới
 						</a>
 					<?php } ?>
@@ -91,9 +91,19 @@ $is_quyen = $db->loadResult();
 							</td>
 						</tr>
 						<tr>
+							<td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:17px;line-height:2.5">Số CCCD</b></td>
+							<td style="width:45%;">
+								<input type="text" name="cccd_so" id="cccd_so" class="form-control" style="font-size:16px;" placeholder="Nhập số CCCD" />
+							</td>
+							<td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:17px;line-height:2.5">Địa chỉ</b></td>
+							<td style="width:45%;">
+								<input type="text" name="diachi" id="diachi" class="form-control" style="font-size:16px;" placeholder="Nhập địa chỉ" />
+							</td>
+						</tr>
+						<tr>
 							<td colspan="4" class="text-center" style="padding-top:10px;">
 								<button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
-								<button class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</button>
+								<span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
 							</td>
 						</tr>
 					</table>
@@ -176,6 +186,8 @@ $is_quyen = $db->loadResult();
 				is_tamtru: $('#is_tamtru').val(),
 				thonto_id: $('#thonto_id').val(),
 				hokhau_so: $('#hokhau_so').val(),
+				cccd_so: $('#cccd_so').val(),
+				diachi: $('#diachi').val(),
 				daxoa: 0,
 				start: start
 			}, function(response, status, xhr) {
@@ -193,6 +205,30 @@ $is_quyen = $db->loadResult();
 		$('#btn_filter').on('click', function(e) {
 			e.preventDefault();
 			loadDanhSach();
+		});
+		$('body').delegate('.btn_hieuchinh', 'click', function() {
+			window.location.href = 'index.php?option=com_vptk&view=nhk&task=edit_nhk&id=' + $(this).data('hokhau');
+		});
+		$('#btn_xuatexcel').on('click', function() {
+			let params = {
+				option: 'com_vptk',
+				controller: 'vptk',
+				task: 'exportExcel',
+				phuongxa_id: $('#phuongxa_id').val() || '',
+				hoten: $('#hoten').val() || '',
+				gioitinh_id: $('#gioitinh_id').val() || '',
+				is_tamtru: $('#is_tamtru').val() || '',
+				thonto_id: $('#thonto_id').val() || '',
+				hokhau_so: $('#hokhau_so').val() || '',
+				cccd_so: $('#cccd_so').val() || '',
+				diachi: $('#diachi').val() || '',
+				daxoa: 0,
+				[Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
+			};
+
+			// Tạo URL đúng
+			let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+			window.location.href = url;
 		});
 	});
 </script>
@@ -228,11 +264,13 @@ $is_quyen = $db->loadResult();
 		padding: 10px;
 	}
 
-	.btn_hieuchinh:hover i,.btn_xoa:hover i {
+	.btn_hieuchinh:hover i,
+	.btn_xoa:hover i {
 		color: #0066ff;
 	}
 
-	.btn_hieuchinh::after,.btn_xoa::after {
+	.btn_hieuchinh::after,
+	.btn_xoa::after {
 		content: attr(data-title);
 		position: absolute;
 		bottom: 72%;
@@ -250,9 +288,10 @@ $is_quyen = $db->loadResult();
 		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 		border: 1px solid #ccc;
 	}
-	
 
-	.btn_hieuchinh:hover::after,.btn_xoa:hover::after {
+
+	.btn_hieuchinh:hover::after,
+	.btn_xoa:hover::after {
 		opacity: 1;
 		visibility: visible;
 	}
@@ -279,7 +318,7 @@ $is_quyen = $db->loadResult();
 		padding: 5px 0 0 5px !important;
 	}
 
-	
+
 
 	.select2-container .select2-selection--single {
 		height: 38px;

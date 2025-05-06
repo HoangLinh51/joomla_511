@@ -5,6 +5,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Session\Session;
+require_once JPATH_LIBRARIES . '/vendor/autoload.php';  // Đối với Joomla
 
 require_once(JPATH_THEMES . '/adminlte/CoreTemplate.php');
 $coreTemplate = new CoreTemplate();
@@ -36,9 +37,9 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/jqvmap/jqvmap.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/css/select2.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.css');
+	$doc->addStyleSheet(URI::root(true) . '/templates/' . $this->template . '/assets/css/bootstrap-datepicker.css');
+
 	$doc->addStyleSheet(Uri::root(true) . '/media/cbcc/css/jquery.toast.css');
-
-
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery/jquery.min.js');
 	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
 	$doc->addScript(Uri::root(true) . '/media/legacy/js/jquery-noconflict.js');
@@ -203,7 +204,9 @@ if ($coreTemplate->isLogin() == true) {
 			position: absolute !important;
 			top: 0 !important;
 		}
-
+		.phpdebugbar-restore-btn, .phpdebugbar-header{
+			display: none !important;
+		}
 		.nav-link.menu-open {
 			background-color: rgba(255, 255, 255, .1) !important;
 			color: #fff !important;

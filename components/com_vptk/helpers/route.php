@@ -10,7 +10,7 @@
  * @phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
  */
 
-use Joomla\Component\Tochuc\Site\Helper\RouteHelper;
+use Joomla\Component\VPTK\Site\Helper\RouteHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

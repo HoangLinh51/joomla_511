@@ -1,7 +1,5 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
-JHtml::_('bootstrap.framework'); // Tải Bootstrap JS
-JHtml::_('stylesheet', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'); // Bootstrap CSS
 $perPage = 20;
 $result = $this->countitems;
 $totalRecords = $result[0]['tongnhankhau'];
@@ -62,13 +60,13 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                         <td style="vertical-align: middle"><?php echo htmlspecialchars($item['diachi']); ?></td>
                         <td style="vertical-align: middle"><?php echo htmlspecialchars($item['dienthoai']); ?></td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-hokhau="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh">
+                            <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-hokhau="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh">
                                 <i class="fas fa-pencil-alt"></i>
-                            </button>
+                            </span>
                             <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-                            <button class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;" data-hokhau="<?php echo $item['id']; ?>" data-title="Xóa">
+                            <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;" data-hokhau="<?php echo $item['id']; ?>" data-title="Xóa">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>
+                            </span>
                         </td>
                     </tr>
                 <?php
@@ -259,137 +257,275 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 }
             });
         }
+        $('<style>.small-alert .bootbox.modal { width: 300px !important; margin: 0 auto; } .small-alert .modal-dialog { width: 300px !important; } .small-alert .modal-footer { display:none } .small-alert .modal-header { height:44px; padding: 7px 20px } .small-alert .modal-body { padding:14px } .success-icon { margin-right: 8px; vertical-align: middle; } </style>').appendTo('head');
+       
+
+        $('body').delegate('.btn_xoa', 'click', function() {
+            var hokhau_id = $(this).data('hokhau');
+            bootbox.confirm({
+                title: "<span class='red' style='font-weight:bold;font-size:20px;'>Thông báo</span>",
+                message: '<span class="red" style="font-size:20px;">Bạn có chắc chắn muốn xóa dữ liệu này?</span>',
+                buttons: {
+                    confirm: {
+                        label: '<i class="icon-ok"></i> Đồng ý',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: '<i class="icon-remove"></i> Không',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function(result) {
+                    if (result) {
+                        console.log('Sending AJAX with hokhau_id:', hokhau_id);
+                        $.ajax({
+                            url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vptk&task=vptk.delNhanKhau&format=raw',
+                            type: 'POST',
+                            data: {
+                                hokhau_id: hokhau_id,
+                                [Joomla.getOptions('csrf.token')]: 1
+                            },
+                            success: function(response) {
+                                console.log('AJAX Success:', response);
+                                var res = typeof response === 'string' ? JSON.parse(response) : response;
+                                var message = res.success ? res.message : 'Xóa thất bại!';
+                                var icon = res.success ?
+                                    '<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
+                                    '';
+                                bootbox.alert({
+                                    title: icon + "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
+                                    message: '<span style="font-size:20px;">' + message + '</span>',
+                                    backdrop: true,
+                                    className: 'small-alert',
+                                    buttons: {
+                                        ok: {
+                                            label: 'OK',
+                                            className: 'hidden' // Ẩn nút OK
+                                        }
+                                    },
+                                    onShown: function() {
+                                        // Tự động đóng sau 2 giây
+                                        setTimeout(function() {
+                                            bootbox.hideAll();
+                                            if (res.success) {
+                                                window.location.reload();
+                                            }
+                                        }, 2000);
+                                    }
+                                });
+                            },
+                            error: function(xhr) {
+                                console.error('AJAX Error:', xhr.status, xhr.responseText);
+                                bootbox.alert({
+                                    title: "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
+                                    message: '<span style="font-size:20px;">Lỗi: ' + xhr.responseText + '</span>',
+                                    className: 'small-alert',
+                                    buttons: {
+                                        ok: {
+                                            label: 'OK',
+                                            className: 'hidden' // Ẩn nút OK
+                                        }
+                                    },
+                                    onShown: function() {
+                                        // Tự động đóng sau 2 giây
+                                        setTimeout(function() {
+                                            bootbox.hideAll();
+                                        }, 2000);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                },
+                className: 'custom-bootbox'
+            });
+        });
     });
 </script>
 
 <style>
     .modal {
-    overflow-x: hidden;
-}
+        overflow-x: hidden;
+    }
 
-.modal-dialog {
-    max-width: 1200px;
-    min-width: 300px;
-    width: 1000px;
-    margin-left: auto; /* Đẩy modal sang phải */
-    margin-right: 0; /* Sát lề phải */
-    margin-top: 1.75rem;
-    margin-bottom: 1.75rem;
-    transform: translateX(100%); /* Modal bắt đầu từ ngoài lề phải */
-    transition: transform 0.5s ease-in-out;
-}
-~
-.modal.show .modal-dialog {
-    transform: translateX(0); /* Trượt vào vị trí sát lề phải */
-}
+    .modal-dialog {
+        max-width: 1200px;
+        min-width: 300px;
+        width: 1000px;
+        margin-left: auto;
+        /* Đẩy modal sang phải */
+        margin-right: 0;
+        /* Sát lề phải */
+        margin-top: 1.75rem;
+        margin-bottom: 1.75rem;
+        transform: translateX(100%);
+        /* Modal bắt đầu từ ngoài lề phải */
+        transition: transform 0.5s ease-in-out;
+    }
 
-.modal.fade .modal-dialog {
-    transition: transform 0.5s ease-in-out;
-    opacity: 1;
-}
+    .modal.show .modal-dialog {
+        transform: translateX(0);
+        /* Trượt vào vị trí sát lề phải */
+    }
 
-.modal.fade:not(.show) .modal-dialog {
-    transform: translateX(100%);
-}
+    .modal.fade .modal-dialog {
+        transition: transform 0.5s ease-in-out;
+        opacity: 1;
+    }
 
-.modal-body {
-    padding: 20px;
-    word-break: break-word;
-}
+    .modal.fade:not(.show) .modal-dialog {
+        transform: translateX(100%);
+    }
 
-.modal-body p {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
+    .modal-body {
+        padding: 20px;
+        word-break: break-word;
+    }
 
-.modal-content {
+    .modal-body p {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header,
+    .modal-footer {
+        padding: 15px 20px;
+    }
+
+    .name-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .name-list ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    .name-list li {
+        margin-bottom: 5px;
+    }
+
+    .name-link {
+        display: block;
+        padding: 5px 10px;
+        color: #007bff;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .name-link:hover {
+        background-color: #f0f0f0;
+        text-decoration: none;
+    }
+
+    .name-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .detail-container {
+        min-height: 300px;
+    }
+
+    .hoten-link {
+        color: #007bff;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .hoten-link:hover {
+        text-decoration: underline;
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .pagination {
+        display: inline-flex;
+        justify-content: center;
+        margin: 0;
+    }
+
+    .page-item.disabled .page-link {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .page-link {
+        padding: 6px 12px;
+        margin: 0 2px;
+        color: #007bff;
+    }
+
+    .page-link:hover {
+        background-color: #e9ecef;
+    }
+
+    .pagination-info {
+        font-size: 14px;
+        color: #333;
+        white-space: nowrap;
+    }
+
+
+    #detailModal.show .modal-dialog {
+        transform: translateX(0);
+        /* Trượt vào vị trí */
+    }
+
+    /* CSS cho modal Bootbox (.custom-bootbox) */
+    /* .custom-bootbox {
+    right: 0;
+    top: 60%;
+    margin: 0;
+} */
+    .custom-bootbox .modal-dialog {
+        /* position: absolute; */
+        width: 498px !important;
+        /* Kích thước cố định */
+        margin: 30px auto !important;
+        /* Căn giữa */
+        /* transform: none !important; Loại bỏ hiệu ứng trượt */
+        /* transition: none !important; Loại bỏ animation */
+        transform: translateY(-50%);
+
+    }
+
+    /* Đảm bảo các thuộc tính chung không ảnh hưởng */
+    .modal {
+        overflow-x: hidden;
+    }
+
+    /* .modal-content {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+} */
 
-.modal-header,
-.modal-footer {
-    padding: 15px 20px;
-}
+    .modal-header,
+    .modal-footer {
+        padding: 15px 20px;
+    }
 
-.name-list {
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.name-list ul {
-    margin: 0;
-    padding: 0;
-}
-
-.name-list li {
-    margin-bottom: 5px;
-}
-
-.name-link {
-    display: block;
-    padding: 5px 10px;
-    color: #007bff;
-    text-decoration: none;
-    border-radius: 4px;
-}
-
-.name-link:hover {
-    background-color: #f0f0f0;
-    text-decoration: none;
-}
-
-.name-link.active {
-    background-color: #007bff;
-    color: white;
-}
-
-.detail-container {
-    min-height: 300px;
-}
-
-.hoten-link {
-    color: #007bff;
-    text-decoration: none;
-    cursor: pointer;
-}
-.hoten-link:hover {
-    text-decoration: underline;
-}
-
-.pagination-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 1rem;
-}
-.pagination {
-    display: inline-flex;
-    justify-content: center;
-    margin: 0;
-}
-.page-item.disabled .page-link {
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-.page-item.active .page-link {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
-}
-.page-link {
-    padding: 6px 12px;
-    margin: 0 2px;
-    color: #007bff;
-}
-.page-link:hover {
-    background-color: #e9ecef;
-}
-.pagination-info {
-    font-size: 14px;
-    color: #333;
-    white-space: nowrap;
-}
+    .modal-body {
+        padding: 20px;
+        word-break: break-word;
+    }
 </style>
