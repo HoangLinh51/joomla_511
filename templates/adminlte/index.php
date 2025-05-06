@@ -55,10 +55,8 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.toast.js');
 
 	$doc->addScript(Uri::root(true) . '/media/cbcc/js/common.js');
-
-
-
 ?>
+
 	<!DOCTYPE html>
 	<html lang="en">
 
@@ -137,7 +135,7 @@ if ($coreTemplate->isLogin() == true) {
 						<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
 					</li>
 				</ul>
-				<ul class="navbar-nav ml-auto">
+				<ul class="navbar-nav ml-auto right-nav">
 					<jdoc:include type="modules" name="sidebar-right" />
 				</ul>
 			</nav>
@@ -194,6 +192,24 @@ if ($coreTemplate->isLogin() == true) {
 
 		</div>
 	</body>
+
+	<div class="modal fade" id="thongBaoModal" tabindex="-1" aria-labelledby="thongBaoModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="thongBaoModalLabel">Chi Tiết Thông Báo</h5>
+					<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng">X</button> -->
+				</div>
+				<div class="modal-body">
+					Nội dung thông báo sẽ được hiển thị ở đây...
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	</html>
 	<style>
@@ -272,6 +288,12 @@ if ($coreTemplate->isLogin() == true) {
 
 		.sidebar-hidden .content-wrapper {
 			margin-left: 0 !important;
+		}
+
+		.right-nav {
+			display: flex;
+			align-items: center;
+			gap: 15px;
 		}
 	</style>
 
