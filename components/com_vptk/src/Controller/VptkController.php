@@ -215,4 +215,25 @@ class VptkController extends BaseController
         $writer->save('php://output');
         jexit();
     }
+    public function getQuanHuyenByTinhThanh()
+    {
+        $tinhthanh_id = Factory::getApplication()->input->getInt('tinhthanh_id', 0);
+        $trangthai = Factory::getApplication()->input->getInt('trangthai', 0);
+
+        $model = Core::model('Danhmuc/Ajax');
+        $result = $model->getQuanHuyenByTinhThanh($tinhthanh_id, $trangthai);
+        header('Content-type: application/json');
+        echo json_encode($result);
+        die;
+    }
+    public function getPhuongXaByQuanHuyen()
+    {
+        $quanhuyen_id = Factory::getApplication()->input->getInt('quanhuyen_id', 0);
+        $trangthai = Factory::getApplication()->input->getInt('trangthai', 0);
+        $model = Core::model('Danhmuc/Ajax');
+        $result = $model->getPhuongXaByQuanHuyen($quanhuyen_id, $trangthai);
+        header('Content-type: application/json');
+        echo json_encode($result);
+        die;
+    }
 }

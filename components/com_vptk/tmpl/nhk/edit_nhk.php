@@ -23,17 +23,7 @@ HTMLHelper::_('script', 'media/cbcc/js/jquery/jquery-validation/additional-metho
 HTMLHelper::_('script', 'media/cbcc/js/jquery/jquery.toast.js', ['version' => 'auto']);
 HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js', ['version' => 'auto']);
 ?>
-<meta>
-<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 
-<!-- <script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/select2/js/select2.min.js" type="text/javascript"></script> -->
-<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.js" type="text/javascript"></script>
-<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
-<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
-<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery.toast.js" type="text/javascript"></script>
-
-</meta>
 <form id="frmNhanhokhau" name="frmNhanhokhau" method="post" action="index.php?option=com_vptk&controller=nhk&task=saveNhanhokhau">
     <div class="container-fluid" style="padding-left:20px; padding-right:20px;">
         <h2 class="mb-3 text-primary">
@@ -59,7 +49,8 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                     <td class="align-middle"><strong>Ngày cấp:</strong></td>
                     <td class="align-middle">
                         <div class="input-group mb-3">
-                            <input type="text" id="hokhau_ngaycap" autocomplete="off" name="hokhau_ngaycap" class="form-control rounded-0" data-date-format="dd/mm/yyyy" value="<?php echo htmlspecialchars($item['hokhau_ngaycap']); ?>" placeholder="dd/mm/yyyy"> <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="text" id="hokhau_ngaycap" autocomplete="off" name="hokhau_ngaycap" class="form-control date-picker" value="<?php echo htmlspecialchars($item['hokhau_ngaycap']); ?>" placeholder="dd/mm/yyyy">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                         </div>
                     </td>
                     <td class="align-middle"><strong>Cơ quan cấp:</strong></td>
@@ -116,7 +107,7 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
         </h3>
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
-            <thead>
+                <thead>
                     <tr class="bg-primary text-white">
                         <th class="align-middle text-center stt" rowspan="2" style="width: 80px;">STT</th>
                         <th class="align-middle text-center quanhe" rowspan="2">Quan hệ với<br>chủ hộ</th>
@@ -124,20 +115,20 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                         <th class="align-middle text-center cccd" rowspan="2">CMND/CCCD</th>
                         <th class="align-middle text-center thongtinkhac" rowspan="2">Thông tin khác</th>
                         <th class="align-middle text-center noihientai" rowspan="2">Thường trú/Tạm trú</th>
-                        <!-- <th class="align-middle text-center noithuongtru" rowspan="2">Nơi thường trú trước khi chuyển đến</th> -->
                         <th class="align-middle text-center lydo" rowspan="2">Lý do xóa đăng ký thường trú</th>
-                        <th class="align-middle text-center tinhtrang" rowspan="2">Tình trạng</th>
                         <th class="align-middle text-center chucnang" rowspan="2" style="width: 150px;">Chức năng</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($nhankhau) && is_array($nhankhau) && count($nhankhau) > 0) { ?>
+                    <?php if (!empty($nhankhau) && is_array($nhankhau) && count($nhankhau) > 0 && $nhankhau[0]['quanhenhanthan_id'] != '-1') { ?>
                         <?php foreach ($nhankhau as $index => $nk) { ?>
                             <tr>
                                 <td class="align-middle text-center stt"><?php echo $index + 1; ?></td>
                                 <td class="align-middle quanhe"><?php echo htmlspecialchars($nk['quanhe'] ?? ''); ?></td>
-                                <td class="align-middle hoten">
-                                    Họ tên: <?php echo htmlspecialchars($nk['hoten'] ?? ''); ?><br>
+                                <td class="align-middle hoten" style="cursor: pointer;">
+                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>" style="text-decoration: underline; color: blue;">
+                                        Họ tên: <?php echo htmlspecialchars($nk['hoten'] ?? ''); ?>
+                                    </a><br>
                                     Ngày sinh: <?php echo htmlspecialchars($nk['ngaysinh'] ?? ''); ?><br>
                                     Điện thoại: <?php echo htmlspecialchars($nk['dienthoai'] ?? ''); ?><br>
                                     Giới tính: <?php echo htmlspecialchars($nk['gioitinh'] ?? ''); ?>
@@ -152,38 +143,43 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                                     Tôn giáo: <?php echo htmlspecialchars($nk['tongiao'] ?? ''); ?><br>
                                     Trình độ: <?php echo htmlspecialchars($nk['trinhdo'] ?? ''); ?><br>
                                     Nghề nghiệp: <?php echo htmlspecialchars($nk['nghenghiep'] ?? ''); ?><br>
-                                    Quốc tịch: <?php echo htmlspecialchars($nk['quoctich'] ?? 'Việt Nam'); ?>
+                                    Quốc tịch: <?php echo htmlspecialchars($nk['quoctich'] ?? 'Việt Nam'); ?><br>
+                                    Nhóm máu: <?php echo htmlspecialchars($nk['nhommau'] ?? 'Chưa xác định'); ?><br>
+                                    Quan hệ hôn nhân: <?php echo htmlspecialchars($nk['qhhonnhan'] ?? 'Chưa xác định'); ?>
                                 </td>
                                 <td class="align-middle noihientai"><?php echo htmlspecialchars($nk['noihientai'] ?? ''); ?></td>
-                                <!-- <td class="align-middle noithuongtru"><?php echo htmlspecialchars($nk['thuongtrucu_diachi'] ?? ''); ?></td> -->
                                 <td class="align-middle lydo"><?php echo htmlspecialchars($nk['lydo'] ?? ''); ?></td>
-                                <td class="align-middle tinhtrang"><?php echo htmlspecialchars($nk['tinhtrang'] ?? 'Hoạt động'); ?></td>
                                 <td class="align-middle text-center chucnang">
                                     <input type="hidden" name="nhankhau_id[]" value="<?php echo $nk['id'] ?? ''; ?>" />
                                     <input type="hidden" name="quanhenhanthan_id[]" value="<?php echo $nk['quanhenhanthan_id'] ?? ''; ?>" />
                                     <input type="hidden" name="hoten[]" value="<?php echo htmlspecialchars($nk['hoten'] ?? ''); ?>" />
                                     <input type="hidden" name="ngaysinh[]" value="<?php echo htmlspecialchars($nk['ngaysinh'] ?? ''); ?>" />
+                                    <input type="hidden" name="dienthoai[]" value="<?php echo htmlspecialchars($nk['dienthoai'] ?? ''); ?>" />
                                     <input type="hidden" name="gioitinh_id[]" value="<?php echo $nk['gioitinh_id'] ?? ''; ?>" />
                                     <input type="hidden" name="cccd_so[]" value="<?php echo htmlspecialchars($nk['cccd_so'] ?? ''); ?>" />
                                     <input type="hidden" name="cccd_ngaycap[]" value="<?php echo htmlspecialchars($nk['cccd_ngaycap'] ?? ''); ?>" />
                                     <input type="hidden" name="cccd_coquancap[]" value="<?php echo htmlspecialchars($nk['cccd_coquancap'] ?? ''); ?>" />
-                                    <input type="hidden" name="dienthoai[]" value="<?php echo htmlspecialchars($nk['dienthoai'] ?? ''); ?>" />
                                     <input type="hidden" name="dantoc_id[]" value="<?php echo $nk['dantoc_id'] ?? ''; ?>" />
                                     <input type="hidden" name="tongiao_id[]" value="<?php echo $nk['tongiao_id'] ?? ''; ?>" />
                                     <input type="hidden" name="trinhdohocvan_id[]" value="<?php echo $nk['trinhdohocvan_id'] ?? ''; ?>" />
                                     <input type="hidden" name="nghenghiep_id[]" value="<?php echo $nk['nghenghiep_id'] ?? ''; ?>" />
                                     <input type="hidden" name="quoctich_id[]" value="<?php echo $nk['quoctich_id'] ?? ''; ?>" />
+                                    <input type="hidden" name="nhommau_id[]" value="<?php echo $nk['nhommau_id'] ?? ''; ?>" />
+                                    <input type="hidden" name="qhhonnhan_id[]" value="<?php echo $nk['qhhonnhan_id'] ?? ''; ?>" />
                                     <input type="hidden" name="is_tamtru[]" value="<?php echo $nk['is_tamtru'] ?? ''; ?>" />
                                     <input type="hidden" name="thuongtrucu_tinhthanh_id[]" value="<?php echo $nk['thuongtrucu_tinhthanh_id'] ?? ''; ?>" />
                                     <input type="hidden" name="thuongtrucu_quanhuyen_id[]" value="<?php echo $nk['thuongtrucu_quanhuyen_id'] ?? ''; ?>" />
                                     <input type="hidden" name="thuongtrucu_phuongxa_id[]" value="<?php echo $nk['thuongtrucu_phuongxa_id'] ?? ''; ?>" />
                                     <input type="hidden" name="thuongtrucu_diachi[]" value="<?php echo htmlspecialchars($nk['thuongtrucu_diachi'] ?? ''); ?>" />
                                     <input type="hidden" name="lydoxoathuongtru_id[]" value="<?php echo $nk['lydoxoathuongtru_id'] ?? ''; ?>" />
-                                    <input type="hidden" name="tinhtrang[]" value="<?php echo htmlspecialchars($nk['tinhtrang'] ?? 'Hoạt động'); ?>" />
                                     <span class="btn btn-small btn-danger btn_xoa" data-xuly="<?php echo $nk['id'] ?? ''; ?>"><i class="fas fa-trash-alt"></i></span>
                                 </td>
                             </tr>
                         <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="8" class="text-center">Không có dữ liệu</td>
+                        </tr>
                     <?php } ?>
                 </tbody>
             </table>
@@ -200,24 +196,26 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
     <?php echo JHTML::_('form.token'); ?>
 </form>
 
-<!-- Modal Thêm Nhân Khẩu -->
+<!-- Modal Nhân Khẩu -->
 <div class="modal fade" id="modalNhankhau" tabindex="-1" role="dialog" aria-labelledby="modalNhankhauLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalNhankhauLabel">Thêm Nhân Khẩu</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
                 <form id="frmModalNhankhau">
+                    <input type="hidden" id="modal_edit_index" value="">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Quan hệ với chủ hộ <span class="text-danger">*</span></label>
                                 <select id="modal_quanhenhanthan_id" class="custom-select" data-placeholder="Chọn quan hệ">
                                     <option value=""></option>
+                                    <option value="-1" data-text="Chủ hộ">Chủ hộ</option>
                                     <?php if (is_array($this->quanhe) && count($this->quanhe) > 0) { ?>
                                         <?php foreach ($this->quanhe as $qh) { ?>
                                             <option value="<?php echo $qh['id']; ?>" data-text="<?php echo htmlspecialchars($qh['tenquanhenhanthan']); ?>">
@@ -343,16 +341,50 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Quốc tịch</label>
-                                <select id="modal_quoctich_id" class="custom-select" data-placeholder="Chọn Quốc tịch">
+                                <select id="modal_quoctich_id" class="custom-select" data-placeholder="Chọn quốc tịch">
                                     <option value=""></option>
                                     <?php if (is_array($this->quoctich) && count($this->quoctich) > 0) { ?>
-                                        <?php foreach ($this->quoctich as $tg) { ?>
-                                            <option value="<?php echo $tg['id']; ?>" data-text="<?php echo htmlspecialchars($tg['tenquoctich']); ?>">
-                                                <?php echo htmlspecialchars($tg['tenquoctich']); ?>
+                                        <?php foreach ($this->quoctich as $qt) { ?>
+                                            <option value="<?php echo $qt['id']; ?>" data-text="<?php echo htmlspecialchars($qt['tenquoctich']); ?>">
+                                                <?php echo htmlspecialchars($qt['tenquoctich']); ?>
                                             </option>
                                         <?php } ?>
                                     <?php } else { ?>
-                                        <option value="">Không có dữ liệu tôn giáo</option>
+                                        <option value="">Không có dữ liệu quốc tịch</option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Nhóm máu</label>
+                                <select id="modal_nhommau_id" class="custom-select" data-placeholder="Chọn nhóm máu">
+                                    <option value=""></option>
+                                    <?php if (is_array($this->nhommau) && count($this->nhommau) > 0) { ?>
+                                        <?php foreach ($this->nhommau as $nm) { ?>
+                                            <option value="<?php echo $nm['code']; ?>" data-text="<?php echo htmlspecialchars($nm['name']); ?>">
+                                                <?php echo htmlspecialchars($nm['name']); ?>
+                                            </option>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <option value="">Không có dữ liệu nhóm máu</option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Quan hệ hôn nhân</label>
+                                <select id="modal_qhhonnhan_id" class="custom-select" data-placeholder="Chọn quan hệ hôn nhân">
+                                    <option value=""></option>
+                                    <?php if (is_array($this->qhhonnhan) && count($this->qhhonnhan) > 0) { ?>
+                                        <?php foreach ($this->qhhonnhan as $qh) { ?>
+                                            <option value="<?php echo $qh['code']; ?>" data-text="<?php echo htmlspecialchars($qh['name']); ?>">
+                                                <?php echo htmlspecialchars($qh['name']); ?>
+                                            </option>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <option value="">Không có dữ liệu quan hệ hôn nhân</option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -376,7 +408,7 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Nơi ở hiện tại <span class="text-danger">*</span></label>
+                                <label class="form-label">Thường trú/Tạm trú <span class="text-danger">*</span></label>
                                 <select id="modal_is_tamtru" class="custom-select" data-placeholder="Chọn trạng thái">
                                     <option value="0" data-text="Thường trú">Thường trú</option>
                                     <option value="1" data-text="Tạm trú">Tạm trú</option>
@@ -487,11 +519,11 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
 
     td.stt,
     th.stt {
-        min-width: 60px;
+        min-width: 80px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 50px;
+        max-width: 80px;
     }
 
     td.quanhe,
@@ -505,101 +537,29 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
 
     td.hoten,
     th.hoten {
-        min-width: 220px;
+        min-width: 300px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 220px;
+        max-width: 300px;
     }
 
-    td.ngaysinh,
-    th.ngaysinh {
-        min-width: 140px;
+    td.cccd,
+    th.cccd {
+        min-width: 300px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 140px;
+        max-width: 300px;
     }
 
-    td.gioitinh,
-    th.gioitinh {
-        min-width: 150px;
+    td.thongtinkhac,
+    th.thongtinkhac {
+        min-width: 400px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 150px;
-    }
-
-    td.socccd,
-    th.socccd {
-        min-width: 140px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 140px;
-    }
-
-    td.ngaycccd,
-    th.ngaycccd {
-        min-Fwidth: 140px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 140px;
-    }
-
-    td.coquancapcccd,
-    th.coquancapcccd {
-        min-width: 220px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 220px;
-    }
-
-    td.dienthoai,
-    th.dienthoai {
-        min-width: 140px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 140px;
-    }
-
-    td.dantoc,
-    th.dantoc {
-        min-width: 150px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 150px;
-    }
-
-    td.tongiao,
-    th.tongiao {
-        min-width: 150px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 150px;
-    }
-
-    td.trinhdo,
-    th.trinhdo {
-        min-width: 150px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 150px;
-    }
-
-    td.nghenghiep,
-    th.nghenghiep {
-        min-width: 150px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 150px;
+        max-width: 400px;
     }
 
     td.noihientai,
@@ -611,17 +571,17 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
         max-width: 150px;
     }
 
-    td.noithuongtru,
-    th.noithuongtru {
-        min-width: 100px;
+    td.lydo,
+    th.lydo {
+        min-width: 200px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 1100px;
+        max-width: 200px;
     }
 
-    td.lydo,
-    th.lydo {
+    td.chucnang,
+    th.chucnang {
         min-width: 150px;
         height: 25px;
         overflow: hidden;
@@ -629,37 +589,27 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
         max-width: 150px;
     }
 
-    td.chucnang,
-    th.chucnang {
-        min-width: 100px;
-        height: 25px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 100px;
-    }
-
     .modal {
         overflow-x: hidden;
     }
-
+    .modal-body{
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
     .modal-dialog {
         max-width: 1200px;
         min-width: 300px;
         width: 1000px;
         margin-left: auto;
-        /* Đẩy modal sang phải */
         margin-right: 0;
-        /* Sát lề phải */
         margin-top: 1.75rem;
         margin-bottom: 1.75rem;
         transform: translateX(100%);
-        /* Modal bắt đầu từ ngoài lề phải */
         transition: transform 0.5s ease-in-out;
     }
 
     .modal.show .modal-dialog {
         transform: translateX(0);
-        /* Trượt vào vị trí sát lề phải */
     }
 
     .modal.fade .modal-dialog {
@@ -689,40 +639,57 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
 
 <script type="text/javascript">
     jQuery(document).ready(function($) {
-        // Debug
-        // console.log('jQuery loaded:', typeof $);
-        // console.log('btn_themnhankhau exists:', $('#btn_themnhankhau').length);
-        // console.log('tblDanhsach tbody exists:', $('#tblDanhsach tbody').length);
+        // Track if Chủ hộ exists
+        var hasChuHo = <?php
+                        $hasChuHo = false;
+                        if (!empty($nhankhau) && is_array($nhankhau)) {
+                            foreach ($nhankhau as $nk) {
+                                if (isset($nk['quanhenhanthan_id']) && $nk['quanhenhanthan_id'] == -1) {
+                                    $hasChuHo = true;
+                                    break;
+                                }
+                            }
+                        }
+                        echo $hasChuHo ? 'true' : 'false';
+                        ?>;
 
-        // // Sử dụng noConflict để tránh xung đột
-        // var bootstrapDatepicker = $.fn.datepicker.noConflict();
-        // $.fn.bootstrapDatepicker = bootstrapDatepicker;
-        $('#hokhau_ngaycap').datepicker({
-            autoclose: true,
-            language: 'vi'
-        });
+        // Hàm khởi tạo Select2 với kiểm tra
+        function initSelect2($element, options) {
+            if ($element.length && $.fn.select2) {
+                // Chỉ hủy Select2 nếu đã được khởi tạo
+                if ($element.data('select2')) {
+                    $element.select2('destroy');
+                }
+                $element.select2(options);
+            }
+        }
+
+        // Initialize datepickers
         $('.date-picker').datepicker({
             autoclose: true,
-            language: 'vi'
+            language: 'vi',
+            format: 'dd/mm/yyyy'
+        }).next().on('click', function() {
+            $(this).prev().focus();
         });
 
-        // Khởi tạo Select2
+        // Initialize Select2
         if ($.fn.select2) {
-            $('#phuongxa_id, #thonto_id').select2({
+            initSelect2($('#phuongxa_id, #thonto_id'), {
                 width: '100%',
                 allowClear: true,
                 placeholder: function() {
                     return $(this).data('placeholder');
                 }
             });
-            $('#modal_quanhenhanthan_id, #modal_gioitinh_id, #modal_dantoc_id, #modal_tongiao_id, #modal_trinhdohocvan_id, #modal_nghenghiep_id, #modal_quoctich_id, #modal_is_tamtru, #modal_lydoxoathuongtru_id').select2({
+            initSelect2($('#modal_quanhenhanthan_id, #modal_gioitinh_id, #modal_dantoc_id, #modal_tongiao_id, #modal_trinhdohocvan_id, #modal_nghenghiep_id, #modal_quoctich_id, #modal_nhommau_id, #modal_qhhonnhan_id, #modal_is_tamtru, #modal_lydoxoathuongtru_id'), {
                 width: '100%',
                 allowClear: true,
                 placeholder: function() {
                     return $(this).data('placeholder');
                 }
             });
-            $('#modal_thuongtrucu_tinhthanh_id, #modal_thuongtrucu_quanhuyen_id, #modal_thuongtrucu_phuongxa_id').select2({
+            initSelect2($('#modal_thuongtrucu_tinhthanh_id, #modal_thuongtrucu_quanhuyen_id, #modal_thuongtrucu_phuongxa_id'), {
                 width: '100%',
                 allowClear: true,
                 placeholder: function() {
@@ -733,7 +700,71 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
             console.error('Select2 not loaded.');
         }
 
-        // Validation cho modal form
+        // Function to update Quan hệ dropdown
+        function updateQuanHeDropdown(isEditing = false, selectedQuanHeId = '') {
+            const $quanheSelect = $('#modal_quanhenhanthan_id');
+            // Disable Chủ hộ option if it exists
+            $quanheSelect.find('option[value="-1"]').prop('disabled', hasChuHo);
+            // Set default value
+            if (isEditing && selectedQuanHeId) {
+                $quanheSelect.val(selectedQuanHeId);
+            } else {
+                $quanheSelect.val(hasChuHo ? '' : '-1');
+            }
+            $quanheSelect.trigger('change.select2');
+        }
+
+        // Handle modal show for adding new nhân khẩu
+        $('#btn_themnhankhau').on('click', function() {
+            $('#modalNhankhauLabel').text('Thêm Nhân Khẩu');
+            $('#modal_edit_index').val('');
+            $('#frmModalNhankhau')[0].reset();
+            $('.div_is_tamtru').hide();
+            $('#frmModalNhankhau select').each(function() {
+                $(this).val('').trigger('change.select2');
+            });
+            updateQuanHeDropdown();
+            $('#modalNhankhau').modal('show');
+        });
+
+        // Handle click on name for editing
+        $('body').on('click', '.edit-nhankhau', function(e) {
+            e.preventDefault();
+            const index = $(this).data('index');
+            const $row = $(this).closest('tr');
+            $('#modalNhankhauLabel').text('Chỉnh sửa Nhân Khẩu');
+            $('#modal_edit_index').val(index);
+            $('#frmModalNhankhau')[0].reset();
+
+            // Populate form fields
+            const quanHeId = $row.find('input[name="quanhenhanthan_id[]"]').val();
+            $('#modal_quanhenhanthan_id').val(quanHeId).trigger('change.select2');
+            $('#modal_hoten').val($row.find('input[name="hoten[]"]').val());
+            $('#modal_ngaysinh').val($row.find('input[name="ngaysinh[]"]').val());
+            $('#modal_dienthoai').val($row.find('input[name="dienthoai[]"]').val());
+            $('#modal_gioitinh_id').val($row.find('input[name="gioitinh_id[]"]').val()).trigger('change.select2');
+            $('#modal_cccd_so').val($row.find('input[name="cccd_so[]"]').val());
+            $('#modal_cccd_ngaycap').val($row.find('input[name="cccd_ngaycap[]"]').val());
+            $('#modal_cccd_coquancap').val($row.find('input[name="cccd_coquancap[]"]').val());
+            $('#modal_dantoc_id').val($row.find('input[name="dantoc_id[]"]').val()).trigger('change.select2');
+            $('#modal_tongiao_id').val($row.find('input[name="tongiao_id[]"]').val()).trigger('change.select2');
+            $('#modal_trinhdohocvan_id').val($row.find('input[name="trinhdohocvan_id[]"]').val()).trigger('change.select2');
+            $('#modal_nghenghiep_id').val($row.find('input[name="nghenghiep_id[]"]').val()).trigger('change.select2');
+            $('#modal_quoctich_id').val($row.find('input[name="quoctich_id[]"]').val()).trigger('change.select2');
+            $('#modal_nhommau_id').val($row.find('input[name="nhommau_id[]"]').val()).trigger('change.select2');
+            $('#modal_qhhonnhan_id').val($row.find('input[name="qhhonnhan_id[]"]').val()).trigger('change.select2');
+            $('#modal_is_tamtru').val($row.find('input[name="is_tamtru[]"]').val()).trigger('change.select2');
+            $('#modal_thuongtrucu_tinhthanh_id').val($row.find('input[name="thuongtrucu_tinhthanh_id[]"]').val()).trigger('change.select2');
+            $('#modal_thuongtrucu_quanhuyen_id').val($row.find('input[name="thuongtrucu_quanhuyen_id[]"]').val()).trigger('change.select2');
+            $('#modal_thuongtrucu_phuongxa_id').val($row.find('input[name="thuongtrucu_phuongxa_id[]"]').val()).trigger('change.select2');
+            $('#modal_thuongtrucu_diachi').val($row.find('input[name="thuongtrucu_diachi[]"]').val());
+            $('#modal_lydoxoathuongtru_id').val($row.find('input[name="lydoxoathuongtru_id[]"]').val()).trigger('change.select2');
+            $('.div_is_tamtru').toggle($('#modal_is_tamtru').val() === '1');
+            updateQuanHeDropdown(true, quanHeId);
+            $('#modalNhankhau').modal('show');
+        });
+
+        // Validation for modal form
         if ($.fn.validate) {
             $('#frmModalNhankhau').validate({
                 ignore: [],
@@ -822,70 +853,90 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
             }, 'Họ tên không được chứa ký tự đặc biệt.');
         }
 
-        // Xử lý nút Lưu trong modal
+        // Handle save button in modal
         $('#btn_luu_nhankhau').on('click', function() {
             if ($('#frmModalNhankhau').valid()) {
-                var stt = $('.stt').length + 1;
-                var quanhe_text = $('#modal_quanhenhanthan_id option:selected').data('text') || '';
-                var hoten = $('#modal_hoten').val();
-                var ngaysinh = $('#modal_ngaysinh').val();
-                var dienthoai = $('#modal_dienthoai').val();
-                var gioitinh_text = $('#modal_gioitinh_id option:selected').data('text') || '';
-                var cccd_so = $('#modal_cccd_so').val();
-                var cccd_ngaycap = $('#modal_cccd_ngaycap').val();
-                var cccd_coquancap = $('#modal_cccd_coquancap').val();
-                var dantoc_text = $('#modal_dantoc_id option:selected').data('text') || '';
-                var tongiao_text = $('#modal_tongiao_id option:selected').data('text') || '';
-                var trinhdo_text = $('#modal_trinhdohocvan_id option:selected').data('text') || '';
-                var nghenghiep_text = $('#modal_nghenghiep_id option:selected').data('text') || '';
-                var quoctich_text = $('#modal_quoctich_id option:selected').data('text') || 'Việt Nam';
-                var is_tamtru_text = $('#modal_is_tamtru option:selected').data('text') || 'Thường trú';
-                var thuongtrucu = '';
+                const editIndex = $('#modal_edit_index').val();
+                const isEditing = editIndex !== '';
+                const wasChuHo = isEditing && $($('#tblDanhsach tbody tr')[editIndex]).find('input[name="quanhenhanthan_id[]"]').val() === '-1';
+                let stt = isEditing ? parseInt($($('#tblDanhsach tbody tr')[editIndex]).find('.stt').text()) : $('.stt').length + 1;
+
+                // Update hasChuHo
+                const newQuanHeId = $('#modal_quanhenhanthan_id').val();
+                if (newQuanHeId === '-1') {
+                    hasChuHo = true;
+                } else if (wasChuHo && newQuanHeId !== '-1') {
+                    hasChuHo = false;
+                }
+
+                // Collect form data
+                const quanhe_text = $('#modal_quanhenhanthan_id option:selected').data('text') || '';
+                const hoten = $('#modal_hoten').val();
+                const ngaysinh = $('#modal_ngaysinh').val();
+                const dienthoai = $('#modal_dienthoai').val();
+                const gioitinh_text = $('#modal_gioitinh_id option:selected').data('text') || '';
+                const cccd_so = $('#modal_cccd_so').val();
+                const cccd_ngaycap = $('#modal_cccd_ngaycap').val();
+                const cccd_coquancap = $('#modal_cccd_coquancap').val();
+                const dantoc_text = $('#modal_dantoc_id option:selected').data('text') || '';
+                const tongiao_text = $('#modal_tongiao_id option:selected').data('text') || '';
+                const trinhdo_text = $('#modal_trinhdohocvan_id option:selected').data('text') || '';
+                const nghenghiep_text = $('#modal_nghenghiep_id option:selected').data('text') || '';
+                const quoctich_text = $('#modal_quoctich_id option:selected').data('text') || 'Việt Nam';
+                const nhommau_text = $('#modal_nhommau_id option:selected').data('text') || 'Chưa xác định';
+                const qhhonnhan_text = $('#modal_qhhonnhan_id option:selected').data('text') || 'Chưa xác định';
+                const is_tamtru_text = $('#modal_is_tamtru option:selected').data('text') || 'Thường trú';
+                let thuongtrucu = '';
                 if ($('#modal_is_tamtru').val() === '1') {
-                    var tinhthanh = $('#modal_thuongtrucu_tinhthanh_id option:selected').data('text') || '';
-                    var quanhuyen = $('#modal_thuongtrucu_quanhuyen_id option:selected').data('text') || '';
-                    var phuongxa = $('#modal_thuongtrucu_phuongxa_id option:selected').data('text') || '';
-                    var diachi = $('#modal_thuongtrucu_diachi').val();
+                    const tinhthanh = $('#modal_thuongtrucu_tinhthanh_id option:selected').data('text') || '';
+                    const quanhuyen = $('#modal_thuongtrucu_quanhuyen_id option:selected').data('text') || '';
+                    const phuongxa = $('#modal_thuongtrucu_phuongxa_id option:selected').data('text') || '';
+                    const diachi = $('#modal_thuongtrucu_diachi').val();
                     thuongtrucu = [diachi, phuongxa, quanhuyen, tinhthanh].filter(Boolean).join(', ');
                 }
-                var lydo_text = $('#modal_lydoxoathuongtru_id option:selected').data('text') || '';
-                var tinhtrang = $('#modal_tinhtrang option:selected').data('text') || 'Hoạt động';
+                const lydo_text = $('#modal_lydoxoathuongtru_id option:selected').data('text') || '';
 
-                // Gộp dữ liệu cho cột Thông tin cá nhân
-                var thongtin_canhan = [
+                // Gộp dữ liệu cho các cột
+                const thongtin_canhan = [
                     `Họ tên: ${hoten}`,
                     `Ngày sinh: ${ngaysinh}`,
                     dienthoai ? `Điện thoại: ${dienthoai}` : '',
                     `Giới tính: ${gioitinh_text}`
                 ].filter(Boolean).join('<br>');
 
-                // Gộp dữ liệu cho cột CMND/CCCD
-                var cccd_info = [
+                const cccd_info = [
                     `Số: ${cccd_so}`,
                     `Ngày cấp: ${cccd_ngaycap}`,
                     `Nơi cấp: ${cccd_coquancap}`
                 ].join('<br>');
 
-                // Gộp dữ liệu cho cột Thông tin khác
-                var thongtin_khac = [
+                const thongtin_khac = [
                     `Dân tộc: ${dantoc_text}`,
                     tongiao_text ? `Tôn giáo: ${tongiao_text}` : '',
                     trinhdo_text ? `Trình độ: ${trinhdo_text}` : '',
                     nghenghiep_text ? `Nghề nghiệp: ${nghenghiep_text}` : '',
-                    `Quốc tịch: ${quoctich_text}`
+                    `Quốc tịch: ${quoctich_text}`,
+                    `Nhóm máu: ${nhommau_text}`,
+                    `Quan hệ hôn nhân: ${qhhonnhan_text}`
                 ].filter(Boolean).join('<br>');
 
-                var str = `
+                // Generate table row
+                const str = `
                 <tr>
                     <td class="align-middle text-center stt">${stt}</td>
                     <td class="align-middle quanhe">${quanhe_text}</td>
-                    <td class="align-middle hoten">${thongtin_canhan}</td>
+                    <td class="align-middle hoten">
+                        <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $('.stt').length}" style="text-decoration: underline; color: blue;">
+                            Họ tên: ${hoten}
+                        </a><br>
+                        Ngày sinh: ${ngaysinh}<br>
+                        ${dienthoai ? `Điện thoại: ${dienthoai}<br>` : ''}
+                        Giới tính: ${gioitinh_text}
+                    </td>
                     <td class="align-middle cccd">${cccd_info}</td>
                     <td class="align-middle thongtinkhac">${thongtin_khac}</td>
                     <td class="align-middle noihientai">${is_tamtru_text}</td>
-                    <td class="align-middle noithuongtru">${thuongtrucu}</td>
                     <td class="align-middle lydo">${lydo_text}</td>
-                    <td class="align-middle tinhtrang">${tinhtrang}</td>
                     <td class="align-middle text-center chucnang">
                         <input type="hidden" name="nhankhau_id[]" value="" />
                         <input type="hidden" name="quanhenhanthan_id[]" value="${$('#modal_quanhenhanthan_id').val()}" />
@@ -901,41 +952,49 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                         <input type="hidden" name="trinhdohocvan_id[]" value="${$('#modal_trinhdohocvan_id').val()}" />
                         <input type="hidden" name="nghenghiep_id[]" value="${$('#modal_nghenghiep_id').val()}" />
                         <input type="hidden" name="quoctich_id[]" value="${$('#modal_quoctich_id').val()}" />
+                        <input type="hidden" name="nhommau_id[]" value="${$('#modal_nhommau_id').val()}" />
+                        <input type="hidden" name="qhhonnhan_id[]" value="${$('#modal_qhhonnhan_id').val()}" />
                         <input type="hidden" name="is_tamtru[]" value="${$('#modal_is_tamtru').val()}" />
                         <input type="hidden" name="thuongtrucu_tinhthanh_id[]" value="${$('#modal_thuongtrucu_tinhthanh_id').val()}" />
                         <input type="hidden" name="thuongtrucu_quanhuyen_id[]" value="${$('#modal_thuongtrucu_quanhuyen_id').val()}" />
                         <input type="hidden" name="thuongtrucu_phuongxa_id[]" value="${$('#modal_thuongtrucu_phuongxa_id').val()}" />
                         <input type="hidden" name="thuongtrucu_diachi[]" value="${$('#modal_thuongtrucu_diachi').val()}" />
                         <input type="hidden" name="lydoxoathuongtru_id[]" value="${$('#modal_lydoxoathuongtru_id').val()}" />
-                        <input type="hidden" name="tinhtrang[]" value="${$('#modal_tinhtrang').val()}" />
                         <span class="btn btn-small btn-danger btn_xoa" data-xuly=""><i class="fas fa-trash-alt"></i></span>
                     </td>
                 </tr>`;
+
                 try {
-                    $('#tblDanhsach tbody').append(str);
-                    console.log('Row appended successfully');
+                    if (isEditing) {
+                        $($('#tblDanhsach tbody tr')[editIndex]).replaceWith(str);
+                    } else {
+                        $('#tblDanhsach tbody').append(str);
+                    }
                     $('#modalNhankhau').modal('hide');
                     $('#frmModalNhankhau')[0].reset();
                     $('.div_is_tamtru').hide();
-                    $('select').trigger('change.select2');
+                    $('#frmModalNhankhau select').each(function() {
+                        $(this).val('').trigger('change.select2');
+                    });
                     $.gritter.add({
                         title: '<h3>Thông báo</h3>',
-                        text: '<span style="font-size:24px;">Thêm nhân khẩu thành công!</span>',
+                        text: '<span style="font-size:24px;">' + (isEditing ? 'Cập nhật' : 'Thêm') + ' nhân khẩu thành công!</span>',
                         time: 1000,
                         class_name: 'gritter-success gritter-center gritter-light'
                     });
                 } catch (e) {
-                    console.error('Error appending row:', e);
+                    console.error('Error processing row:', e);
                     $.gritter.add({
                         title: '<h3>Thông báo</h3>',
-                        text: '<span style="font-size:24px;">Lỗi khi thêm nhân khẩu!</span>',
+                        text: '<span style="font-size:24px;">Lỗi khi ' + (isEditing ? 'cập nhật' : 'thêm') + ' nhân khẩu!</span>',
                         time: 2000,
                         class_name: 'gritter-error gritter-center gritter-light'
                     });
                 }
             }
         });
-        // Xử lý select Phường/Xã để tải Thôn/Tổ
+
+        // Handle Phường/Xã change
         $('#phuongxa_id').on('change', function() {
             var $phuongxa_id = $(this);
             var $thonto_id = $('#thonto_id');
@@ -944,14 +1003,19 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
             $('#tinhthanh_id').val($phuongxa_id.find('option:selected').data('tinhthanh'));
             $('#quanhuyen_id').val($phuongxa_id.find('option:selected').data('quanhuyen'));
 
-            $thonto_id.prop('disabled', true).select2('destroy').html('<option value=""></option>');
+            // Hủy Select2 nếu đã khởi tạo
+            if ($thonto_id.data('select2')) {
+                $thonto_id.select2('destroy');
+            }
+            $thonto_id.prop('disabled', true).html('<option value=""></option>');
 
             if (phuongxa_val === '') {
-                $thonto_id.prop('disabled', false).select2({
+                initSelect2($thonto_id, {
                     width: '100%',
                     allowClear: true,
                     placeholder: $thonto_id.data('placeholder')
                 });
+                $thonto_id.prop('disabled', false);
             } else {
                 $.ajax({
                     url: 'index.php',
@@ -973,12 +1037,12 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                                 options += '<option value="' + v.id + '">' + v.tenkhuvuc + '</option>';
                             });
                         }
-                        $thonto_id.html(options).prop('disabled', false).select2({
+                        $thonto_id.html(options).prop('disabled', false);
+                        initSelect2($thonto_id, {
                             width: '100%',
                             allowClear: true,
                             placeholder: $thonto_id.data('placeholder')
                         });
-                        $thonto_id.trigger('change.select2');
                     },
                     error: function() {
                         $.gritter.add({
@@ -987,11 +1051,12 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                             time: 2000,
                             class_name: 'gritter-error gritter-center gritter-light'
                         });
-                        $thonto_id.prop('disabled', false).select2({
+                        initSelect2($thonto_id, {
                             width: '100%',
                             allowClear: true,
                             placeholder: $thonto_id.data('placeholder')
                         });
+                        $thonto_id.prop('disabled', false);
                     },
                     complete: function() {
                         $thonto_id.siblings('.select2-container').find('.select2-loading').remove();
@@ -1000,27 +1065,28 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
             }
         });
 
-        // Xử lý xóa nhân khẩu
+        // Handle delete nhân khẩu
         $('body').on('click', '.btn_xoa', function() {
             var $row = $(this).closest('tr');
-            var row_index = $('.btn_xoa').index($(this));
             var nhankhau_id = $(this).data('xuly');
-            if (nhankhau_id) {
-                bootbox.confirm({
-                    title: "<span class='text-danger' style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-                    message: '<span class="text-danger" style="font-size:24px;">Bạn có chắc chắn muốn xóa nhân khẩu này?</span>',
-                    buttons: {
-                        confirm: {
-                            label: '<i class="fas fa-check"></i> Đồng ý',
-                            className: 'btn-success'
-                        },
-                        cancel: {
-                            label: '<i class="fas fa-times"></i> Không',
-                            className: 'btn-danger'
-                        }
+            const isChuHo = $row.find('input[name="quanhenhanthan_id[]"]').val() === '-1';
+
+            bootbox.confirm({
+                title: "<span class='text-danger' style='font-weight:bold;font-size:20px;'>Thông báo</span>",
+                message: '<span class="text-danger" style="font-size:24px;">Bạn có chắc chắn muốn xóa nhân khẩu này?</span>',
+                buttons: {
+                    confirm: {
+                        label: '<i class="fas fa-check"></i> Đồng ý',
+                        className: 'btn-success'
                     },
-                    callback: function(result) {
-                        if (result) {
+                    cancel: {
+                        label: '<i class="fas fa-times"></i> Không',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function(result) {
+                    if (result) {
+                        if (nhankhau_id) {
                             $.post('index.php', {
                                 option: 'com_vptk',
                                 controller: 'nhk',
@@ -1030,8 +1096,10 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                             }, function(data) {
                                 if (data === '1') {
                                     $row.remove();
+                                    if (isChuHo) hasChuHo = false;
                                     $('.stt').each(function(i) {
-                                        if (i > 0) $(this).html(i);
+                                        $(this).html(i + 1);
+                                        $(this).closest('tr').find('.edit-nhankhau').data('index', i);
                                     });
                                     $.gritter.add({
                                         title: '<h3>Thông báo</h3>',
@@ -1055,44 +1123,85 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                                     class_name: 'gritter-error gritter-center gritter-light'
                                 });
                             });
+                        } else {
+                            $row.remove();
+                            if (isChuHo) hasChuHo = false;
+                            $('.stt').each(function(i) {
+                                $(this).html(i + 1);
+                                $(this).closest('tr').find('.edit-nhankhau').data('index', i);
+                            });
                         }
                     }
-                });
-            } else {
-                $row.remove();
-                $('.stt').each(function(i) {
-                    if (i > 0) $(this).html(i);
+                }
+            });
+        });
+
+        // Handle is_tamtru change
+        $('#modal_is_tamtru').on('change', function() {
+            $('.div_is_tamtru').toggle($(this).val() === '1');
+            if ($(this).val() === '1') {
+                initSelect2($('#modal_thuongtrucu_tinhthanh_id, #modal_thuongtrucu_quanhuyen_id, #modal_thuongtrucu_phuongxa_id'), {
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: function() {
+                        return $(this).data('placeholder');
+                    }
                 });
             }
         });
 
-        // Xử lý select is_tamtru trong modal
-        $('#modal_is_tamtru').on('change', function() {
-            $('.div_is_tamtru').toggle($(this).val() === '1');
-        });
-
-        // Xử lý select thuongtrucu_tinhthanh_id trong modal
+        // Handle thuongtrucu_tinhthanh_id change
         $('#modal_thuongtrucu_tinhthanh_id').on('change', function() {
             var $quanhuyen = $('#modal_thuongtrucu_quanhuyen_id');
             var $phuongxa = $('#modal_thuongtrucu_phuongxa_id');
             var $diachi = $('#modal_thuongtrucu_diachi');
-            if ($(this).val() === '') {
-                $quanhuyen.html('<option value=""></option>').trigger('change').select2("container").show();
-                $phuongxa.select2("container").show();
+            var tinhthanhVal = $(this).val();
+
+            // Hủy Select2 nếu đã khởi tạo
+            if ($quanhuyen.data('select2')) {
+                $quanhuyen.select2('destroy');
+            }
+            if ($phuongxa.data('select2')) {
+                $phuongxa.select2('destroy');
+            }
+
+            if (tinhthanhVal === '') {
+                $quanhuyen.html('<option value=""></option>');
+                $phuongxa.html('<option value=""></option>');
+                initSelect2($quanhuyen, {
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: $quanhuyen.data('placeholder')
+                });
+                initSelect2($phuongxa, {
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: $phuongxa.data('placeholder')
+                });
                 $diachi.attr('placeholder', 'Nhập số nhà, tên đường, thôn/tổ dân phố');
-            } else if ($(this).val() === '-1') {
-                $quanhuyen.select2("container").hide();
-                $phuongxa.select2("container").hide();
+            } else if (tinhthanhVal === '-1') {
+                $quanhuyen.html('<option value=""></option>').hide();
+                $phuongxa.html('<option value=""></option>').hide();
+                initSelect2($quanhuyen, {
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: $quanhuyen.data('placeholder')
+                });
+                initSelect2($phuongxa, {
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: $phuongxa.data('placeholder')
+                });
                 $diachi.attr('placeholder', 'Nhập số nhà, tên đường, thôn/tổ dân phố, phường/xã, quận/huyện, tỉnh/thành');
             } else {
-                $quanhuyen.select2("container").show();
-                $phuongxa.select2("container").show();
+                $quanhuyen.show();
+                $phuongxa.show();
                 $diachi.attr('placeholder', 'Nhập số nhà, tên đường, thôn/tổ dân phố');
                 $.post('index.php', {
                     option: 'com_vptk',
-                    controller: 'ajax',
+                    controller: 'vptk',
                     task: 'getQuanHuyenByTinhThanh',
-                    tinhthanh_id: $(this).val(),
+                    tinhthanh_id: tinhthanhVal,
                     [Joomla.getOptions('csrf.token')]: 1
                 }, function(data) {
                     var str = '<option value=""></option><option value="-1" data-text="Khác">Khác</option>';
@@ -1101,7 +1210,18 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                             str += '<option value="' + v.id + '" data-text="' + v.tenquanhuyen + '">' + v.tenquanhuyen + '</option>';
                         });
                     }
-                    $quanhuyen.html(str).trigger('change');
+                    $quanhuyen.html(str);
+                    initSelect2($quanhuyen, {
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: $quanhuyen.data('placeholder')
+                    });
+                    $phuongxa.html('<option value=""></option>');
+                    initSelect2($phuongxa, {
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: $phuongxa.data('placeholder')
+                    });
                 }).fail(function() {
                     $.gritter.add({
                         title: '<h3>Thông báo</h3>',
@@ -1109,28 +1229,57 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                         time: 2000,
                         class_name: 'gritter-error gritter-center gritter-light'
                     });
+                    $quanhuyen.html('<option value=""></option>');
+                    $phuongxa.html('<option value=""></option>');
+                    initSelect2($quanhuyen, {
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: $quanhuyen.data('placeholder')
+                    });
+                    initSelect2($phuongxa, {
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: $phuongxa.data('placeholder')
+                    });
                 });
             }
         });
 
-        // Xử lý select thuongtrucu_quanhuyen_id trong modal
+        // Handle thuongtrucu_quanhuyen_id change
         $('#modal_thuongtrucu_quanhuyen_id').on('change', function() {
             var $phuongxa = $('#modal_thuongtrucu_phuongxa_id');
             var $diachi = $('#modal_thuongtrucu_diachi');
-            if ($(this).val() === '') {
-                $phuongxa.html('<option value=""></option>').trigger('change').select2("container").show();
+            var quanhuyenVal = $(this).val();
+
+            // Hủy Select2 nếu đã khởi tạo
+            if ($phuongxa.data('select2')) {
+                $phuongxa.select2('destroy');
+            }
+
+            if (quanhuyenVal === '') {
+                $phuongxa.html('<option value=""></option>');
+                initSelect2($phuongxa, {
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: $phuongxa.data('placeholder')
+                });
                 $diachi.attr('placeholder', 'Nhập số nhà, tên đường, thôn/tổ dân phố');
-            } else if ($(this).val() === '-1') {
-                $phuongxa.select2("container").hide();
+            } else if (quanhuyenVal === '-1') {
+                $phuongxa.html('<option value=""></option>').hide();
+                initSelect2($phuongxa, {
+                    width: '100%',
+                    allowClear: true,
+                    placeholder: $phuongxa.data('placeholder')
+                });
                 $diachi.attr('placeholder', 'Nhập số nhà, tên đường, thôn/tổ dân phố, phường/xã, quận/huyện');
             } else {
-                $phuongxa.select2("container").show();
+                $phuongxa.show();
                 $diachi.attr('placeholder', 'Nhập số nhà, tên đường, thôn/tổ dân phố');
                 $.post('index.php', {
                     option: 'com_vptk',
-                    controller: 'ajax',
+                    controller: 'vptk',
                     task: 'getPhuongXaByQuanHuyen',
-                    quanhuyen_id: $(this).val(),
+                    quanhuyen_id: quanhuyenVal,
                     [Joomla.getOptions('csrf.token')]: 1
                 }, function(data) {
                     var str = '<option value=""></option><option value="-1" data-text="Khác">Khác</option>';
@@ -1139,7 +1288,12 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                             str += '<option value="' + v.id + '" data-text="' + v.tenphuongxa + '">' + v.tenphuongxa + '</option>';
                         });
                     }
-                    $phuongxa.html(str).trigger('change');
+                    $phuongxa.html(str);
+                    initSelect2($phuongxa, {
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: $phuongxa.data('placeholder')
+                    });
                 }).fail(function() {
                     $.gritter.add({
                         title: '<h3>Thông báo</h3>',
@@ -1147,11 +1301,17 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                         time: 2000,
                         class_name: 'gritter-error gritter-center gritter-light'
                     });
+                    $phuongxa.html('<option value=""></option>');
+                    initSelect2($phuongxa, {
+                        width: '100%',
+                        allowClear: true,
+                        placeholder: $phuongxa.data('placeholder')
+                    });
                 });
             }
         });
 
-        // Xử lý select thuongtrucu_phuongxa_id trong modal
+        // Handle thuongtrucu_phuongxa_id change
         $('#modal_thuongtrucu_phuongxa_id').on('change', function() {
             var $diachi = $('#modal_thuongtrucu_diachi');
             $diachi.attr('placeholder', $(this).val() === '-1' ?
@@ -1159,12 +1319,12 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
                 'Nhập số nhà, tên đường, thôn/tổ dân phố');
         });
 
-        // Xử lý nút Quay lại
+        // Handle Quay lại button
         $('#btn_quaylai').on('click', function() {
             window.location.href = '/index.php/component/vptk/?view=nhk&task=default';
         });
 
-        // Validation cho form chính
+        // Validation for main form
         if ($.fn.validate) {
             $('#frmNhanhokhau').validate({
                 ignore: [],
@@ -1209,15 +1369,7 @@ HTMLHelper::_('script', 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/
             });
         }
 
-        // Xử lý nút Lưu form chính
-        $('#btn_luu').on('click', function(e) {
-            e.preventDefault();
-            if ($.fn.validate && $('#frmNhanhokhau').valid()) {
-                document.frmNhanhokhau.submit();
-            }
-        });
-
-        // Kích hoạt sự kiện change ban đầu cho phuongxa_id
+        // Trigger initial phuongxa_id change
         $('#phuongxa_id').trigger('change');
     });
 </script>

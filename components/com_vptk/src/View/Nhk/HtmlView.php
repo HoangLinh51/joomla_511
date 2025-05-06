@@ -154,6 +154,8 @@ class HtmlView extends BaseHtmlView
 		$nghenghiep = Core::loadAssocList('danhmuc_nghenghiep','id,tennghenghiep','trangthai = 1 AND daxoa = 0','sapxep ASC');
 		$lydo = Core::loadAssocList('danhmuc_lydoxoathuongtru','id,tenlydo','trangthai = 1 AND daxoa = 0','sapxep ASC');
 		$quoctich = Core::loadAssocList('danhmuc_quoctich','id,tenquoctich','trangthai = 1 AND daxoa = 0','sapxep ASC');
+		$nhommau = Core::loadAssocList('danhmuc_nhommau','code,name','status = 1 AND daxoa = 0');
+		$qhhonnhan = Core::loadAssocList('danhmuc_tinhtranghonnhan','code,name','status = 1 AND daxoa = 0');
 
         if($hokhau_id != ''){
             $item = $model->getHokhauById($hokhau_id);
@@ -182,6 +184,8 @@ class HtmlView extends BaseHtmlView
         $this->lydo = $lydo;
         $this->item = $item;
         $this->quoctich = $quoctich;
+        $this->nhommau = $nhommau;
+        $this->qhhonnhan = $qhhonnhan;
 
 		
 	}
