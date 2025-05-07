@@ -16,61 +16,51 @@ use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die;
 HTMLHelper::_('behavior.keepalive');
+HTMLHelper::_('bootstrap.framework'); // JS
+HTMLHelper::_('stylesheet', 'media/jui/css/bootstrap.min.css', array('version' => 'auto'));
 $user = Factory::getUser();
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
+$coreTemplate = new CoreTemplate();
+$modelThongbao = Core::model('Thongbao/Thongbao');
+$listThongBao = $modelThongbao->getListThongBao();
+$countThongBao =  $modelThongbao->countItemsUnread($user->id);
+$submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 
 ?>
-<?php
-$db = Factory::getDbo();
-$base_url = Uri::root(true);
-$avatar_id = $user->avatar_id;
-$avatarUrl = $base_url . "/uploader/defaultImage.png";
 
-if (!empty($avatar_id)) {
-	$query = $db->getQuery(true)
-		->select($db->quoteName('code'))
-		->from($db->quoteName('core_attachment'))
-		->where($db->quoteName('object_id') . ' = ' . $db->quote($avatar_id))
-		->order($db->quoteName('created_at') . ' DESC');
-	$db->setQuery($query);
-	$result = $db->loadObject();
-
-	if (!empty($result) && !empty($result->code)) {
-		$avatarUrl = $base_url . "/uploader/get_image.php?code=" . $result->code;
-	}
-}
-?>
-<li class="nav-item dropdown">
-	<a class="nav-link" data-toggle="dropdown" href="#">
+<div class="dropdown">
+	<a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<i class="far fa-bell" style="font-size: 20px"></i>
-		<span class="badge badge-warning navbar-badge">15</span>
+		<?php if ($countThongBao > 0) : ?>
+			<span class="badge bg-danger navbar-badge" id="unread-badge"></span>
+		<?php endif; ?>
 	</a>
-	<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-		<span class="dropdown-header">15 Notifications</span>
-		<div class="dropdown-divider"></div>
-		<a href="#" class="dropdown-item">
-			<i class="fas fa-envelope mr-2"></i> 4 new messages
-			<span class="float-right text-muted text-sm">3 mins</span>
-		</a>
-		<div class="dropdown-divider"></div>
-		<a href="#" class="dropdown-item">
-			<i class="fas fa-users mr-2"></i> 8 friend requests
-			<span class="float-right text-muted text-sm">12 hours</span>
-		</a>
-		<div class="dropdown-divider"></div>
-		<a href="#" class="dropdown-item">
-			<i class="fas fa-file mr-2"></i> 3 new reports
-			<span class="float-right text-muted text-sm">2 days</span>
-		</a>
-		<div class="dropdown-divider"></div>
-		<a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-	</div>
-</li>
+	<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+		<?php if (!empty($listThongBao)) { ?>
+			<?php foreach ($listThongBao as $item) : ?>
+				<?php $isRead = $modelThongbao->getTrangThaiThongBao($user->id, $item->id); ?>
+				<li>
+					<a class="dropdown-item <?php echo $isRead ? 'text-muted' : 'fw-bold'; ?>"
+						href="<?php echo Route::_('index.php?option=com_thongbao&view=thongbao&task=default&id=' . $item->id); ?>"
+						data-id="<?php echo $item->id; ?>" onclick="markAsRead(<?php echo $item->id; ?>, <?php echo $user->id; ?>)">
+						<?php echo $item->tieude; ?>
+						<?php if (!$isRead): ?>
+							<span class="badge bg-info ms-2">Mới</span>
+						<?php endif; ?>
+					</a>
+				</li>
+			<?php endforeach; ?>
+		<?php } else { ?>
+			<div class="notification-item" style="font-size: 14px;">Không có thông báo mới.</div>
+		<?php } ?>
+	</ul>
+</div>
+
 
 <li class="dropdown user user-menu open">
-	<a data-toggle="dropdown" href="#" class="dropdown-toggle" style="background: rgba(0, 0, 0, 0)">
-		<img src="<?php echo htmlspecialchars($avatarUrl, ENT_QUOTES, 'UTF-8'); ?>"
+	<a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+		<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>"
 			alt="Avatar" class="img-circle" style="width: 35px; height: 35px;">
 
 		<?php if ($params->get('greeting')) : ?>
@@ -93,7 +83,7 @@ if (!empty($avatar_id)) {
 	</a>
 	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
 		<li class="user-header">
-			<img src="<?php echo htmlspecialchars($avatarUrl, ENT_QUOTES, 'UTF-8'); ?>" class="img-circle" alt="User Image">
+			<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>" class="img-circle" alt="User Image">
 			<p><?php echo $user->name ?></p>
 			<p>Tham gia từ
 				<?php
@@ -127,9 +117,58 @@ if (!empty($avatar_id)) {
 	<input type="hidden" name="return" value="<?php echo $return; ?>" />
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
+<script>
+	function markAsRead(thongbao_id, user_id) {
+		// Gửi yêu cầu cập nhật trạng thái đến server
+		console.log(thongbao_id, user_id)
+		fetch('', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: `thongbao_id=${thongbao_id}&user_id=${user_id}`
+		}).catch(() => {
+			console.warn("Lỗi khi cập nhật trạng thái đã đọc.");
+		});
+
+		// Cập nhật giao diện ngay lập tức
+		const link = document.querySelector(`a[data-id="${thongbao_id}"]`);
+		console.log(link);
+		if (link) {
+			link.classList.remove('fw-bold');
+			link.classList.add('text-muted');
+
+			const badge = link.querySelector('.bg-info');
+			if (badge) {
+				// Thêm hiệu ứng mờ dần rồi xóa
+				badge.style.transition = "opacity 0.3s ease";
+				badge.style.opacity = 0;
+				setTimeout(() => badge.remove(), 300);
+			}
+		}
+	}
+</script>
 
 <style>
 	.navbar-badge {
-		top: 3px;
+		display: inline-block !important;
+		width: 10px;
+		height: 10px;
+		bottom: 15px !important;
+		left: 10px !important;
+		right: inherit !important;
+		top: inherit !important;
+	}
+
+
+	.dropdown-menu {
+		left: auto !important;
+		right: 0;
+	}
+
+	.dropdown-item {
+		display: flex !important;
+		align-items: center;
+		justify-content: space-between;
 	}
 </style>

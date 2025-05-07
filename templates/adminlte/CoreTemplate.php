@@ -293,4 +293,26 @@ class CoreTemplate{
 		$result .= '</ul>';
 		return $result;
 	}
+
+	public function getAvatarUrl($user)
+	{
+		$db = Factory::getDbo();
+		$base_url = Uri::root(true);
+		$avatar_id = $user->avatar_id;
+		$avatarUrl = $base_url . "/uploader/defaultImage.png";
+		if (!empty($avatar_id)) {
+			$query = $db->getQuery(true)
+				->select($db->quoteName('code'))
+				->from($db->quoteName('core_attachment'))
+				->where($db->quoteName('object_id') . ' = ' . $db->quote($avatar_id))
+				->order($db->quoteName('created_at') . ' DESC');
+			$db->setQuery($query);
+			$result = $db->loadObject();
+
+			if (!empty($result) && !empty($result->code)) {
+				$avatarUrl = $base_url . "/uploader/get_image.php?code=" . $result->code;
+			}
+		}
+		return $avatarUrl;
+	}
 }
