@@ -95,6 +95,10 @@ class ProfileController extends BaseController
 
         // Get the user data.
         $requestData = $app->getInput()->post->get('jform', [], 'array');
+    
+        
+
+        
         // Force the ID to this user.
         $requestData['id'] = $data;
         // Validate the posted data.

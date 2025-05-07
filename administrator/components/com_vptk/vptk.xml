@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="5.0" method="upgrade">
+    <name>Quản lý nhân hộ khẩu</name>
+    <title>COM_VPTK</title>
+    <author>HueNN</author>
+    <creationDate>2024-07-03</creationDate>
+    <authorEmail>you@example.com</authorEmail>
+    <authorUrl>http://www.example.com</authorUrl>
+    <version>3.0.0</version>
+    <description>Component for organizing events on the public site.</description>
+	<namespace path="src">Joomla\Component\VPTK</namespace>
+	
+	<files folder="site">
+		<filename>index.html</filename>
+        <filename>vptk.xml</filename>
+		<folder>helpers</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+	<administration>
+	    <files folder="admin">
+        </files>
+	</administration>
+</extension>
