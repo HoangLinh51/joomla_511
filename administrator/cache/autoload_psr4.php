@@ -75,6 +75,7 @@ return [
 	'Joomla\\Component\\Users\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_users/src'],
 	'Joomla\\Component\\Users\\Api\\' => [JPATH_API . '/components/com_users/src'],
 	'Joomla\\Component\\Users\\Site\\' => [JPATH_SITE . '/components/com_users/src'],
+	'Joomla\\Component\\VPTK\\Site\\' => [JPATH_SITE . '/components/com_vptk/src'],
 	'Joomla\\Component\\Workflow\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_workflow/src'],
 	'Joomla\\Component\\Wrapper\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_wrapper/src'],
 	'Joomla\\Component\\Wrapper\\Site\\' => [JPATH_SITE . '/components/com_wrapper/src'],

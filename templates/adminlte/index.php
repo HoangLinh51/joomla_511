@@ -5,6 +5,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Session\Session;
+require_once JPATH_LIBRARIES . '/vendor/autoload.php';  // Đối với Joomla
 
 require_once(JPATH_THEMES . '/adminlte/CoreTemplate.php');
 $coreTemplate = new CoreTemplate();
@@ -34,9 +35,9 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/jqvmap/jqvmap.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/css/select2.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.css');
+	$doc->addStyleSheet(URI::root(true) . '/templates/' . $this->template . '/assets/css/bootstrap-datepicker.css');
+
 	$doc->addStyleSheet(Uri::root(true) . '/media/cbcc/css/jquery.toast.css');
-
-
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery/jquery.min.js');
 	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
 	$doc->addScript(Uri::root(true) . '/media/legacy/js/jquery-noconflict.js');
@@ -56,8 +57,72 @@ if ($coreTemplate->isLogin() == true) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>CỞ SỞ DỮ LIỆU PHƯỜNG XÃ DÙNG CHUNG</title>
+		<!-- Google Font: Source Sans Pro -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+		<!-- Font Awesome Icons -->
+		<script>
+			var app = {};
+			var loadNoticeBoardSuccess = function(title, text) {
+				// jQuery.gritter.add({
+				// 	title: title,
+				// 	text: text,
+				// 	time: '2000',
+				// 	class_name: 'gritter-success gritter-center gritter-light'
+				// });
+				toastr.success(text, title)
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-top-right",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "5000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+			};
+			var loadNoticeBoardError = function(title, text) {
+				toastr.error(text, title)
+				toastr.options = {
+					"closeButton": true,
+					"debug": false,
+					"newestOnTop": true,
+					"progressBar": true,
+					"positionClass": "toast-top-right",
+					"preventDuplicates": false,
+					"onclick": null,
+					"showDuration": "300",
+					"hideDuration": "1000",
+					"timeOut": "5000",
+					"extendedTimeOut": "1000",
+					"showEasing": "swing",
+					"hideEasing": "linear",
+					"showMethod": "fadeIn",
+					"hideMethod": "fadeOut"
+				}
+				// jQuery.gritter.add({
+				// 	title: title,
+				// 	text: text,
+				// 	time: '2000',
+				// 	class_name: 'gritter-error gritter-light'
+				// });
+			};
+		</script>
+		<jdoc:include type="head" />
+	</head>
 
 <head>
 	<meta charset="utf-8" />
@@ -192,20 +257,22 @@ if ($coreTemplate->isLogin() == true) {
 	</div>
 </body>
 
-</html>
-<style>
-	body:not(.layout-fixed) .main-sidebar {
-		height: inherit !important;
-		min-height: 100% !important;
-		position: absolute !important;
-		top: 0 !important;
-	}
-
-	.nav-link.menu-open {
-		background-color: rgba(255, 255, 255, .1) !important;
-		color: #fff !important;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
-	}
+	</html>
+	<style>
+		body:not(.layout-fixed) .main-sidebar {
+			height: inherit !important;
+			min-height: 100% !important;
+			position: absolute !important;
+			top: 0 !important;
+		}
+		.phpdebugbar-restore-btn, .phpdebugbar-header{
+			display: none !important;
+		}
+		.nav-link.menu-open {
+			background-color: rgba(255, 255, 255, .1) !important;
+			color: #fff !important;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
+		}
 
 	#toast-container .toast-success {
 		background-color: #3c763d;
