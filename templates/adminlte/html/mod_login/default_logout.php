@@ -22,11 +22,12 @@ $user = Factory::getUser();
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
 $coreTemplate = new CoreTemplate();
-$itemThongBao = $coreTemplate->getThongBao();
-$countThongBao =  $coreTemplate->getThongBaoCount($user->id);
-$submitThongbao = $coreTemplate->submitThongbao()
-?>
+$modelThongbao = Core::model('Thongbao/Thongbao');
+$listThongBao = $modelThongbao->getListThongBao();
+$countThongBao =  $modelThongbao->countItemsUnread($user->id);
+$submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 
+?>
 
 <div class="dropdown">
 	<a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,13 +37,13 @@ $submitThongbao = $coreTemplate->submitThongbao()
 		<?php endif; ?>
 	</a>
 	<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-		<?php if (!empty($itemThongBao)) { ?>
-			<?php foreach ($itemThongBao as $item) : ?>
-				<?php $isRead = $coreTemplate->getTrangThaiThongBao($user->id, $item->id); ?>
+		<?php if (!empty($listThongBao)) { ?>
+			<?php foreach ($listThongBao as $item) : ?>
+				<?php $isRead = $modelThongbao->getTrangThaiThongBao($user->id, $item->id); ?>
 				<li>
 					<a class="dropdown-item <?php echo $isRead ? 'text-muted' : 'fw-bold'; ?>"
-						data-id="<?php echo $item->id; ?>" data-bs-toggle="modal"
-						data-bs-target="#thongBaoModal" onclick="markAsRead(<?php echo $item->id; ?>, <?php echo $user->id; ?>)">
+						href="<?php echo Route::_('index.php?option=com_thongbao&view=thongbao&task=default&id=' . $item->id); ?>"
+						data-id="<?php echo $item->id; ?>" onclick="markAsRead(<?php echo $item->id; ?>, <?php echo $user->id; ?>)">
 						<?php echo $item->tieude; ?>
 						<?php if (!$isRead): ?>
 							<span class="badge bg-info ms-2">Mới</span>
@@ -119,6 +120,7 @@ $submitThongbao = $coreTemplate->submitThongbao()
 <script>
 	function markAsRead(thongbao_id, user_id) {
 		// Gửi yêu cầu cập nhật trạng thái đến server
+		console.log(thongbao_id, user_id)
 		fetch('', {
 			method: 'POST',
 			headers: {
@@ -144,10 +146,6 @@ $submitThongbao = $coreTemplate->submitThongbao()
 				setTimeout(() => badge.remove(), 300);
 			}
 		}
-		<?php $countThongBao =  $coreTemplate->getThongBaoCount($user->id); ?>
-		<?php if ($countThongBao <= 0)
-
-		?>
 	}
 </script>
 

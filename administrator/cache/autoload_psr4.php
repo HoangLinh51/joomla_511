@@ -70,6 +70,7 @@ return [
 	'Joomla\\Component\\Tags\\Site\\' => [JPATH_SITE . '/components/com_tags/src'],
 	'Joomla\\Component\\Templates\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_templates/src'],
 	'Joomla\\Component\\Templates\\Api\\' => [JPATH_API . '/components/com_templates/src'],
+	'Joomla\\Component\\Thongbao\\Site\\' => [JPATH_SITE . '/components/com_thongbao/src'],
 	'Joomla\\Component\\Tochuc\\Site\\' => [JPATH_SITE . '/components/com_tochuc/src'],
 	'Joomla\\Component\\Users\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_users/src'],
 	'Joomla\\Component\\Users\\Api\\' => [JPATH_API . '/components/com_users/src'],
