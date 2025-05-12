@@ -24,12 +24,12 @@ $doc = Factory::getDocument();
 $coreTemplate = new CoreTemplate();
 $modelThongbao = Core::model('Thongbao/Thongbao');
 $listThongBao = $modelThongbao->getListThongBao();
-$countThongBao =  $modelThongbao->countItemsUnread($user->id);
+$countThongBao =  $modelThongbao->countThongBao($user->id, 'unread');
 $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 
 ?>
 
-<div class="dropdown">
+<div class="dropdown mr-2">
 	<a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<i class="far fa-bell" style="font-size: 20px"></i>
 		<?php if ($countThongBao > 0) : ?>
@@ -42,7 +42,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 				<?php $isRead = $modelThongbao->getTrangThaiThongBao($user->id, $item->id); ?>
 				<li>
 					<a class="dropdown-item <?php echo $isRead ? 'text-muted' : 'fw-bold'; ?>"
-						href="<?php echo Route::_('index.php?option=com_thongbao&view=thongbao&task=default&id=' . $item->id); ?>"
+						href="<?php echo Route::_('index.php?option=com_thongbao&view=thongbao&task=detail_thongbao&id=' . $item->id); ?>"
 						data-id="<?php echo $item->id; ?>" onclick="markAsRead(<?php echo $item->id; ?>, <?php echo $user->id; ?>)">
 						<?php echo $item->tieude; ?>
 						<?php if (!$isRead): ?>

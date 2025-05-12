@@ -3,30 +3,14 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 
-class Thongbao_Model_Thongbao extends JModelLegacy
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+
+class Thongbao_Model_Thongbao extends BaseDatabaseModel
 {
 
   public function getTitle()
   {
     return "Tie";
-  }
-  public function getPhanquyen()
-  {
-    $user_id = Factory::getUser()->id;
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true);
-    $query->select('quanhuyen_id,phuongxa_id');
-    $query->from('phanquyen_user2khuvuc AS a');
-    $query->where('a.user_id = ' . $db->quote($user_id));
-    $db->setQuery($query);
-    $result = $db->loadAssoc();
-
-    if ($result['phuongxa_id'] == '') {
-      echo '<div class="alert alert-error"><strong>Bạn không được phân quyền sử dụng chức năng này. Vui lòng liên hệ quản trị viên!!!</strong></div>';
-      exit;
-    } else {
-      return $result;
-    }
   }
 
   public function getListThongBao($params = array(), $startFrom = 0, $perPage = 20)
@@ -69,7 +53,7 @@ class Thongbao_Model_Thongbao extends JModelLegacy
     // Sắp xếp và phân trang
     $query->order('a.created_at DESC')
       ->setLimit((int)$perPage, (int)$startFrom);
-
+    $query->where('a.daxoa = 0');
     $db->setQuery($query);
 
     try {
@@ -100,11 +84,10 @@ class Thongbao_Model_Thongbao extends JModelLegacy
     }
   }
 
-  public function countItemsUnread($userId)
+  public function countThongBao($userId, $mode = 'unread')
   {
     $db = Factory::getDbo();
-    $currentDate = date('Y-m-d');
-    $query =  $db->getQuery(true)
+    $query = $db->getQuery(true)
       ->select('COUNT(*) AS tongthongbao')
       ->from($db->quoteName('thongbao', 't'))
       ->leftJoin(
@@ -112,15 +95,17 @@ class Thongbao_Model_Thongbao extends JModelLegacy
           $db->quoteName('t.id') . ' = ' . $db->quoteName('tt.thongbao_id') . ' AND ' .
           $db->quoteName('tt.user_id') . ' = ' . $db->quote($userId)
       )
-      ->where('DATE(' . $db->quoteName('t.created_at') . ') = ' . $db->quote($currentDate))
-      ->where($db->quoteName('t.status') . ' = 1')
-      ->where('(tt.id IS NULL OR tt.is_seen = 0)');
+      ->where('t.status = 1')
+      ->where('t.daxoa = 0');
 
-    $query->where('t.daxoa = 0');
-
+    // Nếu là unread: chỉ đếm những thông báo chưa đọc trong ngày hôm nay
+    if ($mode === 'unread') {
+      $currentDate = date('Y-m-d');
+      $query->where('DATE(t.created_at) = ' . $db->quote($currentDate));
+      $query->where('(tt.id IS NULL OR tt.is_seen = 0)');
+    }
     $db->setQuery($query);
-    $unreadCount = (int) $db->loadResult();
-    return $unreadCount;
+    return (int) $db->loadResult();
   }
 
   public function getDetailThongbao($thongbaoId)
@@ -153,19 +138,6 @@ class Thongbao_Model_Thongbao extends JModelLegacy
           Factory::getApplication()->enqueueMessage('SQL Error: ' . $e->getMessage(), 'error');
           return null;
       }
-  }
-
-  public function removeThongbao($id, $userId)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true);
-    $query->update('thongbao');
-    $query->set('daxoa = 1');
-    $query->set('deleted_by = ' . $db->quote($userId));
-    $query->set('deleted = NOW()');
-    $query->where('id =' . $db->quote($id));
-    $db->setQuery($query);
-    return $db->execute();
   }
 
   public function submitTrangThaiThongBao()
@@ -221,4 +193,84 @@ class Thongbao_Model_Thongbao extends JModelLegacy
 			return false;
 		}
 	}
+
+  public function saveThongBao($formdata, $idUser)
+  {
+    $db = Factory::getDbo();
+
+    // column database
+    $columns = [
+      'tieude' => $formdata["tieude"],
+      'noidung' => $formdata["noidung"],
+      'vanbandinhkem' => $formdata["idTepDinhKem"],
+    ];
+
+    if ($formdata["id"] > 0) {
+      // Update
+      $query = $db->getQuery(true)
+        ->update($db->quoteName('thongbao'))
+        ->set(array_map(function ($k, $v) use ($db) {
+          return $db->quoteName($k) . ' = ' . $db->quote($v);
+        }, array_keys($columns), $columns))
+        ->where($db->quoteName('id') . ' = ' . (int) $formdata["id"]);
+
+      $db->setQuery($query);
+      $db->execute();
+
+      return $formdata["id"];
+    } else {
+      // Insert new 
+      $columns['status'] = 1;
+      $columns['created_by'] = $idUser;
+      $columns['created_at'] = Factory::getDate()->toSql();
+
+      $query = $db->getQuery(true)
+        ->insert($db->quoteName('thongbao'))
+        ->columns(array_keys($columns))
+        ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
+
+      $db->setQuery($query);
+      $db->execute();
+
+      return $db->insertid();
+    }
+  }
+
+  public function getVanBan($idObject)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+
+    $query->select([
+      'a.id',
+      'a.code',
+      'a.filename',
+      'YEAR(a.created_at) AS nam'
+    ])
+      ->from($db->quoteName('core_attachment', 'a'))
+      ->where($db->quoteName('a.object_id') . ' = ' . $db->quote($idObject));
+
+    $db->setQuery($query);
+    try {
+      $results = $db->loadObjectList();
+      return $results ? $results : [];
+    } catch (Exception $e) {
+      Factory::getApplication()->enqueueMessage('SQL Error: ' . $e->getMessage(), 'error');
+      return [];
+    }
+  }
+
+  public function deleteThongbao($idUser, $idThongbao)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true)
+      ->update('thongbao')
+      ->set('daxoa = 1')
+      ->set('deleted_by = ' . $db->quote($idUser))
+      ->set('deleted_at = NOW()')
+      ->where('id =' . $db->quote($idThongbao));
+
+    $db->setQuery($query);
+    return $db->execute();
+  }
 }

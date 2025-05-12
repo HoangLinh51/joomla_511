@@ -5,6 +5,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Session\Session;
+
 require_once JPATH_LIBRARIES . '/vendor/autoload.php';  // Đối với Joomla
 
 require_once(JPATH_THEMES . '/adminlte/CoreTemplate.php');
@@ -14,12 +15,14 @@ if ($coreTemplate->isLogin() == true) {
 	require_once(JPATH_THEMES . '/adminlte/login.php');
 } else {
 	$user = Factory::getUser();
-	if ($user->id == null && $return == false) {
-		$url = Route::_('index.php?option=com_users&view=login');
-		$message = 'Bạn cần đăng nhập vào hệ thống.';
-		Factory::getApplication()->enqueueMessage($message);
-		Factory::getApplication()->redirect($url);
-		return false;
+	if ($user->id == null) {
+		if ($return == false) {
+			$url = Route::_('index.php?option=com_users&view=login');
+			$message = 'Bạn cần đăng nhập vào hệ thống.';
+			Factory::getApplication()->enqueueMessage($message);
+			Factory::getApplication()->redirect($url);
+			return false;
+		}
 	}
 	$app = Factory::getApplication();
 	$doc = Factory::getDocument();
@@ -56,85 +59,19 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addScript(Uri::root(true) . '/media/cbcc/js/common.js');
 }
 ?>
-
-	<head>
-		<meta charset="utf-8" />
-		<meta name="description" content="overview &amp; stats" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>CỞ SỞ DỮ LIỆU PHƯỜNG XÃ DÙNG CHUNG</title>
-		<!-- Google Font: Source Sans Pro -->
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-		<!-- Font Awesome Icons -->
-		<script>
-			var app = {};
-			var loadNoticeBoardSuccess = function(title, text) {
-				// jQuery.gritter.add({
-				// 	title: title,
-				// 	text: text,
-				// 	time: '2000',
-				// 	class_name: 'gritter-success gritter-center gritter-light'
-				// });
-				toastr.success(text, title)
-				toastr.options = {
-					"closeButton": true,
-					"debug": false,
-					"newestOnTop": true,
-					"progressBar": true,
-					"positionClass": "toast-top-right",
-					"preventDuplicates": false,
-					"onclick": null,
-					"showDuration": "300",
-					"hideDuration": "1000",
-					"timeOut": "5000",
-					"extendedTimeOut": "1000",
-					"showEasing": "swing",
-					"hideEasing": "linear",
-					"showMethod": "fadeIn",
-					"hideMethod": "fadeOut"
-				}
-			};
-			var loadNoticeBoardError = function(title, text) {
-				toastr.error(text, title)
-				toastr.options = {
-					"closeButton": true,
-					"debug": false,
-					"newestOnTop": true,
-					"progressBar": true,
-					"positionClass": "toast-top-right",
-					"preventDuplicates": false,
-					"onclick": null,
-					"showDuration": "300",
-					"hideDuration": "1000",
-					"timeOut": "5000",
-					"extendedTimeOut": "1000",
-					"showEasing": "swing",
-					"hideEasing": "linear",
-					"showMethod": "fadeIn",
-					"hideMethod": "fadeOut"
-				}
-				// jQuery.gritter.add({
-				// 	title: title,
-				// 	text: text,
-				// 	time: '2000',
-				// 	class_name: 'gritter-error gritter-light'
-				// });
-			};
-		</script>
-		<jdoc:include type="head" />
-	</head>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
 	<meta charset="utf-8" />
 	<meta name="description" content="overview &amp; stats" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>AdminLTE 3 | Dashboard</title>
+	<title>CỞ SỞ DỮ LIỆU PHƯỜNG XÃ DÙNG CHUNG</title>
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 	<!-- Font Awesome Icons -->
 	<script>
-		var app = {};
 		var loadNoticeBoardSuccess = function(title, text) {
 			// jQuery.gritter.add({
 			// 	title: title,
@@ -199,7 +136,7 @@ if ($coreTemplate->isLogin() == true) {
 					<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
 				</li>
 			</ul>
-			<ul class="navbar-nav ml-auto right-nav">
+			<ul class="d-flex align-items-center navbar-nav ml-auto">
 				<jdoc:include type="modules" name="sidebar-right" />
 			</ul>
 		</nav>
@@ -207,7 +144,7 @@ if ($coreTemplate->isLogin() == true) {
 		<aside class="main-sidebar sidebar-light-primary elevation-4">
 			<a href="index.php" class="d-flex align-items-center gap-3 logo-brand">
 				<img src="/images/banners/logoDnict.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 m-0">
-				<h3 style="color: #343a40; font-weight: 600;margin: 0; margin-left: 5px;">DNICT</h3>
+				<h3 class="m-0 brand-text pl-1" style="color: #3e3e3e">DNICT</h3>
 			</a>
 			<div class="line"></div>
 
@@ -257,22 +194,25 @@ if ($coreTemplate->isLogin() == true) {
 	</div>
 </body>
 
-	</html>
-	<style>
-		body:not(.layout-fixed) .main-sidebar {
-			height: inherit !important;
-			min-height: 100% !important;
-			position: absolute !important;
-			top: 0 !important;
-		}
-		.phpdebugbar-restore-btn, .phpdebugbar-header{
-			display: none !important;
-		}
-		.nav-link.menu-open {
-			background-color: rgba(255, 255, 255, .1) !important;
-			color: #fff !important;
-			box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
-		}
+</html>
+<style>
+	body:not(.layout-fixed) .main-sidebar {
+		height: inherit !important;
+		min-height: 100% !important;
+		position: absolute !important;
+		top: 0 !important;
+	}
+
+	.phpdebugbar-restore-btn,
+	.phpdebugbar-header {
+		display: none !important;
+	}
+
+	.nav-link.menu-open {
+		background-color: rgba(255, 255, 255, .1) !important;
+		color: #fff !important;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24) !important;
+	}
 
 	#toast-container .toast-success {
 		background-color: #3c763d;
@@ -336,12 +276,6 @@ if ($coreTemplate->isLogin() == true) {
 
 	.sidebar-hidden .content-wrapper {
 		margin-left: 0 !important;
-	}
-
-	.right-nav {
-		display: flex;
-		align-items: center;
-		gap: 15px;
 	}
 </style>
 
