@@ -12,7 +12,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die;
 HTMLHelper::_('behavior.keepalive');
@@ -23,7 +22,7 @@ $app = Factory::getApplication();
 $doc = Factory::getDocument();
 $coreTemplate = new CoreTemplate();
 $modelThongbao = Core::model('Thongbao/Thongbao');
-$listThongBao = $modelThongbao->getListThongBao();
+$listThongBao = $modelThongbao->getListThongBao('today', '', 1, 10);
 $countThongBao =  $modelThongbao->countThongBao($user->id, 'unread');
 $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 
@@ -32,30 +31,36 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 <div class="dropdown mr-2">
 	<a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<i class="far fa-bell" style="font-size: 20px"></i>
-		<?php if ($countThongBao > 0) : ?>
+		<?php if ($countThongBao > 0): ?>
 			<span class="badge bg-danger navbar-badge" id="unread-badge"></span>
 		<?php endif; ?>
 	</a>
-	<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+	<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="notificationList">
 		<?php if (!empty($listThongBao)) { ?>
-			<?php foreach ($listThongBao as $item) : ?>
+			<?php foreach ($listThongBao as $index => $item): ?>
 				<?php $isRead = $modelThongbao->getTrangThaiThongBao($user->id, $item->id); ?>
-				<li>
+				<li class="notification-item">
 					<a class="dropdown-item <?php echo $isRead ? 'text-muted' : 'fw-bold'; ?>"
-						href="<?php echo Route::_('index.php?option=com_thongbao&view=thongbao&task=detail_thongbao&id=' . $item->id); ?>"
-						data-id="<?php echo $item->id; ?>" onclick="markAsRead(<?php echo $item->id; ?>, <?php echo $user->id; ?>)">
-						<?php echo $item->tieude; ?>
+						href="<?= Route::_('index.php?option=com_thongbao&view=thongbao&task=detail_thongbao&id=' . $item->id); ?>"
+						onclick="markAsRead(<?= $item->id; ?>, <?= $user->id; ?>)">
+						<?= htmlspecialchars($item->tieude); ?>
 						<?php if (!$isRead): ?>
 							<span class="badge bg-info ms-2">Mới</span>
 						<?php endif; ?>
 					</a>
 				</li>
 			<?php endforeach; ?>
+			<?php if (count($listThongBao) < $totalThongBao): ?>
+				<li class="text-center mt-1">
+					<button class="btn btn-sm btn-outline-primary" id="loadMoreNotifications">Hiển thị thêm</button>
+				</li>
+			<?php endif; ?>
 		<?php } else { ?>
-			<div class="notification-item" style="font-size: 14px;">Không có thông báo mới.</div>
+			<li class="dropdown-item text-muted">Không có thông báo mới.</li>
 		<?php } ?>
 	</ul>
 </div>
+
 
 
 <li class="dropdown user user-menu open">

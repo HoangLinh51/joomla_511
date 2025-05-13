@@ -16,7 +16,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Response\JsonResponse;
-use Joomla\CMS\Service\Provider\Console;
 
 defined('_JEXEC') or die;
 
@@ -47,24 +46,48 @@ class ThongBaoController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
+    public function getDanhSachThongBao()
+    {
+        // Session::checkToken() or die('Token không hợp lệ');
+        $input = Factory::getApplication()->input;
+
+        // Lấy dữ liệu gửi lên từ Ajax
+        $page = $input->getInt('page', 1); // Mặc định là 1 nếu không có
+        $perPage = $input->getInt('perPage', 20);
+        $keyword = $input->getString('keyword', '');
+
+        try {
+            $model = Core::model('Thongbao/Thongbao');
+            $res =  $model->getListThongBao('all', $keyword, $page, $perPage);
+        } catch (Exception $e) {
+            $res = ['error' => $e->getMessage()];
+        }
+        header('Content-Type: application/json');
+        echo json_encode($res);
+        jexit();
+    }
+
     public function edit_thongbao()
     {
-        $user = Factory::getUser();
         Session::checkToken() or die('Token không hợp lệ');
-        $model = Core::model('Thongbao/Thongbao');
-        $formData = Factory::getApplication()->input->post->getArray();
+        $user = Factory::getUser();
 
-        // check token security
+        $input = Factory::getApplication()->input;
+        $formData = $input->post->getArray();
+        $json = json_decode(file_get_contents('php://input'), true);
+        $formData = $json ?? $formData;
+
         try {
-            // Gọi model
             $model = Core::model('Thongbao/Thongbao');
             $model->saveThongBao($formData, $user->id);
             $response = ['success' => true, 'message' => 'Đã lưu dữ liệu thành công'];
         } catch (Exception $e) {
-            $response = ['success' => false, 'message' => 'Có lỗi khi lưu dữ liệu', 'error' => $e];
+            $response = ['success' => false, 'message' => 'Có lỗi khi lưu dữ liệu', 'error' => $e->getMessage()];
         }
-        // header('Content-Type: application/json');
-        return $response;
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        jexit();
     }
 
     public function xoa_thongbao()

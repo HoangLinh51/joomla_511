@@ -49,7 +49,7 @@ class HtmlView extends BaseHtmlView
                 break;
             case 'EDIT_THONGBAO':
                 $this->setLayout('edit_thongbao');
-                $this->_getEditThongBao($id); // Đang sửa nên truyền ID
+                $this->_getEditThongBao($id); // page edit nên truyền id
                 break;
         }
 
@@ -58,23 +58,7 @@ class HtmlView extends BaseHtmlView
 
     private function _initDefaultPage()
     {
-
         $this->import();
-
-        $user = Factory::getUser();
-        $modelThongbao = Core::model('Thongbao/Thongbao');
-        $param = [
-            "tatca" => "1"
-        ];
-        $countThongBao = $modelThongbao->countThongBao($user->id);
-        $this->countItems = $countThongBao;
-
-        $listItemThongbao = $modelThongbao->getListThongBao($param);
-        if (empty($listItemThongbao)) {
-            throw new Exception("Thông báo không tồn tại");
-        } else {
-            $this->item = $listItemThongbao;
-        }
     }
 
     private function _getDetailThongBao($idThongbao)

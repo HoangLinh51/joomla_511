@@ -64,12 +64,12 @@ class Router extends RouterView
 		$this->categoryFactory = $categoryFactory;
 		$this->db              = $db;
 
-		$params = ComponentHelper::getParams('com_tochuc');
+		$params = ComponentHelper::getParams('com_thongbao');
 		$this->noIDs = (bool) $params->get('sef_ids');
 
-		$tochuc = new RouterViewConfiguration('tochuc');
-		$tochuc->setKey('id');
-		$this->registerView($tochuc);
+		$thongbao = new RouterViewConfiguration('thongbao');
+		$thongbao->setKey('id');
+		$this->registerView($thongbao);
 
 		// $mywalk = new RouterViewConfiguration('mywalk');
 		// $mywalk->setKey('id');

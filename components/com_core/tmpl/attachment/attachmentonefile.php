@@ -107,7 +107,7 @@ if (count($this->data) > $maxFiles) {
 		<?php } else
 			echo $stt . ".";
 		?>
-		<div class="<?php echo $this->iddiv; ?> dropzone dropzone-multi col-lg-8">
+		<div class="<?php echo $this->iddiv; ?> dropzone dropzone-multi ">
 			<div class="dropzone-items wm-200px">
 				<div class="dropzone-item">
 					<!--begin::File-->

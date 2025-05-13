@@ -1,7 +1,6 @@
 <?php
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 
 $modelThongbao = Core::model('Thongbao/Thongbao');
@@ -18,11 +17,11 @@ $item = $this->item
 			<p><?php echo $item->noidung ?></p>
 		</div>
 
-		<?php if (!empty($item->vanbandinhkem)): ?>
+		<?php if (!empty($item->vanban)): ?>
 			<div class="mb-4">
 				<h6 class="text-muted">Văn bản đính kèm:</h6>
 				<div class="d-flex flex-column">
-					<?php foreach ($modelThongbao->getVanBan($item->vanbandinhkem) as $vanban) : ?>
+					<?php foreach ($item->vanban as $vanban) : ?>
 						<a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam . '&code=' . $vanban->code; ?>">
 							<?php echo $vanban->filename ?>
 						</a>
@@ -149,7 +148,7 @@ $item = $this->item
 					const isSuccess = data.success ?? true;
 					showToast(data.message || 'Xóa thành công', isSuccess);
 					if (isSuccess) {
-						setTimeout(() => window.location.href = '/index.php/component/thongbao/?view=thongbao&task=ds_thongbao', 1000);
+						setTimeout(() => window.location.href = '/index.php/component/thongbao/?view=thongbao&task=ds_thongbao', 500);
 					}
 				})
 				.catch(error => {
@@ -174,17 +173,21 @@ $item = $this->item
 				})
 				.appendTo('body');
 
-			setTimeout(() => toast.fadeOut(500, () => toast.remove()), 2000);
+			setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
 		}
 	});
 </script>
 
 <style>
+	.content-wrapper {
+		background-color: #fff;
+	}
+
 	.content-box {
 		padding: 0px 20px;
 	}
 
-	.section {
+	/* .section {
 		background: #fff;
 		padding: 24px;
 		border-radius: 12px;
@@ -211,5 +214,5 @@ $item = $this->item
 	.file-link {
 		text-decoration: none;
 		color: #0d6efd;
-	}
+	} */
 </style>

@@ -2,7 +2,6 @@
 defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
-
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class Thongbao_Model_Thongbao extends BaseDatabaseModel
@@ -13,7 +12,7 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
     return "Tie";
   }
 
-  public function getListThongBao($params = array(), $startFrom = 0, $perPage = 20)
+  public function getListThongBao($mode = 'all', $keyword = '', $page = 1, $perPage = 20)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
@@ -25,41 +24,69 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       'a.vanbandinhkem',
       'DATE_FORMAT(a.created_at, "%d/%m/%Y") AS ngay_tao',
       'a.created_by',
+      'b.id AS vanban_id',
+      'b.code AS vanban_code',
+      'b.filename AS vanban_filename',
+      'YEAR(b.created_at) AS vanban_nam'
     ])
-      ->from($db->quoteName('thongbao', 'a'));
+      ->from($db->quoteName('thongbao', 'a'))
+      ->leftJoin($db->quoteName('core_attachment', 'b') . ' ON b.object_id = a.vanbandinhkem');
 
-    // Lọc theo ngày hôm nay (trừ khi có yêu cầu lấy tất cả)
-    if (empty($params['tatca']) || $params['tatca'] !== '1') {
-      $today = date('Y-m-d');
-      $query->where('DATE(a.created_at) = ' . $db->quote($today));
+    // Lọc theo ngày hôm nay (trừ khi yêu cầu lấy tất cả)
+    if ($mode === 'today') {
+      $query->where('DATE(a.created_at) = ' . $db->quote(date('Y-m-d')));
     }
 
-    // Lọc theo ID
-    if (!empty($params['id'])) {
-      $query->where('a.id = ' . (int)$params['id']);
+    // Lọc theo tiêu đề hoặc nội dung
+    if (!empty($keyword)) {
+      $quotedKeyword = $db->quote('%' . $keyword . '%');
+      $query->where('(a.tieude LIKE ' . $quotedKeyword . ' OR a.noidung LIKE ' . $quotedKeyword . ')');
     }
 
-    // Lọc theo tiêu đề
-    if (!empty($params['tieude'])) {
-      $tieude = $db->quote('%' . $params['tieude'] . '%');
-      $query->where('a.tieude LIKE ' . $tieude);
-    }
-
-    // Lọc theo ngày cụ thể
-    if (!empty($params['ngay'])) {
-      $query->where('DATE(a.created_at) = ' . $db->quote($params['ngay']));
-    }
-
-    // Sắp xếp và phân trang
-    $query->order('a.created_at DESC')
-      ->setLimit((int)$perPage, (int)$startFrom);
+    // Lọc theo trạng thái chưa xoá
     $query->where('a.daxoa = 0');
+
+    // Sắp xếp giảm dần theo ngày tạo
+    $query->order('a.created_at DESC');
+
+    // Phân trang
+    $startFrom = ($page - 1) * $perPage;
+    $query->setLimit((int)$perPage, (int)$startFrom);
+
     $db->setQuery($query);
 
     try {
-      return $db->loadObjectList();
+      $rows = $db->loadObjectList();
+
+      // Gom lại nếu có nhiều văn bản cho một thông báo
+      $result = [];
+      foreach ($rows as $row) {
+        $id = $row->id;
+        if (!isset($result[$id])) {
+          $result[$id] = (object)[
+            'id' => $row->id,
+            'tieude' => $row->tieude,
+            'noidung' => $row->noidung,
+            'vanbandinhkem' => $row->vanbandinhkem,
+            'ngay_tao' => $row->ngay_tao,
+            'created_by' => $row->created_by,
+            'vanban' => []
+          ];
+        }
+
+        if (!empty($row->vanban_id)) {
+          $result[$id]->vanban[] = (object)[
+            'id' => $row->vanban_id,
+            'code' => $row->vanban_code,
+            'filename' => $row->vanban_filename,
+            'nam' => $row->vanban_nam
+          ];
+        }
+      }
+
+      return array_values($result);
     } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi truy vấn thông báo: ' . $e->getMessage(), 'error');
+      Factory::getApplication()->enqueueMessage('Lỗi khi lấy thông báo: ' . $e->getMessage(), 'error');
       return [];
     }
   }
@@ -84,7 +111,7 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
     }
   }
 
-  public function countThongBao($userId, $mode = 'unread')
+  public function countThongBao($userId, $mode = 'all')
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
@@ -110,34 +137,71 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
 
   public function getDetailThongbao($thongbaoId)
   {
-      $db = Factory::getDbo();
-      $query = $db->getQuery(true);
-  
-      $query->select([
-          'tb.id',
-          'tb.tieude',
-          'tb.noidung',
-          'tb.vanbandinhkem',
-          'DATE_FORMAT(tb.created_at, "%d/%m/%Y") AS ngay_tao',
-          'tb.created_by',
-          'u.name',
-          'u.username',
-          'u.email'
-      ])
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+
+    $query->select([
+      'tb.id',
+      'tb.tieude',
+      'tb.noidung',
+      'tb.vanbandinhkem',
+      'DATE_FORMAT(tb.created_at, "%d/%m/%Y") AS ngay_tao',
+      'tb.created_by',
+      'u.name',
+      'u.username',
+      'u.email',
+      'vb.id AS vanban_id',
+      'vb.code AS vanban_code',
+      'vb.filename AS vanban_filename',
+      'YEAR(vb.created_at) AS vanban_nam'
+    ])
       ->from($db->quoteName('thongbao', 'tb'))
       ->leftJoin($db->quoteName('jos_users', 'u') . ' ON u.id = tb.created_by')
+      ->leftJoin($db->quoteName('core_attachment', 'vb') . ' ON vb.object_id = tb.vanbandinhkem')
       ->where('tb.id = ' . $db->quote($thongbaoId))
       ->where('tb.daxoa = 0');
-  
-      $db->setQuery($query);
-      
-      try {
-          $result = $db->loadObject();
-          return $result ? $result : null;
-      } catch (Exception $e) {
-          Factory::getApplication()->enqueueMessage('SQL Error: ' . $e->getMessage(), 'error');
-          return null;
+
+    $db->setQuery($query);
+
+    try {
+      $rows = $db->loadObjectList();
+
+      if (empty($rows)) {
+        return null;
       }
+
+      // Lấy bản ghi đầu tiên làm chi tiết
+      $first = $rows[0];
+      $result = (object)[
+        'id' => $first->id,
+        'tieude' => $first->tieude,
+        'noidung' => $first->noidung,
+        'vanbandinhkem' => $first->vanbandinhkem,
+        'ngay_tao' => $first->ngay_tao,
+        'created_by' => $first->created_by,
+        'name' => $first->name,
+        'username' => $first->username,
+        'email' => $first->email,
+        'vanban' => []
+      ];
+
+      // Nếu có nhiều văn bản đính kèm, gom vào mảng
+      foreach ($rows as $row) {
+        if (!empty($row->vanban_id)) {
+          $result->vanban[] = (object)[
+            'id' => $row->vanban_id,
+            'code' => $row->vanban_code,
+            'filename' => $row->vanban_filename,
+            'nam' => $row->vanban_nam
+          ];
+        }
+      }
+
+      return $result;
+    } catch (Exception $e) {
+      Factory::getApplication()->enqueueMessage('SQL Error: ' . $e->getMessage(), 'error');
+      return null;
+    }
   }
 
   public function submitTrangThaiThongBao()
@@ -198,28 +262,32 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
   {
     $db = Factory::getDbo();
 
-    // column database
     $columns = [
-      'tieude' => $formdata["tieude"],
-      'noidung' => $formdata["noidung"],
-      'vanbandinhkem' => $formdata["idTepDinhKem"],
+      'tieude' => $formdata["tieude"] ?? '',
+      'noidung' => $formdata["noidung"] ?? '',
+      'vanbandinhkem' => $formdata["idTepDinhKem"] ?? '',
     ];
 
-    if ($formdata["id"] > 0) {
+    $id = (int) ($formdata["id"] ?? 0);
+
+    if ($id > 0) {
       // Update
       $query = $db->getQuery(true)
-        ->update($db->quoteName('thongbao'))
-        ->set(array_map(function ($k, $v) use ($db) {
-          return $db->quoteName($k) . ' = ' . $db->quote($v);
-        }, array_keys($columns), $columns))
-        ->where($db->quoteName('id') . ' = ' . (int) $formdata["id"]);
+        ->update($db->quoteName('thongbao'));
+
+      $setParts = [];
+      foreach ($columns as $col => $val) {
+        $setParts[] = $db->quoteName($col) . ' = ' . $db->quote($val);
+      }
+      $query->set($setParts);
+      $query->where('id = ' . $db->quote($id));
 
       $db->setQuery($query);
       $db->execute();
 
-      return $formdata["id"];
+      return $id;
     } else {
-      // Insert new 
+      // Insert
       $columns['status'] = 1;
       $columns['created_by'] = $idUser;
       $columns['created_at'] = Factory::getDate()->toSql();
@@ -233,30 +301,6 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       $db->execute();
 
       return $db->insertid();
-    }
-  }
-
-  public function getVanBan($idObject)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true);
-
-    $query->select([
-      'a.id',
-      'a.code',
-      'a.filename',
-      'YEAR(a.created_at) AS nam'
-    ])
-      ->from($db->quoteName('core_attachment', 'a'))
-      ->where($db->quoteName('a.object_id') . ' = ' . $db->quote($idObject));
-
-    $db->setQuery($query);
-    try {
-      $results = $db->loadObjectList();
-      return $results ? $results : [];
-    } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('SQL Error: ' . $e->getMessage(), 'error');
-      return [];
     }
   }
 
