@@ -157,17 +157,7 @@ class AttachmentController extends BaseController
     function uploadSingleImage()
     {
         $formData = Factory::getApplication()->input->post->getArray();
-        if (is_array($_FILES['uploadfile']['name'])) {
-            $file = [
-                'name'     => $_FILES['uploadfile']['name'][0],
-                'type'     => $_FILES['uploadfile']['type'][0],
-                'tmp_name' => $_FILES['uploadfile']['tmp_name'][0],
-                'error'    => $_FILES['uploadfile']['error'][0],
-                'size'     => $_FILES['uploadfile']['size'][0]
-            ];
-        } else {
-            $file = $_FILES['uploadfile'];
-        }
+        $file = $_FILES['uploadfile'];
         $date = getdate();
 
         // Kiểm tra có đúng 1 file được upload không
@@ -184,7 +174,8 @@ class AttachmentController extends BaseController
         $dirPath = $mapper->getDir($date['year'], $date['mon']);
 
         // Tạo tên file mới
-        $new_name = md5($file['name'] . time());
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $new_name = md5($file['name'] . time()) . '.' . $ext;
         $uploadfile = $dirPath . '/' . $new_name;
 
         if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
@@ -202,30 +193,142 @@ class AttachmentController extends BaseController
             $mapper->create($data);
             // ✅ Tạo URL ảnh thông qua get_image.php
             $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $data['code'];
-            $avatarId = $data['object_id'];
+            $iamgeId = $data['object_id'];
             var_dump($data);
 
             echo '<script>
-                    if (window.parent && window.parent.document) {
-                        window.parent.document.getElementById("avatar-preview").src = "' . htmlspecialchars($publicUrl, ENT_QUOTES, 'UTF-8') . '";
-                        var form = window.parent.document.getElementById("member-profile");
-                        var input = window.parent.document.getElementById("avatar_id_input");
-                        if (!input) {
-                            input = document.createElement("input");
-                            input.type = "hidden";
-                            input.name = "avatar_id";
-                            input.id = "avatar_id_input";
-                            form.appendChild(input);
-                            input.value = "' . $avatarId . '";
-                        }
+            if (window.parent && window.parent.document) {
+            var imagePreview = window.parent.document.getElementById("imagePreview");
+                if (imagePreview) {
+                    imagePreview.src = "' . htmlspecialchars($publicUrl, ENT_QUOTES, 'UTF-8') . '";
+                }
+                var form = window.parent.document.getElementById("imageUploadForm");
+                if (form) {
+                    var input = window.parent.document.getElementById("imageIdInput");
+                    if (!input) {
+                        input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "image_id";
+                        input.id = "imageIdInput";
+                        form.appendChild(input);
                     }
-                </script>';
+                    input.value = "' . $iamgeId . '";
+                }
+            }
+          </script>';
             exit;
         } else {
             http_response_code(500);
             echo json_encode(['error' => 'Lỗi khi upload file']);
             exit;
         }
+
+        exit;
+    }
+
+    function uploadMultiImages()
+    {
+        $app = Factory::getApplication();
+        $input = $app->input;
+        $formData = $input->post->getArray();
+        $uploadedFiles = $_FILES['uploadfiles'] ?? null;
+
+        if (empty($uploadedFiles) || empty(array_filter($uploadedFiles['name']))) {
+            http_response_code(400);
+            echo '<script>alert("Không có file nào được chọn hoặc dữ liệu không hợp lệ.");</script>';
+            exit;
+        }
+
+        $type = $formData['type'] ?? -1;
+        $idObject = $formData['idObject'] ?? 0;
+        $user = Factory::getUser();
+        $mapper = Core::model('Core/Attachment');
+        $date = getdate();
+        $dirPath = $mapper->getDir($date['year'], $date['mon']);
+
+        if (!is_dir($dirPath) && !mkdir($dirPath, 0755, true)) {
+            http_response_code(500);
+            echo '<script>alert("Lỗi nghiêm trọng: Không thể tạo thư mục upload.");</script>';
+            exit;
+        }
+
+        $numFiles = count($uploadedFiles['name']);
+        $successfulAttachments = [];
+
+        for ($i = 0; $i < $numFiles; $i++) {
+            $originalName = $uploadedFiles['name'][$i] ?? '';
+            $tmpName = $uploadedFiles['tmp_name'][$i] ?? '';
+            $fileError = $uploadedFiles['error'][$i] ?? UPLOAD_ERR_NO_FILE;
+            $fileType = $uploadedFiles['type'][$i] ?? '';
+
+            if ($fileError !== UPLOAD_ERR_OK || !is_uploaded_file($tmpName)) {
+                continue;
+            }
+
+            // Optional: Kiểm tra định dạng file ảnh
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!in_array($fileType, $allowedTypes)) {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+            $newName = md5($originalName . time() . uniqid()) . '.' . $ext;
+            $uploadPath = $dirPath . '/' . $newName;
+
+            if (!move_uploaded_file($tmpName, $uploadPath)) {
+                continue;
+            }
+
+            $data = [
+                'folder' => $dirPath,
+                'object_id' => $idObject,
+                'code' => $newName,
+                'mime' => $fileType,
+                'url' => $uploadPath,
+                'filename' => $originalName,
+                'type_id' => $type,
+                'created_by' => $user->id,
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+
+            if ($mapper->create($data)) {
+                $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $newName;
+                $successfulAttachments[] = [
+                    'url' => $publicUrl,
+                    'idObject' => $idObject, // hoặc có thể thay bằng `$data['id']` nếu `$mapper->create()` trả về ID mới
+                    'filename' => $originalName
+                ];
+            } else {
+                unlink($uploadPath); // rollback nếu lưu DB thất bại
+            }
+        }
+        echo '<script>';
+        echo 'if (window.parent && window.parent.document) {';
+        echo '  const form = window.parent.document.getElementById("imageUploadForm");';
+        echo '  const imagePreview = window.parent.document.getElementById("imagePreview");';
+
+        foreach ($successfulAttachments as $file) {
+            // Thêm ảnh preview
+            echo '  if (imagePreview) {';
+            echo '    const img = document.createElement("img");';
+            echo '    img.src = "' . htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8') . '";';
+            echo '    img.alt = "' . htmlspecialchars($file['filename'], ENT_QUOTES, 'UTF-8') . '";';
+            echo '    Object.assign(img.style, { maxWidth: "100px", maxHeight: "100px", marginRight: "5px", border: "1px solid #ccc", padding: "2px" });';
+            echo '    imagePreview.appendChild(img);';
+            echo '  }';
+
+            // Thêm hidden input
+            echo '  if (form) {';
+            echo '    const input = document.createElement("input");';
+            echo '    input.type = "hidden";';
+            echo '    input.name = "image_id[]";';
+            echo '    input.value = "' . htmlspecialchars($file['idObject'], ENT_QUOTES, 'UTF-8') . '";';
+            echo '    form.appendChild(input);';
+            echo '  }';
+        }
+
+        echo '}';
+        echo '</script>';
 
         exit;
     }
@@ -498,6 +601,7 @@ class AttachmentController extends BaseController
         //var_dump($formData);
         //exit;
     }
+
     public function download()
     {
         $date = getdate();
@@ -514,6 +618,7 @@ class AttachmentController extends BaseController
         }
         exit;
     }
+
     public function fixedFileNotCopy()
     {
         $user_id = Factory::getApplication()->input->getUser()->id;

@@ -9,13 +9,9 @@
  * @CopyRight             : Dnict                                             *
  ****************************************************************************/
 
-namespace Joomla\Component\Thongbao\Site\View\Thongbao;
+namespace Joomla\Component\BaoCaoLoi\Site\View\BaoCaoLoi;
 
-use Core;
-use Joomla\CMS\Factory;
-use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
-use Joomla\CMS\Pagination\Pagination;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;

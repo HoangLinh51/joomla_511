@@ -47,80 +47,6 @@ $item = $this->item
 	</div>
 </div>
 
-<!-- <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title text-danger" id="confirmDeleteModalLabel">Xác nhận xóa</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-
-			<div class="modal-body">
-				Bạn có chắc chắn muốn xóa mục này không?
-			</div>
-			<input type="hidden" name="idUser" value="<?= $idUser ?>">
-			<input type="hidden" name="idThongbao" value="<?= $item->id ?>">
-
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-				<button type="submit" class="btn btn-danger btn-xoa" data-thongbao="<?= $item->id ?>">Xóa</button>
-			</div>
-		</div>
-	</div>
-</div> -->
-
-<!-- <script>
-	$(document).ready(function() {
-		$('#formThongBao').on('submit', function(e) {
-			e.preventDefault();
-			let formData = new FormData(this);
-
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'POST',
-				data: formData,
-				contentType: false,
-				processData: false,
-				success: function(response) {
-					console.log('AJAX Success:', response);
-					var res = typeof response === 'string' ? JSON.parse(response) : response;
-					var message = res.success ? res.message : 'Xóa thất bại!';
-					var icon = res.success ?
-						'<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
-						'';
-					bootbox.alert({
-						title: icon + "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-						// message: '<span style="font-size:20px;">' + message + '</span>',
-						backdrop: true,
-						className: 'small-alert',
-						buttons: {
-							ok: {
-								label: 'OK',
-								className: 'hidden' // Ẩn nút OK
-							}
-						},
-						onShown: function() {
-							// Tự động đóng sau 2 giây
-							setTimeout(function() {
-								bootbox.hideAll();
-								if (res.success) {
-									window.location.href = '/index.php';
-								}
-							}, 1500);
-						}
-					});
-				},
-				error: function(xhr, status, error) {
-					// Xử lý lỗi
-					// console.log(xhr.responseText);
-				}
-			});
-		})
-	});
-</script> -->
-
 <script>
 	$(document).ready(function() {
 		const idUser = <?= (int)Factory::getUser()->id ?>;
@@ -186,33 +112,4 @@ $item = $this->item
 	.content-box {
 		padding: 0px 20px;
 	}
-
-	/* .section {
-		background: #fff;
-		padding: 24px;
-		border-radius: 12px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-	}
-
-	.label {
-		font-weight: 600;
-		color: #555;
-	}
-
-	.value {
-		color: #333;
-	}
-
-	.deleted-note {
-		background-color: #ffeaea;
-		color: #c00;
-		padding: 12px;
-		border-radius: 8px;
-		margin-top: 20px;
-	}
-
-	.file-link {
-		text-decoration: none;
-		color: #0d6efd;
-	} */
 </style>

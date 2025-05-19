@@ -57,9 +57,9 @@ if (!empty($avatar_id)) {
     <!-- upload avatar -->
     <div class="profile-edit">
         <div class="upload-avatar">
-            <img id="avatar-preview" src="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>"
-                alt="Avatar" style="width: 132px; height: 150px; margin-bottom: 5px">
-            <?php echo Core::inputAvatar('uploadAvatar', null, 1, date('Y'), -1); ?>
+            <img id="imagePreview" src="<?php echo htmlspecialchars($publicUrl, ENT_QUOTES, 'UTF-8'); ?>"
+                alt="Avatar" style="width: 170px; height: 190px; margin-bottom: 5px">
+            <?php echo Core::inputImage('uploadAvatar', null, 1, date('Y'), -1); ?>
         </div>
 
         <form id="member-profile" action="<?php echo Route::_('index.php?option=com_users'); ?>" method="post" class="com-users-profile__edit-form form-validate form-horizontal well" enctype="multipart/form-data">

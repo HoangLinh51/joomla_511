@@ -7,6 +7,7 @@ return [
 	'Joomla\\Component\\Banners\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_banners/src'],
 	'Joomla\\Component\\Banners\\Api\\' => [JPATH_API . '/components/com_banners/src'],
 	'Joomla\\Component\\Banners\\Site\\' => [JPATH_SITE . '/components/com_banners/src'],
+	'Joomla\\Component\\BaoCaoLoi\\Site\\' => [JPATH_SITE . '/components/com_baocaoloi/src'],
 	'Joomla\\Component\\Cache\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_cache/src'],
 	'Joomla\\Component\\Categories\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_categories/src'],
 	'Joomla\\Component\\Categories\\Api\\' => [JPATH_API . '/components/com_categories/src'],
