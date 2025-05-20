@@ -193,7 +193,7 @@ class AttachmentController extends BaseController
             $mapper->create($data);
             // ✅ Tạo URL ảnh thông qua get_image.php
             $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $data['code'];
-            $iamgeId = $data['object_id'];
+            $objectId = $data['object_id'];
             var_dump($data);
 
             echo '<script>
@@ -212,7 +212,7 @@ class AttachmentController extends BaseController
                         input.id = "imageIdInput";
                         form.appendChild(input);
                     }
-                    input.value = "' . $iamgeId . '";
+                    input.value = "' . $objectId . '";
                 }
             }
           </script>';
@@ -233,7 +233,7 @@ class AttachmentController extends BaseController
         $formData = $input->post->getArray();
         $uploadedFiles = $_FILES['uploadfiles'] ?? null;
 
-        if (empty($uploadedFiles) || empty(array_filter($uploadedFiles['name']))) {
+        if (empty($uploadedFiles) || empty(array_filter($uploadedFiles['name'] ?? []))) {
             http_response_code(400);
             echo '<script>alert("Không có file nào được chọn hoặc dữ liệu không hợp lệ.");</script>';
             exit;
@@ -252,7 +252,7 @@ class AttachmentController extends BaseController
             exit;
         }
 
-        $numFiles = count($uploadedFiles['name']);
+        $numFiles = count($uploadedFiles['name'] ?? []);
         $successfulAttachments = [];
 
         for ($i = 0; $i < $numFiles; $i++) {
@@ -308,7 +308,9 @@ class AttachmentController extends BaseController
         echo '  const imagePreview = window.parent.document.getElementById("imagePreview");';
 
         foreach ($successfulAttachments as $file) {
-            // Thêm ảnh preview
+            $url = htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8');
+            $filename = htmlspecialchars($file['filename'], ENT_QUOTES, 'UTF-8');
+            $idObject = htmlspecialchars($file['idObject'], ENT_QUOTES, 'UTF-8');
             echo '  if (imagePreview) {';
             echo '    const img = document.createElement("img");';
             echo '    img.src = "' . htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8') . '";';
@@ -326,6 +328,35 @@ class AttachmentController extends BaseController
             echo '    form.appendChild(input);';
             echo '  }';
         }
+
+        //     echo '  if (imagePreview) {';
+        //     echo '    const wrapper = document.createElement("div");';
+        //     echo '    wrapper.id = "imagePreviewWrapper";';
+        //     echo '    wrapper.style.position = "relative";';
+        //     echo '    wrapper.style.display = "inline-block";';
+        //     echo '    wrapper.style.marginRight = "10px";';
+
+        //     echo '    const img = document.createElement("img");';
+        //     echo '    img.src = "' . $url . '";';
+        //     echo '    img.alt = "' . $filename . '";';
+        //     echo '    Object.assign(img.style, { width: "100px", height: "100px", border: "1px solid #ccc", padding: "2px" });';
+
+        //     echo '    const closeBtn = document.createElement("span");';
+        //     echo '   closeBtn.className = "DELidfiledk' . $idObject . '[]";';
+        //     echo '    closeBtn.innerHTML = "×";';
+        //     echo '    Object.assign(closeBtn.style, { position: "absolute", top: "0", right: "0", background: "rgba(0,0,0,0.5)", color: "#fff", cursor: "pointer", padding: "2px 6px", borderRadius: "0 0 0 5px", fontSize: "14px" });';
+        //     echo '    closeBtn.onclick = function() { 
+        //     const event = new CustomEvent("imageRemoved", {
+        //     detail: { filename: "' . $filename . '", idObject: "' . $idObject . '", url: "' . $url . '", dirPath: "' . $dirPath . '" },
+        //     });
+        //     window.parent.document.dispatchEvent(event);
+        //     };';
+
+        //     echo '    wrapper.appendChild(img);';
+        //     echo '    wrapper.appendChild(closeBtn);';
+        //     echo '    imagePreview.appendChild(wrapper);';
+        //     echo '  }';
+        // }
 
         echo '}';
         echo '</script>';
@@ -528,27 +559,20 @@ class AttachmentController extends BaseController
 
     public function delete()
     {
-        $date = getdate();
-        $year =  Factory::getApplication()->input->getInt('year', 0);
-        $iddiv =  Factory::getApplication()->input->getVar('iddiv');
         $is_new = 0;
-        //truongvc attachment for traodoi module
-        $from = Factory::getApplication()->input->getVar('from');
-        if (!$year)
-            $year = $date['year'];
-        $code = Factory::getApplication()->input->getVar('maso');
-        $idObject = Factory::getApplication()->input->getVar('idObject');
-        if (!$idObject)
-            $idObject = 0;
-        $isTemp = Factory::getApplication()->input->getVar('isTemp');
-        if (!$isTemp)
-            $isTemp = 0;
-        $type = Factory::getApplication()->input->getVar('type');
-        $arr_code = Factory::getApplication()->input->getVar('DELidfiledk' . $idObject);
+        $app = Factory::getApplication();
+        $input = $app->input;
+
+        $type = $input->get('type', '', 'STRING');
+        $year = $input->getInt('year', 0);
+        $iddiv = $input->get('iddiv', '', 'STRING');
+        $idObject = $input->getInt('idObject', 0);
+        $isTemp = $input->getBool('isTemp', false);
+        $from = $input->get('from', '', 'STRING');
+        $arr_code = Factory::getApplication()->input->getVar('DELidfiledk' . $idObject . '[]');
         $pdf = Factory::getApplication()->input->getVar('pdf');
         $is_nogetcontent = Factory::getApplication()->input->getVar('is_nogetcontent');
         $mapper = Core::model('Core/Attachment');
-        //var_dump($arr_code);exit;
         for ($i = 0; $i < count($arr_code); $i++) {
             $mapper->deleteFileByMaso($arr_code[$i]);
         }

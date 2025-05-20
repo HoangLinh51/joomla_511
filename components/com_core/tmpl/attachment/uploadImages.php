@@ -58,20 +58,21 @@ $iframeId = "tftemp" . $this->idObject;
 
 <span class="form-text text-muted mb-2">Kích thước tối đa mỗi file là 1MB. Định dạng: JPG, JPEG, PNG.</span>
 
-<div id="<?php echo $previewContainerId; ?>" class="mt-2" style="display: flex; flex-wrap: wrap; gap: 10px;">
-  <?php // Nếu có ảnh đã tồn tại và muốn hiển thị sẵn, bạn có thể load chúng ở đây bằng PHP 
-  ?>
-</div>
-
 <iframe style="display:none;" id="<?php echo $iframeId; ?>" name="<?php echo $iframeId; ?>"></iframe>
 
 <script type="text/javascript">
-  function updateImagePreview_<?php echo $this->idObject ?>(htmlContent) {
-    const container = document.getElementById("<?php echo $previewContainerId ?>");
-    if (container) {
-      container.innerHTML = htmlContent;
+  document.getElementById('<?php echo $fileInputId; ?>').addEventListener('change', function(e) {
+    const files = e.target.files;
+    const maxSize = 1 * 1024 * 1024; // 1MB
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size > maxSize) {
+        alert("File " + files[i].name + " vượt quá dung lượng cho phép (1MB).");
+        e.target.value = ""; // Reset lại input
+        return;
+      }
     }
-  }
+    document.forms['<?php echo $formName; ?>'].submit();
+  });
 </script>
 
 <style>

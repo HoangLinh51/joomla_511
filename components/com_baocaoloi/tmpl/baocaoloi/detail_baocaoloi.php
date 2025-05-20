@@ -43,7 +43,7 @@ $item = $this->item;
 			</p>
 
 			<!-- Hình ảnh -->
-			<?php if ($item->images): ?>
+			<?php if ($item->images && $item->image > 0): ?>
 				<p><strong class="label">Hình ảnh:</strong></p>
 				<div id="imagePreview">
 					<?php foreach ($item->images as $image): ?>
@@ -78,32 +78,47 @@ $item = $this->item;
 
 			<hr>
 
-			<div class="infor-more">
-				<div class="infor-user">
-					<!-- Thông tin người báo lỗi -->
-					<h6 class="label mb-3"><strong>Thông tin người báo lỗi:</strong></h6>
-					<p><span class="label">Ngày tạo:</span> <?= htmlspecialchars($item->create_at) ?></p>
-					<p><span class="label">Người tạo:</span></p>
-					<ul class="pl-3">
-						<li><strong>Họ tên:</strong> <?= htmlspecialchars($item->name_user) ?></li>
-						<li><strong>Username:</strong> <?= htmlspecialchars($item->username) ?></li>
-						<li><strong>Email:</strong> <?= htmlspecialchars($item->email) ?></li>
-					</ul>
-				</div>
-				<?php if ($item->process_by): ?>
-					<div class="content-process">
-						<h6 class="label mb-3"><strong>Thông tin người xử lý:</strong></h6>
-						<p><span class="label">Ngày xử lý:</span> <?= htmlspecialchars($item->processing_date) ?></p>
-						<p><span class="label">Người xử lý:</span></p>
-						<ul class="pl-3">
-							<li><strong>Họ tên:</strong> <?= htmlspecialchars($item->processor_name) ?></li>
-							<li><strong>Email:</strong> <?= htmlspecialchars($item->processor_email) ?></li>
-							<li><strong>Nội dung xử lý:</strong> <?= htmlspecialchars($item->processing_content) ?></li>
-						</ul>
-					</div>
-				<?php endif; ?>
+
+			<div class="infor-user">
+				<!-- Thông tin người báo lỗi -->
+				<h6 class="label mb-3"><strong>Thông tin người báo lỗi:</strong></h6>
+				<p><span class="label">Thời Gian tạo:</span>
+					<?php
+					if (!empty($item->created_at)) {
+						$date = new DateTime($item->created_at);
+						echo $date->format('H:i:s d/m/Y ');
+					}
+					?>
+				</p>
+				<p><span class="label">Người tạo:</span></p>
+				<ul class="pl-3">
+					<li><strong>Họ tên:</strong> <?= htmlspecialchars($item->name_user) ?></li>
+					<li><strong>Username:</strong> <?= htmlspecialchars($item->username) ?></li>
+					<li><strong>Email:</strong> <?= htmlspecialchars($item->email) ?></li>
+				</ul>
 			</div>
 
+			<?php if ($item->process_by): ?>
+				<hr>
+
+				<div class="content-process">
+					<h6 class="label mb-3"><strong>Thông tin người xử lý:</strong></h6>
+					<p><span class="label">Thời gian xử lý:</span>
+						<?php
+						if (!empty($item->process_at)) {
+							$date = new DateTime($item->process_at);
+							echo $date->format('H:i:s d/m/Y ');
+						}
+						?>
+					</p>
+					<p><span class="label">Người xử lý:</span></p>
+					<ul class="pl-3">
+						<li><strong>Họ tên:</strong> <?= htmlspecialchars($item->processor_name) ?></li>
+						<li><strong>Email:</strong> <?= htmlspecialchars($item->processor_email) ?></li>
+					</ul>
+					<p>Nội dung xử lý: <?= htmlspecialchars($item->processing_content) ?></p>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </div>
@@ -266,11 +281,11 @@ $item = $this->item;
 		justify-content: space-between
 	}
 
-	#imagePreview{
+	#imagePreview {
 		margin: 10px 0px;
 	}
 
-	.img-fluid{
+	.img-fluid {
 		width: 100px;
 		height: 100px;
 		margin: 0px 5px;
