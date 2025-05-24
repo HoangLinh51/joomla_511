@@ -46,28 +46,28 @@ class QuanTriHeThongController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
-    public function getDanhSachQuanTriHeThong()
-    {
-        // Session::checkToken() or die('Token không hợp lệ');
-        $input = Factory::getApplication()->input;
+    // public function getDanhSachQuanTriHeThong()
+    // {
+    //     // Session::checkToken() or die('Token không hợp lệ');
+    //     $input = Factory::getApplication()->input;
 
-        // Lấy dữ liệu gửi lên từ Ajax
-        $page = $input->getInt('page', 1); // Mặc định là 1 nếu không có
-        $perPage = $input->getInt('perPage', 20);
-        $keyword = $input->getString('keyword', '');
+    //     // Lấy dữ liệu gửi lên từ Ajax
+    //     $page = $input->getInt('page', 1); // Mặc định là 1 nếu không có
+    //     $perPage = $input->getInt('perPage', 20);
+    //     $keyword = $input->getString('keyword', '');
 
-        try {
-            $model = Core::model('QuanTriHeThong/QuanTriHeThong');
-            $res =  $model->getListError($keyword, $page, $perPage);
-        } catch (Exception $e) {
-            $res = ['error' => $e->getMessage()];
-        }
-        header('Content-Type: application/json');
-        echo json_encode($res);
-        jexit();
-    }
+    //     try {
+    //         $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+    //         $res =  $model->getListError($keyword, $page, $perPage);
+    //     } catch (Exception $e) {
+    //         $res = ['error' => $e->getMessage()];
+    //     }
+    //     header('Content-Type: application/json');
+    //     echo json_encode($res);
+    //     jexit();
+    // }
 
-    public function create_quantrihethong()
+    public function save_user()
     {
         Session::checkToken() or die('Token không hợp lệ');
         $user = Factory::getUser();
@@ -79,57 +79,27 @@ class QuanTriHeThongController extends BaseController
 
         try {
             $model = Core::model('QuanTriHeThong/QuanTriHeThong');
-            $model->saveQuanTriHeThong($formData, $user->id);
-            $response = ['success' => true, 'message' => 'Đã lưu dữ liệu thành công'];
+            $result = $model->saveUserModel($formData);
+
+            if (!$result['success']) {
+                throw new Exception($result['error']);
+            }
+
+            $response = [
+                'success' => true,
+                'message' => 'Đã lưu dữ liệu thành công',
+                'user_id' => $result['user_id'] ?? null
+            ];
         } catch (Exception $e) {
-            $response = ['success' => false, 'message' => 'Có lỗi khi lưu dữ liệu', 'error' => $e->getMessage()];
+            $response = [
+                'success' => false,
+                'message' => 'Có lỗi khi lưu dữ liệu',
+                'error' => $e->getMessage()
+            ];
         }
 
         header('Content-Type: application/json');
         echo json_encode($response);
         jexit();
-    }
-
-    public function confirm_reason()
-    {
-        $user = Factory::getUser();
-        if (!$user->id) {
-            echo new JsonResponse(null, 'Bạn cần đăng nhập', true);
-            Factory::getApplication()->close();
-            return;
-        }
-        $formData["status"]= 1 ;
-
-        // Lấy dữ liệu từ JSON body (request payload)
-        $json = file_get_contents('php://input');
-        $formData = json_decode($json, true);
-
-        if (!isset($formData['idUser'], $formData['idError'], $formData['action'], $formData['contentReason'])) {
-            echo new JsonResponse(null, 'Thiếu dữ liệu đầu vào', true);
-            Factory::getApplication()->close();
-            return;
-        }
-
-        if($formData['action']==='complete'){
-            $formData["status"] = 2;
-        } else if ($formData['action']==='cancel'){
-            $formData['status'] = 3;
-        }
-
-        try {
-            $model = Core::model('QuanTriHeThong/QuanTriHeThong');
-
-            // Gọi model
-            $result = $model->saveReason($formData);
-
-            echo new JsonResponse([
-                'success' => $result,
-                'message' => 'Cập nhật trạng thái thành công',
-            ]);
-        } catch (Exception $e) {
-            echo new JsonResponse(null, $e->getMessage(), true);
-        }
-
-        Factory::getApplication()->close();
     }
 }

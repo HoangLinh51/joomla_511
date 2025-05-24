@@ -15,7 +15,7 @@ $user = Factory::getUser();
       </div>
       <div class="col-sm-6 text-right" style="padding:0;">
         <?php if ($is_quyen == 0) { ?>
-          <a href="index.php?option=com_quantrihethong&view=quantrihethong&task=edit_taikhoan" class="btn btn-primary" style="font-size:16px;width:136px">
+          <a href="index.php?option=com_quantrihethong&view=quantrihethong&task=edit_user" class="btn btn-primary" style="font-size:16px;width:136px">
             <i class="fas fa-plus"></i> Thêm mới
           </a>
         <?php } ?>
@@ -52,11 +52,11 @@ $user = Factory::getUser();
       <thead>
         <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
           <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ và tên</th>
           <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên người dùng</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Username</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Status</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Reset password</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important; width:131px" class="text-center">Chức năng</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Trạng thái</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important; width: 25%" class="text-center">Đặt lại mật khẩu</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important; width:135px" class="text-center">Chức năng</th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
@@ -78,7 +78,7 @@ $user = Factory::getUser();
                 </label>
 
               </td>
-              <td style="vertical-align: middle" class="text-center d-flex align-items-center">
+              <td style="vertical-align: middle;" class="text-center d-flex align-items-center">
                 <input type="text" class="form-control input-reset" id="password_<?php echo $account['id']; ?>">
                 <button class="btn btn-primary button-reset" id="btn_reset_<?php echo $account['id']; ?>" data-id="<?php echo $account['id']; ?>">
                   <i class="fas fa-sync-alt"></i>
@@ -86,7 +86,7 @@ $user = Factory::getUser();
               </td>
               <td style="vertical-align: middle" class="text-center">
                 <a class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-title="Hiệu chỉnh"
-                  href="<?php echo Route::_('index.php?option=com_quantrihethong&view=quantrihethong&task=edit_taikhoan&id=' . $account['id']); ?>">
+                  href="<?php echo Route::_('index.php?option=com_quantrihethong&view=quantrihethong&task=edit_user&id=' . $account['id']); ?>">
                   <i class="fas fa-pencil-alt"></i>
                 </a>
                 <span style="padding: 0 0px;font-size:22px;color:#999">|</span>

@@ -27,24 +27,24 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 class RawView extends BaseHtmlView
 {
 
-  function display($tpl = null)
-  {
-    $app = Factory::getApplication();
-    $task = $app->input->get('task', 'default');
-    switch ($task) {
-      case "dstaikhoan":
-        $this->_getDanhsachTaikhoan();
-        $this->setLayout('dstaikhoan');
-        break;
+  // function display($tpl = null)
+  // {
+  //   $app = Factory::getApplication();
+  //   $task = $app->input->get('task', 'default');
+  //   switch ($task) {
+  //     case "dstaikhoan":
+  //       $this->_getUserList();
+  //       $this->setLayout('dstaikhoan');
+  //       break;
 
-    }
-    parent::display($tpl);
-  }
+  //   }
+  //   parent::display($tpl);
+  // }
 
-  public function _getDanhsachTaikhoan()
-  {
-    $model = Core::model('Vptk/Danhmuc');
-    $items = $model->getDanhsachTaikhoan();
-    $this->item = $items;
-  }
+  // public function _getUserList()
+  // {
+  //   $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+  //   $items = $model->getUserList();
+  //   $this->item = $items;
+  // }
 }

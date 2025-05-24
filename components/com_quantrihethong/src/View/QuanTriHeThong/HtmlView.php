@@ -21,66 +21,46 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
-        $task = strtolower($app->input->get('task', '', 'CMD'));
 
-        // Xác định layout
-        switch ($task) {
-            case 'edit_baocaoloi':
-                $layout = ($id > 0) ? 'edit_baocaoloi' : 'add_baocaoloi';
-                break;
-            case 'add_taikhoan':
-            case 'edit_taikhoan':
-            case 'ds_quantrihethong':
-                $layout = $task;
-                break;
-            default:
-                $layout = 'default';
-        }
+        $layout = Factory::getApplication()->input->get('task');
+        $layout = ($layout == null) ? 'default' : strtoupper($layout);
 
-        // Xử lý từng layout
         switch ($layout) {
-            case 'default':
+            case 'DEFAULT':
                 $this->setLayout('default');
                 $this->loadAccountList();
                 break;
-            case 'add_taikhoan':
-            case 'edit_taikhoan':
+            case 'ADD_USER':
+            case 'EDIT_USER':
                 $this->setLayout('edit_taikhoan');
-                $this->loadUserData();
+                $this->loadAccountDataById();
                 break;
-            case 'ds_quantrihethong':
-                $this->setLayout('ds_quantrihethong');
-                $this->loadAdminList();
+            default:
+                $this->setLayout('default');
+                $this->loadAccountList();
                 break;
         }
+
 
         parent::display($tpl);
     }
 
     protected function loadAccountList()
     {
-        $model = Core::model('Vptk/Danhmuc');
-        $this->accounts = $model->getDanhsachTaikhoan();
-    }
-
-    protected function loadAdminList()
-    {
-        $this->loadAssets();
-    }
-
-    protected function loadUserData()
-    {
-        $this->loadAssets();
-        $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
         $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+        $this->accounts = $model->getListAccount();
+    }
 
-        $this->user = $id ? $model->getTaikhoanById($id) : [];
+    protected function loadAccountDataById()
+    {
+        $this->loadAssets();
+        $app = Factory::getApplication()->input;
+        $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+        $idAccount = $app->getInt('id', null);
 
-        $this->dmKhuvuc = $model->getDanhsachKhuvuc();
-        $this->chucNang = $model->getChucNangSuDung();
+        $this->user = $model->getAccountById($idAccount);
+        $this->dmKhuvuc = $model->getRegionList();
+        $this->chucNang = $model->getUserGroupFunctions();
     }
 
     protected function loadAssets()
@@ -107,6 +87,7 @@ class HtmlView extends BaseHtmlView
             "$base/media/cbcc/js/jstree-3.2.1/jstree.min.js",
             "$base/media/cbcc/js/fuelux/fuelux.tree.min.js",
             "$base/media/cbcc/js/ace-elements.min.js",
+            "$base/media/cbcc/js/jquery/jquery-validation/jquery.validate.js",
             "$base/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js",
             "$base/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js",
             "$base/media/cbcc/js/jquery/jquery.inputmask.min.js",
@@ -114,7 +95,8 @@ class HtmlView extends BaseHtmlView
             "$base/media/cbcc/js/jquery/jquery.toast.js",
             "$base/templates/adminlte/plugins/pace-progress/pace.min.js",
             "$base/media/legacy/js/jquery-noconflict.js",
-            'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js'
+            'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js'
         ];
 
         foreach ($styles as $style) {

@@ -3,6 +3,11 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\CMS\User\User;
+use Joomla\CMS\User\UserHelper;
+use Joomla\CMS\Component\ComponentHelper;
+
+
 
 class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
 {
@@ -12,303 +17,74 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     return "Tie";
   }
 
-  public function getListError($keyword = '', $page = 1, $perPage = 20)
+  public function getListAccount()
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
-
-    $query->select([
-      'a.id',
-      'a.error_id',
-      'a.enter_error',
-      'a.content',
-      'a.status',
-      'b.name_error AS name_error',
-      'c.name AS name_module',
-    ])
-      ->from($db->quoteName('baocaoloi', 'a'))
-      ->leftJoin($db->quoteName('loailoi', 'b') . ' ON b.id = a.error_id')
-      ->leftJoin($db->quoteName('name_module', 'c') . ' ON c.id = a.module_id');
-
-
-    // Lọc theo tiêu đề hoặc nội dung
-    if (!empty($keyword)) {
-      $quotedKeyword = $db->quote('%' . $keyword . '%');
-      $query->where('(a.content LIKE ' . $quotedKeyword . ' OR c.name LIKE ' . $quotedKeyword . ' OR b.name_error LIKE ' . $quotedKeyword . ')');
-    }
-
-    // Lọc theo trạng thái chưa xoá
-    $query->where('a.deleted = 0');
-
-    // Sắp xếp giảm dần theo ngày tạo
-    $query->order($db->quoteName('a.created_at') . ' DESC');
-
-    // Phân trang
-    $startFrom = ($page - 1) * $perPage;
-    $query->setLimit((int)$perPage, (int)$startFrom);
-
-    $db->setQuery($query);
-
-    try {
-      $rows = $db->loadObjectList();
-
-      // Gom lại nếu có nhiều văn bản cho một thông báo
-      $result = [];
-      foreach ($rows as $row) {
-        $id = $row->id;
-        if (!isset($result[$id])) {
-          $result[$id] = (object)[
-            'id' => $row->id,
-            'error_id' => $row->error_id,
-            'enter_error' => $row->enter_error,
-            'name_error' => $row->name_error,
-            'name_module' => $row->name_module,
-            'status' => $row->status,
-            'content' => $row->content,
-          ];
-        }
-      }
-      return array_values($result);
-    } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi khi lấy danh sách thông báo: ' . $e->getMessage(), 'error');
-      return [];
-    }
-  }
-
-  public function getListNameError()
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select(['id', 'name_error'])
-      ->from($db->quoteName('loailoi'));
-
-    $db->setQuery($query);
-
-    try {
-      return $db->loadObjectList();
-    } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi khi lấy loại lỗi: ' . $e->getMessage(), 'error');
-      return [];
-    }
-  }
-
-  public function getListNameModule()
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select(['id', 'name'])
-      ->from($db->quoteName('name_module'));
-
-    $db->setQuery($query);
-
-    try {
-      return $db->loadObjectList();
-    } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi tên của module: ' . $e->getMessage(), 'error');
-      return [];
-    }
-  }
-
-  public function countQuanTriHeThong($userId)
-  {
-    $db = Factory::getDbo();
-
-    $query = $db->getQuery(true)
-      ->select('COUNT(*) AS tongquantrihethong')
-      ->from($db->quoteName('baocaoloi', 't'))
-      ->where('t.deleted = 0')
-      ->where('t.created_by = ' . (int) $userId);
-
-    $db->setQuery($query);
-    return (int) $db->loadResult();
-  }
-
-  public function getDetailQuanTriHeThong($quantrihethongId)
-  {
-    if (!is_numeric($quantrihethongId) || $quantrihethongId <= 0) {
-      return null;
-    }
-
-    $db = Factory::getDbo();
-
-    // Truy vấn chính
-    $query = $db->getQuery(true)
-      ->select([
-        'a.id',
-        'a.error_id',
-        'a.enter_error',
-        'a.content',
-        'a.image_id',
-        'a.status',
-        'a.processing_content',
-        'a.process_by',
-        'd.name AS processor_name',
-        'd.email AS processor_email',
-        'a.process_at',
-        'a.created_at',
-        'a.created_by',
-        'b.name_error',
-        'c.name AS name_module',
-        'u.name AS name_user',
-        'u.username',
-        'u.email'
-      ])
-      ->from($db->quoteName('baocaoloi', 'a'))
-      ->leftJoin($db->quoteName('loailoi', 'b') . ' ON b.id = a.error_id')
-      ->leftJoin($db->quoteName('name_module', 'c') . ' ON c.id = a.module_id')
-      ->leftJoin($db->quoteName('jos_users', 'd') . ' ON d.id = a.process_by')
-      ->leftJoin($db->quoteName('jos_users', 'u') . ' ON u.id = a.created_by')
-      ->where([
-        'a.id = ' . (int) $quantrihethongId,
-        'a.deleted = 0'
-      ]);
-
-    $db->setQuery($query);
-
-    try {
-      $record = $db->loadObject();
-
-      if (!$record) {
-        return null;
-      }
-
-      // Truy vấn phụ để lấy danh sách ảnh
-      $attachmentQuery = $db->getQuery(true)
-        ->select(['id', 'code', 'filename', 'YEAR(created_at) AS year'])
-        ->from($db->quoteName('core_attachment'))
-        ->where('object_id = ' . (int) $record->image_id);
-
-      $db->setQuery($attachmentQuery);
-      $attachments = $db->loadObjectList();
-
-      // Gắn danh sách images vào record
-      $record->images = $attachments;
-
-      return $record;
-    } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi khi lấy thông tin báo cáo lỗi: ' . $e->getMessage(), 'error');
-      return null;
-    }
-  }
-
-  public function getIdImage($idObject)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select($db->quoteName('id'))
-      ->from($db->quoteName('core_attachment'))
-      ->where($db->quoteName('object_id') . ' = ' . $db->quote($idObject));
-
-    $db->setQuery($query);
-    $idImage = (int) $db->loadResult();
-    return $idImage;
-  }
-
-  public function saveQuanTriHeThong($formdata, $idUser): int
-  {
-    $db = Factory::getDbo();
-
-    // Lấy giá trị error_id
-    $error_id = (int) ($formdata['error_id'] ?? 0);
-    $enter_error = ($error_id === 12) ? ($formdata['name_otherError'] ?? '') : null;
-
-    // Chuẩn bị dữ liệu để lưu
-    $columns = [
-      'error_id' => $error_id,
-      'enter_error' => $enter_error,
-      'module_id' => $formdata['module_id'] ?? '',
-      'content' => $formdata['error_content'] ?? '',
-      'image_id' => (int)$formdata['imageIdInput'],
-      'status' => 1,
-      'created_by' => $idUser,
-      'created_at' => Factory::getDate()->toSql(),
-    ];
-
-    $query = $db->getQuery(true)
-      ->insert($db->quoteName('quantrihethong'))
-      ->columns(array_map([$db, 'quoteName'], array_keys($columns)))
-      ->values(implode(',', array_map(
-        fn($val) => $val !== null ? $db->quote($val) : 'NULL',
-        array_values($columns)
-      )));
-
-    $db->setQuery($query);
-    $db->execute();
-
-    return (int) $db->insertid();
-  }
-
-  public function saveReason($formdata)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->update('quantrihethong')
-      ->set('process_by = ' . $db->quote($formdata["idUser"]))
-      ->set('status =' . $db->quote($formdata["status"]))
-      ->set('process_at = NOW()')
-      ->set('processing_content =' . $db->quote($formdata["contentReason"]))
-      ->where('id =' . $db->quote($formdata["idError"]));
-
-    $db->setQuery($query);
-    return $db->execute();
-  }
-
-  public function getDanhsachTaikhoan()
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true);
-    $query->select('a.id,a.name,a.username,a.email,a.block,a.requireReset,GROUP_CONCAT(c.title SEPARATOR "<br/>") AS nhomnguoidung');
-    $query->from('#__users AS a');
-    $query->innerJoin('#__user_usergroup_map AS b ON a.id = b.user_id');
-    $query->innerJoin('#__usergroups AS c ON b.group_id = c.id AND c.id > 9');
-    $query->where('a.id > 100');
-    $query->group('a.id');
-    $db->setQuery($query);
-    return $db->loadAssocList();
-  }
-
-  public function getTaikhoanById($taikhoan_id)
-  {
-    $db = Factory::getDbo();
-
-    // Truy vấn chính: lấy thông tin user + quyền khu vực
-    $query = $db->getQuery(true);
-    $query->select('a.*, b.group_id, c.*')
+    $query->select('a.id,a.name,a.username,a.email,a.block,a.requireReset,GROUP_CONCAT(c.title SEPARATOR "<br/>") AS nhomnguoidung')
       ->from('#__users AS a')
-      ->innerJoin('#__user_usergroup_map AS b ON a.id = b.user_id AND b.group_id > 9')
-      ->leftJoin('phanquyen_user2khuvuc AS c ON a.id = c.user_id')
-      ->where('a.id = ' . $db->quote($taikhoan_id));
-    $db->setQuery($query);
-    $userData = $db->loadAssoc();
-
-    // Truy vấn phụ: lấy tất cả group title
-    $query = $db->getQuery(true);
-    $query->select('d.id')
-      ->from('#__user_usergroup_map AS b')
-      ->innerJoin('#__usergroups AS d ON b.group_id = d.id')
-      ->where('b.user_id = ' . $db->quote($taikhoan_id) . ' AND b.group_id > 9');
-    $db->setQuery($query);
-    $userData['group_titles']  = $db->loadAssocList();
-
-    return $userData;
+      ->innerJoin('#__user_usergroup_map AS b ON a.id = b.user_id')
+      ->innerJoin('#__usergroups AS c ON b.group_id = c.id')
+      ->where('a.id > 100')
+      ->group('a.id');
+    try {
+      $db->setQuery($query);
+      return $db->loadAssocList();
+    } catch (Exception $e) {
+      Factory::getApplication()->enqueueMessage('Lỗi khi lấy danh sách user: ' . $e->getMessage(), 'error');
+      return [];
+    }
   }
 
-
-  public function getDanhsachKhuvuc()
+  // get account by id  
+  public function getAccountById($taikhoan_id)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
-    $query->select('a.*,b.tenkhuvuc AS cha');
-    $query->from('danhmuc_khuvuc AS a');
-    $query->innerJoin('danhmuc_khuvuc AS b ON a.cha_id = b.id');
-    $query->where('a.daxoa = 0');
-    $query->where('a.level > 1 ');
-    $query->order('a.level,b.tenkhuvuc ASC, a.tenkhuvuc ASC');
+
+    // Truy vấn chính để lấy thông tin tài khoản và các group_id
+    $query->select('a.*, GROUP_CONCAT(b.group_id) AS group_ids, c.*')
+      ->from('#__users AS a')
+      ->innerJoin('#__user_usergroup_map AS b ON a.id = b.user_id')
+      ->leftJoin('phanquyen_user2khuvuc AS c ON a.id = c.user_id')
+      ->where('a.id = ' . $db->quote($taikhoan_id))
+      ->group('a.id'); // Nhóm theo a.id để tránh trùng lặp dữ liệu người dùng
+
     $db->setQuery($query);
-    return $db->loadAssocList();
+    $result = $db->loadAssoc();
+
+    // Chuyển group_ids thành mảng
+    if ($result && !empty($result['group_ids'])) {
+      $result['group_ids'] = explode(',', $result['group_ids']);
+    } else {
+      $result['group_ids'] = []; // Trả về mảng rỗng nếu không có group_id
+    }
+
+    return $result;
   }
 
-  public function getChucNangSuDung()
+  // Get list khuvuc
+  public function getRegionList()
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('a.*,b.tenkhuvuc AS cha')
+      ->from('danhmuc_khuvuc AS a')
+      ->innerJoin('danhmuc_khuvuc AS b ON a.cha_id = b.id')
+      ->where('a.daxoa = 0')
+      ->where('a.level > 1 ')
+      ->order('a.level,b.tenkhuvuc ASC, a.tenkhuvuc ASC');
+    try {
+      $db->setQuery($query);
+      return $db->loadAssocList();
+    } catch (Exception $e) {
+      Factory::getApplication()->enqueueMessage('Lỗi khi lấy danh sách khu vực: ' . $e->getMessage(), 'error');
+      return [];
+    }
+  }
+
+  //get list chuc nang 
+  public function getUserGroupFunctions()
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
@@ -320,8 +96,221 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     try {
       return $db->loadObjectList();
     } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi khi lấy loại lỗi: ' . $e->getMessage(), 'error');
+      Factory::getApplication()->enqueueMessage('Lỗi khi lấy danh sách chức năng sử dụng: ' . $e->getMessage(), 'error');
       return [];
     }
+  }
+
+  // function to save user model
+  public function saveUserModel($formData)
+  {
+    // Get the database object
+    $db = Factory::getDbo();
+    $formData['chucNang'] = array_map('intval', explode(',', $formData['chucNang']));
+
+    try {
+      // New user creation
+      if (empty($formData['id'])) {
+        return $this->createUser($formData, $db);
+      }
+
+      // Update existing user
+      return $this->updateUser($formData, $db);
+    } catch (Exception $e) {
+      return [
+        'success' => false,
+        'error' => $e->getMessage()
+      ];
+    }
+  }
+
+  private function createUser($formData, $db): array
+  {
+    $user = new User();
+    // Prepare user data
+    $data = [
+      'name'         => $formData['name'],
+      'username'     => $formData['username'],
+      'email'        => $formData['email'],
+      'password'     => $formData['password'],
+      'password2'    => $formData['password'],
+      'block'        => isset($formData['block']) ? (int)$formData['block'] : 0,
+      'requireReset' => (int)$formData['requireReset'],
+      'groups'       => $formData['chucNang'],
+      'lastvisitDate' => '0000-00-00 00:00:00',
+      'lastResetTime' => '0000-00-00 00:00:00',
+    ];
+
+    // Bind and save the user
+    if (!$user->bind($data)) {
+      return [
+        'success' => false,
+        'error' => 'Bind failed: ' . implode(', ', $user->getErrors())
+      ];
+    }
+
+    if (!$user->save()) {
+      return [
+        'success' => false,
+        'error' => 'Save failed: ' . implode(', ', $user->getErrors())
+      ];
+    }
+
+    $chucNangs = $formData['chucNang'];
+    // Insert user permissions into core_user_action_donvi
+    $query = $db->getQuery(true)
+      ->insert($db->quoteName('core_user_action_donvi'))
+      ->columns(['user_id', 'action_id', 'iddonvi', 'group_id']);
+
+    foreach ($chucNangs as $chucNangId) {
+      $query->values(
+        (int)$user->id . ', 1, 1, ' . (int)$chucNangId
+      );
+    }
+
+    $db->setQuery($query);
+
+    if (!$db->execute()) {
+      return [
+        'success' => false,
+        'error' => $db->getErrorMsg()
+      ];
+    }
+
+    // Insert user permissions into phanquyen_user2khuvuc
+    $permissionResult = $this->saveUserPermissions($formData, $user->id, $db);
+    if (!$permissionResult['success']) {
+      return $permissionResult;
+    }
+
+    return [
+      'success' => true,
+      'user_id' => $user->id
+    ];
+  }
+
+
+  private function updateUser($formData, $db): array
+  {
+    // Load existing user
+    $user = new User();
+    if (!$user->load($formData['id'])) {
+      return [
+        'success' => false,
+        'error' => 'Failed to load user with ID: ' . $formData['id']
+      ];
+    }
+
+    // Prepare user data for update
+    $data = [
+      'id'           => $formData['id'],
+      'name'         => $formData['name'],
+      'username'     => $formData['username'],
+      'email'        => $formData['email'],
+      'block'        => isset($formData['block']) ? (int)$formData['block'] : 0,
+      'requireReset' => (int)$formData['requireReset'],
+      'groups'       => $formData['chucNang'],
+    ];
+
+    // Include password only if provided
+    if (!empty($formData['password'])) {
+      $salt = UserHelper::genRandomPassword(32);
+      $data['password'] = UserHelper::hashPassword($formData['password'], $salt) . ':' . $salt;
+    }
+
+    // Bind updated data to user
+    if (!$user->bind($data)) {
+      return [
+        'success' => false,
+        'error' => 'Bind failed: ' . implode(', ', $user->getErrors())
+      ];
+    }
+
+    // Save the updated user
+    if (!$user->save()) {
+      return [
+        'success' => false,
+        'error' => 'Save failed: ' . implode(', ', $user->getErrors())
+      ];
+    }
+
+    // Delete existing permissions
+    $query = $db->getQuery(true)
+      ->delete($db->quoteName('core_user_action_donvi'))
+      ->where($db->quoteName('user_id') . ' = ' . (int)$formData['id']);
+
+    if (!$db->setQuery($query)->execute()) {
+      return [
+        'success' => false,
+        'error' => 'Failed to delete existing permissions: ' . $db->getErrorMsg()
+      ];
+    }
+
+    // Insert updated permissions
+    $chucNangs = $formData['chucNang'];
+    $query = $db->getQuery(true)
+      ->insert($db->quoteName('core_user_action_donvi'))
+      ->columns(['user_id', 'action_id', 'iddonvi', 'group_id']);
+
+    foreach ($chucNangs as $chucNangId) {
+      $query->values(
+        (int)$formData["id"] . ', 0, 0, ' . (int)$chucNangId
+      );
+    }
+
+    if (!$db->setQuery($query)->execute()) {
+      return [
+        'success' => false,
+        'error' => 'Failed to insert updated permissions: ' . $db->getErrorMsg()
+      ];
+    }
+
+    // Delete existing permissions in phanquyen_user2khuvuc
+    $query = $db->getQuery(true)
+      ->delete($db->quoteName('phanquyen_user2khuvuc'))
+      ->where($db->quoteName('user_id') . ' = ' . (int)$formData['id']);
+
+    if (!$db->setQuery($query)->execute()) {
+      return [
+        'success' => false,
+        'error' => 'Failed to delete existing khu vuc permissions: ' . $db->getErrorMsg()
+      ];
+    }
+
+    // Update user permissions in phanquyen_user2khuvuc
+    $permissionResult = $this->saveUserPermissions($formData, $formData["id"], $db);
+    if (!$permissionResult['success']) {
+      return $permissionResult;
+    }
+
+    return [
+      'success' => true,
+      'user_id' => $formData['id']
+    ];
+  }
+  private function saveUserPermissions($formData, $userId, $db): array
+  {
+    $query = $db->getQuery(true)
+      ->insert($db->quoteName('phanquyen_user2khuvuc'))
+      ->columns(['user_id', 'quanhuyen_id', 'phuongxa_id', 'thonto_id'])
+      ->values(
+        (int)$userId . ',' .
+          $db->quote(0) . ',' .
+          $db->quote($formData["phuongXa"]) . ',' .
+          $db->quote($formData["thonTo"])
+      );
+
+    $db->setQuery($query);
+
+    if (!$db->execute()) {
+      return [
+        'success' => false,
+        'error' => 'Failed to insert user permissions: ' . $db->getErrorMsg()
+      ];
+    }
+
+    return [
+      'success' => true
+    ];
   }
 }
