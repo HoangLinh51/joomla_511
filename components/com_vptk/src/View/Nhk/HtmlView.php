@@ -103,15 +103,17 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
         $document->addStyleSheet(Uri::root(true).'/media/cbcc/css/jquery.toast.css');
         $document->addStyleSheet(Uri::base(true).'/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
-
+        $document->addStyleSheet(Uri::base(true).'/media/cbcc/css/jquery.gritter.css');
         // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
         // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         // $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/jquery/jquery.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js');
-        $document->addScript('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.vi.min.js');
+        $document->addScript(Uri::base(true).'/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js');
+        $document->addScript(Uri::root(true) . '/media/cbcc/js/bootbox.min.js');
+        $document->addScript(Uri::root(true) . '/media/cbcc/js/jquery/jquery.gritter.min.js');
+        // $document->addScript('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.vi.min.js');
         $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
-
         // $document->addScript(Uri::base(true).'/media/legacy/js/jquery-noconflict.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/fuelux/fuelux.tree.min.js');
@@ -122,7 +124,6 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true).'/media/cbcc/js/jstree/jquery.cookie.js');
         $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery.toast.js');
         $document->addScript(Uri::base(true).'/templates/adminlte/plugins/pace-progress/pace.min.js');
-
 
         $hokhau_id = $app->getInt('id',null);
 
@@ -146,6 +147,8 @@ class HtmlView extends BaseHtmlView
 			$phuongxa = $db->loadAssocList();
 		}
 		$tinhthanh = Core::loadAssocList('danhmuc_tinhthanh','id,tentinhthanh','trangthai = 1 AND daxoa = 0','sapxep ASC, tentinhthanh ASC');
+		$phuongxa2 = Core::loadAssocList('danhmuc_phuongxa','id,tenphuongxa','trangthai = 1 AND daxoa = 0','sapxep ASC, tenphuongxa ASC');
+
 		$quanhe = Core::loadAssocList('danhmuc_quanhenhanthan','id,tenquanhenhanthan','trangthai = 1 AND daxoa = 0','sapxep ASC');
 		$gioitinh = Core::loadAssocList('danhmuc_gioitinh','id,tengioitinh','trangthai = 1 AND daxoa = 0','sapxep ASC');
 		$dantoc = Core::loadAssocList('danhmuc_dantoc','id,tendantoc','trangthai = 1 AND daxoa = 0','sapxep ASC');
@@ -164,7 +167,7 @@ class HtmlView extends BaseHtmlView
 			$phuongxa_id = $item['phuongxa_id'];
         }else{
             $item = array();
-			$item['nhankhau'][0]['quanhenhanthan_id'] = '-1';
+			$item['nhankhau'];
 			if(count($phuongxa) == 1){ $phuongxa_id = $phuongxa[0]['id']; }
         }
 		if((int)$phuongxa_id > 0){
@@ -173,6 +176,8 @@ class HtmlView extends BaseHtmlView
 			$thonto = array();
 		}
         $this->tinhthanh = $tinhthanh;
+        $this->phuongxa2 = $phuongxa2;
+
         $this->phuongxa = $phuongxa;
         $this->thonto = $thonto;
         $this->quanhe = $quanhe;

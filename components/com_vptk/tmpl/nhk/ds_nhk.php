@@ -89,11 +89,11 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 <ul class="pagination">
                     <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
                         <a class="page-link" href="#" data-page="1">
-                            <<< /a>
+                            << </a>
                     </li>
                     <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
                         <a class="page-link" href="#" data-page="<?php echo max(1, $currentPage - 1); ?>">
-                            << /a>
+                            <</a>
                     </li>
                     <?php
                     $range = 2;
@@ -279,7 +279,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                     if (result) {
                         console.log('Sending AJAX with hokhau_id:', hokhau_id);
                         $.ajax({
-                            url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vptk&task=vptk.delNhanKhau&format=raw',
+                            url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vptk&task=vptk.delHoKhau&format=raw',
                             type: 'POST',
                             data: {
                                 hokhau_id: hokhau_id,
