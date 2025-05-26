@@ -43,7 +43,7 @@ $item = $this->item;
 			</p>
 
 			<!-- Hình ảnh -->
-			<?php if ($item->images && $item->image > 0): ?>
+			<?php if ($item->images): ?>
 				<p><strong class="label">Hình ảnh:</strong></p>
 				<div id="imagePreview">
 					<?php foreach ($item->images as $image): ?>

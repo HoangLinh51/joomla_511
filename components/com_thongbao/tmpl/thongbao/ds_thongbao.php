@@ -83,7 +83,6 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
               <td style="vertical-align: middle"><?php echo htmlspecialchars($item->noidung); ?></td>
               <td style="vertical-align: middle" class="text-center">
                 <?php if ($item->vanbandinhkem): ?>
-                  <?php var_dump($item->vanban); ?>
                   <div class="d-flex flex-column">
                     <?php foreach ($item->vanban as $vanban) : ?>
                       <?php if ($vanban->type === 'application/pdf'): ?>

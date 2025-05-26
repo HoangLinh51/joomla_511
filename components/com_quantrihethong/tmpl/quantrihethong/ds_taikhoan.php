@@ -91,7 +91,7 @@ $user = Factory::getUser();
                 </a>
                 <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
                 <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;"
-                  data-title="Xóa" data-thongbao="<?php echo $account['id']; ?>">
+                  data-title="Xóa" data-account="<?php echo $account['id']; ?>">
                   <i class="fas fa-trash-alt"></i>
                 </span>
               </td>
@@ -183,9 +183,6 @@ $user = Factory::getUser();
   }
 
   $(document).ready(function() {
-    $(function() {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
     const idUser = <?= (int)Factory::getUser()->id ?>;
 
     //hàm load data
@@ -239,6 +236,39 @@ $user = Factory::getUser();
         }
       });
     }
+
+    $('body').on('click', '.btn_xoa', function() {
+      const confirmed = confirm('Bạn có chắc chắn muốn xóa dữ liệu này?');
+      if (!confirmed) return;
+
+      const url = "<?= Route::_('index.php?option=com_quantrihethong&task=quantrihethong.xoa_taikhoan') ?>";
+      const tokenName = Joomla.getOptions('csrf.token');
+
+      const payload = {
+        idUser: idUser,
+        idAccount: $(this).data('account')
+      };
+      payload[tokenName] = 1;
+      fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+          const isSuccess = data.success ?? true;
+          showToast(data.message || 'Xóa thành công', isSuccess);
+          if (isSuccess) {
+            setTimeout(() => location.reload(), 500);
+          }
+        })
+        .catch(error => {
+          console.error('Lỗi:', error);
+          showToast('Đã xảy ra lỗi khi xóa dữ liệu', false);
+        });
+    });
     //hành động search 
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
@@ -330,16 +360,5 @@ $user = Factory::getUser();
   input:checked+.slider::after {
     content: "✓";
     left: 28px;
-  }
-
-
-  .btn_hieuchinh,
-  .btn_xoa {
-    color: #999;
-  }
-
-  .btn_hieuchinh:hover,
-  .btn_xoa:hover {
-    color: #0066ff;
   }
 </style>

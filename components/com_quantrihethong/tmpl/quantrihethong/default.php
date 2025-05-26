@@ -42,7 +42,54 @@ use Joomla\CMS\Factory;
     color: #fff;
     background-color: #007bff;
   }
-  .nav-tabs{
+
+  .nav-tabs {
     border-color: #bbbbbb;
+  }
+
+  .btn_hieuchinh,
+  .btn_xoa {
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .btn_hieuchinh,
+  .btn_xoa {
+    cursor: pointer;
+    pointer-events: auto;
+    color: #999;
+    padding: 10px;
+  }
+
+  .btn_hieuchinh:hover i,
+  .btn_xoa:hover i {
+    color: #0066ff;
+  }
+
+  .btn_hieuchinh::after,
+  .btn_xoa::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 72%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(79, 89, 102, .08);
+    color: #000000;
+    padding: 6px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    border-radius: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+  }
+
+
+  .btn_hieuchinh:hover::after,
+  .btn_xoa:hover::after {
+    opacity: 1;
+    visibility: visible;
   }
 </style>

@@ -291,11 +291,12 @@ class AttachmentController extends BaseController
                 'created_at' => date('Y-m-d H:i:s')
             ];
 
-            if ($mapper->create($data)) {
+            $idImage = $mapper->create($data);
+            if ($idImage) {
                 $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $newName;
                 $successfulAttachments[] = [
                     'url' => $publicUrl,
-                    'idObject' => $idObject, // hoặc có thể thay bằng `$data['id']` nếu `$mapper->create()` trả về ID mới
+                    'idImage' => $idImage, // hoặc có thể thay bằng `$data['id']` nếu `$mapper->create()` trả về ID mới
                     'filename' => $originalName
                 ];
             } else {
@@ -310,53 +311,55 @@ class AttachmentController extends BaseController
         foreach ($successfulAttachments as $file) {
             $url = htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8');
             $filename = htmlspecialchars($file['filename'], ENT_QUOTES, 'UTF-8');
-            $idObject = htmlspecialchars($file['idObject'], ENT_QUOTES, 'UTF-8');
+            $idImage = htmlspecialchars($file['idImage'], ENT_QUOTES, 'UTF-8');
             echo '  if (imagePreview) {';
             echo '    const img = document.createElement("img");';
             echo '    img.src = "' . htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8') . '";';
             echo '    img.alt = "' . htmlspecialchars($file['filename'], ENT_QUOTES, 'UTF-8') . '";';
-            echo '    Object.assign(img.style, { maxWidth: "100px", maxHeight: "100px", marginRight: "5px", border: "1px solid #ccc", padding: "2px" });';
-            echo '    imagePreview.appendChild(img);';
+            echo '    Object.assign(img.style, { maxWidth: "100px", maxHeight: "100px", border: "1px solid #ccc", padding: "2px" });';
+            echo '    const wrapper = document.createElement("div");';
+            echo '    wrapper.style.display = "inline-block";';
+            echo '    wrapper.style.position = "relative";';
+            echo '    wrapper.style.marginRight = "5px";';
+
+            echo '    img.id = "uploaded_img_' . $idImage . '";';
+            echo '    wrapper.appendChild(img);';
+
+            echo '    const closeBtn = document.createElement("span");';
+            echo '    closeBtn.innerHTML = "×";';
+            echo '    Object.assign(closeBtn.style, {';
+            echo '      position: "absolute",';
+            echo '      top: "0px",';
+            echo '      right: "0px",';
+            echo '      background: "rgba(0,0,0,0.6)",';
+            echo '      color: "white",';
+            echo '      padding: "0 5px",';
+            echo '      cursor: "pointer",';
+            echo '      fontWeight: "bold",';
+            echo '      borderRadius: "0px 0px 0px 5px",';
+            echo '      lineHeight: "1",';
+            echo '    });';
+
+            echo '    closeBtn.onclick = function() {';
+            echo '      wrapper.remove();';
+            echo '      const hiddenInput = form.querySelector("input#image_id_' . $idImage . '");';
+            echo '      if (hiddenInput) hiddenInput.remove();';
+            echo '    };';
+
+            echo '    wrapper.appendChild(closeBtn);';
+            echo '    imagePreview.appendChild(wrapper);';
             echo '  }';
 
             // Thêm hidden input
             echo '  if (form) {';
             echo '    const input = document.createElement("input");';
             echo '    input.type = "hidden";';
-            echo '    input.name = "image_id[]";';
-            echo '    input.value = "' . htmlspecialchars($file['idObject'], ENT_QUOTES, 'UTF-8') . '";';
+            echo '    input.name = "image_id";';
+            echo '    input.id = "image_id_' . $idImage . '";';
+            echo '    input.value = "' . htmlspecialchars($file['idImage'], ENT_QUOTES, 'UTF-8') . '";';
             echo '    form.appendChild(input);';
             echo '  }';
         }
-
-        //     echo '  if (imagePreview) {';
-        //     echo '    const wrapper = document.createElement("div");';
-        //     echo '    wrapper.id = "imagePreviewWrapper";';
-        //     echo '    wrapper.style.position = "relative";';
-        //     echo '    wrapper.style.display = "inline-block";';
-        //     echo '    wrapper.style.marginRight = "10px";';
-
-        //     echo '    const img = document.createElement("img");';
-        //     echo '    img.src = "' . $url . '";';
-        //     echo '    img.alt = "' . $filename . '";';
-        //     echo '    Object.assign(img.style, { width: "100px", height: "100px", border: "1px solid #ccc", padding: "2px" });';
-
-        //     echo '    const closeBtn = document.createElement("span");';
-        //     echo '   closeBtn.className = "DELidfiledk' . $idObject . '[]";';
-        //     echo '    closeBtn.innerHTML = "×";';
-        //     echo '    Object.assign(closeBtn.style, { position: "absolute", top: "0", right: "0", background: "rgba(0,0,0,0.5)", color: "#fff", cursor: "pointer", padding: "2px 6px", borderRadius: "0 0 0 5px", fontSize: "14px" });';
-        //     echo '    closeBtn.onclick = function() { 
-        //     const event = new CustomEvent("imageRemoved", {
-        //     detail: { filename: "' . $filename . '", idObject: "' . $idObject . '", url: "' . $url . '", dirPath: "' . $dirPath . '" },
-        //     });
-        //     window.parent.document.dispatchEvent(event);
-        //     };';
-
-        //     echo '    wrapper.appendChild(img);';
-        //     echo '    wrapper.appendChild(closeBtn);';
-        //     echo '    imagePreview.appendChild(wrapper);';
-        //     echo '  }';
-        // }
 
         echo '}';
         echo '</script>';

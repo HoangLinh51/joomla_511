@@ -26,8 +26,8 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
       'b.name_error AS name_error',
       'c.name AS name_module',
     ])
-      ->from($db->quoteName('baocaoloi', 'a'))
-      ->leftJoin($db->quoteName('loailoi', 'b') . ' ON b.id = a.error_id')
+      ->from($db->quoteName('error_report', 'a'))
+      ->leftJoin($db->quoteName('error_type', 'b') . ' ON b.id = a.error_id')
       ->leftJoin($db->quoteName('name_module', 'c') . ' ON c.id = a.module_id');
 
 
@@ -80,7 +80,7 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
       ->select(['id', 'name_error'])
-      ->from($db->quoteName('loailoi'));
+      ->from($db->quoteName('error_type'));
 
     $db->setQuery($query);
 
@@ -115,7 +115,7 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
 
     $query = $db->getQuery(true)
       ->select('COUNT(*) AS tongbaocaoloi')
-      ->from($db->quoteName('baocaoloi', 't'))
+      ->from($db->quoteName('error_report', 't'))
       ->where('t.deleted = 0')
       ->where('t.created_by = ' . (int) $userId);
 
@@ -137,8 +137,7 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
         'a.id',
         'a.error_id',
         'a.enter_error',
-        'a.content',
-        'a.image_id',
+      'a.content',
         'a.status',
         'a.processing_content',
         'a.process_by',
@@ -153,8 +152,8 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
         'u.username',
         'u.email'
       ])
-      ->from($db->quoteName('baocaoloi', 'a'))
-      ->leftJoin($db->quoteName('loailoi', 'b') . ' ON b.id = a.error_id')
+      ->from($db->quoteName('error_report', 'a'))
+      ->leftJoin($db->quoteName('error_type', 'b') . ' ON b.id = a.error_id')
       ->leftJoin($db->quoteName('name_module', 'c') . ' ON c.id = a.module_id')
       ->leftJoin($db->quoteName('jos_users', 'd') . ' ON d.id = a.process_by')
       ->leftJoin($db->quoteName('jos_users', 'u') . ' ON u.id = a.created_by')
@@ -172,16 +171,17 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
         return null;
       }
 
-      // Truy vấn phụ để lấy danh sách ảnh
+      // Truy vấn lấy danh sách ảnh từ bảng trung gian error_attachment
       $attachmentQuery = $db->getQuery(true)
-        ->select(['id', 'code', 'filename', 'YEAR(created_at) AS year'])
-        ->from($db->quoteName('core_attachment'))
-        ->where('object_id = ' . (int) $record->image_id);
+        ->select(['a.id', 'a.code', 'a.filename', 'YEAR(a.created_at) AS year'])
+        ->from($db->quoteName('core_attachment', 'a'))
+        ->innerJoin($db->quoteName('error_attachment', 'ea') . ' ON ea.attachment_id = a.id')
+        ->where('ea.error_id = ' . (int) $baocaoloiId);
 
       $db->setQuery($attachmentQuery);
       $attachments = $db->loadObjectList();
 
-      // Gắn danh sách images vào record
+      // Gắn danh sách ảnh vào đối tượng record
       $record->images = $attachments;
 
       return $record;
@@ -204,45 +204,100 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
     return $idImage;
   }
 
-  public function saveBaoCaoLoi($formdata, $idUser): int
+  public function saveBaoCaoLoi($formdata, $idUser)
   {
     $db = Factory::getDbo();
 
-    // Lấy giá trị error_id
-    $error_id = (int) ($formdata['error_id'] ?? 0);
-    $enter_error = ($error_id === 12) ? ($formdata['name_otherError'] ?? '') : null;
+    // Lấy dữ liệu đầu vào
+    $error_id = (int) ($formdata['type_error_id'] ?? 0);
+    $enter_error = ($error_id === 12) ? trim($formdata['name_otherError'] ?? '') : null;
+    $module_id = $formdata['module_id'] ?? '';
+    $content = $formdata['error_content'] ?? '';
 
-    // Chuẩn bị dữ liệu để lưu
+    // Chuẩn bị dữ liệu để insert
     $columns = [
-      'error_id' => $error_id,
+      'error_id'    => $error_id,
       'enter_error' => $enter_error,
-      'module_id' => $formdata['module_id'] ?? '',
-      'content' => $formdata['error_content'] ?? '',
-      'image_id' => (int)$formdata['imageIdInput'],
-      'status' => 1,
-      'created_by' => $idUser,
-      'created_at' => Factory::getDate()->toSql(),
+      'module_id'   => $module_id,
+      'content'     => $content,
+      'status'      => 1,
+      'created_by'  => $idUser,
+      'created_at'  => Factory::getDate()->toSql(),
     ];
 
+    // Tạo query insert
     $query = $db->getQuery(true)
-      ->insert($db->quoteName('baocaoloi'))
+      ->insert($db->quoteName('error_report'))
       ->columns(array_map([$db, 'quoteName'], array_keys($columns)))
       ->values(implode(',', array_map(
         fn($val) => $val !== null ? $db->quote($val) : 'NULL',
         array_values($columns)
       )));
 
-    $db->setQuery($query);
-    $db->execute();
+    try {
+      $db->setQuery($query);
+      $db->execute();
 
-    return (int) $db->insertid();
+      $insertId = $db->insertid();
+      if ($insertId && !empty($formdata['imageIdInput'])) {
+        return $this->saveAttachments($insertId, $formdata['imageIdInput']);
+      }
+
+      return ['success' => true, 'messages' => ['Báo cáo lỗi đã được lưu.']];
+    } catch (Exception $e) {
+      return ['success' => false, 'messages' => ['Lỗi khi lưu báo cáo: ' . $e->getMessage()]];
+    }
   }
+
+  public function saveAttachments($error_id, $imageIdInput)
+  {
+    if (!$error_id || empty($imageIdInput)) {
+      return ['success' => false, 'messages' => ['ID lỗi hoặc danh sách ảnh không hợp lệ.']];
+    }
+
+    $db = Factory::getDbo();
+    $attachmentIds = array_filter(array_map('intval', explode(',', $imageIdInput)));
+
+    if (empty($attachmentIds)) {
+      return ['success' => false, 'messages' => ['Không có ảnh hợp lệ để lưu.']];
+    }
+
+    $query = $db->getQuery(true);
+    $columns = ['error_id', 'attachment_id'];
+
+    $success = true;
+    $messages = [];
+
+    foreach ($attachmentIds as $attachmentId) {
+      $query->clear()
+        ->insert($db->quoteName('error_attachment'))
+        ->columns($db->quoteName($columns))
+        ->values(implode(',', [
+          $db->quote($error_id),
+          $db->quote($attachmentId)
+        ]));
+
+      try {
+        $db->setQuery($query);
+        $db->execute();
+        $messages[] = "Đã lưu attachment ID $attachmentId.";
+      } catch (Exception $e) {
+        $success = false;
+        $msg = "Lỗi khi lưu attachment ID $attachmentId: " . $e->getMessage();
+        $messages[] = $msg;
+        Factory::getApplication()->enqueueMessage($msg, 'error');
+      }
+    }
+
+    return ['success' => $success, 'messages' => $messages];
+  }
+
 
   public function saveReason($formdata)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
-      ->update('baocaoloi')
+      ->update('error_report')
       ->set('process_by = ' . $db->quote($formdata["idUser"]))
       ->set('status =' . $db->quote($formdata["status"]))
       ->set('process_at = NOW()')

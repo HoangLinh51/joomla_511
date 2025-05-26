@@ -26,6 +26,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       ->innerJoin('#__user_usergroup_map AS b ON a.id = b.user_id')
       ->innerJoin('#__usergroups AS c ON b.group_id = c.id')
       ->where('a.id > 100')
+      ->where('a.is_deleted = 0')
       ->group('a.id');
     try {
       $db->setQuery($query);
@@ -189,7 +190,6 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     ];
   }
 
-
   private function updateUser($formData, $db): array
   {
     // Load existing user
@@ -288,6 +288,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'user_id' => $formData['id']
     ];
   }
+
   private function saveUserPermissions($formData, $userId, $db): array
   {
     $query = $db->getQuery(true)
@@ -312,5 +313,29 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     return [
       'success' => true
     ];
+  }
+
+  public function deleteAccount($formData)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true)
+      ->update('jos_users')
+      ->set('is_deleted = 1')
+      ->set('deleted_by = ' . $db->quote($formData['idUser']))
+      ->set('deleted_at = NOW()')
+      ->where('id =' . $db->quote($formData['idAccount']));
+
+    $db->setQuery($query);
+    try {
+      $db->execute();
+      return [
+        'success' => true,
+      ];
+    } catch (Exception $e) {
+      return [
+        'success' => false,
+        'error' => 'Có lỗi khi xóa User: ' . $e->getMessage()
+      ];
+    }
   }
 }

@@ -32,7 +32,7 @@ $iframeId = "tftemp" . $this->idObject;
 ?>
 
 <?php if ($this->isCapnhat == 1): ?>
-  <form id="<?php echo $formId; ?>" name="<?php echo $formName; ?>" enctype="multipart/form-data" action="<?php echo Uri::root(true); ?>/index.php?option=com_core&controller=attachment&task=uploadMultiImages" method="post" target="<?php echo $iframeId; ?>">
+  <form id="imageUploadForm" name="<?php echo $formName; ?>" enctype="multipart/form-data" action="<?php echo Uri::root(true); ?>/index.php?option=com_core&controller=attachment&task=uploadMultiImages" method="post" target="<?php echo $iframeId; ?>">
     <div class="mb-2">
       <label for="<?php echo $fileInputId; ?>" class="btn btn-sm btn-primary" style="cursor: pointer;">
         <i class="fas fa-upload"></i> Chọn ảnh (có thể chọn nhiều file)
