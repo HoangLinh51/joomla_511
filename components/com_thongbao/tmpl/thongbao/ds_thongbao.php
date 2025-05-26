@@ -76,31 +76,36 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
             <tr>
               <td class="text-center" style="vertical-align: middle"><?php echo $stt++; ?></td>
               <td style="vertical-align: middle">
-                <a href="<?php echo '/index.php/component/thongbao/?view=thongbao&task=detail_thongbao&id=' . $item->id; ?>">
+                <a href="#" class="modal-detail" data-thongbaoId="<?php echo htmlspecialchars($item->id); ?>">
                   <?php echo htmlspecialchars($item->tieude); ?>
                 </a>
               </td>
               <td style="vertical-align: middle"><?php echo htmlspecialchars($item->noidung); ?></td>
               <td style="vertical-align: middle" class="text-center">
                 <?php if ($item->vanbandinhkem): ?>
+                  <?php var_dump($item->vanban); ?>
                   <div class="d-flex flex-column">
                     <?php foreach ($item->vanban as $vanban) : ?>
-                      <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam . '&code=' . $vanban->code; ?>">
-                        <?php echo $vanban->filename ?>
-                      </a>
+                      <?php if ($vanban->type === 'application/pdf'): ?>
+                        <a href="<?php echo '/index.php?option=com_thongbao&view=thongbao&format=raw&task=viewpdf&file=' . $vanban->code ?>" target="_blank">
+                          <?php echo $vanban->filename ?>
+                        </a>
+                      <?php else:  ?>
+                        <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam . '&code=' . $vanban->code; ?>">
+                          <?php echo $vanban->filename ?>
+                        </a>
+                      <?php endif; ?>
+
                     <?php endforeach ?>
                   </div>
                 <?php endif ?>
               </td>
               <td class="text-center">
-                <a class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;"
-                  href="<?php echo Route::_('index.php?option=com_thongbao&view=thongbao&task=edit_thongbao&id=' . $item->id); ?>"
-                  data-title="Hiệu chỉnh">
+                <span class="btn btn-sm btn_hieuchinh" data-thongbao="<?php echo $item->id; ?>" data-title="Hiệu chỉnh">
                   <i class="fas fa-pencil-alt"></i>
-                </a>
+                </span>
                 <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-                <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;"
-                  data-thongbao="<?php echo $item->id; ?>" data-title="Xóa">
+                <span class="btn btn-sm btn_xoa" data-thongbao="<?php echo $item->id; ?>" data-title="Xóa">
                   <i class="fas fa-trash-alt"></i>
                 </span>
               </td>
@@ -169,6 +174,22 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
       </div>
     </div>
   </div>
+
+  <div class="modal fade modal-fixed-right" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-right" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detailModalLabel">Thông tin chi tiết</h5>
+        </div>
+        <div class="modal-body">
+          <div id="detailContent">Đang tải...</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -194,7 +215,17 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
   $(document).ready(function() {
     const idUser = <?= (int)Factory::getUser()->id ?>;
     const idThongbao = <?= (int)$item->id ?>;
+    $('body').delegate('.btn_hieuchinh', 'click', function() {
+      window.location.href = 'index.php?option=com_thongbao&view=thongbao&task=edit_thongbao&id=' + $(this).data('thongbao');
+    });
 
+    $(document).on('click', '.modal-detail', function(e) {
+      e.preventDefault();
+
+      var thongbaoId = $(this).data('thongbaoid');
+      console.log('Clicked thongbaoid:', thongbaoId);
+      loadDetail(thongbaoId);
+    });
     //hàm load data
     function loadData(page, keyword, perPage = 1) {
       $("#tbody_danhsach").html('<tr><td colspan="9"><strong>loading...</strong></td></tr>');
@@ -251,6 +282,37 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
         }
       });
     }
+
+    function loadDetail(thongbaoId) {
+      $("#overlay").fadeIn(300);
+      var params = {
+        option: 'com_thongbao',
+        view: 'thongbao',
+        format: 'raw',
+        task: 'DETAIL_THONGBAO',
+        thongbaoId: thongbaoId,
+      };
+      console.log('Detail Params:', params);
+      $.ajax({
+        url: 'index.php',
+        type: 'GET',
+        data: params,
+        success: function(response) {
+
+          console.log('Detail response:', response);
+          $('#detailContent').html(response);
+          $('#detailModal').modal('show');
+          $("#overlay").fadeOut(300);
+        },
+        error: function(xhr, status, error) {
+          console.log('Detail error:', error);
+
+          $('#detailContent').html('<p class="text-danger">Lỗi khi tải thông tin: ' + error + '</p>');
+          $('#detailModal').modal('show');
+          $("#overlay").fadeOut(300);
+        }
+      });
+    }
     //hành động search 
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
@@ -304,7 +366,80 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
 </script>
 
 <style>
+  .content-wrapper {
+    background-color: #fff;
+  }
+
+  .content-box {
+    padding: 0px 20px;
+  }
+
+  .modal-dialog.modal-dialog-right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 0;
+    height: 100%;
+    max-width: 500px;
+    transform: none !important;
+    padding: 20px 10px;
+  }
+
+  .modal-dialog.modal-dialog-right .modal-content {
+    height: 100%;
+    border-radius: 5px;
+  }
+
   .danhsach {
     padding: 20px;
+  }
+
+  span.btn_hieuchinh,
+  span.btn_xoa {
+    font-size: 18px;
+    padding: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .btn_hieuchinh,
+  .btn_xoa {
+    cursor: pointer;
+    pointer-events: auto;
+    color: #999;
+    padding: 10px;
+  }
+
+  .btn_hieuchinh:hover i,
+  .btn_xoa:hover i {
+    color: #0066ff;
+  }
+
+  .btn_hieuchinh::after,
+  .btn_xoa::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 72%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(79, 89, 102, .08);
+    color: #000000;
+    padding: 6px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    border-radius: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+  }
+
+
+  .btn_hieuchinh:hover::after,
+  .btn_xoa:hover::after {
+    opacity: 1;
+    visibility: visible;
   }
 </style>

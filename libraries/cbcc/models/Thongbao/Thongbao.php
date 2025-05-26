@@ -27,6 +27,7 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       'b.id AS vanban_id',
       'b.code AS vanban_code',
       'b.filename AS vanban_filename',
+      'b.mime AS type',
       'YEAR(b.created_at) AS vanban_nam'
     ])
       ->from($db->quoteName('thongbao', 'a'))
@@ -79,7 +80,8 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
             'id' => $row->vanban_id,
             'code' => $row->vanban_code,
             'filename' => $row->vanban_filename,
-            'nam' => $row->vanban_nam
+            'nam' => $row->vanban_nam,
+            'type' => $row->type
           ];
         }
       }
@@ -152,6 +154,7 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       'u.email',
       'vb.id AS vanban_id',
       'vb.code AS vanban_code',
+      'vb.mime AS type',
       'vb.filename AS vanban_filename',
       'YEAR(vb.created_at) AS vanban_nam'
     ])

@@ -10,22 +10,28 @@ $item = $this->item;
 
 <div class="container my-3">
   <div class="content-box">
-    <h2 class="mb-3 text-primary">
-      <?php echo ((int)$item->id > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin thông báo
-    </h2>
     <form action="<?= Route::_('index.php?option=com_thongbao&task=thongbao.edit_thongbao&id=' . (int)$item->id) ?>" id="formThongBao" name="formThongBao" method="post">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="m-0 text-primary">
+          <?php echo ((int)$item->id > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin thông báo
+        </h2>
+        <div>
+          <a href="index.php/component/thongbao/?view=thongbao&task=default&id=<?= (int)$item->id ?>" class="btn btn-secondary"><i class="fa fa-share"></i> Quay lại</a>
+          <button type="submit" id="submitBtn" class="btn btn-success"><i class="fa fa-save"></i> Lưu</button>
+        </div>
+      </div>
       <div class="form-group">
-        <label for="tieude">Tiêu đề</label>
-        <input type="text" class="form-control" id="tieude" name="tieude" maxlength="255" required
-          value="<?= htmlspecialchars($item->tieude) ?>" oninput="validateLength(this, 255)">
-        <small id="tieudeHelp" class="form-text text-muted text-danger d-none">Tiêu đề không được vượt quá 255 ký tự.</small>
+        <label for="tieude">Tiêu đề <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="tieude" name="tieude" maxlength="255"
+          required value="<?= htmlspecialchars($item->tieude) ?>" oninput="validateTitle(this)">
+        <small id="titleError" class="text-danger"></small>
       </div>
 
       <div class="form-group">
-        <label for="noidung">Nội dung</label>
+        <label for="noidung">Nội dung <span class="text-danger">*</span></label>
         <textarea class="form-control" id="noidung" name="noidung" rows="4" maxlength="510" required
-          oninput="validateLength(this, 510)"><?= htmlspecialchars($item->noidung) ?></textarea>
-        <small id="noidungHelp" class="form-text text-muted text-danger d-none">Nội dung không được vượt quá 510 ký tự.</small>
+          oninput="validateContent(this)"><?= htmlspecialchars($item->noidung) ?></textarea>
+        <small id="contentError" class="text-danger"></small>
       </div>
 
       <div class="form-group">
@@ -48,15 +54,11 @@ $item = $this->item;
       <?php if ($item->id > 0): ?>
         <h5>Thông tin hệ thống</h5>
         <p><strong>Người tạo:</strong> <?= htmlspecialchars($item->name) ?></p>
-        <p><strong>Ngày tạo:</strong> <?= htmlspecialchars($item->ngay_tao) ?></p>
+        <p><strong>Ngày tạo mới:</strong> <?= htmlspecialchars($item->ngay_tao) ?></p>
         <p><strong>Email người tạo:</strong> <?= htmlspecialchars($item->email) ?></p>
       <?php endif ?>
 
       <input type="hidden" name="id" value="<?= (int)$item->id ?>">
-      <div class="float-right button">
-        <a href="index.php/component/thongbao/?view=thongbao&task=default&id=<?= (int)$item->id ?>" class="btn btn-secondary">Hủy</a>
-        <button type="submit" id="submitBtn" class="btn btn-primary">Lưu</button>
-      </div>
       <?php echo HTMLHelper::_('form.token'); ?>
     </form>
   </div>
@@ -78,17 +80,30 @@ $item = $this->item;
 </style>
 
 <script>
-  // hàm check validate độ dài của input 
-  function validateLength(input, maxLength) {
-    const helpId = input.id + 'Help';
-    const helpEl = document.getElementById(helpId);
-    if (input.value.length > maxLength) {
-      input.classList.add('is-invalid');
-      if (helpEl) helpEl.classList.remove('d-none');
-    } else {
-      input.classList.remove('is-invalid');
-      if (helpEl) helpEl.classList.add('d-none');
-    }
+  function setValidation(input, errorElement, message = '') {
+    errorElement.textContent = message;
+    input.setCustomValidity(message);
+  }
+
+  function validateTitle(input) {
+    const value = input.value.trim();
+    const errorElement = document.getElementById('titleError');
+
+    if (value.length < 5) return setValidation(input, errorElement, 'Tiêu đề quá ngắn ');
+    if (value.length > 255) return setValidation(input, errorElement, 'Tiêu đề quá dài');
+
+    setValidation(input, errorElement);
+  }
+
+
+  function validateContent(input) {
+    const value = input.value.trim();
+    const errorElement = document.getElementById('contentError');
+
+    if (value.length < 10) return setValidation(input, errorElement, 'Nội dung thông báo quá ngắn ');
+    if (value.length > 255) return setValidation(input, errorElement, 'Nội dung thông báo quá dài');
+
+    setValidation(input, errorElement);
   }
   // hàm thông báo 
   function showToast(message, isSuccess = true) {
