@@ -112,7 +112,6 @@ $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/c
 
 	.logo-DN {
 		width: 100px;
-		margin-top: 25px;
 	}
 
 	.line {

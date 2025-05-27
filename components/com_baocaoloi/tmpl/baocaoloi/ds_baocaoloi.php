@@ -1,0 +1,269 @@
+<?php
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Router\Route;
+
+defined('_JEXEC') or die('Restricted access');
+$user = Factory::getUser();
+$modelBaoCaoLoi = Core::model('BaoCaoLoi/BaoCaoLoi');
+$limit = 20; // số bản ghi mỗi trang
+$this->item = $modelBaoCaoLoi->getListError('', 1, 20);
+$this->countItems = $modelBaoCaoLoi->countBaoCaoLoi($user->id);
+$currentPage = max(1, (int) Factory::getApplication()->input->getInt('page', 1));
+$totalPages = ceil($this->countItems / $limit);
+$startRecord = ($this->countItems > 0) ? (($currentPage - 1) * $limit + 1) : 0;
+$endRecord = min($this->countItems, $currentPage * $limit);
+?>
+<div class="danhsach">
+  <div class="content-header">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý báo cáo lỗi</h3>
+      </div>
+      <div class="col-sm-6 text-right" style="padding:0;">
+        <?php if ($is_quyen == 0) { ?>
+          <a href="index.php?option=com_baocaoloi&view=baocaoloi&task=add_baocaoloi" class="btn btn-primary" style="font-size:16px;width:136px">
+            <i class="fas fa-plus"></i> Thêm mới
+          </a>
+        <?php } ?>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-primary collapsed-card">
+    <div class="card-header" data-card-widget="collapse">
+      <h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool un-collapsed-card" data-action="reload"><i class="fas fa-sync-alt"></i></button>
+        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-borderless">
+        <tr>
+          <td style="width:100%;">
+            <input type="text" name="keyword" id="keyword" class="form-control" style="font-size:16px;" placeholder="Nhập nội dung hoặc tiêu đề" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" class="text-center" style="padding-top:10px;">
+            <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="div_danhsach">
+    <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
+      <thead>
+        <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
+          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên lỗi</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên module</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Nội dung lỗi</th>
+          <th style="vertical-align:middle;color:#4F4F4F!important; width:131px" class="text-center">Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody id="tbody_danhsach">
+        <?php
+        if (!empty($this->item)) {
+          $stt = Factory::getApplication()->input->getInt('start', 0) + 1;
+          foreach ($this->item as $item):
+        ?>
+            <tr>
+              <td class="text-center" style="vertical-align: middle"><?php echo $stt++; ?></td>
+              <td style="vertical-align: middle">
+                <a href="<?php echo '/index.php/component/baocaoloi/?view=baocaoloi&task=detail_baocaoloi&id=' . $item->id; ?>">
+                  <?php if ($item->error_id !== 12): ?>
+                    <?php echo htmlspecialchars($item->name_error); ?>
+                  <?php else : ?>
+                    <?php echo htmlspecialchars($item->name_error); ?> (<?php echo htmlspecialchars($item->enter_error); ?>)
+                  <?php endif ?>
+                </a>
+              </td>
+              <td style="vertical-align: middle"><?php echo htmlspecialchars($item->name_module); ?></td>
+              <td style="vertical-align: middle"><?php echo htmlspecialchars($item->content); ?></td>
+              <td style="vertical-align: middle" class="text-center">
+                <?php
+                switch ((int)$item->status) {
+                  case 1:
+                    echo '<span class="text-warning">Chờ xử lý</span>';
+                    break;
+                  case 2:
+                    echo '<span class="text-success">Đã hoàn thành</span>';
+                    break;
+                  case 3:
+                    echo '<span class="text-danger">Đã hủy</span>';
+                    break;
+                  default:
+                    echo '<span class="text-muted">Không xác định</span>';
+                    break;
+                }
+                ?>
+              </td>
+            </tr>
+          <?php
+          endforeach;
+        } else {
+          ?>
+          <tr>
+            <td colspan="8" class="text-center">Không có dữ liệu</td>
+          </tr>
+        <?php
+        }
+        ?>
+      </tbody>
+    </table>
+    <!-- pagination -->
+    <div class="pagination-container d-flex align-items-center mt-3">
+      <div id="pagination" class="mx-auto">
+        <?php if ($totalPages > 1): ?>
+          <ul class="pagination">
+            <li class="page-item <?= $currentPage == 1 ? 'disabled' : ''; ?>">
+              <a class="page-link" href="#" data-page="1">
+                <<
+                  </a>
+            </li>
+            <li class="page-item <?= $currentPage == 1 ? 'disabled' : ''; ?>">
+              <a class="page-link" href="#" data-page="<?= max(1, $currentPage - 1); ?>">
+                <
+                  </a>
+            </li>
+            <?php
+            $range = 2;
+            $startPage = max(1, $currentPage - $range);
+            $endPage = min($totalPages, $currentPage + $range);
+
+            if ($startPage > 1) {
+              echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+            }
+            for ($i = $startPage; $i <= $endPage; $i++): ?>
+              <li class="page-item <?= $i == $currentPage ? 'active' : ''; ?>">
+                <a class="page-link" href="#" data-page="<?= $i; ?>"><?= $i; ?></a>
+              </li>
+            <?php endfor;
+
+            if ($endPage < $totalPages) {
+              echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+            }
+            ?>
+            <li class="page-item <?= $currentPage == $totalPages ? 'disabled' : ''; ?>">
+              <a class="page-link" href="#" data-page="<?= min($totalPages, $currentPage + 1); ?>">></a>
+            </li>
+            <li class="page-item <?= $currentPage == $totalPages ? 'disabled' : ''; ?>">
+              <a class="page-link" href="#" data-page="<?= $totalPages; ?>">>></a>
+            </li>
+          </ul>
+        <?php endif; ?>
+      </div>
+
+      <div class="pagination-info text-right ml-3">
+        <?php if ($this->countItems > 0): ?>
+          Hiển thị <?= $startRecord; ?> - <?= $endRecord; ?> của <?= $this->countItems; ?> mục (<?= $totalPages; ?> trang)
+        <?php else: ?>
+          Không có dữ liệu trang
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showToast(message, isSuccess = true) {
+    const toast = $('<div></div>')
+      .text(message)
+      .css({
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        background: isSuccess ? '#28a745' : '#dc3545',
+        color: 'white',
+        padding: '10px 20px',
+        borderRadius: '5px',
+        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+        zIndex: 9999
+      })
+      .appendTo('body');
+
+    setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
+  }
+
+  $(document).ready(function() {
+    const idUser = <?= (int)Factory::getUser()->id ?>;
+
+    //hàm load data
+    function loadData(page, keyword, perPage = 20) {
+      $("#tbody_danhsach").html('<tr><td colspan="9"><strong>loading...</strong></td></tr>');
+      $.ajax({
+        url: 'index.php?option=com_baocaoloi&controller=baocaoloi&task=getDanhSachBaoCaoLoi',
+        method: "POST",
+        data: {
+          page: page,
+          perPage: perPage,
+          keyword: keyword || ""
+        },
+        success: function(responseData) {
+          console.log(responseData)
+          if (Array.isArray(responseData) && responseData.length > 0) {
+            let html = '';
+            responseData.forEach(function(item, index) {
+              statusHtml = '';
+              switch (parseInt(item.status)) {
+                case 1:
+                  statusHtml = '<span class="text-warning">Chờ xử lý</span>';
+                  break;
+                case 2:
+                  statusHtml = '<span class="text-success">Đã hoàn thành</span>';
+                  break;
+                case 3:
+                  statusHtml = '<span class="text-danger">Đã hủy</span>';
+                  break;
+                default:
+                  statusHtml = '<span class="text-muted">Không xác định</span>';
+                  break;
+              }
+              html += `
+                <tr>
+                  <td class="text-center" style="vertical-align: middle">${index + 1}</td>
+                  <td style="vertical-align: middle">
+                    <a href="/index.php/component/baocaoloi/?view=baocaoloi&task=detail_baocaoloi&id=${item.id}">
+                      ${item.name_error || ''}
+                    </a>
+                  </td>
+                  <td style="vertical-align:middle;">${item.name_module || ''}</td>
+                  <td style="vertical-align:middle;">${item.content || ''}</td>
+                  <td style="vertical-align:middle;">${statusHtml}</td>
+                </tr>`;
+            });
+            $("#tbody_danhsach").html(html);
+          } else {
+            $("#tbody_danhsach").html('<tr><td colspan="9" class="text-center text-danger">Không có dữ liệu</td></tr>');
+          }
+        }
+      });
+    }
+    //hành động search 
+    $('#btn_filter').on('click', function(e) {
+      e.preventDefault();
+
+      let keyword = $('#keyword').val();
+      let page = 1;
+      loadData(page, keyword, 20)
+    })
+    //hành động chuyển trang
+    $('body').on('click', "#pagination .page-link", function(e) {
+      e.preventDefault()
+      let page = $(this).data('page')
+      $('#pagination .page-item').removeClass('active')
+      $(this).parent().addClass('active')
+      loadData(page, '', 20)
+    })
+  });
+</script>
+
+<style>
+  .danhsach {
+    padding: 20px;
+  }
+</style>

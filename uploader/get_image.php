@@ -9,7 +9,7 @@ if (!$code) {
 }
 
 // ⚡ Tạo đường dẫn đến file trong tmp
-$filePath = "C:/xampp81/htdocs/Joomla_511/upload/2025/4/" . $code;
+$filePath = "C:/xampp/htdocs/Joomla_511/upload/2025/5/" . $code;
 
 // 🔍 Kiểm tra file tồn tại
 if (!file_exists($filePath)) {

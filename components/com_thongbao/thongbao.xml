@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="component" method="upgrade">
+	<name>Thông báo</name>
+	<author>LinhLH</author>
+	<creationDate>2025-04</creationDate>
+	<copyright>(C) 2006 Open Source Matters, Inc.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <authorEmail>you@example.com</authorEmail>
+    <authorUrl>http://www.example.com</authorUrl>
+	<version>4.0.0</version>
+    <description>Component for organizing events on the public site.</description>
+	<namespace path="src">Joomla\Component\Thongbao</namespace>
+	<files folder="site">
+		<filename>index.html</filename>
+        <filename>thongbao.xml</filename>
+		<folder>helpers</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+	<administration>
+		<files folder="admin">
+			<filename>thongbao.xml</filename>
+			<folder>forms</folder>
+			<folder>helpers</folder>
+			<folder>postinstall</folder>
+			<folder>services</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
+		</files>
+	</administration>
+</extension>

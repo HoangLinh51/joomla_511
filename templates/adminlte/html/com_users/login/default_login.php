@@ -195,7 +195,7 @@ $doc = Factory::getDocument();
 	button,
 	.btn-info {
 		width: 100%;
-		padding: 12px;
+		padding: 7px;
 		background-color: #269bff;
 		color: white;
 		border: none;

@@ -9,6 +9,7 @@
 
 		<field
 			name="avatar_id"
+			id="avatar_id"
 			type="hidden"
 			filter="string"
 		/>

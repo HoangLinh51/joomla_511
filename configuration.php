@@ -9,7 +9,7 @@ class JConfig {
 	public $captcha = '0';
 	public $list_limit = 20;
 	public $access = 1;
-	public $debug = 1;
+	public $debug = 0;
 	public $debug_lang = false;
 	public $debug_lang_const = true;
 	public $dbtype = 'mysqli';
@@ -19,6 +19,7 @@ class JConfig {
 	// public $password = 'Abc123@@@';
 	// public $db = 'joomla511';
 
+	// public $host = 'localhost:3306';
 	public $host = '10.49.41.247:3306';
 	public $user = 'pxdnict';
 	public $password = 'PX@2024!@#';
