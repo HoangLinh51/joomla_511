@@ -207,22 +207,18 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'name'         => $formData['name'],
       'username'     => $formData['username'],
       'email'        => $formData['email'],
+      'password'     => $formData['password'],
+      'password2'    => $formData['password'],
       'block'        => isset($formData['block']) ? (int)$formData['block'] : 0,
       'requireReset' => (int)$formData['requireReset'],
       'groups'       => $formData['chucNang'],
     ];
 
-    // Include password only if provided
-    if (!empty($formData['password'])) {
-      $salt = UserHelper::genRandomPassword(32);
-      $data['password'] = UserHelper::hashPassword($formData['password'], $salt) . ':' . $salt;
-    }
-
     // Bind updated data to user
     if (!$user->bind($data)) {
       return [
         'success' => false,
-        'error' => 'Bind failed: ' . implode(', ', $user->getErrors())
+        'error' => 'Bind failed in upldate: ' . implode(', ', $user->getErrors())
       ];
     }
 
@@ -232,6 +228,12 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
         'success' => false,
         'error' => 'Save failed: ' . implode(', ', $user->getErrors())
       ];
+    }
+    // Include password only if provided
+    if (!empty($formData['password'])) {
+      $salt = UserHelper::genRandomPassword(32);
+
+      $data['password'] = UserHelper::hashPassword($formData['password']) . ':' . $salt;
     }
 
     // Delete existing permissions

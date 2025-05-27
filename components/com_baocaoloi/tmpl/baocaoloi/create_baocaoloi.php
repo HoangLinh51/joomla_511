@@ -8,6 +8,7 @@ $modelBaoCaoLoi = Core::model('BaoCaoLoi/BaoCaoLoi');
 $nameError = $this->nameError;
 $nameModule = $this->nameModule;
 ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
 <div class="container my-3">
   <div class="content-box">
@@ -16,49 +17,45 @@ $nameModule = $this->nameModule;
         <?php echo ((int)$item->id > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin lỗi
       </h2>
       <div>
-        <a href="index.php/component/baocaoloi/?view=baocaoloi&task=ds_baocaoloi" class="btn btn-secondary"><i class="fa fa-share"></i> Hủy</a>
-        <button type="submit" id="submitBtn" class="btn btn-success"><i class="fa fa-save"></i> Lưu</button>
+        <a href="index.php/component/baocaoloi/?view=baocaoloi&task=ds_baocaoloi" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Hủy</a>
+        <button type="submit" id="submitBtn" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</button>
       </div>
     </div>
     <form action="<?= Route::_('index.php?option=com_baocaoloi&task=baocaoloi.create_baocaoloi') ?>" id="errorReportForm" name="errorReportForm" method="post">
       <div class="form-group">
         <label for="selectNameError">Tên lỗi <span class="text-danger">*</span></label>
-        <select class="form-control select2" id="selectNameError" name="type_error_id" required onchange="validateNameError(this)">
-          <option value="">-- Hãy chọn lỗi --</option>
+        <select class="form-control select2" id="selectNameError" name="type_error_id" data-placeholder="-- Hãy chọn lỗi --" required>
+          <option value=""></option>
           <?php foreach ($nameError as $error) : ?>
             <option value="<?= $error->id ?>" data-nameError="<?= $error->id ?>">
               <?= htmlspecialchars($error->name_error) ?>
             </option>
           <?php endforeach; ?>
         </select>
-        <small id="nameError" class="text-danger"></small>
       </div>
 
       <div class="form-group" style="display: none" id="enterOtherError">
         <label for="nameOther">Nhập tên lỗi khác <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="nameOther" name="name_other" minlength="10" maxlength="255"
-          placeholder="Hãy nhập tên lỗi khác vào đây" oninput="validateNameOtherError(this)">
-        <small id="nameOtherError" class="text-danger"></small>
+          placeholder="Hãy nhập tên lỗi khác vào đây">
       </div>
 
       <div class="form-group">
         <label for="selectModuleError">Tên module <span class="text-danger">*</span></label>
-        <select class="form-control select2" id="selectModuleError" name="module_id" required onchange="validateModuleError(this)">
-          <option value="">-- Hãy chọn tên module --</option>
+        <select class="form-control select2" id="selectModuleError" name="module_id" data-placeholder="-- Hãy chọn tên module --" required>
+          <option value=""></option>
           <?php foreach ($nameModule as $nameModule) : ?>
             <option value="<?= $nameModule->id ?>" data-nameModule="<?= $nameModule->id ?>">
               <?= htmlspecialchars($nameModule->name) ?>
             </option>
           <?php endforeach; ?>
         </select>
-        <small id="moduleError" class="text-danger"></small>
       </div>
 
       <div class="form-group">
         <label for="error_content">Nội dung lỗi <span class="text-danger">*</span></label>
         <textarea class="form-control" id="error_content" name="error_content" rows="4" minlength="10" maxlength="510"
-          placeholder="Hãy mô tả về lỗi đó" required oninput="validateContent(this)"></textarea>
-        <small id="contentError" class="text-danger"></small>
+          placeholder="Hãy mô tả về lỗi đó"></textarea>
       </div>
 
       <div class="bottom-page">
@@ -77,8 +74,10 @@ $nameModule = $this->nameModule;
           <img class="lightbox-content" id="lightboxImage" src="" alt="Preview lớn">
         </div>
       </div>
-      <?php echo HTMLHelper::_('form.token'); ?>
+
+      <?= HTMLHelper::_('form.token'); ?>
     </form>
+
   </div>
 </div>
 
@@ -166,6 +165,12 @@ $nameModule = $this->nameModule;
       text-align: left;
     }
   }
+
+  .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin: 0px;
+  }
 </style>
 <script>
   // ==== Toast Message ====
@@ -193,73 +198,32 @@ $nameModule = $this->nameModule;
     }, 1000);
   }
 
-  // ==== DOM Ready ====
-  $(function() {
-    // Select2 init
-    $('#selectNameError').select2({
-      placeholder: '-- Hãy chọn lỗi --',
-      allowClear: true,
-      width: '100%'
-    });
-    $('#selectModuleError').select2({
-      placeholder: '-- Hãy chọn Module --',
-      allowClear: true,
-      width: '100%'
-    });
-  });
-
-  // ==== Validation ====
-  function setValidation(input, errorEl, msg = '') {
-    errorEl.textContent = msg;
-    input.setCustomValidity(msg);
-  }
-
-  function validateNameError(input) {
-    const errorEl = document.getElementById('nameError');
-    setValidation(input, errorEl, !input.value ? 'Hãy chọn tên lỗi' : '');
-
+  function toggleOtherErrorInput() {
     const selectNameError = document.getElementById('selectNameError');
     const enterOther = document.getElementById('enterOtherError');
     const otherErrorInput = document.getElementById('nameOther');
 
-    if (selectNameError && enterOther && otherErrorInput) {
-      toggleOtherErrorInput(selectNameError, enterOther, otherErrorInput);
-      selectNameError.addEventListener('change', toggleOtherErrorInput);
-    }
-  }
-
-  function toggleOtherErrorInput(selectNameError, enterOther, otherErrorInput) {
     const show = parseInt(selectNameError.value, 10) === 12;
     enterOther.style.display = show ? 'block' : 'none';
     if (!show) otherErrorInput.value = '';
   }
 
-  function validateNameOtherError(input) {
-    console.log('Validating other error name input');
-    const errorEl = document.getElementById('nameOtherError');
-    const val = input.value.trim();
+  // ==== DOM Ready ====
+  $(function() {
+    // Select2 init
+    $('#selectNameError, #selectModuleError').select2({
+      placeholder: function() {
+        return $(this).data('placeholder');
+      },
+      allowClear: true,
+      width: '100%',
+    });
 
-    if (val.length < 10) return setValidation(input, errorEl, 'Tên lỗi khác quá ngắn');
-    if (val.length > 255) return setValidation(input, errorEl, 'Tên lỗi khác quá dài');
-    setValidation(input, errorEl);
-  }
+    // Nếu bạn cần toggleOtherErrorInput khi select thay đổi:
+    $('#selectNameError').on('change', toggleOtherErrorInput);
+  });
 
-  function validateModuleError(input) {
-    const errorEl = document.getElementById('moduleError');
-    setValidation(input, errorEl, !input.value ? 'Hãy chọn tên module gặp lỗi' : '');
-  }
-
-  function validateContent(input) {
-    const errorEl = document.getElementById('contentError');
-    const val = input.value.trim();
-
-    if (val.length < 10) return setValidation(input, errorEl, 'Nội dung thông báo quá ngắn');
-    if (val.length > 255) return setValidation(input, errorEl, 'Nội dung thông báo quá dài');
-    setValidation(input, errorEl);
-  }
-
-  // ==== DOMContentLoaded ====
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', () => {
     // === Lightbox Preview ===
     const preview = document.getElementById('imagePreview');
     const lightbox = document.getElementById('lightboxOverlay');
@@ -285,11 +249,43 @@ $nameModule = $this->nameModule;
       });
     }
 
-    // === Form Submit ===
-    const form = document.getElementById('errorReportForm');
+    $(document).ready(function() {
+      const $form = $('#errorReportForm');
 
-    if (form) {
-      form.addEventListener('submit', function(e) {
+      $form.validate({
+        rules: {
+          type_error_id: {
+            required: true,
+          },
+          name_other: {
+            required: true,
+            minlength: 5,
+          },
+          module_id: {
+            required: true,
+          },
+          error_content: {
+            required: true,
+            minlength: 10,
+          },
+        },
+        messages: {
+          type_error_id: 'Vui lòng chọn tên lỗi',
+          name_other: {
+            required: 'Vui lòng nhập tên lỗi khác',
+            minlength: 'Tên lỗi khác quá ngắn',
+          },
+          module_id: 'Vui lòng chọn module gặp lỗi',
+          error_content: {
+            required: 'Vui lòng nhập nội dung lỗi',
+            minlength: 'Nội dung lỗi quá ngắn',
+          },
+        }
+      });
+
+      const imageIdInput = document.getElementById('imageIdInput');
+
+      $form.on('submit', async (e) => {
         e.preventDefault();
 
         const previewChildren = $('#imagePreview').children();
@@ -298,27 +294,31 @@ $nameModule = $this->nameModule;
         }).get();
         $('#imageIdInput').val(imageIds)
 
-        const formData = new FormData(form);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-          })
-          .then(res => res.json())
-          .then(data => {
-            const isSuccess = data.success ?? true;
-            showToast(data.message || 'Lưu dữ liệu thành công', isSuccess);
+        if (!$form.valid()) {
+          showToast('Vui lòng nhập đầy đủ thông tin', false)
+          return;
+        }
+        $.ajax({
+          url: $form.attr('action'),
+          type: 'POST',
+          data: new FormData(form),
+          contentType: false,
+          processData: false,
+          success: function(response) {
+            const isSuccess = response.success ?? true;
+            showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
             if (isSuccess) {
               setTimeout(() => {
                 window.location.href = '/index.php/component/baocaoloi/?view=baocaoloi&task=ds_baocaoloi';
               }, 500);
             }
-          })
-          .catch(err => {
-            console.error('Lỗi gửi dữ liệu:', err);
-            showToast('Gửi dữ liệu thất bại', false);
-          });
+          },
+          error: function(xhr, status, error) {
+            console.error('Submit error:', xhr.responseText);
+            showToast('Đã xảy ra lỗi khi gửi dữ liệu', false);
+          }
+        });
       });
-    }
+    });
   });
 </script>

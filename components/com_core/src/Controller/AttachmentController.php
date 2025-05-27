@@ -190,11 +190,9 @@ class AttachmentController extends BaseController
                 'created_by' => $user->id,
                 'created_at' => date('Y-m-d H:i:s')
             );
-            $mapper->create($data);
+            $avatarId = $mapper->create($data);
             // ✅ Tạo URL ảnh thông qua get_image.php
             $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $data['code'];
-            $objectId = $data['object_id'];
-            var_dump($data);
 
             echo '<script>
             if (window.parent && window.parent.document) {
@@ -204,15 +202,15 @@ class AttachmentController extends BaseController
                 }
                 var form = window.parent.document.getElementById("imageUploadForm");
                 if (form) {
-                    var input = window.parent.document.getElementById("imageIdInput");
+                    var input = window.parent.document.getElementById("jform_avatar_id");
                     if (!input) {
                         input = document.createElement("input");
                         input.type = "hidden";
-                        input.name = "image_id";
-                        input.id = "imageIdInput";
+                        input.name = "avatar_id";
+                        input.id = "avatar_id";
                         form.appendChild(input);
                     }
-                    input.value = "' . $objectId . '";
+                    input.value = "' . $avatarId . '";
                 }
             }
           </script>';

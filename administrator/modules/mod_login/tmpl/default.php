@@ -20,9 +20,9 @@ $wa->useScript('keepalive')
     ->useScript('field.passwordview')
     ->registerAndUseScript('mod_login.admin', 'mod_login/admin-login.min.js', [], ['defer' => true], ['core', 'form.validate']);
 
-Text::script('JSHOWPASSWORD');
-Text::script('JHIDEPASSWORD');
-?>
+        // Text::script('JSHOWPASSWORD');
+        // Text::script('JHIDEPASSWORD');
+        ?>
 <form class="form-validate" action="<?php echo Route::_('index.php', true); ?>" method="post" id="form-login">
     <fieldset>
         <legend class="visually-hidden"><?php echo Text::_('MOD_LOGIN'); ?></legend>

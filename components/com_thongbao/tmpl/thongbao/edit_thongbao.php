@@ -8,6 +8,8 @@ $modelThongbao = Core::model('Thongbao/Thongbao');
 $item = $this->item;
 ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
 <div class="container my-3">
   <div class="content-box">
     <form action="<?= Route::_('index.php?option=com_thongbao&task=thongbao.edit_thongbao&id=' . (int)$item->id) ?>" id="formThongBao" name="formThongBao" method="post">
@@ -16,22 +18,19 @@ $item = $this->item;
           <?php echo ((int)$item->id > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin thông báo
         </h2>
         <div>
-          <a href="index.php/component/thongbao/?view=thongbao&task=default&id=<?= (int)$item->id ?>" class="btn btn-secondary"><i class="fa fa-share"></i> Quay lại</a>
-          <button type="submit" id="submitBtn" class="btn btn-success"><i class="fa fa-save"></i> Lưu</button>
+          <a href="index.php/component/thongbao/?view=thongbao&task=default&id=<?= (int)$item->id ?>" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Quay lại</a>
+          <button type="submit" id="submitBtn" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</button>
         </div>
       </div>
       <div class="form-group">
         <label for="tieude">Tiêu đề <span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="tieude" name="tieude" maxlength="255"
-          required value="<?= htmlspecialchars($item->tieude) ?>" oninput="validateTitle(this)">
-        <small id="titleError" class="text-danger"></small>
+          value="<?= htmlspecialchars($item->tieude) ?>">
       </div>
 
       <div class="form-group">
         <label for="noidung">Nội dung <span class="text-danger">*</span></label>
-        <textarea class="form-control" id="noidung" name="noidung" rows="4" maxlength="510" required
-          oninput="validateContent(this)"><?= htmlspecialchars($item->noidung) ?></textarea>
-        <small id="contentError" class="text-danger"></small>
+        <textarea class="form-control" id="noidung" name="noidung" rows="4" maxlength="510"><?= htmlspecialchars($item->noidung) ?></textarea>
       </div>
 
       <div class="form-group">
@@ -77,37 +76,18 @@ $item = $this->item;
   .button {
     padding-bottom: 20px;
   }
+
+  .error {
+    margin-bottom: 0;
+    font-size: 12px;
+    color: #dc3545;
+  }
 </style>
 
 <script>
-  function setValidation(input, errorElement, message = '') {
-    errorElement.textContent = message;
-    input.setCustomValidity(message);
-  }
-
-  function validateTitle(input) {
-    const value = input.value.trim();
-    const errorElement = document.getElementById('titleError');
-
-    if (value.length < 5) return setValidation(input, errorElement, 'Tiêu đề quá ngắn ');
-    if (value.length > 255) return setValidation(input, errorElement, 'Tiêu đề quá dài');
-
-    setValidation(input, errorElement);
-  }
-
-
-  function validateContent(input) {
-    const value = input.value.trim();
-    const errorElement = document.getElementById('contentError');
-
-    if (value.length < 10) return setValidation(input, errorElement, 'Nội dung thông báo quá ngắn ');
-    if (value.length > 255) return setValidation(input, errorElement, 'Nội dung thông báo quá dài');
-
-    setValidation(input, errorElement);
-  }
-  // hàm thông báo 
+  // Hàm thông báo toast
   function showToast(message, isSuccess = true) {
-    const toast = $('<div></div>')
+    $('<div></div>')
       .text(message)
       .css({
         position: 'fixed',
@@ -120,25 +100,52 @@ $item = $this->item;
         boxShadow: '0 0 10px rgba(0,0,0,0.3)',
         zIndex: 9999
       })
-      .appendTo('body');
-
-    setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
+      .appendTo('body')
+      .delay(1000)
+      .fadeOut(500, function() {
+        $(this).remove();
+      });
   }
-  //hành động submit khi thêm mới hoặc sửa 
+
   $(document).ready(function() {
-    $('#formThongBao').on('submit', function(e) {
-      e.preventDefault();
-      const fileInput = $('#dinhkem_vanbanlienquan').find('input[class="fileUploaded"]').val();
-      if (fileInput && fileInput !== undefined) {
-        const idVanban = $('#dinhkem_vanbanlienquan').find('input[name="idObject"]').val();
-        $('#idTepDinhKem').val(idVanban);
-      } else {
-        $('#idTepDinhKem').val('<?= $item->vanbandinhkem ?? '' ?>');
+    // Cấu hình validate
+    const $form = $('#formThongBao');
+    $form.validate({
+      rules: {
+        tieude: {
+          required: true,
+          minlength: 5,
+        },
+        noidung: {
+          required: true
+        },
+      },
+      messages: {
+        tieude: {
+          required: 'Nhập tiêu đề',
+          minlength: 'Tiêu đề quá ngắn'
+        },
+        noidung: 'Nhập nội dung',
       }
-      let formData = new FormData(this);
+    });
+
+    // Xử lý submit
+    $form.on('submit', function(e) {
+      e.preventDefault();
+
+      if (!$form.valid()) {
+        showToast('Vui lòng nhập đầy đủ thông tin', false)
+        return;
+      }
+
+      const fileInput = $('#dinhkem_vanbanlienquan .fileUploaded').val();
+      const idVanban = $('#dinhkem_vanbanlienquan input[name="idObject"]').val();
+      $('#idTepDinhKem').val(fileInput ? idVanban : '<?= $item->vanbandinhkem ?? '' ?>');
+
+      const formData = new FormData(this);
 
       $.ajax({
-        url: $(this).attr('action'),
+        url: $form.attr('action'),
         type: 'POST',
         data: formData,
         contentType: false,
@@ -147,11 +154,14 @@ $item = $this->item;
           const isSuccess = response.success ?? true;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
-            setTimeout(() => window.location.href = '/index.php/component/thongbao/?view=thongbao&task=ds_thongbao', 500);
+            setTimeout(() => {
+              window.location.href = '/index.php/component/thongbao/?view=thongbao&task=ds_thongbao';
+            }, 500);
           }
         },
         error: function(xhr, status, error) {
           console.error('Submit error:', xhr.responseText);
+          showToast('Đã xảy ra lỗi khi gửi dữ liệu', false);
         }
       });
     });

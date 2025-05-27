@@ -209,7 +209,7 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
     $db = Factory::getDbo();
 
     // Lấy dữ liệu đầu vào
-    $error_id = (int) ($formdata['type_error_id'] ?? 0);
+    $error_id = (int) ($formdata['nameError'] ?? 0);
     $enter_error = ($error_id === 12) ? trim($formdata['name_otherError'] ?? '') : null;
     $module_id = $formdata['module_id'] ?? '';
     $content = $formdata['error_content'] ?? '';

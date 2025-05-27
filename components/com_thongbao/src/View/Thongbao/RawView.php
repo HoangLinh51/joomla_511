@@ -118,7 +118,9 @@ class RawView extends BaseHtmlView
             header('Content-Type: application/pdf');
             header('Content-Disposition: inline; filename="' . basename($filePath) . '"');
             header('Content-Length: ' . filesize($filePath));
-            readfile($filePath);
+            header('Accept-Ranges: bytes');
+            header('Cache-Control: public, must-revalidate, max-age=0');
+            readfile($filePath);      // Header chuẩn
             exit;
         } else {
             echo "File không tồn tại.";
