@@ -21,7 +21,7 @@ $nhankhau = $item['nhankhau'];
 </meta>
 <form id="frmNhanhokhau" name="frmNhanhokhau" method="post" action="index.php?option=com_vptk&controller=vptk&task=saveNhanhokhau">
     <div class="container-fluid" style="padding-left:20px; padding-right:20px;">
-        <h2 class="mb-3 text-primary">
+        <h2 class="mb-3 text-primary" style="margin-bottom: 0 !important;line-height:2">
             <?php echo ((int)$item['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin nhân, hộ khẩu
             <span class="float-right">
                 <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>
@@ -29,7 +29,7 @@ $nhankhau = $item['nhankhau'];
 
             </span>
         </h2>
-        <table class="table w-100" id="tblThongtin">
+        <table class="table w-100" style="margin-bottom: 15px;" id="tblThongtin">
             <tbody>
                 <tr>
                     <td colspan="6">
@@ -75,6 +75,7 @@ $nhankhau = $item['nhankhau'];
                                     <?php } ?>
                                 <?php } ?>
                             </select>
+                            <label class="error_modal" for="phuongxa_id"></label>
                         </div>
                     </td>
                     <td class="align-middle">
@@ -88,18 +89,22 @@ $nhankhau = $item['nhankhau'];
                                     <?php } ?>
                                 <?php } ?>
                             </select>
+                            <label class="error_modal" for="thonto_id"></label>
                         </div>
                     </td>
                     <td class="align-middle">
                         <div class="mb-3">
                             <strong>Số nhà/Đường <span class="text-danger">*</span></strong>
                             <input type="text" id="diachi" name="diachi" value="<?php echo htmlspecialchars($item['diachi']); ?>" class="form-control" placeholder="Nhập số nhà, tên đường">
+                            <label class="error_modal" for="diachi"></label>
                         </div>
                     </td>
                 </tr>
+
             </tbody>
         </table>
-        <h3 style="padding-left:10px ;" class="mb-0 fw-bold">Thông tin nhân khẩu
+        <h3 style="padding-left:15px ;" class="mb-0 fw-bold">Thông tin nhân khẩu
+
             <span class="float-right">
                 <button type="button" class="btn btn-primary" id="btn_themnhankhau" data-toggle="modal" data-target="#modalNhankhau"><i class="fas fa-plus"></i> Thêm nhân khẩu</button>
             </span>
@@ -492,6 +497,7 @@ $nhankhau = $item['nhankhau'];
                                         <option value="">Không có dữ liệu lý do</option>
                                     <?php } ?>
                                 </select>
+                                <input type="hidden" id="modal_tinhtang" value="Chưa xác thực">
                             </div>
                         </div>
 
@@ -507,6 +513,31 @@ $nhankhau = $item['nhankhau'];
 </div>
 
 <style>
+    /* Trong file CSS hoặc <style> */
+    .table#tblThongtin td.align-middle {
+        width: 33.33%;
+        /* Chia đều 3 cột */
+        padding: .75rem 0rem .75rem .75rem;
+    }
+
+    /* .table#tblThongtin .mb-3 {
+    width: 100%; /* Container lấp đầy <td> */
+    }
+
+    */ .table#tblThongtin .form-control,
+    .table#tblThongtin .custom-select,
+    .table#tblThongtin .input-group {
+        width: 100% !important;
+        /* Đảm bảo tất cả trường nhập liệu có chiều rộng bằng nhau */
+        box-sizing: border-box;
+        /* Bao gồm padding và border trong chiều rộng */
+    }
+
+    .table#tblThongtin .input-group .form-control {
+        flex: 1;
+        /* Đảm bảo input trong input-group lấp đầy không gian */
+    }
+
     .status-verified {
         color: green;
         /* Màu xanh cho "Đã xác thực" */
@@ -565,7 +596,7 @@ $nhankhau = $item['nhankhau'];
 
     td.stt,
     th.stt {
-        min-width: 80px;
+        min-width: 50px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -574,7 +605,7 @@ $nhankhau = $item['nhankhau'];
 
     td.quanhe,
     th.quanhe {
-        min-width: 150px;
+        min-width: 100px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -583,7 +614,7 @@ $nhankhau = $item['nhankhau'];
 
     td.hoten,
     th.hoten {
-        min-width: 300px;
+        min-width: 250px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -592,7 +623,7 @@ $nhankhau = $item['nhankhau'];
 
     td.cccd,
     th.cccd {
-        min-width: 300px;
+        min-width: 250px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -610,6 +641,15 @@ $nhankhau = $item['nhankhau'];
 
     td.noihientai,
     th.noihientai {
+        min-width: 120px;
+        height: 25px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+    }
+
+    td.noio_truoc,
+    th.noio_truoc {
         min-width: 150px;
         height: 25px;
         overflow: hidden;
@@ -628,7 +668,7 @@ $nhankhau = $item['nhankhau'];
 
     td.lydo,
     th.lydo {
-        min-width: 200px;
+        min-width: 100px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -637,7 +677,7 @@ $nhankhau = $item['nhankhau'];
 
     td.chucnang,
     th.chucnang {
-        min-width: 150px;
+        min-width: 100px;
         height: 25px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -694,7 +734,8 @@ $nhankhau = $item['nhankhau'];
     }
 
     .error_modal {
-        margin-bottom: 0;
+        margin-bottom: 0px;
+        margin-top: 0;
         font-size: 12px;
         color: red;
     }
@@ -947,6 +988,7 @@ $nhankhau = $item['nhankhau'];
                 const isEditing = editIndex !== '';
                 const wasChuHo = isEditing && $($('#tblDanhsach tbody tr')[editIndex]).find('input[name="quanhenhanthan_id[]"]').val() === '-1';
                 const newQuanHeId = $('#modal_quanhenhanthan_id').val();
+                const tinhtrang_text = $('#modal_tinhtang').val() || 'Chưa xác thực';
                 const nhanKhauCount = $('#tblDanhsach tbody tr').filter(function() {
                     return $(this).find('td').length > 1 || $(this).find('td').text().trim() !== 'Không có dữ liệu';
                 }).length;
@@ -990,6 +1032,7 @@ $nhankhau = $item['nhankhau'];
                 const quoctich_text = $('#modal_quoctich_id option:selected').data('text') || 'Việt Nam';
                 const nhommau_text = $('#modal_nhommau_id option:selected').data('text') || 'Chưa xác định';
                 const qhhonnhan_text = $('#modal_qhhonnhan_id option:selected').data('text') || 'Chưa xác định';
+
                 const is_tamtru_text = $('#modal_is_tamtru option:selected').data('text') || 'Thường trú';
                 let thuongtrucu = '';
                 if ($('#modal_is_tamtru').val() === '1') {
@@ -1042,6 +1085,7 @@ $nhankhau = $item['nhankhau'];
                 <td class="align-middle noihientai">${is_tamtru_text}</td>
                 <td class="align-middle noio_truoc">${$('#modal_is_tamtru').val() === '1' ? thuongtrucu : ''}</td>
                 <td class="align-middle lydo">${lydo_text}</td>
+                <td class="align-middle tinhtang" style="color: red">${tinhtrang_text}</td>
                 <td class="align-middle text-center chucnang">
                     <input type="hidden" name="nhankhau_id[]" value="${nhankhauId}" />
                     <input type="hidden" name="quanhenhanthan_id[]" value="${$('#modal_quanhenhanthan_id').val()}" />
@@ -1329,27 +1373,9 @@ $nhankhau = $item['nhankhau'];
         if ($.fn.validate) {
             $('#frmNhanhokhau').validate({
                 ignore: [],
-                invalidHandler: function(form, validator) {
-                    var errors = validator.numberOfInvalids();
-                    if (errors) {
-                        var message = errors === 1 ? 'Kiểm tra lỗi sau:<br/>' : 'Phát hiện ' + errors + ' lỗi sau:<br/>';
-                        var errorsList = '';
-                        if (validator.errorList.length > 0) {
-                            for (var x = 0; x < validator.errorList.length; x++) {
-                                errorsList += '<br/>\u25CF ' + validator.errorList[x].message;
-                            }
-                        }
-                        $.gritter.add({
-                            title: '<h3>Thông báo</h3>',
-                            text: '<span style="font-size:24px;">' + message + errorsList + '</span>',
-                            time: 2000,
-                            class_name: 'gritter-error gritter-center gritter-light'
-                        });
-                    }
-                    validator.focusInvalid();
-                },
                 errorPlacement: function(error, element) {
-                    error.appendTo(element.closest('.mb-3'));
+                    error.addClass('error_modal');
+                    error.appendTo(element.closest('.mb-3').find('label.error_modal'));
                 },
                 rules: {
                     phuongxa_id: {
@@ -1369,6 +1395,7 @@ $nhankhau = $item['nhankhau'];
                 }
             });
         }
+
 
         // Trigger initial phuongxa_id change
         $('#phuongxa_id').trigger('change');
