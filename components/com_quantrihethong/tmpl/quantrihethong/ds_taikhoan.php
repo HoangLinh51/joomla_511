@@ -73,14 +73,17 @@ $user = Factory::getUser();
               <td style="vertical-align: middle"><?php echo htmlspecialchars($account['username']); ?></td>
               <td style="vertical-align: middle; text-align: center">
                 <label class="custom-toggle">
-                  <input type="checkbox" <?php echo ($account['block'] == 0) ? 'checked' : ''; ?>>
+                  <input type="checkbox" class="btn_doitrangthai"
+                    data-key="<?php echo $account['id']; ?>"
+                    data-status="<?php echo $account['block']; ?>"
+                    <?php echo ($account['block'] == 0) ? 'checked' : ''; ?>>
                   <span class="slider"></span>
                 </label>
 
               </td>
               <td style="vertical-align: middle;" class="text-center d-flex align-items-center">
-                <input type="text" class="form-control input-reset" id="password_<?php echo $account['id']; ?>">
-                <button class="btn btn-primary button-reset" id="btn_reset_<?php echo $account['id']; ?>" data-id="<?php echo $account['id']; ?>">
+                <input type="text" class="form-control input-reset" name="input-reset">
+                <button class="btn btn-primary btn_reset_password" data-name="<?php echo $account['name']; ?>" data-id="<?php echo $account['id']; ?>">
                   <i class="fas fa-sync-alt"></i>
                 </button>
               </td>
@@ -163,27 +166,105 @@ $user = Factory::getUser();
 </div>
 
 <script>
-  function showToast(message, isSuccess = true) {
+  function showToast(message, type = 'success') {
+    let color;
+
+    switch (type) {
+      case 'success':
+        color = '#28a745'; // xanh
+        break;
+      case 'danger':
+        color = '#dc3545'; // đỏ
+        break;
+      case 'warning':
+        color = '#ffc107'; // vàng
+        break;
+      default:
+        color = '#17a2b8'; // xanh nhạt (info)
+    }
+
     const toast = $('<div></div>')
       .text(message)
       .css({
         position: 'fixed',
         top: '20px',
         right: '20px',
-        background: isSuccess ? '#28a745' : '#dc3545',
+        background: color,
         color: 'white',
-        padding: '10px 20px',
-        borderRadius: '5px',
-        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+        padding: '12px 24px',
+        borderRadius: '8px',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        opacity: 0,
         zIndex: 9999
       })
-      .appendTo('body');
+      .appendTo('body')
+      .animate({
+        opacity: 1
+      }, 300); // fade-in
 
-    setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
+    // Tự động biến mất
+    setTimeout(() => {
+      toast.fadeOut(500, () => toast.remove());
+    }, 2000);
   }
 
   $(document).ready(function() {
     const idUser = <?= (int)Factory::getUser()->id ?>;
+
+    $('body').delegate('.btn_doitrangthai', 'click', function() {
+      const status = $(this).data('status');
+      if ($(this).data('status') == 1) {
+        $(this).data('status', 0);
+      } else {
+        $(this).data('status', 1);
+      }
+      console.log('status', status, '---', $(this).data('task'), '---', $(this).data('key'))
+      $.post('index.php', {
+        option: 'com_quantrihethong',
+        controller: 'quantrihethong',
+        task: 'trangthaiTK',
+        id: $(this).data('key'),
+        status: status
+      }, function(data) {
+        if (data == 1) {
+          showToast('Cập nhật trạng thái thành công', 'success');
+        } else {
+          showToast('Cập nhật trạng thái thất bại', 'danger');
+        }
+      });
+    });
+
+    $('body').delegate('.btn_reset_password', 'click', function() {
+      const row_index = $('.btn_reset_password').index($(this))
+      const matkhau_capnhat = $('input[name="input-reset"]').eq(row_index).val()
+      const name = $(this).data('name')
+      const confirmed = confirm(`Bạn có chắc chắn muốn cập nhật lại mật khẩu của ${name} này không?`);
+
+      if (!confirmed) return;
+      if (matkhau_capnhat == '' || matkhau_capnhat == null) {
+        showToast('Không có gì để cập nhật', 'warning')
+      } else {
+        console.log
+
+        $.post('index.php', {
+          option: 'com_quantrihethong',
+          controller: 'quantrihethong',
+          task: 'capnhatMK',
+          id: $(this).data('id'),
+          matkhau: matkhau_capnhat
+        }, function(data) {
+          console.log(data)
+          if (data.success == true) {
+            showToast('Cập nhật mật khẩu thành công', 'success');
+            // window.location.reload()
+          } else {
+            showToast('Cập nhật mật khẩu thất bại', 'danger');
+          }
+        });
+      }
+    });
 
     //hàm load data
     function loadData(page, keyword, perPage = 20) {
@@ -259,14 +340,14 @@ $user = Factory::getUser();
         .then(response => response.json())
         .then(data => {
           const isSuccess = data.success ?? true;
-          showToast(data.message || 'Xóa thành công', isSuccess);
+          showToast(data.message || 'Xóa thành công', 'success');
           if (isSuccess) {
             setTimeout(() => location.reload(), 500);
           }
         })
         .catch(error => {
           console.error('Lỗi:', error);
-          showToast('Đã xảy ra lỗi khi xóa dữ liệu', false);
+          showToast('Đã xảy ra lỗi khi xóa dữ liệu', 'danger');
         });
     });
     //hành động search 

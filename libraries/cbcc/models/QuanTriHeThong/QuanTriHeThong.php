@@ -102,6 +102,58 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     }
   }
 
+  public function changeTrangthaiTK($user_id, $trangthai)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->update($db->quoteName('jos_users'));
+    if ($trangthai == 1) {
+      $query->set('block = 0');
+    } else if ($trangthai == 0) {
+      $query->set('block = 1');
+    } else {
+      return false;
+    }
+    $query->where('id = ' . $db->quote($user_id));
+    $db->setQuery($query);
+    return $db->execute();
+  }
+
+  function resetPassworkTK($id, $inputPassword)
+  {
+    $user = Factory::getUser($id);
+
+    if ($user->id == 0) {
+      return ['success' => false, 'message' => 'User không tồn tại'];
+    }
+
+    $newPassword = (string) $inputPassword;
+    $newPassword = mb_convert_encoding($newPassword, 'UTF-8');
+
+    // Tắt yêu cầu reset
+    $user->requireReset = 0;
+
+    $data = [
+      'password'  => $newPassword,
+      'password2' => $newPassword,
+    ];
+
+    if (!$user->bind($data)) {
+      return ['success' => false, 'message' => $user->getError()];
+    }
+
+    // Test nội bộ hash đúng chưa
+    if (!UserHelper::verifyPassword($newPassword, $user->password, $user->id)) {
+      return ['success' => false, 'message' => 'Mã hóa sai'];
+    }
+
+    if (!$user->save(true)) {
+      return ['success' => false, 'message' => $user->getError()];
+    }
+
+    return ['success' => true, 'message' => 'Cập nhật thành công'];
+  }
+
   // function to save user model
   public function saveUserModel($formData)
   {
@@ -230,11 +282,11 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       ];
     }
     // Include password only if provided
-    if (!empty($formData['password'])) {
-      $salt = UserHelper::genRandomPassword(32);
+    // if (!empty($formData['password'])) {
+    //   $salt = UserHelper::genRandomPassword(32);
 
-      $data['password'] = UserHelper::hashPassword($formData['password']) . ':' . $salt;
-    }
+    //   $data['password'] = UserHelper::hashPassword($formData['password']) . ':' . $salt;
+    // }
 
     // Delete existing permissions
     $query = $db->getQuery(true)

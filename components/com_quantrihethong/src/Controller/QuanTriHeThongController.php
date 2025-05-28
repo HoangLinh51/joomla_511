@@ -15,7 +15,6 @@ use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Response\JsonResponse;
 
 defined('_JEXEC') or die;
 
@@ -78,6 +77,31 @@ class QuanTriHeThongController extends BaseController
         header('Content-Type: application/json');
         echo json_encode($response);
         jexit();
+    }
+
+    public function trangthaiTK()
+    {
+        $user_id = $this->input->getInt('id', null);
+        $trangthai = $this->input->getInt('status', null);
+        $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+        if (!$model->changeTrangthaiTK($user_id, $trangthai)) {
+            $result = '0';
+        } else {
+            $result = '1';
+        }
+        header('Content-type: application/json');
+        echo json_encode($result);
+        die;
+    }
+    public function capnhatMK()
+    {
+        $user_id = $this->input->getInt('id', null);
+        $matkhau = $this->input->getString('matkhau', null);
+        $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+        $result = $model->resetPassworkTK($user_id, $matkhau);
+        header('Content-type: application/json');
+        echo json_encode($result);
+        die;
     }
 
     public function xoa_taikhoan()
