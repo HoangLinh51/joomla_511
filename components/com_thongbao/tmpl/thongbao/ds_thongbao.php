@@ -6,16 +6,17 @@ use Joomla\CMS\Router\Route;
 defined('_JEXEC') or die('Restricted access');
 $user = Factory::getUser();
 $modelThongBao = Core::model('Thongbao/Thongbao');
-$limit = 20; // số bản ghi mỗi trang
-$this->item = $modelThongBao->getListThongBao('all', '', 1, 20);
+$limit = 5; // số bản ghi mỗi trang
+$this->item = $modelThongBao->getListThongBao('all', '', 1, $limit);
 $this->countItems = $modelThongBao->countThongBao($user->id);
-// $currentPage = max(1, (int) Factory::getApplication()->input->getInt('page', 1));
-// $totalPages = ceil($this->countItems / $limit);
-// $startRecord = ($this->countItems > 0) ? (($currentPage - 1) * $limit + 1) : 0;
-// $endRecord = min($this->countItems, $currentPage * $limit);
-
+$currentPage = max(1, (int) Factory::getApplication()->input->getInt('page', 1));
+$totalPages = ceil($this->countItems / $limit);
+$startRecord = ($this->countItems > 0) ? (($currentPage - 1) * $limit + 1) : 0;
+$endRecord = min($this->countItems, $currentPage * $limit);
 
 ?>
+
+
 <div class="danhsach">
   <div class="content-header">
     <div class="row mb-2">
@@ -80,6 +81,7 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
                   <?php echo htmlspecialchars($item->tieude); ?>
                 </a>
               </td>
+              <?php var_dump($item) ?>
               <td style="vertical-align: middle"><?php echo htmlspecialchars($item->noidung); ?></td>
               <td style="vertical-align: middle" class="text-center">
                 <?php if ($item->vanbandinhkem): ?>
@@ -226,7 +228,7 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
       loadDetail(thongbaoId);
     });
     //hàm load data
-    function loadData(page, keyword, perPage = 1) {
+    function loadData(page, keyword, perPage) {
       $("#tbody_danhsach").html('<tr><td colspan="9"><strong>loading...</strong></td></tr>');
       $.ajax({
         url: 'index.php?option=com_thongbao&controller=thongbao&task=getDanhSachThongBao',
@@ -318,7 +320,7 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
 
       let keyword = $('#keyword').val();
       let page = 1;
-      loadData(page, keyword, 1)
+      loadData(page, keyword, <?= $limit ?>)
     })
     //hành động chuyển trang
     $('body').on('click', "#pagination .page-link", function(e) {
@@ -326,7 +328,7 @@ $this->countItems = $modelThongBao->countThongBao($user->id);
       let page = $(this).data('page')
       $('#pagination .page-item').removeClass('active')
       $(this).parent().addClass('active')
-      loadData(page, '', 1)
+      loadData(page, '', <?= $limit ?>)
     })
     //hành động xóa item 
     $('body').on('click', '.btn_xoa', function() {

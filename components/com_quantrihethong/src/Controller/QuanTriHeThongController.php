@@ -45,6 +45,27 @@ class QuanTriHeThongController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
+    public function getListAccount()
+    {
+        $input = Factory::getApplication()->input;
+        $formData = $input->post->getArray();
+        $json = json_decode(file_get_contents('php://input'), true);
+        $formData = $json ?? $formData;
+        // $skip = ($formData['page'] - 1) * $formData['take'];
+        // var_dump($formData);
+
+        try {
+            $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+            $result = $model->getListAccount($formData['keyword'], $formData['page'], $formData['take']);
+        } catch (Exception $e) {
+            $result = $e->getMessage();
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        jexit();
+    }
+
     public function save_user()
     {
         Session::checkToken() or die('Token không hợp lệ');

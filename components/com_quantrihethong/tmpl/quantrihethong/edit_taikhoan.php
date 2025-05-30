@@ -38,9 +38,10 @@ $user = $this->user;
           value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" />
       </div>
       <div class="formGroup">
-        <label for="password">Mật khẩu <span class="text-danger">*</span></label>
+        <label for="password">Mật khẩu<?php if ((int)$user['id'] == 0): ?><span class="text-danger">*</span><?php endif; ?></label>
         <input type="password" id="password" name="password" class="form-control"
-          title="Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ in hoa, 1 số và 1 ký tự đặc biệt (!@#$%^&*)" />
+          title="Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ in hoa, 1 số và 1 ký tự đặc biệt (!@#$%^&*)"
+          placeholder="<?php echo ((int)$user['id'] > 0) ? 'Để trống nếu không đổi mật khẩu' : 'Nhập mật khẩu'; ?>" />
       </div>
       <div class="formGroup">
         <label for="email">Email <span class="text-danger">*</span></label>
@@ -78,7 +79,6 @@ $user = $this->user;
                     </label>
                   <?php endif; ?>
                 <?php endforeach; ?>
-                <input type="hidden" id="phuongXa" name="phuongXa" required>
               </div>
             </div>
             <label for="phuongXa" class="error"></label>
@@ -98,10 +98,8 @@ $user = $this->user;
             <label for="thonTo" class="error"></label>
             <input type="hidden" id="thonTo" name="thonTo" required>
           </div>
-
         </div>
       </div>
-
       <div class="formGroup">
         <label for="requireresetpassword">Yêu cầu đổi mật khẩu</label>
         <label class="custom-toggle">
@@ -109,10 +107,10 @@ $user = $this->user;
           <span class="slider"></span>
           <input type="hidden" id="requireReset" name="requireReset">
         </label>
-
       </div>
       <?php echo HTMLHelper::_('form.token'); ?>
     </form>
+    <input type="hidden" name="action" value="<?php echo ((int)$user['id'] > 0) ? 'edit' : 'create'; ?>">
   </div>
 </div>
 <style>
@@ -343,7 +341,7 @@ $user = $this->user;
 </style>
 
 <script>
-  function showToast(message, isSuccess = true) {
+  function showToast(message, isSuccess = true, error = '') {
     const toast = document.createElement('div');
     Object.assign(toast.style, {
       position: 'fixed',
@@ -354,16 +352,26 @@ $user = $this->user;
       padding: '10px 20px',
       borderRadius: '5px',
       boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-      zIndex: '9999'
+      zIndex: '9999',
+      maxWidth: '300px',
+      fontFamily: 'sans-serif'
     });
-    toast.textContent = message;
+
+    // Tạo nội dung HTML
+    toast.innerHTML = `
+      <strong style="display:block; font-size: 16px; margin-bottom: 5px;">
+       ${message}
+      </strong>
+      <span style="font-size: 14px;">${error}</span>
+    `;
+
     document.body.appendChild(toast);
 
     setTimeout(() => {
-      toast.style.transition = `opacity ${500}ms`;
+      toast.style.transition = `opacity 500ms`;
       toast.style.opacity = '0';
       setTimeout(() => toast.remove(), 500);
-    }, 1000);
+    }, 2000);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -499,8 +507,9 @@ $user = $this->user;
         "Họ và tên chỉ được chứa chữ cái và khoảng trắng");
       $.validator.addMethod("validUsername", (value) => /^[A-Za-z0-9_]+$/.test(value),
         "Tên tài khoản chỉ được chứa chữ cái, số, dấu gạch dưới");
-      $.validator.addMethod("strongPassword", (value) => /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/.test(value),
-        "Mật khẩu phải có ít nhất 8 ký tự, gồm 1 chữ in hoa, 1 số và 1 ký tự đặc biệt");
+      $.validator.addMethod("strongPassword", (value) => {
+        return value === '' || /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/.test(value);
+      }, "Mật khẩu phải có ít nhất 8 ký tự, gồm 1 chữ in hoa, 1 số và 1 ký tự đặc biệt");
 
       $(elements.form).validate({
         ignore: [],
@@ -516,7 +525,9 @@ $user = $this->user;
             validUsername: true
           },
           password: {
-            required: true,
+            required: function() {
+              return $('input[name="action"]').val() === 'create';
+            },
             strongPassword: true
           },
           email: {
@@ -589,7 +600,7 @@ $user = $this->user;
         });
         const data = await response.json();
         const isSuccess = data.success ?? true;
-        showToast(data.message || 'Lưu dữ liệu thành công', isSuccess);
+        showToast(data.message || 'Lưu dữ liệu thành công', isSuccess, data.error || '');
 
         if (isSuccess && redirectAfterSave) {
           setTimeout(() => {
@@ -600,7 +611,7 @@ $user = $this->user;
         }
       } catch (err) {
         console.error('Lỗi gửi dữ liệu:', err);
-        showToast('Gửi dữ liệu thất bại', false);
+        showToast('Gửi dữ liệu thất bại', false, data.error || '');
       }
     };
 

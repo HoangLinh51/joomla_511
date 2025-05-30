@@ -17,21 +17,26 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
 
-    $query->select([
+    // Danh sách cột
+    $columns = [
       'a.id',
       'a.tieude',
       'a.noidung',
       'a.vanbandinhkem',
       'DATE_FORMAT(a.created_at, "%d/%m/%Y") AS ngay_tao',
-      'a.created_by',
-      'b.id AS vanban_id',
-      'b.code AS vanban_code',
-      'b.filename AS vanban_filename',
-      'b.mime AS type',
-      'YEAR(b.created_at) AS vanban_nam'
-    ])
+      'a.created_by'
+    ];
+
+    // Nếu có yêu cầu join attachment, thêm cột
+    $columns[] = 'b.id AS vanban_id';
+    $columns[] = 'b.code AS vanban_code';
+    $columns[] = 'b.filename AS vanban_filename';
+    $columns[] = 'b.mime AS type';
+    $columns[] = 'YEAR(b.created_at) AS vanban_nam';
+
+    $query->select($columns)
       ->from($db->quoteName('thongbao', 'a'))
-      ->leftJoin($db->quoteName('core_attachment', 'b') . ' ON b.object_id = a.vanbandinhkem');
+      ->leftJoin($db->quoteName('core_attachment', 'b') . ' ON b.object_id = a.vanbandinhkem AND a.vanbandinhkem IS NOT NULL');
 
     // Lọc theo ngày hôm nay (trừ khi yêu cầu lấy tất cả)
     if ($mode === 'today') {
