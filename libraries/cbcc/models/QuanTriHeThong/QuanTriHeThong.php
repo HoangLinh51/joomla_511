@@ -60,16 +60,15 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
         'totalrecord' => (int) $totalRecord
       ];
     } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi khi lấy danh sách user: ' . $e->getMessage(), 'error');
       return [
         'data' => [],
         'page' => (int) $page,
         'take' => (int) $take,
-        'totalrecord' => 0
+        'totalrecord' => 0,
+        'error' =>  $e->getMessage()
       ];
     }
   }
-
   // get account by id  
   public function getAccountById($taikhoan_id)
   {
@@ -96,7 +95,6 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
 
     return $result;
   }
-
   // Get list khuvuc
   public function getRegionList()
   {
@@ -116,7 +114,6 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       return [];
     }
   }
-
   //get list chuc nang 
   public function getUserGroupFunctions()
   {
@@ -134,25 +131,31 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       return [];
     }
   }
-
-  public function changeTrangthaiTK($user_id, $trangthai)
+  //thay đổi trạng thái account
+  public function changeStatus($user_id, $trangthai)
   {
+    // Kiểm tra đầu vào
+    if (!is_numeric($user_id) || $user_id <= 0 || !in_array($trangthai, [0, 1])) {
+      return false; // Hoặc throw exception với thông báo lỗi
+    }
+
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
-    $query->update($db->quoteName('jos_users'));
-    if ($trangthai == 1) {
-      $query->set('block = 0');
-    } else if ($trangthai == 0) {
-      $query->set('block = 1');
-    } else {
-      return false;
-    }
-    $query->where('id = ' . $db->quote($user_id));
-    $db->setQuery($query);
-    return $db->execute();
-  }
+    $query->update($db->quoteName('jos_users'))
+      ->set('block = ' . (int)$trangthai)
+      ->where('id = ' . (int)$user_id);
 
-  function resetPassworkTK($id, $inputPassword)
+    $db->setQuery($query);
+    $result = $db->execute();
+
+    // Kiểm tra số bản ghi bị ảnh hưởng
+    if ($result && $db->getAffectedRows() > 0) {
+      return true;
+    }
+    return false;
+  }
+  //reset password
+  function resetPassword($id, $inputPassword)
   {
     $user = Factory::getUser($id);
 
@@ -174,6 +177,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     if (!$user->bind($data)) {
       return ['success' => false, 'message' => $user->getError()];
     }
+    var_dump('newPassword--->', $newPassword);
 
     // Test nội bộ hash đúng chưa
     if (!UserHelper::verifyPassword($newPassword, $user->password, $user->id)) {
@@ -186,8 +190,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
 
     return ['success' => true, 'message' => 'Cập nhật thành công'];
   }
-
-  // function to save user model
+  //get info user từ controller 
   public function saveUserModel($formData)
   {
     // Get the database object
@@ -209,7 +212,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       ];
     }
   }
-
+  //hàm tạo mới
   private function createUser($formData, $db): array
   {
     $user = new User();
@@ -274,7 +277,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'user_id' => $user->id
     ];
   }
-
+  //hàm edit
   private function updateUser($formData, $db): array
   {
     // Load existing user
@@ -285,7 +288,6 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
         'error' => 'Failed to load user with ID: ' . $formData['id']
       ];
     }
-
     // Prepare user data for update
     $data = [
       'id'           => $formData['id'],
@@ -314,12 +316,6 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
         'error' => 'Save failed: ' . implode(', ', $user->getErrors())
       ];
     }
-    // Include password only if provided
-    // if (!empty($formData['password'])) {
-    //   $salt = UserHelper::genRandomPassword(32);
-
-    //   $data['password'] = UserHelper::hashPassword($formData['password']) . ':' . $salt;
-    // }
 
     // Delete existing permissions
     $query = $db->getQuery(true)
@@ -375,7 +371,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'user_id' => $formData['id']
     ];
   }
-
+  // hàm lưu phân quyền
   private function saveUserPermissions($formData, $userId, $db): array
   {
     $query = $db->getQuery(true)
@@ -401,7 +397,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'success' => true
     ];
   }
-
+  //hàm xóa account
   public function deleteAccount($formData)
   {
     $db = Factory::getDbo();

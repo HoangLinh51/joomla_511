@@ -41,9 +41,13 @@ $item = $this->item;
           <small>Hiện tại:
             <div class="d-flex flex-column">
               <?php foreach ($item->vanban as $vanban) : ?>
-                <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam . '&code=' . $vanban->code; ?>">
-                  <?php echo $vanban->filename ?>
-                </a>
+                <div>
+                  <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam . '&code=' . $vanban->code; ?>" class="mr-2">
+                    <?php echo $vanban->filename ?>
+                  </a>
+                  <i class="fa fa-trash-alt bnt-deleteVanBan" data-idobject="<?= $item->vanbandinhkem ?>"
+                    data-code="<?= $vanban->code ?>"></i>
+                </div>
               <?php endforeach ?>
             </div>
           </small>
@@ -165,5 +169,27 @@ $item = $this->item;
         }
       });
     });
+
+    $('.bnt-deleteVanBan').on('click', async function(e) {
+      const idObject = $(this).data('idobject')
+      const codeVB = $(this).data('code')
+
+      try {
+        const response = await fetch(`index.php?option=com_thongbao&task=thongbao.deleteVanBan`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            idObject,
+            codeVB,
+          })
+        });
+        console.log(response)
+      } catch (error) {
+        console.error('Error:', error);
+        showToast('Đã xảy ra lỗi khi xóa dữ liệu', 'danger');
+      }
+    })
   });
 </script>

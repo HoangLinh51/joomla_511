@@ -15,7 +15,7 @@ $user = $this->user;
 
 <div class="container my-3">
   <div class="content-box">
-    <form action="<?= Route::_('index.php?option=com_quantrihethong&task=quantrihethong.save_user ') ?>" id="accountForm" name="accountForm" method="post">
+    <form action="<?= Route::_('index.php?option=com_quantrihethong&task=quantrihethong.saveInfoAccount ') ?>" id="accountForm" name="accountForm" method="post">
       <div class="form-header">
         <h2 class="text-primary">
           <?php echo ((int)$user['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> tài khoản
@@ -103,11 +103,20 @@ $user = $this->user;
       <div class="formGroup">
         <label for="requireresetpassword">Yêu cầu đổi mật khẩu</label>
         <label class="custom-toggle">
-          <input type="checkbox" class="requireReset" <?php echo ($user['requireReset'] == 1) ? 'checked' : ''; ?>>
+          <input type="checkbox" class="requireReset"
+            <?php echo ($user['requireReset'] == 1) ? 'checked' : ''; ?>>
+          <span class="slider"></span>
+          <input type="hidden" id="requireReset" name="requireReset" value="<?php echo ($user['requireReset'] == 1) ? '1' : '0'; ?>">
+        </label>
+      </div>
+      <!-- <div class="formGroup">
+        <label for="requireresetpassword">Yêu cầu đổi mật khẩu</label>
+        <label class="custom-toggle">
+          <input type="checkbox" class="requireReset" <?php ($user['requireReset'] == 1) ? 'checked' : ''; ?>>
           <span class="slider"></span>
           <input type="hidden" id="requireReset" name="requireReset">
         </label>
-      </div>
+      </div> -->
       <?php echo HTMLHelper::_('form.token'); ?>
     </form>
     <input type="hidden" name="action" value="<?php echo ((int)$user['id'] > 0) ? 'edit' : 'create'; ?>">
@@ -399,7 +408,10 @@ $user = $this->user;
         saveBack: document.getElementById('btn_luu_quaylai'),
         back: document.getElementById('btn_quaylai')
       },
-      requireReset: document.querySelector('.requireReset')
+      requireReset: {
+        class: document.querySelector('.requireReset'),
+        hidden: document.getElementById('requireReset')
+      }
     };
 
     // Data from PHP
@@ -586,7 +598,10 @@ $user = $this->user;
           .map(input => input.value);
         item.hidden.value = selected.join(',');
       });
-      elements.requireReset.value = elements.requireReset.checked ? '1' : '0';
+      elements.requireReset.class.addEventListener('change', function() {
+        elements.requireReset.hidden.value = elements.requireReset.checked ? '1' : '0';
+        
+      });
 
       if (!$(elements.form).valid()) {
         showToast('Vui lòng nhập đầy đủ thông tin', false);

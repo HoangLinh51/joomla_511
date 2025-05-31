@@ -141,29 +141,6 @@ if (count($this->data) > $maxFiles) {
 			jQuery('.div_secured').hide();
 		}
 	}
-
-
-	function removeFile() {
-		var arr = document.getElementsByName("DELidfiledk<?php echo $this->idObject ?>[]");
-
-		if (jQuery(arr).attr('data-code') != '') {
-			if (confirm("Bạn có muốn xóa không")) {
-
-				// Build the URL and send the AJAX request
-				var url = "index.php?option=com_core&controller=attachment&format=raw&task=delete&type=<?php echo $this->type ?>&year=<?php echo $this->year ?>&iddiv=<?php echo $this->iddiv ?>&idObject=<?php echo $this->idObject ?>&isTemp=<?php echo $this->isTemp ?>&from=attachment";
-
-				jQuery.post(url, {
-					"DELidfiledk<?php echo $this->idObject ?>[]": jQuery(arr).attr('data-code')
-				}, function(resp) {
-					jQuery("#tftemp<?php echo $this->idObject ?>").html(resp);
-				});
-			}
-		} else {
-			alert("Bạn phải chọn ít nhất một dòng để xóa");
-		}
-
-		return false;
-	}
 </script>
 <style>
 	a.dz-clickable:hover {

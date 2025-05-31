@@ -66,6 +66,7 @@ class RawView extends BaseHtmlView
         $model = Core::model('ThongBao/ThongBao');
 
         $detail = $model->getDetailThongbao($thongbaoId);
+        // var_dump($detail['tieude']);
         if (!$detail) {
             echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
             Factory::getApplication()->close();

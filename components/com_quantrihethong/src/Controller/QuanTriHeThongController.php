@@ -51,8 +51,6 @@ class QuanTriHeThongController extends BaseController
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
-        // $skip = ($formData['page'] - 1) * $formData['take'];
-        // var_dump($formData);
 
         try {
             $model = Core::model('QuanTriHeThong/QuanTriHeThong');
@@ -66,7 +64,7 @@ class QuanTriHeThongController extends BaseController
         jexit();
     }
 
-    public function save_user()
+    public function saveInfoAccount()
     {
         Session::checkToken() or die('Token không hợp lệ');
         $input = Factory::getApplication()->input;
@@ -100,32 +98,48 @@ class QuanTriHeThongController extends BaseController
         jexit();
     }
 
-    public function trangthaiTK()
+    public function changeStatusCTL()
     {
         $user_id = $this->input->getInt('id', null);
         $trangthai = $this->input->getInt('status', null);
-        $model = Core::model('QuanTriHeThong/QuanTriHeThong');
-        if (!$model->changeTrangthaiTK($user_id, $trangthai)) {
-            $result = '0';
-        } else {
-            $result = '1';
+
+        // Kiểm tra đầu vào
+        if (is_null($user_id) || !in_array($trangthai, [0, 1])) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Invalid user ID or status'
+            ];
+            header('Content-type: application/json');
+            echo json_encode($response);
+            exit;
         }
+
+        $model = Core::model('QuanTriHeThong/QuanTriHeThong');
+        $result = $model->changeStatus($user_id, $trangthai);
+
+        $response = [
+            'status' => $result ? 'success' : 'error',
+            'result' => $result ? '1' : '0',
+            'message' => $result ? 'Status updated successfully' : 'Failed to update status'
+        ];
+
         header('Content-type: application/json');
-        echo json_encode($result);
-        die;
+        echo json_encode($response);
+        exit;
     }
-    public function capnhatMK()
+
+    public function resetPasswordCTL()
     {
         $user_id = $this->input->getInt('id', null);
-        $matkhau = $this->input->getString('matkhau', null);
+        $password = $this->input->getString('password', null);
         $model = Core::model('QuanTriHeThong/QuanTriHeThong');
-        $result = $model->resetPassworkTK($user_id, $matkhau);
+        $result = $model->resetPassword($user_id, $password);
         header('Content-type: application/json');
         echo json_encode($result);
         die;
     }
 
-    public function xoa_taikhoan()
+    public function deleteAccountCTL()
     {
         // Session::checkToken() or die('Token không hợp lệ');
         $input = Factory::getApplication()->input;

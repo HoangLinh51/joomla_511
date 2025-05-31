@@ -227,7 +227,7 @@ defined('_JEXEC') or die('Restricted access');
       $('.pagination-info').text(info);
 
       // Update browser URL without reloading
-      history.pushState({}, '', `index.php?option=com_quantrihethong&view=quantrihethong&page=${currentPage}${keyword ? `&keyword=${encodeURIComponent(keyword)}` : ''}`);
+      history.pushState({}, '', `?view=quantrihethong&task=ds_taikhoan&page=${currentPage}${keyword ? `&keyword=${encodeURIComponent(keyword)}` : ''}`);
     } catch (error) {
       console.error('Error:', error);
       $('#tbody_danhsach').html('<tr><td colspan="6" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
@@ -269,12 +269,12 @@ defined('_JEXEC') or die('Restricted access');
       const newStatus = $input.data('status') == 0 ? 1 : 0;
 
       $.post(baseUrl, {
-        task: 'trangthaiTK',
+        task: 'changeStatusCTL',
         id,
         status: newStatus,
         [csrfToken]: 1
       }, function(data) {
-        if (data == 1) {
+        if (data.result == 1) {
           $input.data('status', newStatus);
           showToast('Cập nhật trạng thái thành công', 'success');
         } else {
@@ -289,11 +289,10 @@ defined('_JEXEC') or die('Restricted access');
 
     // reset password
     $('body').on('click', '.btn_reset_password', function() {
-      const $button = $(this);
-      const index = $('.btn_reset_password').index($button);
+      const index = $('.btn_reset_password').index($(this));
       const password = $('input[name="input-reset"]').eq(index).val();
-      const name = $button.data('name');
-      const id = $button.data('id');
+      const name = $(this).data('name');
+      const id = $(this).data('id');
 
       if (!password) {
         showToast('Vui lòng nhập mật khẩu mới', 'warning');
@@ -302,19 +301,20 @@ defined('_JEXEC') or die('Restricted access');
 
       if (!confirm(`Bạn có chắc chắn muốn cập nhật mật khẩu của ${name}?`)) return;
 
-      $.post(baseUrl, {
-        task: 'capnhatMK',
+      $.post('index.php', {
+        option: 'com_quantrihethong',
+        controller: 'quantrihethong',
+        task: 'resetPasswordCTL',
         id,
-        matkhau: password,
-        [csrfToken]: 1
+        password
       }, function(data) {
-        if (data.success) {
+        if (data.success == true) {
           showToast('Cập nhật mật khẩu thành công', 'success');
-          $('input[name="input-reset"]').eq(index).val('');
+          // window.location.reload()
         } else {
           showToast('Cập nhật mật khẩu thất bại', 'danger');
         }
-      }).fail(() => showToast('Lỗi khi cập nhật mật khẩu', 'danger'));
+      });
     });
 
     // delete account
@@ -323,7 +323,7 @@ defined('_JEXEC') or die('Restricted access');
 
       const idAccount = $(this).data('account');
       try {
-        const response = await fetch(`${baseUrl}&task=quantrihethong.xoa_taikhoan`, {
+        const response = await fetch(`${baseUrl}&task=quantrihethong.deleteAccountCTL`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

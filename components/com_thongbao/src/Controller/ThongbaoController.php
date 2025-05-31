@@ -48,17 +48,14 @@ class ThongBaoController extends BaseController
 
     public function getDanhSachThongBao()
     {
-        // Session::checkToken() or die('Token không hợp lệ');
         $input = Factory::getApplication()->input;
-
-        // Lấy dữ liệu gửi lên từ Ajax
-        $page = $input->getInt('page', 1); // Mặc định là 1 nếu không có
-        $perPage = $input->getInt('perPage', 20);
-        $keyword = $input->getString('keyword', '');
+        $formData = $input->post->getArray();
+        $json = json_decode(file_get_contents('php://input'), true);
+        $formData = $json ?? $formData;
 
         try {
             $model = Core::model('Thongbao/Thongbao');
-            $res =  $model->getListThongBao('all', $keyword, $page, $perPage);
+            $res =  $model->getListThongBao('all', $formData['keyword'], $formData['page'], $formData['take']);
         } catch (Exception $e) {
             $res = ['error' => $e->getMessage()];
         }
@@ -126,5 +123,40 @@ class ThongBaoController extends BaseController
         }
 
         Factory::getApplication()->close();
+    }
+
+    public function deleteVanBan()
+    {
+        $user = Factory::getUser();
+        if (!$user->id) {
+            echo new JsonResponse(null, 'Bạn cần đăng nhập', true);
+            Factory::getApplication()->close();
+            return;
+        }
+
+        // Lấy dữ liệu từ JSON body (request payload)
+        $json = file_get_contents('php://input');
+        $formData = json_decode($json, true);
+        try {
+            $model = Core::model('Thongbao/Thongbao');
+            $result = $model->deleteVanBan($formData);
+
+            if (!$result['success']) {
+                throw new Exception($result['error']);
+            }
+
+            $response = [
+                'success' => true,
+                'message' => 'Đã xóa file thành công',
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'success' => false,
+                'message' => 'Có lỗi khi xóa dữ liệu:' . $e->getMessage(),
+            ];
+        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        jexit();
     }
 }
