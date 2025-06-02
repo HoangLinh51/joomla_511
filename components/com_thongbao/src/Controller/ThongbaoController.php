@@ -125,32 +125,23 @@ class ThongBaoController extends BaseController
         Factory::getApplication()->close();
     }
 
-    public function deleteVanBan()
+    public function deleteVanBanCTL()
     {
-        $user = Factory::getUser();
-        if (!$user->id) {
-            echo new JsonResponse(null, 'Bạn cần đăng nhập', true);
-            Factory::getApplication()->close();
-            return;
-        }
+        // Session::checkToken() or die('Token không hợp lệ');
+        $input = Factory::getApplication()->input;
+        $formData = $input->post->getArray();
+        $json = json_decode(file_get_contents('php://input'), true);
+        $formData = $json ?? $formData;
 
-        // Lấy dữ liệu từ JSON body (request payload)
-        $json = file_get_contents('php://input');
-        $formData = json_decode($json, true);
         try {
             $model = Core::model('Thongbao/Thongbao');
-            $result = $model->deleteVanBan($formData);
-
-            if (!$result['success']) {
-                throw new Exception($result['error']);
-            }
-
-            $response = [
-                'success' => true,
+            $result = $model->deleteVanBan($formData['idVanban'], $formData['idThongbao']);
+            return $response = [
+                'success' => $result,
                 'message' => 'Đã xóa file thành công',
             ];
         } catch (Exception $e) {
-            $response = [
+            return  $response = [
                 'success' => false,
                 'message' => 'Có lỗi khi xóa dữ liệu:' . $e->getMessage(),
             ];

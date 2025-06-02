@@ -108,7 +108,7 @@ if (count($this->data) > $maxFiles) {
 			echo $stt . ".";
 		?>
 		<div class="<?php echo $this->iddiv; ?> dropzone dropzone-multi ">
-			<div class="dropzone-items wm-200px">
+			<div class="dropzone-items w-100">
 				<div class="dropzone-item">
 					<!--begin::File-->
 					<div class="dropzone-file">
@@ -123,7 +123,7 @@ if (count($this->data) > $maxFiles) {
 
 					<!--begin::Toolbar-->
 					<div class="dropzone-toolbar">
-						<span class="dropzone-delete" onclick="removeFile()" data-code="<?php echo $item['code'] ?>" name="DELidfiledk<?php echo $this->idObject ?>[]" data-dz-remove><i class="fa fa-times"></i></span>
+						<span class="dropzone-delete" onclick="removeFile(this)" data-code="<?php echo $item['code'] ?>" data-dz-remove><i class="fa fa-times"></i></span>
 					</div>
 					<!--end::Toolbar-->
 				</div>
@@ -139,6 +139,25 @@ if (count($this->data) > $maxFiles) {
 			jQuery('.div_secured').show();
 		} else {
 			jQuery('.div_secured').hide();
+		}
+	}
+
+
+	function removeFile(el) {
+		var code = jQuery(el).attr('data-code');
+		if (code) {
+			if (confirm("Bạn có muốn xóa không")) {
+				var url = "index.php?option=com_core&controller=attachment&format=raw&task=delete&type=<?php echo $this->type ?>&year=<?php echo $this->year ?>&iddiv=<?php echo $this->iddiv ?>&idObject=<?php echo $this->idObject ?>&isTemp=<?php echo $this->isTemp ?>&from=attachment";
+
+				var data = {};
+				data['DELidfiledk<?php echo $this->idObject ?>[]'] = code;
+				jQuery.post(url, data, function(resp) {
+					console.log(resp);
+					jQuery("#tftemp<?php echo $this->idObject ?>").html(resp);
+				});
+			}
+		} else {
+			alert("Không tìm thấy mã code để xóa");
 		}
 	}
 </script>
@@ -159,5 +178,9 @@ if (count($this->data) > $maxFiles) {
 
 	#attactment_tochuc-error {
 		color: red;
+	}
+
+	.dropzone.dropzone-multi div.dropzone-item {
+		display: -webkit-box;
 	}
 </style>

@@ -19,8 +19,7 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       ->select([
         'a.id',
         'a.tieude',
-        'a.noidung',
-        'a.vanbandinhkem',
+      'a.noidung',
         'DATE_FORMAT(a.created_at, "%d/%m/%Y") AS ngay_tao',
         'a.created_by'
     ])
@@ -32,44 +31,72 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       $query->where('DATE(a.created_at) = ' . $db->quote(date('Y-m-d')));
     }
 
-    // Filter by keyword in title or content
+    // Filter by keyword
     if (!empty($keyword)) {
       $quotedKeyword = $db->quote('%' . $keyword . '%');
       $query->where('(a.tieude LIKE ' . $quotedKeyword . ' OR a.noidung LIKE ' . $quotedKeyword . ')');
     }
 
-    // Order by creation date descending
-    $query->order('a.created_at DESC');
-
-    // Pagination
+    // Count total records
     $totalQuery = clone $query;
     $totalQuery->clear('select')->select('COUNT(DISTINCT a.id)');
     $db->setQuery($totalQuery);
     $totalRecord = $db->loadResult();
 
-    // Áp dụng phân trang
+    // Pagination
     $take = (int) $take > 0 ? (int) $take : 20;
     $skip = ($page - 1) * $take;
+    $query->order('a.created_at DESC');
     $query->setLimit($take, $skip);
 
     $db->setQuery($query);
     $rows = $db->loadObjectList();
 
-    // Process results
-    $result = array_map(function ($row) {
-      $vanban = [];
-      if (!empty($row->vanbandinhkem)) {
-        $vanban = $this->getVanBan($row->vanbandinhkem);
-      }
+    // Lấy toàn bộ ID thông báo để truy vấn file
+    $ids = array_map(function ($item) {
+      return (int) $item->id;
+    }, $rows);
 
+    $vanbanMap = [];
+
+    if (!empty($ids)) {
+      $query = $db->getQuery(true)
+        ->select([
+          'tv.thongbao_id',
+          'ca.id ',
+          'ca.code',
+          'ca.filename',
+          'ca.mime',
+          'YEAR(ca.created_at) AS year'
+        ])
+        ->from($db->quoteName('thongbao_vanban', 'tv'))
+        ->innerJoin($db->quoteName('core_attachment', 'ca') . ' ON ca.id = tv.vanban_id')
+        ->where('tv.thongbao_id IN (' . implode(',', $ids) . ')');
+
+      $db->setQuery($query);
+      $attachments = $db->loadObjectList();
+
+      // Nhóm file theo ID thông báo
+      foreach ($attachments as $file) {
+        $vanbanMap[$file->thongbao_id][] = [
+          'id' => $file->id,
+          'filename' => $file->filename,
+          'code' => $file->code,
+          'type' => $file->mime,
+          'year' => $file->year
+        ];
+      }
+    }
+
+    // Gán danh sách văn bản vào mỗi thông báo
+    $result = array_map(function ($row) use ($vanbanMap) {
       return (object)[
             'id' => $row->id,
             'tieude' => $row->tieude,
-            'noidung' => $row->noidung,
-            'vanbandinhkem' => $row->vanbandinhkem,
+        'noidung' => $row->noidung,
             'ngay_tao' => $row->ngay_tao,
             'created_by' => $row->created_by,
-        'vanban' => $vanban
+        'vanban' => $vanbanMap[$row->id] ?? []
       ];
     }, $rows);
 
@@ -81,36 +108,69 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
     ];
   }
 
-  public function getVanBan($idVanban)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select([
-        'b.id AS vanban_id',
-        'b.code AS vanban_code',
-        'b.filename AS vanban_filename',
-        'b.mime AS type',
-        'YEAR(b.created_at) AS vanban_nam'
-      ])
-      ->from($db->quoteName('core_attachment', 'b'))
-      ->where($db->quoteName('b.object_id') . ' = ' . $db->quote($idVanban));
+  // public function getListThongBao($mode = 'all', $keyword = '', $page = 1, $take = 20)
+  // {
+  //   $db = Factory::getDbo();
+  //   $query = $db->getQuery(true)
+  //     ->select([
+  //       'a.id',
+  //       'a.tieude',
+  //     'a.noidung',
+  //     'DATE_FORMAT(a.created_at, "%d/%m/%Y") AS ngay_tao',
+  //       'a.created_by'
+  //   ])
+  //     ->from($db->quoteName('thongbao', 'a'))
+  //     ->where('a.daxoa = 0');
 
-    $db->setQuery($query);
-    $results = $db->loadObjectList();
+  //   // Filter by today if mode is 'today'
+  //   if ($mode === 'today') {
+  //     $query->where('DATE(a.created_at) = ' . $db->quote(date('Y-m-d')));
+  //   }
 
-    // Transform results into the desired object format
-    $formattedResults = array_map(function ($row) {
-      return (object)[
-        'id' => $row->vanban_id,
-        'code' => $row->vanban_code,
-        'filename' => $row->vanban_filename,
-        'nam' => $row->vanban_nam,
-        'type' => $row->type
-      ];
-    }, $results);
+  //   // Filter by keyword in title or content
+  //   if (!empty($keyword)) {
+  //     $quotedKeyword = $db->quote('%' . $keyword . '%');
+  //     $query->where('(a.tieude LIKE ' . $quotedKeyword . ' OR a.noidung LIKE ' . $quotedKeyword . ')');
+  //   }
 
-    return $formattedResults;
-  }
+  //   // Order by creation date descending
+  //   $query->order('a.created_at DESC');
+
+  //   // Pagination
+  //   $totalQuery = clone $query;
+  //   $totalQuery->clear('select')->select('COUNT(DISTINCT a.id)');
+  //   $db->setQuery($totalQuery);
+  //   $totalRecord = $db->loadResult();
+
+  //   // Áp dụng phân trang
+  //   $take = (int) $take > 0 ? (int) $take : 20;
+  //   $skip = ($page - 1) * $take;
+  //   $query->setLimit($take, $skip);
+
+  //   $db->setQuery($query);
+  //   $rows = $db->loadObjectList();
+
+  //   // Process results
+  //   $result = array_map(function ($row) {
+  //     $vanban = [];
+
+  //     return (object)[
+  //           'id' => $row->id,
+  //           'tieude' => $row->tieude,
+  //       'noidung' => $row->noidung,
+  //       'ngay_tao' => $row->ngay_tao,
+  //           'created_by' => $row->created_by,
+  //       'vanban' => $vanban
+  //     ];
+  //   }, $rows);
+
+  //   return [
+  //     'data' => $result,
+  //     'page' => (int) $page,
+  //     'take' => (int) $take,
+  //     'totalrecord' => (int) $totalRecord
+  //   ];
+  // }
 
   public function getTrangThaiThongBao($userId, $thongbaoId)
   {
@@ -165,36 +225,55 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       'tb.id',
       'tb.tieude',
       'tb.noidung',
-      'tb.vanbandinhkem',
       'DATE_FORMAT(tb.created_at, "%d/%m/%Y") AS ngay_tao',
       'tb.created_by',
       'u.name',
       'u.username',
-      'u.email',
+      'u.email'
     ])
       ->from($db->quoteName('thongbao', 'tb'))
       ->leftJoin($db->quoteName('jos_users', 'u') . ' ON u.id = tb.created_by')
-      ->where('tb.id = ' . $db->quote($thongbaoId))
+      ->where('tb.id = ' . (int)$thongbaoId)
       ->where('tb.daxoa = 0');
 
     try {
-    $db->setQuery($query);
+      $db->setQuery($query);
       $row = $db->loadObject();
 
       if (!$row) {
         return null;
       }
 
-      $vanban = [];
-      if (!empty($row->vanbandinhkem)) {
-        $vanban = $this->getVanBan($row->vanbandinhkem);
-      }
+      // Truy vấn lấy các file đính kèm
+      $query = $db->getQuery(true)
+        ->select([
+          'ca.id ',
+          'ca.code',
+          'ca.filename',
+          'ca.mime',
+          'YEAR(ca.created_at) AS year'
+        ])
+        ->from($db->quoteName('thongbao_vanban', 'tv'))
+        ->innerJoin($db->quoteName('core_attachment', 'ca') . ' ON ca.id = tv.vanban_id')
+        ->where('tv.thongbao_id = ' . (int)$thongbaoId);
+
+      $db->setQuery($query);
+      $attachments = $db->loadObjectList();
+
+      $vanban = array_map(function ($item) {
+        return [
+          'id' => $item->id,
+          'filename' => $item->filename,
+          'code' => $item->code,
+          'type' => $item->mime,
+          'year' => $item->year
+        ];
+      }, $attachments);
 
       return (object)[
         'id' => $row->id,
         'tieude' => $row->tieude,
         'noidung' => $row->noidung,
-        'vanbandinhkem' => $row->vanbandinhkem,
         'ngay_tao' => $row->ngay_tao,
         'created_by' => $row->created_by,
         'name' => $row->name,
@@ -206,6 +285,7 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       return $e->getMessage();
     }
   }
+
 
   public function submitTrangThaiThongBao()
 	{
@@ -264,47 +344,90 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
   public function saveThongBao($formdata, $idUser)
   {
     $db = Factory::getDbo();
+    $id_vanban = $formdata['fileupload_id'] ?? [];
+    $result = [];
 
     $columns = [
       'tieude' => $formdata["tieude"] ?? '',
       'noidung' => $formdata["noidung"] ?? '',
-      'vanbandinhkem' => $formdata["idTepDinhKem"] ?? '',
     ];
 
     $id = (int) ($formdata["id"] ?? 0);
+    $now = Factory::getDate()->toSql();
 
-    if ($id > 0) {
-      // Update
-      $query = $db->getQuery(true)
-        ->update($db->quoteName('thongbao'));
+    try {
+      if ($id > 0) {
+        // ✅ Cập nhật
+        $columns['status'] = 1;
+        $columns['created_by'] = $idUser;
+        $columns['created_at'] = $now;
 
-      $setParts = [];
-      foreach ($columns as $col => $val) {
-        $setParts[] = $db->quoteName($col) . ' = ' . $db->quote($val);
+        $query = $db->getQuery(true)
+          ->update($db->quoteName('thongbao'));
+
+        $setParts = [];
+        foreach ($columns as $col => $val) {
+          $setParts[] = $db->quoteName($col) . ' = ' . $db->quote($val);
+        }
+
+        $query->set($setParts)
+          ->where('id = ' . $db->quote($id));
+
+        $db->setQuery($query);
+        $db->execute();
+
+        $idThongbao = $id;
+      } else {
+        // ✅ Tạo mới
+        $columns['status'] = 1;
+        $columns['created_by'] = $idUser;
+        $columns['created_at'] = $now;
+
+        $query = $db->getQuery(true)
+          ->insert($db->quoteName('thongbao'))
+          ->columns(array_keys($columns))
+          ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
+
+        $db->setQuery($query);
+        $db->execute();
+
+        $idThongbao = $db->insertid();
       }
-      $query->set($setParts);
-      $query->where('id = ' . $db->quote($id));
 
-      $db->setQuery($query);
-      $db->execute();
+      // ✅ Thêm các bản ghi liên kết mới
+      if (!empty($idThongbao) && !empty($id_vanban)) {
+        foreach ($id_vanban as $idVanBan) {
+          if (!is_numeric($idVanBan)) {
+            continue;
+          }
 
-      return $id;
-    } else {
-      // Insert
-      $columns['status'] = 1;
-      $columns['created_by'] = $idUser;
-      $columns['created_at'] = Factory::getDate()->toSql();
+          $query = $db->getQuery(true)
+            ->insert($db->quoteName('thongbao_vanban'))
+            ->columns([$db->quoteName('thongbao_id'), $db->quoteName('vanban_id')])
+            ->values(
+              implode(',', [
+                $db->quote((int) $idThongbao),
+                $db->quote((int) $idVanBan)
+              ])
+            );
+          $db->setQuery($query);
+          $db->execute();
+        }
+      }
 
-      $query = $db->getQuery(true)
-        ->insert($db->quoteName('thongbao'))
-        ->columns(array_keys($columns))
-        ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
-
-      $db->setQuery($query);
-      $db->execute();
-
-      return $db->insertid();
+      // ✅ Kết quả trả về
+      $result = [
+        'message' => $id > 0 ? 'Cập nhật thông báo thành công!' : 'Tạo mới thông báo thành công!',
+        'result' => $idThongbao
+      ];
+    } catch (\RuntimeException $e) {
+      $result = [
+        'message' => 'Lỗi: ' . $e->getMessage(),
+        'result' => null
+      ];
     }
+
+    return $result;
   }
 
   public function deleteThongbao($idUser, $idThongbao)
@@ -321,5 +444,21 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
     return $db->execute();
   }
 
-  public function deleteVanBan($formdata){}
+  public function deleteVanBan($idVanban, $idThongbao): bool
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+
+    // Xây câu lệnh DELETE
+    $conditions = [
+      $db->quoteName('thongbao_id') . ' = ' . $db->quote($idThongbao),
+      $db->quoteName('vanban_id') . ' = ' . $db->quote($idVanban)
+    ];
+
+    $query->delete($db->quoteName('thongbao_vanban'))
+      ->where($conditions);
+    $db->setQuery($query);
+
+    return $db->execute();
+  }
 }

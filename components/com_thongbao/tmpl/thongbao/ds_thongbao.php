@@ -111,21 +111,22 @@ defined('_JEXEC') or die('Restricted access');
       return '<tr><td colspan="5" class="text-center">Không có dữ liệu</td></tr>';
     }
     return items.map((item, index) => {
+      console.log(item)
       let vanbanHtml = '';
       if (item.vanban && Array.isArray(item.vanban)) {
-        item.vanban.map(vb => {
+        vanbanHtml = item.vanban.map(vb => {
           if (vb.type === 'application/pdf') {
-            vanbanHtml = `
-            <a href = "/index.php?option=com_thongbao&view=thongbao&format=raw&task=viewpdf&file=${vb.code}" target = "_blank" >
-              ${vb.filename}
-            </a><br/>`;
+            return `
+        <a href="/index.php?option=com_thongbao&view=thongbao&format=raw&task=viewpdf&file=${vb.code}" target="_blank">
+          ${vb.filename}
+        </a><br/>`;
           } else {
-            vanbanHtml = `
-            <a href="/index.php?option=com_core&controller=attachment&format=raw&task=download&year=${vb.nam}&code=${vb.code}">
-              ${vb.filename}
-            </a><br/>`
+            return `
+        <a href="/index.php?option=com_core&controller=attachment&format=raw&task=download&year=${vb.nam}&code=${vb.code}">
+          ${vb.filename}
+        </a><br/>`;
           }
-        }).join('')
+        }).join('');
       }
 
       return `

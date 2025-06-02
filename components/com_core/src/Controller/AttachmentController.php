@@ -570,12 +570,13 @@ class AttachmentController extends BaseController
         $idObject = $input->getInt('idObject', 0);
         $isTemp = $input->getBool('isTemp', false);
         $from = $input->get('from', '', 'STRING');
-        $arr_code = Factory::getApplication()->input->getVar('DELidfiledk' . $idObject . '[]');
+        $arr_code = $input->get('DELidfiledk' . $idObject, [], 'ARRAY');
         $pdf = Factory::getApplication()->input->getVar('pdf');
         $is_nogetcontent = Factory::getApplication()->input->getVar('is_nogetcontent');
         $mapper = Core::model('Core/Attachment');
-        for ($i = 0; $i < count($arr_code); $i++) {
-            $mapper->deleteFileByMaso($arr_code[$i]);
+
+        foreach ($arr_code as $code) {
+            $mapper->deleteFileByMaso($code);
         }
         $url = Uri::root(true) . '/index.php?option=com_core&view=attachment&format=raw&task=input&iddiv=' . $iddiv . '&idObject=' . $idObject . '&is_new=' . $is_new . '&year=' . $year . '&type=' . $type . "&pdf=" . $pdf . "&is_nogetcontent=" . $is_nogetcontent;
         echo "<script>window.parent.loadDivFromUrl('" . $iddiv . "','$url" . "'); </script>";
