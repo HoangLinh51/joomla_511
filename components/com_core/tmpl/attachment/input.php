@@ -66,7 +66,7 @@ if ($this->isCapnhat == 12) {
 <?php if ($this->isCapnhat == 1) { ?>
 	<form name=frmUpload enctype="multipart/form-data" action="<?php echo Uri::root(true); ?>/index.php?option=com_core&controller=attachment&task=doattachment" method="post" target="tftemp<?php echo $this->idObject?>">
 	<div class="dropzone-panel mb-lg-0 mb-2">
-		<label  for="uploadfile" class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm quyết định</label >
+		<label  for="uploadfile" class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm file</label >
 		<input multiple type="file" id="uploadfile" name="uploadfile[]" onchange="document.frmUpload.submit();" style="display:none;"/> 
 	</div>
 

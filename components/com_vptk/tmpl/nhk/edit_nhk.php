@@ -104,6 +104,7 @@ $nhankhau = $item['nhankhau'];
             </tbody>
         </table>
         <h3 style="padding-left:15px ;" class="mb-0 fw-bold">Thông tin nhân khẩu
+
             <span class="float-right">
                 <button type="button" class="btn btn-primary" id="btn_themnhankhau" data-toggle="modal" data-target="#modalNhankhau"><i class="fas fa-plus"></i> Thêm nhân khẩu</button>
             </span>
@@ -656,6 +657,15 @@ $nhankhau = $item['nhankhau'];
         max-width: 150px;
     }
 
+    td.noio_truoc,
+    th.noio_truoc {
+        min-width: 150px;
+        height: 25px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+    }
+
     td.lydo,
     th.lydo {
         min-width: 100px;
@@ -979,7 +989,6 @@ $nhankhau = $item['nhankhau'];
                 const wasChuHo = isEditing && $($('#tblDanhsach tbody tr')[editIndex]).find('input[name="quanhenhanthan_id[]"]').val() === '-1';
                 const newQuanHeId = $('#modal_quanhenhanthan_id').val();
                 const tinhtrang_text = $('#modal_tinhtang').val() || 'Chưa xác thực';
-
                 const nhanKhauCount = $('#tblDanhsach tbody tr').filter(function() {
                     return $(this).find('td').length > 1 || $(this).find('td').text().trim() !== 'Không có dữ liệu';
                 }).length;
@@ -1077,7 +1086,6 @@ $nhankhau = $item['nhankhau'];
                 <td class="align-middle noio_truoc">${$('#modal_is_tamtru').val() === '1' ? thuongtrucu : ''}</td>
                 <td class="align-middle lydo">${lydo_text}</td>
                 <td class="align-middle tinhtang" style="color: red">${tinhtrang_text}</td>
-
                 <td class="align-middle text-center chucnang">
                     <input type="hidden" name="nhankhau_id[]" value="${nhankhauId}" />
                     <input type="hidden" name="quanhenhanthan_id[]" value="${$('#modal_quanhenhanthan_id').val()}" />

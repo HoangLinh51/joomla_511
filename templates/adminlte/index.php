@@ -5,7 +5,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Session\Session;
-require_once JPATH_LIBRARIES . '/vendor/autoload.php';  // Đối với Joomla
 
 require_once(JPATH_THEMES . '/adminlte/CoreTemplate.php');
 $coreTemplate = new CoreTemplate();
@@ -26,22 +25,18 @@ if ($coreTemplate->isLogin() == true) {
 	$app = Factory::getApplication();
 	$doc = Factory::getDocument();
 
-
-	// $doc->addStyleSheet(Uri::root(true).'/templates/'.$this->template. '/dist/css/adminlte.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/adminltev3.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/_all-skins.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/fontawesome-free/css/all.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');
-
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/jqvmap/jqvmap.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/css/select2.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.css');
-	$doc->addStyleSheet(URI::root(true) . '/templates/' . $this->template . '/assets/css/bootstrap-datepicker.css');
-
 	$doc->addStyleSheet(Uri::root(true) . '/media/cbcc/css/jquery.toast.css');
+
+
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery/jquery.min.js');
-	// $doc->addScript(Uri::root(true). '/templates/' .$this->template. '/plugins/bootstrap/js/bootstrap.min.js');
 	$doc->addScript(Uri::root(true) . '/media/legacy/js/jquery-noconflict.js');
 	$doc->addScript(Uri::root(true) . '/templates/adminlte/plugins/jquery-ui/jquery-ui.min.js');
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery-ui/jquery.blockUI.min.js');
@@ -54,11 +49,7 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/js/select2.min.js');
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.js');
 	$doc->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.toast.js');
-
 	$doc->addScript(Uri::root(true) . '/media/cbcc/js/common.js');
-
-
-
 ?>
 	<!DOCTYPE html>
 	<html lang="en">
@@ -138,15 +129,14 @@ if ($coreTemplate->isLogin() == true) {
 						<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
 					</li>
 				</ul>
-				<ul class="navbar-nav ml-auto">
+				<ul class="d-flex align-items-center navbar-nav ml-auto">
 					<jdoc:include type="modules" name="sidebar-right" />
 				</ul>
 			</nav>
-
-			<aside class="main-sidebar sidebar-dark-primary elevation-4">
+			<aside class="main-sidebar sidebar-light-primary elevation-4">
 				<a href="index.php" class="d-flex align-items-center gap-3 logo-brand">
 					<img src="/images/banners/logoDnict.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 m-0">
-					<h3 class="m-0 brand-text ">DNICT</h3>
+					<h3 class="m-0 brand-text pl-1" style="color: #3e3e3e">DNICT</h3>
 				</a>
 				<div class="line"></div>
 
@@ -177,7 +167,6 @@ if ($coreTemplate->isLogin() == true) {
 					</nav>
 				</div>
 			</aside>
-
 			<div class="content-wrapper">
 				<jdoc:include type="message" />
 				<jdoc:include type="component" style="xhtml" />
@@ -185,11 +174,11 @@ if ($coreTemplate->isLogin() == true) {
 
 			<!-- Footer -->
 			<!-- <footer class="main-footer">
-				<div class="pull-right hidden-xs">
-					<b>Version</b> 2.4.13
-				</div>
-				<strong>Copyright © 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rightsreserved.
-			</footer> -->
+		<div class="pull-right hidden-xs">
+			<b>Version</b> 2.4.13
+		</div>
+		<strong>Copyright © 2014-2019 <a href="https://adminlte.io">AdminLTE</a>.</strong> All rightsreserved.
+	</footer> -->
 
 			<jdoc:include type="modules" name="debug" style="none" />
 
@@ -204,9 +193,7 @@ if ($coreTemplate->isLogin() == true) {
 			position: absolute !important;
 			top: 0 !important;
 		}
-		.phpdebugbar-restore-btn, .phpdebugbar-header{
-			display: none !important;
-		}
+
 		.nav-link.menu-open {
 			background-color: rgba(255, 255, 255, .1) !important;
 			color: #fff !important;
@@ -254,19 +241,8 @@ if ($coreTemplate->isLogin() == true) {
 			font-weight: 500;
 		}
 
-		.logo-brand:hover {
-			color: #fff;
-		}
-
 		.logo-brand .brand-image {
 			height: 90%;
-		}
-
-		.line {
-			height: 1px;
-			background-color: #d7d7d7;
-			width: 100%;
-			margin-bottom: 10px;
 		}
 
 		.sidebar-hidden .main-sidebar {
@@ -277,16 +253,6 @@ if ($coreTemplate->isLogin() == true) {
 			margin-left: 0 !important;
 		}
 	</style>
-
-	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			const toggleBtn = document.querySelector('[data-widget="pushmenu"]');
-			toggleBtn.addEventListener('click', function(e) {
-				e.preventDefault();
-				document.body.classList.toggle('sidebar-hidden');
-			});
-		});
-	</script>
 
 <?php
 }

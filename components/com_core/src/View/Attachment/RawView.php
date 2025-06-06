@@ -57,6 +57,9 @@ class RawView extends BaseHtmlView
             case 'UPLOADAVATAR':
                 $this->_initInput();
                 break;
+            case 'UPLOADIMAGES':
+                $this->_initInput();
+                break;
             case 'ATTACHMENT':
                 $this->_initInput();
                 // $this->_initAttachment();

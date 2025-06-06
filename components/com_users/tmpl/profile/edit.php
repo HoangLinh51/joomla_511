@@ -35,14 +35,14 @@ $user = Factory::getUser();
 <?php
 $db = Factory::getDbo();
 $base_url = Uri::root(true);
-$avatar_id = $user->avatar_id;
+$avatarId = $user->avatar_id;
 $avatar_url = $base_url . "/uploader/defaultImage.png";
 
-if (!empty($avatar_id)) {
+if (!empty($avatarId)) {
     $query = $db->getQuery(true)
         ->select($db->quoteName('code'))
         ->from($db->quoteName('core_attachment'))
-        ->where($db->quoteName('object_id') . ' = ' . $db->quote($avatar_id))
+        ->where($db->quoteName('id') . ' = ' . $db->quote($avatarId))
         ->order($db->quoteName('created_at') . ' DESC');
     $db->setQuery($query);
     $result = $db->loadObject();
@@ -57,12 +57,11 @@ if (!empty($avatar_id)) {
     <!-- upload avatar -->
     <div class="profile-edit">
         <div class="upload-avatar">
-            <img id="avatar-preview" src="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>"
-                alt="Avatar" style="width: 132px; height: 150px; margin-bottom: 5px">
-            <?php echo Core::inputAvatar('uploadAvatar', null, 1, date('Y'), -1); ?>
+            <img id="imagePreview" src="<?php echo htmlspecialchars($avatar_url, ENT_QUOTES, 'UTF-8'); ?>"
+                alt="Avatar" style="width: 170px; height: 190px; margin-bottom: 5px">
+            <?php echo Core::inputImage('uploadAvatar', null, 1, date('Y'), -1); ?>
         </div>
-
-        <form id="member-profile" action="<?php echo Route::_('index.php?option=com_users'); ?>" method="post" class="com-users-profile__edit-form form-validate form-horizontal well" enctype="multipart/form-data">
+        <form id="profile-member" action="<?php echo Route::_('index.php?option=com_users&task=profile.save'); ?>" method="post" class="com-users-profile__edit-form form-validate form-horizontal well" enctype="multipart/form-data">
             <?php // Iterate through the form fieldsets and display each one. 
             ?>
             <?php foreach ($this->form->getFieldsets() as $group => $fieldset) : ?>
@@ -96,7 +95,7 @@ if (!empty($avatar_id)) {
                         <span class="icon-check" aria-hidden="true"></span>
                         <?php echo Text::_('Lưu'); ?>
                     </button>
-                    <button type="submit" class="btn btn-danger" name="task" value="profile.cancel" formnovalidate>
+                    <button class="btn btn-danger" name="task" value="profile.cancel" formnovalidate>
                         <span class="icon-times" aria-hidden="true"></span>
                         <?php echo Text::_('Hủy'); ?>
                     </button>

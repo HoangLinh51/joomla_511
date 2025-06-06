@@ -21,8 +21,8 @@ $app->getDocument()->getWebAssetManager()
     ->useScript('keepalive')
     ->useScript('field.passwordview');
 
-Text::script('JSHOWPASSWORD');
-Text::script('JHIDEPASSWORD');
+// Text::script('JSHOWPASSWORD');
+// Text::script('JHIDEPASSWORD');
 ?>
 <form id="login-form-<?php echo $module->id; ?>" class="mod-login" action="<?php echo Route::_('index.php', true); ?>" method="post">
 
@@ -79,19 +79,18 @@ Text::script('JHIDEPASSWORD');
             $dataAttributeKeys = array_filter(array_keys($button), function ($key) {
                 return substr($key, 0, 5) == 'data-';
             });
-            ?>
+        ?>
             <div class="mod-login__submit form-group">
                 <button type="button"
-                        class="btn btn-secondary w-100 <?php echo $button['class'] ?? '' ?>"
-                        <?php foreach ($dataAttributeKeys as $key) : ?>
-                            <?php echo $key ?>="<?php echo $button[$key] ?>"
-                        <?php endforeach; ?>
-                        <?php if ($button['onclick']) : ?>
-                        onclick="<?php echo $button['onclick'] ?>"
-                        <?php endif; ?>
-                        title="<?php echo Text::_($button['label']) ?>"
-                        id="<?php echo $button['id'] ?>"
-                        >
+                    class="btn btn-secondary w-100 <?php echo $button['class'] ?? '' ?>"
+                    <?php foreach ($dataAttributeKeys as $key) : ?>
+                    <?php echo $key ?>="<?php echo $button[$key] ?>"
+                    <?php endforeach; ?>
+                    <?php if ($button['onclick']) : ?>
+                    onclick="<?php echo $button['onclick'] ?>"
+                    <?php endif; ?>
+                    title="<?php echo Text::_($button['label']) ?>"
+                    id="<?php echo $button['id'] ?>">
                     <?php if (!empty($button['icon'])) : ?>
                         <span class="<?php echo $button['icon'] ?>"></span>
                     <?php elseif (!empty($button['image'])) : ?>
@@ -109,23 +108,23 @@ Text::script('JHIDEPASSWORD');
         </div>
 
         <?php
-            $usersConfig = ComponentHelper::getParams('com_users'); ?>
-            <ul class="mod-login__options list-unstyled">
-                <li>
-                    <a href="<?php echo Route::_('index.php?option=com_users&view=reset'); ?>">
+        $usersConfig = ComponentHelper::getParams('com_users'); ?>
+        <ul class="mod-login__options list-unstyled">
+            <li>
+                <a href="<?php echo Route::_('index.php?option=com_users&view=reset'); ?>">
                     <?php echo Text::_('MOD_LOGIN_FORGOT_YOUR_PASSWORD'); ?></a>
-                </li>
-                <li>
-                    <a href="<?php echo Route::_('index.php?option=com_users&view=remind'); ?>">
+            </li>
+            <li>
+                <a href="<?php echo Route::_('index.php?option=com_users&view=remind'); ?>">
                     <?php echo Text::_('MOD_LOGIN_FORGOT_YOUR_USERNAME'); ?></a>
-                </li>
-                <?php if ($usersConfig->get('allowUserRegistration')) : ?>
+            </li>
+            <?php if ($usersConfig->get('allowUserRegistration')) : ?>
                 <li>
                     <a href="<?php echo Route::_($registerLink); ?>">
-                    <?php echo Text::_('MOD_LOGIN_REGISTER'); ?> <span class="icon-register" aria-hidden="true"></span></a>
+                        <?php echo Text::_('MOD_LOGIN_REGISTER'); ?> <span class="icon-register" aria-hidden="true"></span></a>
                 </li>
-                <?php endif; ?>
-            </ul>
+            <?php endif; ?>
+        </ul>
         <input type="hidden" name="option" value="com_users">
         <input type="hidden" name="task" value="user.login">
         <input type="hidden" name="return" value="<?php echo $return; ?>">
