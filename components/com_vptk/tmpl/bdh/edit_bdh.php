@@ -1283,8 +1283,6 @@ $nhankhau = $item['nhankhau'];
             var $diachi = $('#modal_thuongtrucu_diachi');
             var tinhthanhVal = $(this).val();
 
-            // Hủy Select2 nếu đã khởi tạo
-
             if ($phuongxa.data('select2')) {
                 $phuongxa.select2('destroy');
             }

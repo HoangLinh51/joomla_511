@@ -9,7 +9,7 @@
  * @CopyRight             : Dnict                                            *
  ****************************************************************************/
 
-namespace Joomla\Component\VPTK\Site\View\Nhk;
+namespace Joomla\Component\VPTK\Site\View\Bdh;
 
 use Core;
 use Joomla\CMS\Factory;
@@ -55,8 +55,8 @@ class RawView extends BaseHtmlView
             case 'DETAIL':
                 $this->_getDetail();
                 break;
-            case 'DS_NHK':
-                $this->_pageNHK();
+            case 'DS_BDH':
+                $this->_pageBDH();
                 break;
             case 'DETAIL_NHK':
                 $this->_pageDetailNHK();
@@ -85,29 +85,25 @@ class RawView extends BaseHtmlView
         // $this->quatrinh_bienche = $quatrinh_bienche; 	
         parent::display();
     }
-    private function _pageNHK()
+    private function _pageBDH()
     {
-        $model = Core::model('Vptk/Vptk');
+        $model = Core::model('Vptk/Bdh');
         $app = Factory::getApplication()->input;
         $params = [
-            'phuongxa_id' => $app->getInt('phuongxa_id', 0),
+            'phuongxa_id' => $app->getInt('phuongxa_id', ''),
             'hoten' => $app->getString('hoten', ''),
-            'gioitinh_id' => $app->getInt('gioitinh_id', ''),
-            'is_tamtru' => $app->getInt('is_tamtru', ''),
-            'thonto_id' => $app->getInt('thonto_id', 0),
-            'hokhau_so' => $app->getString('hokhau_so', ''),
-            'cccd_so' => $app->getString('cccd_so', ''),
-            'diachi' => $app->getString('diachi', ''),
-
-            'daxoa' => $app->getInt('daxoa', 0)
+            'chucdanh_id' => $app->getInt('chucdanh_id', ''),
+            'tinhtrang_id' => $app->getInt('tinhtrang_id', ''),
+            'chucdanh_kn' => $app->getInt('chucdanh_kn', ''),
+            'chucdanh_id' => $app->getInt('chucdanh_id', ''),
         ];
-        // Thêm tham số phân trang
         $startFrom = $app->getInt('start', 0); // Lấy từ query string hoặc mặc định là 0
-        $perPage = 20; // Có thể lấy từ cấu hình hoặc query string
-        $rows = $model->getDanhsachNhanHoKhau($params, $startFrom, $perPage);
+        $perPage = 20;
+        $items = $model->getDanhSachBanDieuHanh($params,  $startFrom, $perPage);
         $countitems = $model->countitems($params);
-        $this->rows = $rows;
         $this->countitems = $countitems;
+
+        $this->items = $items;
         parent::display();
     }
     private function _pageDetailNHK()

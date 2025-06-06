@@ -3,7 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 
-class Vptk_Model_Vptk extends JModelLegacy
+class Vptk_Model_Bdh extends JModelLegacy
 {
 
     public function getTitle()
@@ -39,38 +39,32 @@ class Vptk_Model_Vptk extends JModelLegacy
             return $result;
         }
     }
-    public function getDanhsachNhanHoKhau($params = array(), $startFrom, $perPage = 100)
+    public function getDanhSachBanDieuHanh($params = array(), $startFrom, $perPage = 100)
     {
-        $phanquyen = $this->getPhanquyen();
         $db = Factory::getDbo();
+        $phanquyen = $this->getPhanquyen();
+
         $query = $db->getQuery(true);
+        $query->select('a.id,a.thonto_id,c.tenkhuvuc AS thonto,a.nhiemky_id,f.tennhiemky,b.hoten,a.chucdanh_id,a.id_llct,d.tenchucdanh,b.dienthoai,CONCAT_WS(" - ",DATE_FORMAT(a.ngaybatdau,"%d/%m/%Y"),DATE_FORMAT(a.ngayketthuc,"%d/%m/%Y")) AS thoigian,a.tinhtrang_id,e.tentinhtrang,a.lydoketthuc');
+        $query->from('vptk_bandieuhanh AS a');
+        $query->innerJoin('vptk_hokhau2nhankhau AS b ON a.nhankhau_id = b.id AND b.daxoa = 0');
+        $query->innerJoin('danhmuc_khuvuc AS c ON a.thonto_id = c.id');
+        $query->innerJoin('danhmuc_chucdanh AS d ON a.chucdanh_id = d.id');
+        // $query->innerJoin('danhmuc_lyluanchinhtri AS g ON a.id_llct = g.id');
 
-        $query->select('a.id,
-        a.hokhau_so,
-        DATE_FORMAT(a.hokhau_ngaycap,"%d/%m/%Y") AS hokhau_ngaycap,
-        b.hoten AS hotenchuho,
-        IF(b.gioitinh_id = 1, "Nam", IF(b.gioitinh_id = 2, "Nữ", "Không xác định")) as tengioitinh,
-        CONCAT(a.diachi, ", ", d.tenkhuvuc, ", ", c.tenkhuvuc) AS diachi, 
-        b.dienthoai,
-        DATE_FORMAT(b.ngaysinh,"%d/%m/%Y") AS namsinh');
-        $query->from('vptk_hokhau AS a');
-        $query->innerJoin('vptk_hokhau2nhankhau AS b ON b.quanhenhanthan_id = -1 AND b.daxoa = 0 AND a.id = b.hokhau_id');
-        $query->innerJoin('danhmuc_khuvuc AS c ON c.id = a.phuongxa_id');
-        $query->innerJoin('danhmuc_khuvuc AS d ON d.id = a.thonto_id');
+        $query->innerJoin('danhmuc_tinhtrang AS e ON a.tinhtrang_id = e.id');
+        $query->innerJoin('danhmuc_nhiemky AS f ON a.nhiemky_id = f.id AND f.daxoa = 0');
+        if ($params['daxoa'] == '1') {
+            $query->where('a.daxoa = 1');
+        } else {
+            $query->where('a.daxoa = 0');
+        }
+        if ($params['hoten'] != '') {
+            $query->where('b.hoten LIKE ' . $db->quote('%' . $params['hoten'] . '%'));
+        }
 
-
-        if (!empty($params['hokhau_so'])) {
-            $query->where('a.hokhau_so = ' . $db->quote($params['hokhau_so']));
-        }
-        if (!empty($params['hoten'])) {
-            $hoten = $db->quote('%' . $params['hoten'] . '%');
-            $query->where('b.hoten LIKE ' . $hoten);
-        }
-        if (!empty($params['gioitinh_id'])) {
-            $query->where('b.gioitinh_id = ' . $db->quote($params['gioitinh_id']));
-        }
-        if (!empty($params['is_tamtru'])) {
-            $query->where('b.is_tamtru = ' . $db->quote($params['is_tamtru']));
+        if (!empty($params['chucdanh_id'])) {
+            $query->where('a.chucdanh_id = ' . $db->quote($params['chucdanh_id']));
         }
         if (!empty($params['thonto_id'])) {
             $query->where('a.thonto_id = ' . $db->quote($params['thonto_id']));
@@ -80,50 +74,49 @@ class Vptk_Model_Vptk extends JModelLegacy
         } elseif ($phanquyen['phuongxa_id'] != '-1') {
             $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
         }
-        if (isset($params['daxoa']) && $params['daxoa'] == '1') {
-            $query->where('a.daxoa = 1');
-        } else {
-            $query->where('a.daxoa = 0');
-        }
-        if (!empty($params['cccd_so'])) {
-            $query->where('b.cccd_so = ' . $db->quote($params['cccd_so']));
-        }
 
-        if (!empty($params['diachi'])) {
-            $diachi = $db->quote('%' . $params['diachi'] . '%');
-            $query->where('a.diachi LIKE ' . $diachi);
+        $phanquyen = $this->getPhanquyen();
+        if ($params['phuongxa_id'] == '' && $phanquyen['phuongxa_id'] != '-1') {
+            $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
         }
+        $query->order('c.tenkhuvuc ASC,f.tungay DESC,d.sapxep ASC,b.hoten ASC,a.ngaybatdau DESC');
         if ($startFrom !== null) {
             $query->order('id ASC')->setLimit($perPage, $startFrom);
         } else {
             $query->order('id ASC')->setLimit($perPage, 0);
         }
-
-        // Debug query
-        // echo $query->dump();
-        // exit;
-
         $db->setQuery($query);
-        try {
-            return $db->loadAssocList();
-        } catch (Exception $e) {
-            Factory::getApplication()->enqueueMessage('SQL Error: ' . $e->getMessage(), 'error');
-            return [];
+        // echo $query; 
+        $rows = $db->loadAssocList();
+        for ($i = 0, $n = count($rows); $i < $n; $i++) {
+            $row = $rows[$i];
+            // $result['thonto'][] = $row;
+            $result[$row['thonto']][$row['tennhiemky']][] = $row;
+            if ($row['thonto_id'] != $rows[$i - 1]['thonto_id']) {
+                $result[$row['thonto']][$row['tennhiemky']][0]['rowskhuvuc'] = 1;
+            } else {
+                $result[$row['thonto']][$row['tennhiemky']][0]['rowskhuvuc'] += 1;
+            }
         }
+        // var_dump($result);exit;
+        return $result;
     }
+
     public function countitems($params = array())
     {
         $phanquyen = $this->getPhanquyen();
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
 
-        $query->select('COUNT(*) AS tongnhankhau');
-        $query->from('vptk_hokhau AS a');
+        $query->select('COUNT(*) AS tongbandieudanh');
+        $query->from('vptk_bandieuhanh AS a');
+        $query->innerJoin('vptk_hokhau2nhankhau AS b ON a.nhankhau_id = b.id AND b.daxoa = 0');
 
         if (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
             $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
         }
         $query->where('a.daxoa = 0');
+        // echo $query
         $db->setQuery($query);
         return $db->loadAssocList();
     }
