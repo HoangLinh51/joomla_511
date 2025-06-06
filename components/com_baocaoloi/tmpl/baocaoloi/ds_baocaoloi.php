@@ -120,7 +120,7 @@ defined('_JEXEC') or die('Restricted access');
       <td style="vertical-align:middle;">${item.content || ''}</td>
       <td style="vertical-align:middle;" class="text-center">${renderStatus(item.status)}</td>
     </tr>
-  `).join('');
+    `).join('');
   }
 
   function renderPagination(currentPage, totalPages, totalRecord, take) {

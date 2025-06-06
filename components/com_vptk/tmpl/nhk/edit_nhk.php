@@ -20,8 +20,8 @@ $nhankhau = $item['nhankhau'];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 </meta>
 <form id="frmNhanhokhau" name="frmNhanhokhau" method="post" action="index.php?option=com_vptk&controller=vptk&task=saveNhanhokhau">
-    <div class="container-fluid" style="padding-left:20px; padding-right:20px;">
-        <h2 class="mb-3 text-primary" style="margin-bottom: 0 !important;line-height:2">
+    <div class="container-fluid px-3">
+        <h2 class="mb-0 text-primary" style="line-height:2">
             <?php echo ((int)$item['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin nhân, hộ khẩu
             <span class="float-right">
                 <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>

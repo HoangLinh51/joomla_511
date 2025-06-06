@@ -81,15 +81,23 @@ class RawView extends BaseHtmlView
         echo '      <h6 class="text-muted">Nội dung:</h6>';
         echo '      <p>' . nl2br(htmlspecialchars($detail->noidung)) . '</p>';
         echo '    </div>';
+
         if (!empty($detail->vanban) && is_array($detail->vanban)) {
             echo '    <div class="mb-4">';
             echo '      <h6 class="text-muted">Văn bản đính kèm:</h6>';
             echo '      <div class="d-flex flex-column">';
             foreach ($detail->vanban as $vanban) {
-                echo '        <a href="/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' .
-                    urlencode($vanban->nam) . '&code=' . urlencode($vanban->code) . '" target="_blank">';
-                echo              htmlspecialchars($vanban->filename);
-                echo '        </a>';
+                if ($vanban['type'] === 'application/pdf') {
+                    echo '        <a href="/index.php?option=com_thongbao&view=thongbao&format=raw&task=viewpdf&file=' .
+                        urlencode($vanban['code']) . '" target="_blank">';
+                    echo              htmlspecialchars($vanban['filename']);
+                    echo '        </a>';
+                } else {
+                    echo '        <a href="/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' .
+                        urlencode($vanban['nam']) . '&code=' . urlencode($vanban['code']) . '" target="_blank">';
+                    echo              htmlspecialchars($vanban['filename']);
+                    echo '        </a>';
+                }
             }
             echo '      </div>';
             echo '    </div>';
@@ -113,7 +121,7 @@ class RawView extends BaseHtmlView
     public function viewpdf()
     {
         $file = $_GET['file'];
-        $filePath = JPATH_ROOT . '/upload/2025/5/' . basename($file); // đảm bảo chống path traversal
+        $filePath = JPATH_ROOT . '/upload/2025/6/' . basename($file); // đảm bảo chống path traversal
 
         if (file_exists($filePath)) {
             header('Content-Type: application/pdf');

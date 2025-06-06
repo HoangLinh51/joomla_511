@@ -60,13 +60,6 @@ $item = $this->item;
         <?php endif; ?>
       </div>
 
-      <?php if ($item->id > 0): ?>
-        <h5>Thông tin hệ thống</h5>
-        <p><strong>Người tạo:</strong> <?= htmlspecialchars($item->name) ?></p>
-        <p><strong>Ngày tạo mới:</strong> <?= htmlspecialchars($item->ngay_tao) ?></p>
-        <p><strong>Email người tạo:</strong> <?= htmlspecialchars($item->email) ?></p>
-      <?php endif ?>
-
       <input type="hidden" name="id" value="<?= (int)$item->id ?>">
       <?php echo HTMLHelper::_('form.token'); ?>
     </form>
