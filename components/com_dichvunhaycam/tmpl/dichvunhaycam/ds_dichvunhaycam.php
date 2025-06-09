@@ -101,9 +101,9 @@ defined('_JEXEC') or die('Restricted access');
           <th style="vertical-align: middle" class="text-center text-dark">STT</th>
           <th style="vertical-align: middle" class="text-center text-dark">Tên cơ sở</th>
           <th style="vertical-align: middle" class="text-center text-dark">Địa chỉ</th>
-          <th style="vertical-align: middle; min-width: 175px" class="text-center text-dark">Thông tin chủ cơ sở</th>
-          <th style="vertical-align: middle; min-width: 140px" class="text-center text-dark">Trạng thái</th>
-          <th style="vertical-align: middle; min-width: 125px;" class="text-center text-dark">Chức năng </th>
+          <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center text-dark">Thông tin chủ cơ sở</th>
+          <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Trạng thái</th>
+          <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center text-dark">Chức năng </th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
@@ -169,14 +169,13 @@ defined('_JEXEC') or die('Restricted access');
     `).join('');
   }
 
-  
   function renderStatus(status) {
-    if(status === "Đang hoạt động"){
+    if (status === "Đang hoạt động") {
       return `<span class="text-success">${status}</span>`;
-    }else if(status === "Đang xây dựng"){
+    } else if (status === "Đang xây dựng") {
       return `<span class="text-warning">${status}</span>`;
       return '<span class="text-warning"></span>';
-    } else if(status === "Tạm ngưng hoạt động"){
+    } else if (status === "Tạm ngưng hoạt động") {
       return `<span class="text-danger">${status}</span>`;
     }
   }
@@ -305,11 +304,11 @@ defined('_JEXEC') or die('Restricted access');
       autoclose: true,
       language: 'vi'
     });
-    
-		$('body').delegate('.btn_hieuchinh', 'click', function() {
-			window.location.href = '/index.php?option=com_dichvunhaycam&view=dichvunhaycam&task=edit_dichvunhaycam&id=' + $(this).data('idcoso');
-		});
-    
+
+    $('body').delegate('.btn_hieuchinh', 'click', function() {
+      window.location.href = '/index.php?option=com_dichvunhaycam&view=dichvunhaycam&task=edit_dichvunhaycam&id=' + $(this).data('idcoso');
+    });
+
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
       loadData(1, getFilterParams());
@@ -362,7 +361,7 @@ defined('_JEXEC') or die('Restricted access');
           })
         });
         const data = await response.json();
-        showToast(data.message || 'Xóa thành công', 'success');
+        showToast(data.message || 'Xóa cơ sở thành công', 'success');
         if (data.success !== false) {
           setTimeout(() => {
             window.location.href = '/index.php/component/dichvunhaycam/?view=dichvunhaycam';
@@ -374,26 +373,26 @@ defined('_JEXEC') or die('Restricted access');
       }
     });
 
-		$('#btn_xuatexcel').on('click', function() {
-			let params = {
-				option: 'com_dichvunhaycam',
-				controller: 'dichvunhaycam',
-				task: 'exportExcel',
-				tenchucoso: $('#tenchucoso').val() || '',
-				tencoso: $('#tencoso').val() || '',
-				ngaybatdau: $('#batdau').val() || '',
-				ngayketthuc: $('#ketthuc').val() || '',
-				trangthai_id: $('#trangthai_id').val() || '',
-				phuongxa_id: $('#phuongxa_id').val() || '',
-				thonto_id: $('#thonto_id').val() || '',
-				daxoa: 0,
-				[Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
-			};
+    $('#btn_xuatexcel').on('click', function() {
+      let params = {
+        option: 'com_dichvunhaycam',
+        controller: 'dichvunhaycam',
+        task: 'exportExcel',
+        tenchucoso: $('#tenchucoso').val() || '',
+        tencoso: $('#tencoso').val() || '',
+        ngaybatdau: $('#batdau').val() || '',
+        ngayketthuc: $('#ketthuc').val() || '',
+        trangthai_id: $('#trangthai_id').val() || '',
+        phuongxa_id: $('#phuongxa_id').val() || '',
+        thonto_id: $('#thonto_id').val() || '',
+        daxoa: 0,
+        [Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
+      };
 
-			// Tạo URL đúng
-			let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
-			window.location.href = url;
-		});
+      // Tạo URL đúng
+      let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+      window.location.href = url;
+    });
 
     // Reset search handler
     $('.un-collapsed-card[data-action="reload"]').on('click', function(e) {

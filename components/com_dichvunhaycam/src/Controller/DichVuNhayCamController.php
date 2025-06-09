@@ -121,7 +121,7 @@ class DichVuNhayCamController extends BaseController
             "dienthoai_nhanvien",
             "diachi_nhanvien",
             "tinhtrang_cutru_nhanvien",
-            "trangthai"
+            "trangthai_nhanvien"
         ];
 
         // Kiểm tra có dữ liệu nhân viên không

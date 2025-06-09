@@ -215,7 +215,7 @@ class DichVuNhayCam_Model_DichVuNhayCam extends BaseDatabaseModel
         'id' => $coso->id,
         'coso_ten' => $coso->coso_ten,
         'coso_diachi' => $coso->coso_diachi,
-        'ngaykhaosat' => $coso->ngaykhaosat,
+        'ngaykhaosat' => date('d/m/Y', strtotime($coso->ngaykhaosat)),
         'phuongxa_id' => $coso->phuongxa_id,
         'thonto_id' => $coso->thonto_id,
         'trangthaihoatdong_id' => $coso->trangthaihoatdong_id,
@@ -248,7 +248,6 @@ class DichVuNhayCam_Model_DichVuNhayCam extends BaseDatabaseModel
       ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
       ->leftJoin($db->quoteName('danhmuc_gioitinh', 'dg') . ' ON nk.gioitinh_id = dg.id')
       ->where('nk.daxoa = 0')
-      ->where('nk.hokhau_id > 0')
       ->where('hk.daxoa = 0')
       ->where('TIMESTAMPDIFF(YEAR, nk.ngaysinh, CURDATE()) >= 18')
       ->order('nk.hokhau_id DESC');
@@ -309,7 +308,7 @@ class DichVuNhayCam_Model_DichVuNhayCam extends BaseDatabaseModel
       'data' => $rows,
       'page' => $page,
       'take' => $take,
-      'totalrecord' => $totalRecord
+      'totalrecord' => $totalRecord,
     ];
   }
 
@@ -361,7 +360,7 @@ class DichVuNhayCam_Model_DichVuNhayCam extends BaseDatabaseModel
       return $id;
     } catch (\RuntimeException $e) {
       $db->transactionRollback();
-      throw new \RuntimeException('Không thể lưu dữ liệu. Vui lòng thử lại sau.', 500);
+      throw new \RuntimeException($e->getMessage(), 500);
     }
   }
 
@@ -378,68 +377,48 @@ class DichVuNhayCam_Model_DichVuNhayCam extends BaseDatabaseModel
   }
 
   //sau khi hàm lưu dvnc chạy thì lưu user
-  private function saveNhanVien($db, $dsNhanVien, $idUser, $id, $now)
+  public function saveNhanVien($db, $nhanviens, $idUser, $coso_id, $now)
   {
-    $nhanVienIds = array_filter(array_column($dsNhanVien, 'id_nhanvien'), 'is_numeric');
-    $existingPairs = [];
-    if (!empty($nhanVienIds)) {
-      $queryCheck = $db->getQuery(true)
-        ->select($db->quoteName(['nhankhau_id', 'cosonhaycam_id']))
-        ->from($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
-        ->where($db->quoteName('cosonhaycam_id') . ' = ' . (int) $id)
-        ->where($db->quoteName('nhankhau_id') . ' IN (' . implode(',', array_map('intval', $nhanVienIds)) . ')');
-      $db->setQuery($queryCheck);
-      $existingPairs = $db->loadAssocList('nhankhau_id');
-    }
+    // Xoá tất cả nhân viên cũ của cơ sở
+    $query = $db->getQuery(true)
+      ->delete($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
+      ->where($db->quoteName('cosonhaycam_id') . ' = ' . (int) $coso_id);
+    $db->setQuery($query)->execute();
 
-    $insertQueries = [];
-    $updateQueries = [];
-    foreach ($dsNhanVien as $nv) {
-      $idNhanVien = (int) ($nv['id_nhanvien'] ?? 0);
-      if ($idNhanVien == 0 && empty($nv['hoten_nhanvien']) && empty($nv['cccd']) && empty($nv['trangthai'])) {
-        continue;
+    // Chèn lại danh sách nhân viên
+    foreach ($nhanviens as $nv) {
+      $idNhanVien = (int)($nv['id_nhanvien'] ?? 0);
+      $hoten = trim($nv['hoten_nhanvien'] ?? '');
+      $cccd = trim($nv['cccd_nhanvien'] ?? '');
+
+      if ($idNhanVien === 0 && $hoten === '' && $cccd === '' ) {
+        continue; // Bỏ qua bản ghi rỗng
       }
 
-      $nvData = [
-        'tennhanvien' => $nv['hoten_nhanvien'] ?? '',
-        'gioitinh_id' => ($nv['gioitinh_nhanvien'] === 'Nam' ? 1 : 2),
-        'cccd' => $nv['cccd_nhanvien'] ?? '',
+      $columns = [
+        'cosonhaycam_id' => (int)$coso_id,
+        'tennhanvien' => $hoten,
+        'nhankhau_id' => $idNhanVien,
+        'gioitinh_id' => (int)($nv['gioitinh_nhanvien'] ?? 0),
+        'cccd' => $cccd,
         'dienthoai' => $nv['dienthoai_nhanvien'] ?? '',
-        'is_thuongtru' => (int) ($nv['tinhtrang_cutru_nhanvien'] ?? 0),
         'diachi' => $nv['diachi_nhanvien'] ?? '',
-        'trangthai' => (int) ($nv['trangthai'] ?? 0),
-        'daxoa' => 0,
-        'nguoitao_id' => $idUser,
+        'is_thuongtru' => (int)($nv['tinhtrang_cutru_nhanvien'] ?? 0),
+        'trangthai' => (int)($nv['trangthai_nhanvien'] ?? 0),
+        'nguoitao_id' => (int)$idUser,
         'ngaytao' => $now,
-        'cosonhaycam_id' => (int) $id,
-        'nhankhau_id' => $idNhanVien
+        'daxoa' => 0,
       ];
 
-      if (isset($existingPairs[$idNhanVien])) {
-        $query = $db->getQuery(true)
-          ->update($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
-          ->set($this->buildQuerySet($db, $nvData, ['cosonhaycam_id', 'nhankhau_id']))
-          ->where([
-            $db->quoteName('cosonhaycam_id') . ' = ' . (int) $id,
-            $db->quoteName('nhankhau_id') . ' = ' . (int) $idNhanVien
-          ]);
-        $updateQueries[] = ['query' => $query];
-      } else {
-        $query = $db->getQuery(true)
-          ->insert($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
-          ->columns(array_keys($nvData))
-          ->values(implode(',', array_map([$db, 'quote'], array_values($nvData))));
-        $insertQueries[] = ['query' => $query];
-      }
-    }
-
-    foreach ($insertQueries as $q) {
-      $db->setQuery($q['query'])->execute();
-    }
-    foreach ($updateQueries as $q) {
-      $db->setQuery($q['query'])->execute();
+      $query = $db->getQuery(true)
+        ->insert($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
+        ->columns(array_keys($columns))
+        ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
+      $db->setQuery($query)->execute();
     }
   }
+
+
 
   //xóa cơ sở dịch vụ nhạy cảm
   public function deleteDichVuNhayCam($idUser, $idDichVuNhayCam)

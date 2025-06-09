@@ -106,7 +106,7 @@ $nhankhau = $item['nhankhau'];
         <h3 style="padding-left:15px ;" class="mb-0 fw-bold">Thông tin nhân khẩu
 
             <span class="float-right">
-                <button type="button" class="btn btn-primary" id="btn_themnhankhau" data-toggle="modal" data-target="#modalNhankhau"><i class="fas fa-plus"></i> Thêm nhân khẩu</button>
+                <button type="button" class="btn btn-primary" id="btn_themnhankhau" data-bs-toggle="modal" data-bs-target="#modalNhankhau"><i class="fas fa-plus"></i> Thêm nhân khẩu</button>
             </span>
         </h3>
         <div style="padding-left: 10px;" class="table-responsive">
@@ -224,12 +224,14 @@ $nhankhau = $item['nhankhau'];
 </form>
 
 <!-- Modal Nhân Khẩu -->
-<div class="modal fade" id="modalNhankhau" tabindex="-1" role="dialog" aria-labelledby="modalNhankhauLabel" aria-hidden="true">
+
+<!-- <div class="modal fade" id="modalThemNhanVien" tabindex="-1" aria-labelledby="modalThemNhanVienLabel" aria-hidden="true"> -->
+<div class="modal fade" id="modalNhankhau" tabindex="-1" aria-labelledby="modalNhankhauLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalNhankhauLabel">Thêm Nhân Khẩu</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -500,12 +502,11 @@ $nhankhau = $item['nhankhau'];
                                 <input type="hidden" id="modal_tinhtang" value="Chưa xác thực">
                             </div>
                         </div>
-
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
             </div>
         </div>

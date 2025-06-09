@@ -17,7 +17,6 @@ $detaiCoSo = $this->detailCoSo;
       <span class="float-right">
         <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>
         <button type="submit" id="btn_luu" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
-
       </span>
     </h2>
     <table class="table w-100" style="margin-bottom: 15px;" id="tblThongtin">
@@ -32,11 +31,10 @@ $detaiCoSo = $this->detailCoSo;
           <td class="input-thongtin">
             <strong>Tên cơ sở <span class="text-danger">*</span></strong>
             <input type="text" name="tencoso" value="<?php echo htmlspecialchars($detaiCoSo->coso_ten); ?>" class="form-control" placeholder="Nhập tên cơ sở">
-            <label for="tencoso" class="error"></label>
           </td>
           <td class="input-thongtin">
             <strong>Phường xã <span class="text-danger">*</span></strong>
-            <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn phường/xã">
+            <select id="phuongxa_id" name="phuongxa_id" class="custom-select select2" data-placeholder="Chọn phường/xã">
               <option value=""></option>
               <?php if (is_array($this->phuongxa) && count($this->phuongxa) == 1) { ?>
                 <option value="<?php echo $this->phuongxa[0]['id']; ?>" selected><?php echo htmlspecialchars($this->phuongxa[0]['tenkhuvuc']); ?></option>
@@ -46,21 +44,18 @@ $detaiCoSo = $this->detailCoSo;
                 <?php } ?>
               <?php } ?>
             </select>
-            <label for="phuongxa_id" class="error"></label>
           </td>
           <td class="input-thongtin">
             <strong>Thôn tổ <span class="text-danger">*</span></strong>
-            <select id="thonto_id" name="thonto_id" class="custom-select" data-placeholder="Chọn thôn/tổ" style="width: 67%;">
+            <select id="thonto_id" name="thonto_id" class="custom-select select2" data-placeholder="Chọn thôn/tổ" style="width: 67%;">
               <option value=""></option>
             </select>
-            <label for="thonto_id" class="error"></label>
           </td>
         </tr>
         <tr class="mb-3">
           <td class="input-thongtin">
             <strong>Địa chỉ <span class="text-danger">*</span></strong>
             <input type="text" name="diachi" value="<?php echo htmlspecialchars($detaiCoSo->coso_diachi); ?>" class="form-control" placeholder="Nhập địa chỉ cơ sở">
-            <label for="diachi" class="error"></label>
           </td>
           <td class="input-thongtin">
             <strong>Ngày khảo sát <span class="text-danger">*</span></strong>
@@ -68,11 +63,10 @@ $detaiCoSo = $this->detailCoSo;
               <input type="text" id="ngaykhaosat" name="ngaykhaosat" class="form-control date-picker" value="<?php echo htmlspecialchars($detaiCoSo->ngaykhaosat); ?>" placeholder="dd/mm/yyyy">
               <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
             </div>
-            <label for="ngaykhaosat" class="error"></label>
           </td>
           <td class="input-thongtin">
             <strong>Trạng thái <span class="text-danger">*</span></strong>
-            <select id="idTrangthai" name="idTrangthai" class="custom-select" data-placeholder="Chọn phường/xã">
+            <select id="trangthai_id" name="trangthai_id" class="custom-select select2" data-placeholder="Chọn trạng thái">
               <option value=""></option>
               <?php if (is_array($this->trangthaihoatdong) && count($this->trangthaihoatdong) == 1) { ?>
                 <option value="<?php echo $this->trangthaihoatdong[0]['id']; ?>" selected>
@@ -86,7 +80,6 @@ $detaiCoSo = $this->detailCoSo;
                 <?php } ?>
               <?php } ?>
             </select>
-            <label for="idTrangthai" class="error"></label>
           </td>
         </tr>
 
@@ -100,7 +93,6 @@ $detaiCoSo = $this->detailCoSo;
           <td class="input-thongtin">
             <strong>Họ tên <span class="text-danger">*</span></strong>
             <input type="text" id="hoten_chucoso" name="hoten_chucoso" class="form-control" value="<?php echo htmlspecialchars($detaiCoSo->chucoso_ten); ?>" placeholder="Nhập họ tên chủ cơ sở">
-            <label for="hoten_chucoso" class="error"></label>
           </td>
           <td class="input-thongtin">
             <strong>CMND/CCCD</strong>
@@ -124,19 +116,17 @@ $detaiCoSo = $this->detailCoSo;
         <thead>
           <tr class="bg-primary text-white">
             <th class="align-middle text-center" style="width: 80px;"></th>
-            <th class="align-middle text-center" style="min-width: 170px;">Họ tên</th>
+            <th class="align-middle text-center" style="min-width: 230px;">Họ tên</th>
             <th class="align-middle text-center" style="min-width: 115px;">Giới tính</th>
-            <th class="align-middle text-center" style="min-width: 150px;">CMND/CCCD</th>
+            <th class="align-middle text-center" style="min-width: 170px;">CMND/CCCD</th>
             <th class="align-middle text-center" style="min-width: 150px;">Điện thoại</th>
-            <th class="align-middle text-center" style="min-width: 200px;">Địa chỉ</th>
+            <th class="align-middle text-center" style="min-width: 250px;">Địa chỉ</th>
             <th class="align-middle text-center" style="min-width: 150px;">Tình trạng</th>
-            <th class="align-middle text-center" style="min-width: 145px;">Trạng thái</th>
+            <th class="align-middle text-center" style="min-width: 175px;">Trạng thái</th>
             <th class="align-middle text-center" style="min-width: 115px;">Chức năng</th>
           </tr>
         </thead>
         <tbody>
-
-
         </tbody>
       </table>
     </div>
@@ -151,27 +141,30 @@ $detaiCoSo = $this->detailCoSo;
   <?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
-<div class="modal fade" id="modalThemNhanVien" tabindex="-1" role="dialog" aria-labelledby="modalThemNhanVienLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal modal-right fade" id="modalThemNhanVien" tabindex="-1" aria-labelledby="modalThemNhanVienLabel">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalThemNhanVienLabel">Tìm nhân khẩu</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
       <div class="modal-body">
         <form action="<?= Route::_('index.php?option=com_dichvunhaycam&task=dichvunhaycam.timkiem_nhankhau') ?>" id="frmmodalThemNhanVien" name="frmmodalThemNhanVien" method="post">
-          <div class="d-flex align-items-center flex-column">
+          <div class="d-flex flex-column">
             <div class="d-flex justify-content-between mb-3" style="gap:20px">
-              <div class="input-thongtin">
+              <div class="input-thongtin" style="width: 100%">
                 <strong>Họ và tên nhân khẩu</strong>
                 <input type="text" name="modal_tennhankhau" class="form-control" placeholder="Nhập họ và tên nhân khẩu">
               </div>
-              <div class="input-thongtin">
+              <div class="input-thongtin" style="width: 100%">
                 <strong>CMND/CCCD</strong>
                 <input type="text" name="modal_cccd" class="form-control" placeholder="Nhập số CMND/CCCD">
               </div>
             </div>
             <div class="d-flex justify-content-between mb-3" style="gap:20px">
-              <div class="input-thongtin">
+              <div class="input-thongtin" style="width: 100%">
                 <strong>Phường xã</strong>
                 <select id="modal_phuongxaid" name="modal_phuongxaid" class="custom-select" data-placeholder="Chọn xã/phường" style="width: 67%;">
                   <option value=""></option>
@@ -180,14 +173,16 @@ $detaiCoSo = $this->detailCoSo;
                   <?php } ?>
                 </select>
               </div>
-              <div class="input-thongtin">
+              <div class="input-thongtin" style="width: 100%">
                 <strong>Thôn tổ</strong>
                 <select id="modal_thontoid" name="modal_thontoid" class="custom-select" data-placeholder="Chọn thôn/tổ" style="width: 67%;">
                   <option value=""></option>
                 </select>
               </div>
             </div>
-            <button type="submit" class="btn btn-primary btn_timkiemnhankhau">Tìm kiếm</button>
+            <div class="d-flex align-item-center justify-content-center ">
+              <button type="submit" class="btn btn-primary btn_timkiemnhankhau">Tìm kiếm</button>
+            </div>
           </div>
         </form>
         <h5 class="modal-title">Danh sách nhân khẩu</h5>
@@ -196,11 +191,11 @@ $detaiCoSo = $this->detailCoSo;
             <thead>
               <tr class="bg-primary text-white">
                 <th class="align-middle text-center" style="min-width: 45px;"></th>
-                <th class="align-middle text-center" style="min-width: 170px;">Họ tên</th>
-                <th class="align-middle text-center" style="min-width: 110px;">Giới tính</th>
-                <th class="align-middle text-center" style="min-width: 140px;">CMND/CCCD</th>
-                <th class="align-middle text-center" style="min-width: 140px;">Điện thoại</th>
-                <th class="align-middle text-center" style="min-width: 220px;">Địa chỉ</th>
+                <th class="align-middle text-center" style="min-width: 165px;">Họ tên</th>
+                <th class="align-middle text-center" style="min-width: 100px;">Giới tính</th>
+                <th class="align-middle text-center" style="min-width: 135px;">CMND/CCCD</th>
+                <th class="align-middle text-center" style="min-width: 130px;">Điện thoại</th>
+                <th class="align-middle text-center" style="min-width: 200px;">Địa chỉ</th>
                 <th class="align-middle text-center" style="min-width: 162px;">Tình trạng cư trú</th>
               </tr>
             </thead>
@@ -214,8 +209,7 @@ $detaiCoSo = $this->detailCoSo;
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-        <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Thêm nhân viên</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
       </div>
     </div>
   </div>
@@ -226,25 +220,46 @@ $detaiCoSo = $this->detailCoSo;
   const phuongxa_id = <?= json_encode($detaiCoSo->phuongxa_id ?? 0) ?>;
   const thonto_id = <?= json_encode($detaiCoSo->thonto_id ?? 0) ?>;
 
+  let $activeNhanVienRow = null;
   $(document).ready(function() {
     $('.date-picker').datepicker({
       autoclose: true,
       language: 'vi'
     });
 
+    //khởi tạo select 2 của phường/xã, thôn/tổ, trạng thái, phường/xã và thôn/tổ bên trong modal
+    $('#phuongxa_id, #thonto_id, #trangthai_id, #modal_phuongxaid, #modal_thontoid').select2({
+      placeholder() {
+        return $(this).data('placeholder');
+      },
+      allowClear: true,
+      width: '100%'
+    });
+
     $.validator.addMethod('select2', value => value !== '', 'Vui lòng chọn một giá trị');
+
+    $('#phuongxa_id, #thonto_id, #ngaykhaosat, #trangthai_id').on('change', function() {
+      $(this).valid(); // Gọi validate lại field này
+    });
 
     $('#btn_quaylai').click(() =>
       window.location.href = '<?php echo Route::_('/index.php/component/dichvunhaycam/?view=dichvunhaycam&task=default'); ?>'
     );
 
-    $('#btn_themnhanvien').click(() => $('#tblDanhsach tbody').append(renderEmployee()));
+    $('#btn_themnhanvien').click(() => {
+      const $newRow = $(renderNhanVien());
+      $('#tblDanhsach tbody').append($newRow);
+
+      // Nếu checkbox trong dòng mới đang được check thì disable input tương ứng
+      const $checkbox = $newRow.find('.lock-user');
+      const isLocked = $checkbox.is(':checked');
+
+      applyLockState($newRow, isLocked);
+    });
     $('#tblDanhsach').on('click', '.btn-huy', function() {
       $(this).closest('tr').remove();
     });
 
-    // Render danh sách nhân viên
-    nhanviens.forEach(nv => $('#tblDanhsach tbody').append(renderEmployee(formatNhanVien(nv))));
     // Gán phường/xã nếu có
     if (phuongxa_id) {
       $('#phuongxa_id').val(phuongxa_id);
@@ -258,25 +273,23 @@ $detaiCoSo = $this->detailCoSo;
         fetchKhuVuc($(this).val(), '#modal_thontoid');
       }
     });
-    // Sự kiện
 
+    $(document).on('click', '[id^="btn_timnhankhau-"]', function() {
+      // Ghi nhớ dòng đang click để sau này dùng lại
+      $activeNhanVienRow = $(this).closest('tr');
+    });
+
+    //hành động chuyển trang khi đang tìm nhân khẩu
     $('#modalThemNhanVien').on('click', '#paginationContainer .page-link', function(e) {
       e.preventDefault();
       if ($(this).parent().hasClass('disabled')) return;
       const page = parseInt($(this).data('page'), 10);
       if (!page || isNaN(page)) return;
 
-      timKiemNhanKhau(page); // Gọi lại ajax với trang mới
+      timKiemNhanKhau(page);
     });
 
-    $('#phuongxa_id, #thonto_id, #idTrangthai, #modal_phuongxaid, #modal_thontoid').select2({
-      placeholder() {
-        return $(this).data('placeholder');
-      },
-      allowClear: true,
-      width: '100%'
-    });
-
+    //sự kiện khi chọn phường xã sẽ render thôn tổ theo phường xã
     $('#phuongxa_id').on('change', function() {
       const val = $(this).val();
       $('#thonto_id').html('<option value=""></option>').trigger('change');
@@ -285,37 +298,94 @@ $detaiCoSo = $this->detailCoSo;
 
     $('#frmmodalThemNhanVien').submit(function(e) {
       e.preventDefault();
-      timKiemNhanKhau(1); // Luôn tìm từ trang 1
+      timKiemNhanKhau(1);
     });
 
-    // Lưu nhân viên đã chọn
-    $('#btn_luu_nhankhau').click(() => {
-      $('#tblDanhSachNhanKhau tbody input.checkNhanVien:checked').each(function() {
-        const $row = $(this).closest('tr');
-        const rowData = {
-          id: $(this).val(),
-          hoten: $row.find('td').eq(1).text().trim(),
-          gioitinh: $row.find('td').eq(2).text().trim(),
-          cccd: $row.find('td').eq(3).text().trim(),
-          dienthoai: $row.find('td').eq(4).text().trim(),
-          diachi: $row.find('td').eq(5).text().trim(),
-          tinhtrang: $row.find('td').eq(6).text().trim() === 'Thường trú' ? '0' : '1',
-          trangthai: '1'
-        };
+    // in nhân viên đã chọn ra bên ngoài modal
+    $(document).on('click', '#btn_luu_nhankhau', function() {
+      const $row = $(this).closest('tr'); // Dòng trong modal
 
-        let $targetRow = $('#tblDanhsach tbody tr.input-row').filter(function() {
+      let tinhtrangcutru = '';
+      if ($row.find('td:eq(6)').text().trim() === 'Thường trú') {
+        tinhtrangcutru = '0';
+      } else if ($row.find('td:eq(6)').text().trim() === 'Tạm trú') {
+        tinhtrangcutru = '1';
+      }
+
+      const nhankhau = {
+        id: $(this).val(),
+        hoten: $row.find('td:eq(1)').text().trim(),
+        gioitinh: $row.find('td:eq(2)').text().trim(),
+        cccd: $row.find('td:eq(3)').text().trim(),
+        dienthoai: $row.find('td:eq(4)').text().trim(),
+        diachi: $row.find('td:eq(5)').text().trim(),
+        tinhtrang: tinhtrangcutru
+      };
+
+      const $tbody = $('#tblDanhsach tbody');
+
+      // Kiểm tra trùng ID (trừ dòng đang chọn)
+      if ($tbody.find(`tr.input-row[data-id="${nhankhau.id}"]`).not($activeNhanVienRow).length > 0) {
+        alert('Nhân khẩu này đã được thêm.');
+        return;
+      }
+
+      let $targetRow;
+
+      if ($activeNhanVienRow && $activeNhanVienRow.find('input[name="id_nhanvien[]"]').val()) {
+        // Nếu dòng đã có ID → cập nhật dữ liệu
+        $targetRow = $activeNhanVienRow;
+      } else {
+        // Nếu dòng chưa có ID → tìm dòng trống đầu tiên
+        $targetRow = $('#tblDanhsach tbody tr.input-row').filter(function() {
           return $(this).find('input[name="id_nhanvien[]"]').val() === "";
         }).first();
 
         if ($targetRow.length === 0) {
-          $('#tblDanhsach tbody').append(renderEmployee());
+          // Nếu không có dòng trống → tạo dòng mới
+          $('#tblDanhsach tbody').append(renderNhanVien());
           $targetRow = $('#tblDanhsach tbody tr.input-row').last();
         }
+      }
 
-        $targetRow.replaceWith(renderEmployee(rowData));
-      });
+      // Gán dữ liệu mới vào dòng đích
+      const newRow = $(renderNhanVien(nhankhau));
+      $targetRow.replaceWith(newRow);
 
+      // Khóa dòng sau khi thêm
+      const $checkbox = newRow.find('input[type="checkbox"][class="lock-user"]');
+      $checkbox.prop('checked', true).trigger('change');
+
+      // Reset dòng đang thao tác
+      $activeNhanVienRow = null;
+
+      // Ẩn modal
       $('#modalThemNhanVien').modal('hide');
+    });
+
+    //xóa 1 hàng nhân viên
+    $(document).on('click', '.btn-xoa-nv', function() {
+      if (confirm('Bạn có chắc muốn xoá nhân khẩu này không?')) {
+        $(this).closest('tr').remove();
+      }
+    });
+
+    // khóa nhân viên(để không thể hiệu chỉnh được)
+    $(document).on('change', 'input[type="checkbox"].lock-user', function() {
+      const $row = $(this).closest('tr.input-row');
+      const isLocked = $(this).is(':checked');
+      applyLockState($row, isLocked);
+    });
+
+    //danh sách nhân viên được lấy từ detail
+    nhanviens.forEach(nv => {
+      const data = formatNhanVien(nv);
+      const row = $(renderNhanVien(data));
+      $('#tblDanhsach tbody').append(row);
+
+      // ✅ Tự tích và gọi trigger khóa dòng
+      const $checkbox = row.find('input[class="lock-user"]');
+      $checkbox.prop('checked', true).trigger('change');
     });
 
     // Validate form chính
@@ -337,7 +407,7 @@ $detaiCoSo = $this->detailCoSo;
         thonto_id: {
           required: true,
         },
-        idTrangthai: {
+        trangthai_id: {
           required: true,
         },
         hoten_chucoso: {
@@ -351,11 +421,13 @@ $detaiCoSo = $this->detailCoSo;
         hoten_chucoso: 'Vui lòng nhập họ tên chủ cơ sở',
         phuongxa_id: 'Vui lòng chọn phường xã',
         thonto_id: 'Vui lòng chọn thôn tổ',
-        idTrangthai: 'Vui lòng chọn trạng thái'
+        trangthai_id: 'Vui lòng chọn trạng thái'
       },
       errorPlacement(error, element) {
         if (element.hasClass('select2')) {
           error.insertAfter(element.next('.select2-container'));
+        } else if (element.closest('.input-group').length) {
+          error.insertAfter(element.closest('.input-group'));
         } else {
           error.insertAfter(element);
         }
@@ -397,6 +469,29 @@ $detaiCoSo = $this->detailCoSo;
     });
   });
 
+  function applyLockState($row, isLocked) {
+    $row.find('input[type="text"], textarea').prop('readonly', isLocked);
+
+    $row.find('select[name="gioitinh_nhanvien[]"], select[name="tinhtrang_cutru_nhanvien[]"]').each(function() {
+      if (isLocked) {
+        $(this).attr('data-readonly', 'true').css({
+          'pointer-events': 'none',
+          'background-color': '#e9ecef'
+        });
+      } else {
+        $(this).removeAttr('data-readonly').css({
+          'pointer-events': '',
+          'background-color': ''
+        });
+      }
+    });
+    console.log(isLocked)
+
+    $row.find('.btn_timnhankhau').prop('disabled', !isLocked);
+    $row.find('.btn-xoa-nv').prop('disabled', false); // vẫn cho phép xóa
+  }
+
+  //lấy thôn tổ theo cha_id(phường/xã) và gán váo element
   function fetchKhuVuc(cha_id, element = '#thonto_id', selectedId = null) {
     $.post('index.php', {
       option: 'com_vptk',
@@ -413,6 +508,7 @@ $detaiCoSo = $this->detailCoSo;
     });
   }
 
+  //tìm kiếm nhân viên
   function timKiemNhanKhau(page = 1) {
     const $form = $('#frmmodalThemNhanVien');
     const formData = new FormData($form[0]);
@@ -438,7 +534,11 @@ $detaiCoSo = $this->detailCoSo;
           data.forEach(item => {
             $tbody.append(`
             <tr>
-              <td class="text-center"><input type="checkbox" class="checkNhanVien" value="${item.id}"></td>
+              <td class="text-center">
+                <button type="button" class="btn btn_luu_nhankhau" id="btn_luu_nhankhau" value="${item.id}" data-title="Thêm nhân viên">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </td>
               <td>${item.hoten || ''}</td>
               <td class="text-center">${item.tengioitinh || ''}</td>
               <td class="text-center">${item.cccd_so || ''}</td>
@@ -463,6 +563,7 @@ $detaiCoSo = $this->detailCoSo;
     });
   }
 
+  // format data phù hợp để render nhân viên khi đang trong hiệu chỉnh
   function formatNhanVien(nv) {
     return {
       id: nv.nhankhau_id,
@@ -476,30 +577,32 @@ $detaiCoSo = $this->detailCoSo;
     };
   }
 
-  function renderEmployee(data = {}) {
+  function renderNhanVien(data = {}) {
     return `
-    <tr class="input-row">
-      <td class="text-center">
-        <input type="checkbox" id="lock-user-${data.id || ''}" name="lock-user" >
+    <tr class="input-row" data-id="${data.id || ''}">
+      <td class="text-center align-middle" >
+        <input type="checkbox"  class="lock-user"style="width: 20px;height: 20px" >
       </td>
-      <td class= "d-flex align-item-center input-name" >
-        <button type="button" id="btn_timnhankhau" data-toggle="modal" data-target="#modalThemNhanVien" class="btn btn-primary">
-          <i class="fas fa-search"></i>
-        </button>
-        <input type="text" class="form-control" name="hoten_nhanvien[]" value="${data.hoten || ''}">  
-        <input type="hidden" name="id_nhanvien[]" value="${data.id || ''}">
+      <td class="input-name">
+        <div class="input-group">
+          <button type="button" id="btn_timnhankhau-${data.id}" data-bs-toggle="modal" data-bs-target="#modalThemNhanVien" data-iduser="${data.id}" class="btn btn-primary btn_timnhankhau">
+            <i class="fas fa-search"></i>
+          </button>
+          <input type="text" class="form-control" name="hoten_nhanvien[]" value="${data.hoten || ''}">  
+          <input type="hidden" name="id_nhanvien[]" value="${data.id || ''}">
+        </div>
       </td>
       <td>
         <select class="form-control" name="gioitinh_nhanvien[]">
           <option value="">Chọn</option>
-          <option value="Nam" ${data.gioitinh === 'Nam' ? 'selected' : ''}>Nam</option>
-          <option value="Nữ" ${data.gioitinh === 'Nữ' ? 'selected' : ''}>Nữ</option>
-          <option value="Khác" ${data.gioitinh === 'Khác' ? 'selected' : ''}>Khác</option>
+          <option value="1" ${data.gioitinh === 'Nam' ? 'selected' : ''}>Nam</option>
+          <option value="2" ${data.gioitinh === 'Nữ' ? 'selected' : ''}>Nữ</option>
+          <option value="3" ${data.gioitinh === 'Khác' ? 'selected' : ''}>Khác</option>
         </select>
       </td>
       <td><input type="text" class="form-control" name="cccd_nhanvien[]" value="${data.cccd || ''}"></td>
       <td><input type="text" class="form-control" name="dienthoai_nhanvien[]" value="${data.dienthoai || ''}"></td>
-      <td><textarea class="form-control" name="diachi_nhanvien[]" value="${data.diachi || ''}"></textarea></td>
+      <td><textarea class="form-control" rows="1" name="diachi_nhanvien[]">${data.diachi || ''}</textarea></td>
       <td>
         <select class="form-control" name="tinhtrang_cutru_nhanvien[]">
           <option value="">Chọn</option>
@@ -508,14 +611,13 @@ $detaiCoSo = $this->detailCoSo;
         </select>
       </td>
       <td>
-        <select class="form-control" name="trangthai[]">
-          <option value="">Chọn</option>
+        <select class="form-control" name="trangthai_nhanvien[]">
           <option value="1" ${data.trangthai === '1' ? 'selected' : ''}>Đang làm việc</option>
           <option value="0" ${data.trangthai === '0' ? 'selected' : ''}>Nghỉ việc</option>
         </select>
       </td>
-      <td class="text-center">
-        <button type="button" class="btn btn-danger btn-sm btn-huy"><i class="fas fa-times"></i></button>
+      <td class="text-center align-middle">
+        <button type="button" class="btn btn-danger btn-sm btn-xoa-nv"><i class="fas fa-times"></i></button>
       </td>
     </tr>
     `;
@@ -585,11 +687,11 @@ $detaiCoSo = $this->detailCoSo;
 
 <style>
   .input-name input {
-    border-radius: 4px 0px 0px 4px;
+    border-radius: 0px 4px 4px 0px;
   }
 
-  .input-name input {
-    border-radius: 0px 4px 4px 0px;
+  .input-name button {
+    border-radius: 4px 0px 0px 4px;
   }
 
   .select2-container .select2-choice {
@@ -606,88 +708,97 @@ $detaiCoSo = $this->detailCoSo;
   }
 
   .input-thongtin {
-    min-width: 353px;
+    width: 357px;
   }
 
   .button {
     padding-bottom: 20px;
   }
 
-  .bottom-page {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .upload-image img {
-    width: 500px;
-    max-height: 270px;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .upload-image img:hover {
-    transform: scale(1.03);
-  }
-
-  .infor-more {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    min-width: 250px;
-    flex: 1;
-  }
-
-  #lightboxOverlay {
-    position: fixed;
-    z-index: 1050;
-    width: 100%;
-    height: 100%;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  .lightbox-content {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 8px;
-  }
-
-  .lightbox-close {
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    color: white;
-    font-size: 32px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    .bottom-page {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .infor-more {
-      align-items: flex-start;
-      text-align: left;
-    }
-  }
-
   .input-group-text {
     border-radius: 0px 4px 4px 0px;
   }
+
+  .modal.modal-right .modal-dialog {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+  }
+
+  .modal.modal-right .modal-content {
+    height: 100%;
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  .table-bordered td,
+  .table-bordered th {
+    border-color: #c9c9c9;
+  }
+
+  @media (min-width: 992px) {
+
+    .modal-lg,
+    .modal-xl {
+      max-width: 1000px;
+    }
+  }
+
+  #tblDanhSachNhanKhau.table td,
+  #tblDanhSachNhanKhau.table th {
+    padding: 8px;
+  }
+
+  .btn_luu_nhankhau {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .btn_luu_nhankhau:hover {
+    color: #007bff;
+  }
+
+  .btn_luu_nhankhau::after {
+    content: attr(data-title);
+    position: absolute;
+    top: 33px;
+    left: 10%;
+    transform: translateX(-10%);
+    background-color: #999;
+    color: #000;
+    padding: 6px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    border-radius: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* border: 1px solid #ccc; */
+    z-index: 999;
+  }
+
+  .btn_luu_nhankhau::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent transparent #999 transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 998;
+  }
+
+  .btn_luu_nhankhau:hover::after,
+  .btn_luu_nhankhau:hover::before {
+    opacity: 1;
+    visibility: visible;
+  }
+
 
   .error {
     color: #dc3545;
