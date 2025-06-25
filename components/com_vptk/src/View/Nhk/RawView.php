@@ -55,8 +55,8 @@ class RawView extends BaseHtmlView
             case 'DETAIL':
                 $this->_getDetail();
                 break;
-            case 'DS_NHK':
-                $this->_pageNHK();
+            case 'DS_BDH':
+                $this->_pageBDH();
                 break;
             case 'DETAIL_NHK':
                 $this->_pageDetailNHK();
@@ -85,7 +85,7 @@ class RawView extends BaseHtmlView
         // $this->quatrinh_bienche = $quatrinh_bienche; 	
         parent::display();
     }
-    private function _pageNHK()
+    private function _pageBDH()
     {
         $model = Core::model('Vptk/Vptk');
         $app = Factory::getApplication()->input;

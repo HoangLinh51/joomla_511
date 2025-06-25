@@ -89,21 +89,43 @@ class RawView extends BaseHtmlView
     {
         $model = Core::model('Vptk/Bdh');
         $app = Factory::getApplication()->input;
+
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', ''),
             'hoten' => $app->getString('hoten', ''),
             'chucdanh_id' => $app->getInt('chucdanh_id', ''),
             'tinhtrang_id' => $app->getInt('tinhtrang_id', ''),
             'chucdanh_kn' => $app->getInt('chucdanh_kn', ''),
-            'chucdanh_id' => $app->getInt('chucdanh_id', ''),
         ];
-        $startFrom = $app->getInt('start', 0); // Lấy từ query string hoặc mặc định là 0
+
         $perPage = 20;
-        $items = $model->getDanhSachBanDieuHanh($params,  $startFrom, $perPage);
+        $startFrom = $app->getInt('start', 0);
+
+        // Lấy tất cả bản ghi (không phân trang ở SQL)
+        $allItems = $model->getDanhSachBanDieuHanh($params, 0, 0);
         $countitems = $model->countitems($params);
+
+        // Áp dụng phân trang thủ công
+        $paginatedItems = [];
+        $count = 0;
+        $startIndex = $startFrom;
+        $endIndex = $startFrom + $perPage;
+
+        foreach ($allItems as $thonto => $nhiemkys) {
+            foreach ($nhiemkys as $nhiemky => $thanhviens) {
+                if ($count >= $endIndex) break 2;
+
+                if ($count >= $startIndex) {
+                    $paginatedItems[$thonto][$nhiemky] = $thanhviens;
+                }
+
+                $count += count($thanhviens);
+            }
+        }
+
+        $this->items = $paginatedItems;
         $this->countitems = $countitems;
 
-        $this->items = $items;
         parent::display();
     }
     private function _pageDetailNHK()

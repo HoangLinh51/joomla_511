@@ -9,6 +9,9 @@ $currentPage = JFactory::getApplication()->input->getInt('start', 0) / $perPage 
 // Tính toán START và END
 $startRecord = JFactory::getApplication()->input->getInt('start', 0) + 1;
 $endRecord = min($startRecord + $perPage - 1, $totalRecords);
+
+// Tính STT bắt đầu từ startRecord
+$stt = $startRecord - 1;
 ?>
 
 <div id="div_danhsach">
@@ -26,18 +29,32 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
-            <?php $stt = JFactory::getApplication()->input->getInt('start', 0); ?>
+            <?php
+            $stt = $startRecord; // STT bắt đầu từ giá trị phân trang
+            $displayedRows = 0; // Đếm số dòng đã hiển thị
+            ?>
             <?php foreach ($this->items as $thontos => $nhiemkys) { ?>
                 <?php foreach ($nhiemkys as $nhiemky => $thanhviens) { ?>
                     <?php $rowspan = count($thanhviens); ?>
                     <?php for ($i = 0, $n = count($thanhviens); $i < $n; $i++) { ?>
-                        <?php $item = $thanhviens[$i]; ?>
-                        <?php $stt++; ?>
+                        <?php
+                        // Chỉ hiển thị tối đa $perPage dòng
+                        if ($displayedRows >= $perPage) break;
+
+                        $item = $thanhviens[$i];
+                        $displayedRows++;
+                        ?>
                         <tr>
                             <?php if ($i == 0) { ?>
-                                <td style="vertical-align:middle;" class="text-center" rowspan="<?php echo $rowspan; ?>"><?php echo $stt; ?></td>
-                                <td style="vertical-align:middle;" rowspan="<?php echo $rowspan; ?>"><?php echo htmlspecialchars($thontos); ?></td>
-                                <td style="vertical-align:middle;" rowspan="<?php echo $rowspan; ?>"><?php echo htmlspecialchars($item['tennhiemky']); ?></td>
+                                <td style="vertical-align:middle;" class="text-center" rowspan="<?php echo $rowspan; ?>">
+                                    <?php echo $stt; ?>
+                                </td>
+                                <td style="vertical-align:middle;" rowspan="<?php echo $rowspan; ?>">
+                                    <?php echo htmlspecialchars($thontos); ?>
+                                </td>
+                                <td style="vertical-align:middle;" rowspan="<?php echo $rowspan; ?>">
+                                    <?php echo htmlspecialchars($item['tennhiemky']); ?>
+                                </td>
                             <?php } ?>
                             <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['hoten']); ?></td>
                             <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['tenchucdanh']); ?></td>
@@ -62,11 +79,16 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                             </td>
                         </tr>
                     <?php } ?>
+                    <?php
+                    // Tăng STT sau mỗi nhóm (bản ghi chính)
+                    if ($displayRowCounter < $perPage) {
+                        $stt++;
+                    }
+                    ?>
                 <?php } ?>
             <?php } ?>
         </tbody>
     </table>
-
     <div class="pagination-container d-flex align-items-center mt-3">
         <div id="pagination" class="mx-auto">
             <?php if ($totalPages > 1): ?>
@@ -145,7 +167,87 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
     jQuery(document).ready(function($) {
         var totalPages = parseInt($('#totalPages').val());
         var currentPage = parseInt($('#currentPage').val());
+$(document).ready(function() {
+			// Khởi tạo DataTable
+			$('#tblDanhsach').DataTable({
+				pagingType: 'full_numbers',
+				lengthMenu: [
+					[10, 20, 50, 100, -1],
+					[10, 20, 50, 100, "Tất cả"]
+				],
+				ordering: true,
+				searching: true,
+				dom: '<"top-left"f>rt<"modal-footer"flip><"clear">',
+				language: {
+					paginate: {
+						first: '««',
+						previous: '«',
+						next: '»',
+						last: '»»'
+					},
+					search: " ",
+					info: " _START_ - _END_ của tổng cộng _TOTAL_ mục",
+					infoEmpty: "Không có dữ liệu để hiển thị",
+					infoFiltered: "(được lọc từ tổng cộng _MAX_ mục)"
+				},
+				drawCallback: function() {
+					$('.dataTables_paginate .paginate_button')
+						.not('.previous, .next, .first, .last')
+						.hide();
+				},
+				columnDefs: [{
+					orderable: false,
+					targets: [2, 3, 4]
+				}]
+			});
 
+			// Ẩn thanh tìm kiếm không cần thiết
+			$('.dataTables_filter').eq(1).hide();
+
+			// Chọn input tìm kiếm
+			let $searchInput = $(".dataTables_filter input[type='search']");
+
+			// Gán class cho input
+			$searchInput.addClass("inputsearch");
+			$searchInput.attr("placeholder", ""); // Placeholder trống để không hiển thị mặc định
+
+			// Bọc input trong div và thêm label + icon
+			$searchInput.wrap('<div class="search-container"></div>');
+			$searchInput.before('<label class="search-label">Tìm kiếm</label>');
+			$searchInput.before('<i class="icon-search"></i>');
+
+			// Floating label hoạt động khi nhập chữ
+			$searchInput.on("focus", function() {
+				$(this).siblings(".search-label").css({
+					top: "-3px",
+					fontSize: "12px",
+					color: "#3b71ca",
+					backgroundColor: "#fff"
+				});
+			});
+
+			$searchInput.on("blur", function() {
+				if ($(this).val().length === 0) {
+					$(this).siblings(".search-label").css({
+						top: "33%",
+						fontSize: "16px",
+						color: "#888"
+					});
+				}
+			});
+
+
+
+			// Đảm bảo input có chiều rộng bằng bảng
+			function setSearchWidth() {
+				let tableWidth = $("#tblDanhsach").outerWidth() - 35; // Trừ đi 10px
+				$(".inputsearch").attr("style", "width: " + tableWidth + "px !important;");
+			}
+
+
+			setSearchWidth();
+			$(window).resize(setSearchWidth);
+		});
         // Xử lý click vào phân trang
         $('.pagination').on('click', '.page-link', function(e) {
             e.preventDefault();
