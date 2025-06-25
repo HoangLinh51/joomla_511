@@ -165,12 +165,6 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		top: inherit !important;
 	}
 
-
-	.dropdown-menu {
-		left: auto !important;
-		right: 0;
-	}
-
 	.dropdown-item {
 		display: flex !important;
 		align-items: center;

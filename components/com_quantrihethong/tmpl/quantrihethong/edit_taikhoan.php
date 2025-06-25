@@ -15,47 +15,38 @@ $user = $this->user;
 
 <div class="container my-3">
   <div class="content-box">
-    <div class="form-header">
-      <h2 class="text-primary">
-        <?php echo ((int)$user['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> tài khoản
-      </h2>
-      <div class="button-action">
-        <button id="btn_luu_themmoi" class="btn btn-small btn-success"><i class="fa fa-save"></i> Lưu và thêm mới</button>
-        <button id="btn_luu_quaylai" class="btn btn-small btn-primary"><i class="fa fa-save"></i> Lưu và quay lại</button>
-        <button id="btn_quaylai" class="btn btn-small btn-secondary"><i class="fa fa-share"></i> Quay lại</button>
+    <form action="<?= Route::_('index.php?option=com_quantrihethong&task=quantrihethong.saveInfoAccount ') ?>" id="accountForm" name="accountForm" method="post">
+      <div class="form-header">
+        <h2 class="text-primary">
+          <?php echo ((int)$user['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> tài khoản
+        </h2>
+        <div class="button-action">
+          <button id="btn_luu_themmoi" class="btn btn-small btn-success"><i class="fa fa-save"></i> Lưu và thêm mới</button>
+          <button id="btn_luu_quaylai" class="btn btn-small btn-primary"><i class="fa fa-save"></i> Lưu và quay lại</button>
+          <button id="btn_quaylai" class="btn btn-small btn-secondary"><i class="fa fa-arrow-left"></i> Quay lại</button>
+        </div>
       </div>
-    </div>
-    <form action="<?= Route::_('index.php?option=com_quantrihethong&task=quantrihethong.save_user ') ?>" id="accountForm" name="accountForm" method="post">
       <input type="hidden" name="id" id="id" value="<?php echo $user['id']; ?>">
       <div class="formGroup">
         <label for="name">Họ và tên <span class="text-danger">*</span></label>
-        <input type="text" id="name" name="name" class="form-control" value="<?php echo htmlspecialchars($user['name']); ?>"
-          required pattern="[A-Za-zÀ-ỹ\s]+" oninput="validateName(this)"
-          title="Họ và tên chỉ được chứa chữ cái và khoảng trắng">
-        <span id="nameError" class="text-danger"></span>
+        <input type="text" id="name" name="name" class="form-control"
+          value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" />
       </div>
       <div class="formGroup">
         <label for="username">Tên tài khoản <span class="text-danger">*</span></label>
-        <input type="text" id="username" name="username" class="form-control" required pattern="[A-Za-z0-9_]{3,20}"
-          value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>"
-          title="Tên tài khoản chỉ được chứa chữ cái, số, dấu gạch dưới, từ 3 đến 20 ký tự"
-          oninput="validateUsername(this)">
-        <span id="usernameError" class="text-danger"></span>
+        <input type="text" id="username" name="username" class="form-control"
+          value="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" />
       </div>
       <div class="formGroup">
-        <label for="password">Mật khẩu <span class="text-danger">*</span></label>
-        <input type="password" id="password" name="password" class="form-control" required
-          pattern="(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}"
+        <label for="password">Mật khẩu<?php if ((int)$user['id'] == 0): ?><span class="text-danger">*</span><?php endif; ?></label>
+        <input type="password" id="password" name="password" class="form-control"
           title="Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 chữ in hoa, 1 số và 1 ký tự đặc biệt (!@#$%^&*)"
-          oninput="validatePassword(this)">
-        <span id="passwordError" class="text-danger"></span>
+          placeholder="<?php echo ((int)$user['id'] > 0) ? 'Để trống nếu không đổi mật khẩu' : 'Nhập mật khẩu'; ?>" />
       </div>
       <div class="formGroup">
         <label for="email">Email <span class="text-danger">*</span></label>
-        <input type="email" id="email" name="email" class="form-control" required value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>"
-          oninput="validateEmail(this)" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-          title="Vui lòng nhập địa chỉ email hợp lệ (ví dụ: example@domain.com)">
-        <span id="emailError" class="text-danger"></span>
+        <input type="email" id="email" name="email" class="form-control"
+          value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" />
       </div>
       <div class="formGroup">
         <label for="chucnang">Chức năng sử dụng <span class="text-danger">*</span></label>
@@ -64,59 +55,71 @@ $user = $this->user;
           <div class="dropdown" id="chucnang-dropdown">
             <?php foreach ($chucNang as $cn): ?>
               <label class="option">
-                <input type="checkbox" class="chucNang" value="<?php echo $cn->id; ?>" onchange="validateChucNang()">
+                <input type="checkbox" class="chucNang" value="<?php echo $cn->id; ?>">
                 <?php echo htmlspecialchars($cn->title); ?>
               </label>
             <?php endforeach; ?>
-            <input type="hidden" id="chucNang" name="chucNang" required>
           </div>
         </div>
-        <span id="chucNangError" class="text-danger"></span>
+        <label for="chucnang" class="error"></label>
+        <input type="hidden" id="chucNang" name="chucNang" required>
       </div>
       <div class="formGroup">
         <label for="donviquanly">Đơn vị quản lý <span class="text-danger">*</span></label>
         <div class="select-dv">
-          <div class="select-checkbox-container">
-            <div class="select-checkbox" id="phuongxa_select">-- Chọn Phường/Xã --</div>
-            <div class="dropdown" id="phuongXa-dropdown">
-              <?php foreach ($khuVuc as $px): ?>
-                <?php if ($px['level'] == 2): ?>
-                  <label class="option">
-                    <input type="checkbox" class="phuongXa" value="<?php echo $px['id']; ?>"
-                      onchange="validatePhuongXa(); loadThonTo()">
-                    <?php echo htmlspecialchars($px['tenkhuvuc']); ?>
-                  </label>
-                <?php endif; ?>
-              <?php endforeach; ?>
-              <input type="hidden" id="phuongXa" name="phuongXa" required>
+          <div class="phuongxa">
+            <div class="select-checkbox-container">
+              <div class="select-checkbox" id="phuongxa_select">-- Chọn Phường/Xã --</div>
+              <div class="dropdown" id="phuongXa-dropdown">
+                <?php foreach ($khuVuc as $px): ?>
+                  <?php if ($px['level'] == 2): ?>
+                    <label class="option">
+                      <input type="checkbox" class="phuongXa" value="<?php echo $px['id']; ?>">
+                      <?php echo htmlspecialchars($px['tenkhuvuc']); ?>
+                    </label>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              </div>
             </div>
-            <span id="phuongXaError" class="text-danger"></span>
+            <label for="phuongXa" class="error"></label>
+            <input type="hidden" id="phuongXa" name="phuongXa" required>
           </div>
+          <div class="thonto">
+            <div class="select-checkbox-container">
+              <div class="select-checkbox" id="thonto_select">-- Chọn Thôn/Tổ --</div>
+              <div class="dropdown" id="thonTo_dropdown">
+                <label class="option select-all-option">
+                  <input type="checkbox" id="select-all-thon-to"> Chọn tất cả
+                </label>
 
-          <div class="select-checkbox-container">
-            <div class="select-checkbox" id="thonto_select">-- Chọn Thôn/Tổ --</div>
-            <div class="dropdown" id="thonTo_dropdown">
-              <label class="option select-all-option">
-                <input type="checkbox" id="select-all-thon-to"> Chọn tất cả
-              </label>
-              <input type="hidden" id="thonTo" name="thonTo">
-              <!-- Thôn/Tổ options sẽ được thêm động bằng jQuery -->
+                <!-- Thôn/Tổ options sẽ được thêm động bằng jQuery -->
+              </div>
             </div>
+            <label for="thonTo" class="error"></label>
+            <input type="hidden" id="thonTo" name="thonTo" required>
           </div>
         </div>
       </div>
-
       <div class="formGroup">
         <label for="requireresetpassword">Yêu cầu đổi mật khẩu</label>
         <label class="custom-toggle">
-          <input type="checkbox" class="requireReset" <?php echo ($user['requireReset'] == 1) ? 'checked' : ''; ?>>
+          <input type="checkbox" class="requireReset"
+            <?php echo ($user['requireReset'] == 1) ? 'checked' : ''; ?>>
+          <span class="slider"></span>
+          <input type="hidden" id="requireReset" name="requireReset" value="<?php echo ($user['requireReset'] == 1) ? '1' : '0'; ?>">
+        </label>
+      </div>
+      <!-- <div class="formGroup">
+        <label for="requireresetpassword">Yêu cầu đổi mật khẩu</label>
+        <label class="custom-toggle">
+          <input type="checkbox" class="requireReset" <?php ($user['requireReset'] == 1) ? 'checked' : ''; ?>>
           <span class="slider"></span>
           <input type="hidden" id="requireReset" name="requireReset">
         </label>
-
-      </div>
+      </div> -->
       <?php echo HTMLHelper::_('form.token'); ?>
     </form>
+    <input type="hidden" name="action" value="<?php echo ((int)$user['id'] > 0) ? 'edit' : 'create'; ?>">
   </div>
 </div>
 <style>
@@ -146,6 +149,10 @@ $user = $this->user;
     margin-bottom: 5px;
   }
 
+  .dropdown.show {
+    display: block
+  }
+
   .select-checkbox-container {
     position: relative;
     width: 100%;
@@ -170,20 +177,17 @@ $user = $this->user;
 
   .dropdown {
     position: absolute;
-    top: 100%;
+    bottom: 100%;
     left: 0;
     right: 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background: white;
+    background: #fff;
     max-height: 200px;
     overflow-y: auto;
+    overflow-X: auto;
     display: none;
-    z-index: 1000;
-  }
-
-  .dropdown.show {
-    display: block;
+    z-index: 100;
   }
 
   .option {
@@ -337,154 +341,80 @@ $user = $this->user;
     font-size: 0.875rem;
     margin-top: 5px;
   }
+
+  .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin: 0px;
+  }
 </style>
 
 <script>
-  function showToast(message, isSuccess = true) {
-    const toast = $('<div></div>')
-      .text(message)
-      .css({
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        background: isSuccess ? '#28a745' : '#dc3545',
-        color: 'white',
-        padding: '10px 20px',
-        borderRadius: '5px',
-        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-        zIndex: 9999
-      })
-      .appendTo('body');
-
-    setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
-  }
-
-  function setValidation(input, errorElement, message = '') {
-    errorElement.textContent = message;
-    input.setCustomValidity(message);
-  }
-
-  function validateName(input) {
-    const value = input.value.trim();
-    const errorElement = document.getElementById('nameError');
-
-    if (value.length < 2) return setValidation(input, errorElement, 'Họ và tên phải có ít nhất 2 ký tự');
-    if (value.length > 50) return setValidation(input, errorElement, 'Họ và tên không được vượt quá 50 ký tự');
-    if (!/^[A-Za-zÀ-ỹ\s]+$/.test(value)) return setValidation(input, errorElement, 'Họ và tên chỉ được chứa chữ cái và khoảng trắng');
-
-    setValidation(input, errorElement);
-  }
-
-  function validateUsername(input) {
-    const value = input.value.trim();
-    const errorElement = document.getElementById('usernameError');
-
-    if (value.length < 5) return setValidation(input, errorElement, 'Tên tài khoản phải có ít nhất 5 ký tự');
-    if (value.length > 20) return setValidation(input, errorElement, 'Tên tài khoản không được vượt quá 20 ký tự');
-    if (!/^[A-Za-z0-9_]+$/.test(value)) return setValidation(input, errorElement, 'Chỉ dùng chữ, số, gạch dưới');
-    if (/^[0-9_]/.test(value)) return setValidation(input, errorElement, 'Tên tài khoản phải bắt đầu bằng chữ cái');
-
-    setValidation(input, errorElement);
-  }
-
-  function validatePassword(input) {
-    const value = input.value;
-    const errorElement = document.getElementById('passwordError');
-
-    if (value.length < 8) return setValidation(input, errorElement, 'Mật khẩu phải có ít nhất 8 ký tự');
-    if (value.length > 50) return setValidation(input, errorElement, 'Mật khẩu không được vượt quá 50 ký tự');
-    if (!/[A-Z]/.test(value)) return setValidation(input, errorElement, 'Phải có ít nhất 1 chữ in hoa');
-    if (!/[0-9]/.test(value)) return setValidation(input, errorElement, 'Phải có ít nhất 1 số');
-    if (!/[!@#$%^&*]/.test(value)) return setValidation(input, errorElement, 'Phải có ít nhất 1 ký tự đặc biệt (!@#$%^&*)');
-
-    setValidation(input, errorElement);
-  }
-
-  function validateEmail(input) {
-    const value = input.value.trim();
-    const errorElement = document.getElementById('emailError');
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    if (!value) return setValidation(input, errorElement, 'Email là bắt buộc');
-    if (!emailPattern.test(value)) return setValidation(input, errorElement, 'Email không hợp lệ');
-    if (value.length > 100) return setValidation(input, errorElement, 'Email không được vượt quá 100 ký tự');
-
-    setValidation(input, errorElement);
-  }
-
-  function validateCheckboxGroup({
-    checkboxSelector,
-    hiddenInputId,
-    errorId,
-    selectTextId,
-    placeholder,
-    label
-  }) {
-    const checkboxes = document.querySelectorAll(checkboxSelector);
-    const hiddenInput = document.getElementById(hiddenInputId);
-    const errorElement = document.getElementById(errorId);
-    const selectText = document.getElementById(selectTextId);
-
-    const selected = Array.from(checkboxes)
-      .filter(cb => cb.checked)
-      .map(cb => cb.value);
-
-    hiddenInput.value = selected.join(',');
-
-    selectText.textContent = selected.length > 0 ? `${selected.length} ${label} được chọn` : placeholder;
-
-    if (selected.length === 0) {
-      setValidation(hiddenInput, errorElement, `Vui lòng chọn ít nhất một ${label}`);
-    } else {
-      setValidation(hiddenInput, errorElement);
-    }
-  }
-
-  function validateChucNang() {
-    validateCheckboxGroup({
-      checkboxSelector: '.chucNang',
-      hiddenInputId: 'chucNang',
-      errorId: 'chucNangError',
-      selectTextId: 'chucnang_select',
-      placeholder: '-- Hãy chọn chức năng sử dụng --',
-      label: 'chức năng'
+  function showToast(message, isSuccess = true, error = '') {
+    const toast = document.createElement('div');
+    Object.assign(toast.style, {
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      background: isSuccess ? '#28a745' : '#dc3545',
+      color: 'white',
+      padding: '10px 20px',
+      borderRadius: '5px',
+      boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+      zIndex: '9999',
+      maxWidth: '300px',
+      fontFamily: 'sans-serif'
     });
+
+    // Tạo nội dung HTML
+    toast.innerHTML = `
+      <strong style="display:block; font-size: 16px; margin-bottom: 5px;">
+       ${message}
+      </strong>
+      <span style="font-size: 14px;">${error}</span>
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.transition = `opacity 500ms`;
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 500);
+    }, 2000);
   }
 
+  document.addEventListener('DOMContentLoaded', () => {
+    // Cache DOM elements
+    const elements = {
+      form: document.getElementById('accountForm'),
+      chucnang: {
+        dropdown: document.getElementById('chucnang-dropdown'),
+        select: document.getElementById('chucnang_select'),
+        hidden: document.getElementById('chucNang')
+      },
+      phuongxa: {
+        dropdown: document.getElementById('phuongXa-dropdown'),
+        select: document.getElementById('phuongxa_select'),
+        hidden: document.getElementById('phuongXa')
+      },
+      thonto: {
+        dropdown: document.getElementById('thonTo_dropdown'),
+        select: document.getElementById('thonto_select'),
+        hidden: document.getElementById('thonTo'),
+        selectAll: document.getElementById('select-all-thon-to')
+      },
+      buttons: {
+        saveNew: document.getElementById('btn_luu_themmoi'),
+        saveBack: document.getElementById('btn_luu_quaylai'),
+        back: document.getElementById('btn_quaylai')
+      },
+      requireReset: {
+        class: document.querySelector('.requireReset'),
+        hidden: document.getElementById('requireReset')
+      }
+    };
 
-  function validatePhuongXa() {
-    const checkboxes = document.querySelectorAll('.phuongXa:checked');
-    const hiddenInput = document.getElementById('phuongXa');
-    const errorElement = document.getElementById('phuongXaError');
-
-    if (checkboxes.length === 0) {
-      errorElement.textContent = 'Vui lòng chọn ít nhất một Phường/Xã';
-      hiddenInput.setCustomValidity('Vui lòng chọn ít nhất một Phường/Xã');
-    } else {
-      errorElement.textContent = '';
-      hiddenInput.setCustomValidity('');
-    }
-  }
-
-  function validateThonTo() {
-    const checkboxes = document.querySelectorAll('.thonTo:checked');
-    const hiddenInput = document.getElementById('thonTo');
-    const errorElement = document.getElementById('thonToError');
-
-    if (checkboxes.length === 0) {
-      errorElement.textContent = 'Vui lòng chọn ít nhất một Thôn/Tổ';
-      hiddenInput.setCustomValidity('Vui lòng chọn ít nhất một Thôn/Tổ');
-    } else {
-      errorElement.textContent = '';
-      hiddenInput.setCustomValidity('');
-    }
-  }
-
-
-
-
-  $(document).ready(function() {
-    // Dữ liệu từ PHP
+    // Data from PHP
     const khuVucData = <?php echo json_encode($khuVuc); ?>;
     const userData = <?php echo json_encode($user); ?>;
     const chucNang = <?php echo json_encode($chucNang); ?>;
@@ -494,203 +424,267 @@ $user = $this->user;
       thonto_id: <?php echo json_encode($user["thonto_id"] ?? ''); ?>
     };
 
-    // Bộ nhớ đệm các phần tử jQuery
-    const $chucnangDropdown = $('#chucnang-dropdown');
-    const $chucnangSelect = $('#chucnang_select');
-    const $phuongXaDropdown = $('#phuongXa-dropdown');
-    const $phuongXaSelect = $('#phuongxa_select');
-    const $thonToDropdown = $('#thonTo_dropdown');
-    const $thonToSelect = $('#thonto_select');
-    const $selectAllThonTo = $('#select-all-thon-to');
+    const phuongXaData = khuVucData.filter(item => item.level === 2);
+    const thonToData = khuVucData.filter(item => item.level === 3);
 
-    // Lọc khu vực theo level
-    const filterKhuVuc = (data, level) => data.filter(item => item.level === level);
-    const phuongXaData = filterKhuVuc(khuVucData, 2);
-    const thonToData = filterKhuVuc(khuVucData, 3);
-
-    // Mở/đóng dropdown
-    const toggleDropdown = ($select, $dropdown) => {
-      const $allDropdowns = $('.dropdown');
-      const isOpen = $dropdown.hasClass('show');
-      $allDropdowns.removeClass('show');
-      if (!isOpen) $dropdown.addClass('show');
+    const toggleDropdown = (dropdown) => {
+      const allDropdowns = document.querySelectorAll('.dropdown');
+      const isOpen = dropdown.classList.contains('show');
+      allDropdowns.forEach(dd => dd.classList.remove('show'));
+      if (!isOpen) dropdown.classList.add('show');
     };
 
-    // Cập nhật hiển thị cho dropdown
-    const updateSelection = ($dropdown, $select, placeholder) => {
-      const selectedLabels = $dropdown.find('input:checked:not(#select-all-thon-to)')
-        .map((_, el) => $(el).parent().text().trim()).get();
-      $select.html(selectedLabels.length > 0 ? selectedLabels.join(', ') : placeholder)
-        .append('<span></span>');
+    const updateSelection = (dropdown, select, placeholder) => {
+      const selectedLabels = Array.from(dropdown.querySelectorAll('input:checked:not(#select-all-thon-to)'))
+        .map(input => input.parentElement.textContent.trim());
+      select.innerHTML = selectedLabels.length ? selectedLabels.join(', ') : placeholder;
+      select.appendChild(document.createElement('span'));
     };
 
-    // Cập nhật giá trị hidden input
-    const updateHiddenInput = ($dropdown, hiddenInputId) => {
-      const selectedIds = $dropdown.find('input:checked:not(#select-all-thon-to)')
-        .map((_, el) => $(el).val()).get();
-      $(hiddenInputId).val(selectedIds.join(','));
+    const updateHiddenInput = (dropdown, hiddenInput) => {
+      const selectedIds = Array.from(dropdown.querySelectorAll('input:checked:not(#select-all-thon-to)'))
+        .map(input => input.value);
+      hiddenInput.value = selectedIds.join(',');
     };
 
-    // Cập nhật tùy chọn Thôn/Tổ
     const updateThonToOptions = (selectedPhuongXaIds) => {
-      $thonToDropdown.find('.option:not(.select-all-option)').remove();
+      const container = elements.thonto.dropdown;
+      container.querySelectorAll('.option:not(.select-all-option)').forEach(opt => opt.remove());
+
       const thonToOptions = thonToData.filter(item => selectedPhuongXaIds.includes(String(item.cha_id)));
       thonToOptions.forEach(item => {
-        $thonToDropdown.append(`
-                <label class="option">
-                    <input type="checkbox" class="thonTo" value="${item.id}">
-                    ${item.tenkhuvuc}
-                </label>
-            `);
+        const label = document.createElement('label');
+        label.className = 'option';
+        label.innerHTML = `
+        <input type="checkbox" class="thonTo" value="${item.id}">
+        ${item.tenkhuvuc}
+      `;
+        container.appendChild(label);
       });
 
-      // Tích chọn Thôn/Tổ nếu đang ở chế độ chỉnh sửa
       if (editData.thonto_id) {
-        const thontoIds = editData.thonto_id.split(',').map(id => id.trim());
-        thontoIds.forEach(id => {
-          $thonToDropdown.find(`input[value="${id}"]`).prop('checked', true);
-        });
+        editData.thonto_id.split(',').map(id => id.trim())
+          .forEach(id => {
+            const input = container.querySelector(`input[value="${id}"]`);
+            if (input) input.checked = true;
+          });
       }
 
       updateThonToSelection();
     };
 
-    // Cập nhật hiển thị và trạng thái "Chọn tất cả" cho Thôn/Tổ
     const updateThonToSelection = () => {
-      updateSelection($thonToDropdown, $thonToSelect, '-- Chọn Thôn/Tổ --');
-      const $allCheckboxes = $thonToDropdown.find('input:not(#select-all-thon-to)');
-      $selectAllThonTo.prop('checked',
-        $allCheckboxes.length > 0 && $allCheckboxes.filter(':checked').length === $allCheckboxes.length
-      );
-      updateHiddenInput($thonToDropdown, '#thonTo');
+      updateSelection(elements.thonto.dropdown, elements.thonto.select, '-- Chọn Thôn/Tổ --');
+      const allCheckboxes = elements.thonto.dropdown.querySelectorAll('input:not(#select-all-thon-to)');
+      elements.thonto.selectAll.checked = allCheckboxes.length > 0 &&
+        allCheckboxes.length === Array.from(allCheckboxes).filter(cb => cb.checked).length;
+      updateHiddenInput(elements.thonto.dropdown, elements.thonto.hidden);
     };
 
-    // Đóng dropdown khi click bên ngoài
-    $(document).on('click', e => {
-      if (!$(e.target).closest('.select-checkbox-container').length) {
-        $('.dropdown').removeClass('show');
-      }
-    });
-
-    // Xử lý sự kiện dropdown
-    const setupDropdownEvents = ($select, $dropdown, placeholder, hiddenInputId, onChange) => {
-      $select.on('click', () => toggleDropdown($select, $dropdown));
-      $dropdown.on('change', 'input', () => {
-        updateSelection($dropdown, $select, placeholder);
-        updateHiddenInput($dropdown, hiddenInputId);
-        if (onChange) onChange();
+    const setupDropdownEvents = (select, dropdown, placeholder, hiddenInput, onChange) => {
+      select.addEventListener('click', () => toggleDropdown(dropdown));
+      dropdown.addEventListener('change', (e) => {
+        if (e.target.tagName === 'INPUT') {
+          updateSelection(dropdown, select, placeholder);
+          updateHiddenInput(dropdown, hiddenInput);
+          if (onChange) onChange();
+        }
       });
     };
 
-    // Thiết lập sự kiện cho các dropdown
-    setupDropdownEvents($chucnangSelect, $chucnangDropdown, '-- Hãy chọn chức năng sử dụng --', '#chucNang');
-    setupDropdownEvents($phuongXaSelect, $phuongXaDropdown, '-- Chọn Phường/Xã --', '#phuongXa', () => {
-      const selectedIds = $phuongXaDropdown.find('input:checked').map((_, el) => $(el).val()).get();
-      updateThonToOptions(selectedIds);
-    });
-    setupDropdownEvents($thonToSelect, $thonToDropdown, '-- Chọn Thôn/Tổ --', '#thonTo');
-
-    // Xử lý "Chọn tất cả" cho Thôn/Tổ
-    $selectAllThonTo.on('change', function() {
-      $thonToDropdown.find('input:not(#select-all-thon-to)').prop('checked', this.checked);
-      updateThonToSelection();
-    });
-
-    // Khởi tạo trạng thái chỉnh sửa
     const initializeEditState = () => {
-      // Chức năng
       if (Array.isArray(editData.group_id) && editData.group_id.length) {
         editData.group_id.forEach(id => {
-          $chucnangDropdown.find(`input[value="${id}"]`).prop('checked', true);
+          const input = elements.chucnang.dropdown.querySelector(`input[value="${id}"]`);
+          if (input) input.checked = true;
         });
-        updateSelection($chucnangDropdown, $chucnangSelect, '-- Hãy chọn chức năng sử dụng --');
-        updateHiddenInput($chucnangDropdown, '#chucNang');
+        updateSelection(elements.chucnang.dropdown, elements.chucnang.select, '-- Hãy chọn chức năng sử dụng --');
+        updateHiddenInput(elements.chucnang.dropdown, elements.chucnang.hidden);
       }
 
-      // Phường/Xã
       if (editData.phuongxa_id) {
         const phuongxaIds = editData.phuongxa_id.split(',').map(id => id.trim());
         phuongxaIds.forEach(id => {
-          $phuongXaDropdown.find(`input[value="${id}"]`).prop('checked', true);
+          const input = elements.phuongxa.dropdown.querySelector(`input[value="${id}"]`);
+          if (input) input.checked = true;
         });
-        updateSelection($phuongXaDropdown, $phuongXaSelect, '-- Chọn Phường/Xã --');
-        updateHiddenInput($phuongXaDropdown, '#phuongXa');
+        updateSelection(elements.phuongxa.dropdown, elements.phuongxa.select, '-- Chọn Phường/Xã --');
+        updateHiddenInput(elements.phuongxa.dropdown, elements.phuongxa.hidden);
         updateThonToOptions(phuongxaIds);
       }
     };
 
-    // Khởi chạy
-    initializeEditState();
+    const setupValidation = () => {
+      $.validator.addMethod("validName", (value) => /^[A-Za-zÀ-ỹ\s]+$/.test(value),
+        "Họ và tên chỉ được chứa chữ cái và khoảng trắng");
+      $.validator.addMethod("validUsername", (value) => /^[A-Za-z0-9_]+$/.test(value),
+        "Tên tài khoản chỉ được chứa chữ cái, số, dấu gạch dưới");
+      $.validator.addMethod("strongPassword", (value) => {
+        return value === '' || /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$/.test(value);
+      }, "Mật khẩu phải có ít nhất 8 ký tự, gồm 1 chữ in hoa, 1 số và 1 ký tự đặc biệt");
 
-    function submitForm(redirectAfterSave) {
-      const form = document.getElementById('accountForm');
-      let selectedChucNang = [];
-      let selectedPhuongXa = [];
-      let selectedThonTo = [];
-      $('#chucnang-dropdown input[class="chucNang"]:checked').each(function() {
-        let item = $(this).val();
-        selectedChucNang.push(item);
+      $(elements.form).validate({
+        ignore: [],
+        rules: {
+          name: {
+            required: true,
+            minlength: 3,
+            validName: true
+          },
+          username: {
+            required: true,
+            minlength: 5,
+            validUsername: true
+          },
+          password: {
+            required: function() {
+              return $('input[name="action"]').val() === 'create';
+            },
+            strongPassword: true
+          },
+          email: {
+            required: true,
+            email: true
+          },
+          chucNang: {
+            required: true,
+          },
+          phuongXa: {
+            required: true,
+          },
+          thonTo: {
+            required: true,
+          }
+        },
+        messages: {
+          name: {
+            required: 'Vui lòng nhập tên',
+            minlength: 'Họ và tên quá ngắn'
+          },
+          username: {
+            required: 'Vui lòng nhập tên người dùng',
+            minlength: 'Tên người dùng quá ngắn'
+          },
+          password: {
+            required: 'Vui lòng nhập mật khẩu'
+          },
+          email: {
+            required: 'Vui lòng nhập email',
+            email: 'Vui lòng nhập email hợp lệ'
+          },
+          chucNang: {
+            required: 'Vui lòng chọn chức năng sử dụng',
+          },
+          phuongXa: {
+            required: 'Vui lòng chọn Phường/Xã',
+          },
+          thonTo: {
+            required: 'Vui lòng chọn Thôn/Tổ',
+          }
+        },
+        errorPlacement: (error, element) => {
+          if (element.hasClass('select-checkbox')) {
+            error.insertAfter(element.next('.select-checkbox-container'));
+          } else {
+            error.insertAfter(element);
+          }
+        }
       });
-      $('#phuongXa-dropdown input[class="phuongXa"]:checked').each(function() {
-        let item = $(this).val();
-        selectedPhuongXa.push(item);
-      });
-      $('#thonTo_dropdown input[class="thonTo"]:checked').each(function() {
-        let item = $(this).val();
-        selectedThonTo.push(item);
-      });
-      let requireReset = $('input[class="requireReset"]').is(':checked')
+    };
 
-      if (requireReset) {
-        requireReset = 1;
-      } else {
-        requireReset = 0;
+    const submitForm = async (redirectAfterSave) => {
+      [elements.chucnang, elements.phuongxa, elements.thonto].forEach(item => {
+        const selected = Array.from(item.dropdown.querySelectorAll('input:checked'))
+          .map(input => input.value);
+        item.hidden.value = selected.join(',');
+      });
+      elements.requireReset.class.addEventListener('change', function() {
+        elements.requireReset.hidden.value = elements.requireReset.checked ? '1' : '0';
+        
+      });
+
+      if (!$(elements.form).valid()) {
+        showToast('Vui lòng nhập đầy đủ thông tin', false);
+        return;
       }
 
-      $('#chucNang').val(selectedChucNang)
-      $('#phuongXa').val(selectedPhuongXa)
-      $('#thonTo').val(selectedThonTo)
-      $('#requireReset').val(requireReset)
-
-      const formData = new FormData(form);
-
-      fetch(form.action, {
+      try {
+        const response = await fetch(elements.form.action, {
           method: 'POST',
-          body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-          const isSuccess = data.success ?? true;
-          showToast(data.message || 'Lưu dữ liệu thành công', isSuccess);
-          if (isSuccess && redirectAfterSave === 'new') {
-            setTimeout(() => {
-              window.location.href = '/index.php?option=com_quantrihethong&view=quantrihethong&task=edit_user';
-            }, 500);
-          } else if (isSuccess && redirectAfterSave === 'back') {
-            setTimeout(() => {
-              window.location.href = '/index.php/component/quantrihethong/?view=quantrihethong&task=default';
-            }, 500);
-          }
-        })
-        .catch(err => {
-          console.error('Lỗi gửi dữ liệu:', err);
-          showToast('Gửi dữ liệu thất bại', false);
+          body: new FormData(elements.form)
         });
-    }
+        const data = await response.json();
+        const isSuccess = data.success ?? true;
+        showToast(data.message || 'Lưu dữ liệu thành công', isSuccess, data.error || '');
 
-    $('#btn_luu_themmoi').click(function(e) {
+        if (isSuccess && redirectAfterSave) {
+          setTimeout(() => {
+            window.location.href = redirectAfterSave === 'new' ?
+              '/index.php?option=com_quantrihethong&view=quantrihethong&task=edit_user' :
+              '/index.php/component/quantrihethong/?view=quantrihethong&task=default';
+          }, 500);
+        }
+      } catch (err) {
+        console.error('Lỗi gửi dữ liệu:', err);
+        showToast('Gửi dữ liệu thất bại', false, data.error || '');
+      }
+    };
+
+    // Event listeners
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.select-checkbox-container')) {
+        document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('show'));
+      }
+    });
+
+    setupDropdownEvents(
+      elements.chucnang.select,
+      elements.chucnang.dropdown,
+      '-- Hãy chọn chức năng sử dụng --',
+      elements.chucnang.hidden
+    );
+
+    setupDropdownEvents(
+      elements.phuongxa.select,
+      elements.phuongxa.dropdown,
+      '-- Chọn Phường/Xã --',
+      elements.phuongxa.hidden,
+      () => updateThonToOptions(
+        Array.from(elements.phuongxa.dropdown.querySelectorAll('input:checked'))
+        .map(input => input.value)
+      )
+    );
+
+    setupDropdownEvents(
+      elements.thonto.select,
+      elements.thonto.dropdown,
+      '-- Chọn Thôn/Tổ --',
+      elements.thonto.hidden
+    );
+
+    elements.thonto.selectAll.addEventListener('change', (e) => {
+      elements.thonto.dropdown.querySelectorAll('input:not(#select-all-thon-to)')
+        .forEach(cb => cb.checked = e.target.checked);
+      updateThonToSelection();
+    });
+
+    elements.buttons.saveNew.addEventListener('click', (e) => {
       e.preventDefault();
       submitForm('new');
     });
 
-    $('#btn_luu_quaylai').click(function(e) {
+    elements.buttons.saveBack.addEventListener('click', (e) => {
       e.preventDefault();
       submitForm('back');
     });
 
-    $('#btn_quaylai').click(function(e) {
+    elements.buttons.back.addEventListener('click', (e) => {
       e.preventDefault();
       window.location.href = '/index.php/component/quantrihethong/?view=quantrihethong&task=default';
     });
+
+    // Initialize
+    setupValidation();
+    initializeEditState();
   });
 </script>

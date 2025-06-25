@@ -4,15 +4,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 
 defined('_JEXEC') or die('Restricted access');
-$user = Factory::getUser();
-$modelBaoCaoLoi = Core::model('BaoCaoLoi/BaoCaoLoi');
-$limit = 20; // số bản ghi mỗi trang
-$this->item = $modelBaoCaoLoi->getListError('', 1, 20);
-$this->countItems = $modelBaoCaoLoi->countBaoCaoLoi($user->id);
-$currentPage = max(1, (int) Factory::getApplication()->input->getInt('page', 1));
-$totalPages = ceil($this->countItems / $limit);
-$startRecord = ($this->countItems > 0) ? (($currentPage - 1) * $limit + 1) : 0;
-$endRecord = min($this->countItems, $currentPage * $limit);
 ?>
 <div class="danhsach">
   <div class="content-header">
@@ -21,11 +12,9 @@ $endRecord = min($this->countItems, $currentPage * $limit);
         <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý báo cáo lỗi</h3>
       </div>
       <div class="col-sm-6 text-right" style="padding:0;">
-        <?php if ($is_quyen == 0) { ?>
-          <a href="index.php?option=com_baocaoloi&view=baocaoloi&task=add_baocaoloi" class="btn btn-primary" style="font-size:16px;width:136px">
-            <i class="fas fa-plus"></i> Thêm mới
-          </a>
-        <?php } ?>
+        <a href="<?php echo Route::_('index.php?option=com_baocaoloi&view=baocaoloi&task=add_baocaoloi') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
+          <i class="fas fa-plus"></i> Thêm mới
+        </a>
       </div>
     </div>
   </div>
@@ -42,7 +31,7 @@ $endRecord = min($this->countItems, $currentPage * $limit);
       <table class="table table-borderless">
         <tr>
           <td style="width:100%;">
-            <input type="text" name="keyword" id="keyword" class="form-control" style="font-size:16px;" placeholder="Nhập nội dung hoặc tiêu đề" />
+            <input type="text" name="keyword" id="keyword" class="form-control" style="font-size:16px;" placeholder="Tìm kiếm tên lỗi, tên module hoặc nội dung lỗi" />
           </td>
         </tr>
         <tr>
@@ -57,119 +46,32 @@ $endRecord = min($this->countItems, $currentPage * $limit);
   <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
       <thead>
-        <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên lỗi</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên module</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Nội dung lỗi</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important; width:131px" class="text-center">Trạng thái</th>
+        <tr style="background-color: #FBFBFB !important;" class="bg-primary">
+          <th style="vertical-align: middle" class="text-center text-dark">STT</th>
+          <th style="vertical-align: middle" class="text-center text-dark">Tên lỗi</th>
+          <th style="vertical-align: middle" class="text-center text-dark">Tên module</th>
+          <th style="vertical-align: middle" class="text-center text-dark">Nội dung lỗi</th>
+          <th style="width:131px; vertical-align: middle" class="text-center text-dark">Trạng thái</th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
-        <?php
-        if (!empty($this->item)) {
-          $stt = Factory::getApplication()->input->getInt('start', 0) + 1;
-          foreach ($this->item as $item):
-        ?>
-            <tr>
-              <td class="text-center" style="vertical-align: middle"><?php echo $stt++; ?></td>
-              <td style="vertical-align: middle">
-                <a href="<?php echo '/index.php/component/baocaoloi/?view=baocaoloi&task=detail_baocaoloi&id=' . $item->id; ?>">
-                  <?php if ($item->error_id !== 12): ?>
-                    <?php echo htmlspecialchars($item->name_error); ?>
-                  <?php else : ?>
-                    <?php echo htmlspecialchars($item->name_error); ?> (<?php echo htmlspecialchars($item->enter_error); ?>)
-                  <?php endif ?>
-                </a>
-              </td>
-              <td style="vertical-align: middle"><?php echo htmlspecialchars($item->name_module); ?></td>
-              <td style="vertical-align: middle"><?php echo htmlspecialchars($item->content); ?></td>
-              <td style="vertical-align: middle" class="text-center">
-                <?php
-                switch ((int)$item->status) {
-                  case 1:
-                    echo '<span class="text-warning">Chờ xử lý</span>';
-                    break;
-                  case 2:
-                    echo '<span class="text-success">Đã hoàn thành</span>';
-                    break;
-                  case 3:
-                    echo '<span class="text-danger">Đã hủy</span>';
-                    break;
-                  default:
-                    echo '<span class="text-muted">Không xác định</span>';
-                    break;
-                }
-                ?>
-              </td>
-            </tr>
-          <?php
-          endforeach;
-        } else {
-          ?>
-          <tr>
-            <td colspan="8" class="text-center">Không có dữ liệu</td>
-          </tr>
-        <?php
-        }
-        ?>
+        <tr>
+          <td colspan="6" class="text-center">Đang tải dữ liệu...</td>
+        </tr>
       </tbody>
     </table>
     <!-- pagination -->
     <div class="pagination-container d-flex align-items-center mt-3">
-      <div id="pagination" class="mx-auto">
-        <?php if ($totalPages > 1): ?>
-          <ul class="pagination">
-            <li class="page-item <?= $currentPage == 1 ? 'disabled' : ''; ?>">
-              <a class="page-link" href="#" data-page="1">
-                <<
-                  </a>
-            </li>
-            <li class="page-item <?= $currentPage == 1 ? 'disabled' : ''; ?>">
-              <a class="page-link" href="#" data-page="<?= max(1, $currentPage - 1); ?>">
-                <
-                  </a>
-            </li>
-            <?php
-            $range = 2;
-            $startPage = max(1, $currentPage - $range);
-            $endPage = min($totalPages, $currentPage + $range);
-
-            if ($startPage > 1) {
-              echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-            }
-            for ($i = $startPage; $i <= $endPage; $i++): ?>
-              <li class="page-item <?= $i == $currentPage ? 'active' : ''; ?>">
-                <a class="page-link" href="#" data-page="<?= $i; ?>"><?= $i; ?></a>
-              </li>
-            <?php endfor;
-
-            if ($endPage < $totalPages) {
-              echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-            }
-            ?>
-            <li class="page-item <?= $currentPage == $totalPages ? 'disabled' : ''; ?>">
-              <a class="page-link" href="#" data-page="<?= min($totalPages, $currentPage + 1); ?>">></a>
-            </li>
-            <li class="page-item <?= $currentPage == $totalPages ? 'disabled' : ''; ?>">
-              <a class="page-link" href="#" data-page="<?= $totalPages; ?>">>></a>
-            </li>
-          </ul>
-        <?php endif; ?>
-      </div>
-
-      <div class="pagination-info text-right ml-3">
-        <?php if ($this->countItems > 0): ?>
-          Hiển thị <?= $startRecord; ?> - <?= $endRecord; ?> của <?= $this->countItems; ?> mục (<?= $totalPages; ?> trang)
-        <?php else: ?>
-          Không có dữ liệu trang
-        <?php endif; ?>
-      </div>
+      <div id="pagination" class="mx-auto"></div>
+      <div id="pagination-info" class="pagination-info text-right ml-3"></div>
     </div>
   </div>
 </div>
 
 <script>
+  const idUser = <?= (int)Factory::getUser()->id ?>;
+  const csrfToken = Joomla.getOptions('csrf.token', '');
+
   function showToast(message, isSuccess = true) {
     const toast = $('<div></div>')
       .text(message)
@@ -189,76 +91,163 @@ $endRecord = min($this->countItems, $currentPage * $limit);
     setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
   }
 
-  $(document).ready(function() {
-    const idUser = <?= (int)Factory::getUser()->id ?>;
+  function renderStatus(status) {
+    switch (parseInt(status)) {
+      case 1:
+        return statusHtml = '<span class="text-warning">Chờ xử lý</span>';
+      case 2:
+        return statusHtml = '<span class="text-success">Đã hoàn thành</span>';
+      case 3:
+        return statusHtml = '<span class="text-danger">Đã hủy</span>';
+      default:
+        return statusHtml = '<span class="text-muted">Không xác định</span>';
+    }
+  }
 
-    //hàm load data
-    function loadData(page, keyword, perPage = 20) {
-      $("#tbody_danhsach").html('<tr><td colspan="9"><strong>loading...</strong></td></tr>');
-      $.ajax({
-        url: 'index.php?option=com_baocaoloi&controller=baocaoloi&task=getDanhSachBaoCaoLoi',
-        method: "POST",
+  function renderTBody(items, start) {
+    if (!items || items.length === 0) {
+      return '<tr><td colspan="5" class="text-center">Không có dữ liệu</td></tr>';
+    }
+    return items.map((item, index) => `
+    <tr>
+      <td class="text-center" style="vertical-align: middle">${start + index}</td>
+      <td style="vertical-align: middle">
+        <a href="/index.php/component/baocaoloi/?view=baocaoloi&task=detail_baocaoloi&id=${item.id}">
+          ${item.error_id !== 12 ? item.name_error || '' : `${item.name_error || ''} (${item.enter_error || ''})`}
+        </a>
+      </td>
+      <td style="vertical-align:middle;">${item.name_module || ''}</td>
+      <td style="vertical-align:middle;">${item.content || ''}</td>
+      <td style="vertical-align:middle;" class="text-center">${renderStatus(item.status)}</td>
+    </tr>
+    `).join('');
+  }
+
+  function renderPagination(currentPage, totalPages, totalRecord, take) {
+    let html = '<ul class="pagination">';
+
+    // First and Previous buttons
+    html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="1">&lt;&lt;</a>
+    </li>`;
+    html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${Math.max(1, currentPage - 1)}">&lt;</a>
+    </li>`;
+
+    // Page numbers
+    const range = 2;
+    const startPage = Math.max(1, currentPage - range);
+    const endPage = Math.min(totalPages, currentPage + range);
+
+    if (totalPages > 1 && startPage > 1) {
+      html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>`;
+    }
+
+    if (totalPages > 1 && endPage < totalPages) {
+      html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+    }
+
+    // Next and Last buttons
+    html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${Math.min(totalPages, currentPage + 1)}">&gt;</a>
+    </li>`;
+    html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" data-page="${totalPages}">&gt;&gt;</a>
+    </li>`;
+    html += '</ul>';
+
+    // Pagination info
+    const startRecord = (currentPage - 1) * take + 1;
+    const endRecord = Math.min(startRecord + take - 1, totalRecord);
+    const info = totalRecord > 0 ?
+      `Hiển thị ${startRecord} - ${endRecord} của ${totalRecord} mục (${totalPages} trang)` :
+      'Không có dữ liệu trang';
+
+    return {
+      pagination: html,
+      info
+    };
+  }
+
+  async function loadData(page = 1, keyword = '', take = 20) {
+    try {
+      $('#tbody_danhsach').html('<tr><td colspan="5" class="text-center">Đang tải dữ liệu...</td></tr>');
+      const response = await $.ajax({
+        url: 'index.php?option=com_baocaoloi&controller=baocaoloi&task=getListErrorReport',
+        method: 'POST',
         data: {
-          page: page,
-          perPage: perPage,
-          keyword: keyword || ""
-        },
-        success: function(responseData) {
-          console.log(responseData)
-          if (Array.isArray(responseData) && responseData.length > 0) {
-            let html = '';
-            responseData.forEach(function(item, index) {
-              statusHtml = '';
-              switch (parseInt(item.status)) {
-                case 1:
-                  statusHtml = '<span class="text-warning">Chờ xử lý</span>';
-                  break;
-                case 2:
-                  statusHtml = '<span class="text-success">Đã hoàn thành</span>';
-                  break;
-                case 3:
-                  statusHtml = '<span class="text-danger">Đã hủy</span>';
-                  break;
-                default:
-                  statusHtml = '<span class="text-muted">Không xác định</span>';
-                  break;
-              }
-              html += `
-                <tr>
-                  <td class="text-center" style="vertical-align: middle">${index + 1}</td>
-                  <td style="vertical-align: middle">
-                    <a href="/index.php/component/baocaoloi/?view=baocaoloi&task=detail_baocaoloi&id=${item.id}">
-                      ${item.name_error || ''}
-                    </a>
-                  </td>
-                  <td style="vertical-align:middle;">${item.name_module || ''}</td>
-                  <td style="vertical-align:middle;">${item.content || ''}</td>
-                  <td style="vertical-align:middle;">${statusHtml}</td>
-                </tr>`;
-            });
-            $("#tbody_danhsach").html(html);
-          } else {
-            $("#tbody_danhsach").html('<tr><td colspan="9" class="text-center text-danger">Không có dữ liệu</td></tr>');
-          }
+          page,
+          take,
+          keyword,
+          [csrfToken]: 1
         }
       });
+
+      const items = response.data || [];
+      const currentPage = response.page || page;
+      const totalRecord = response.totalrecord || items.length;
+      const totalPages = Math.ceil(totalRecord / take);
+      const start = (currentPage - 1) * take + 1;
+
+      $('#tbody_danhsach').html(renderTBody(items, start));
+      const {
+        pagination,
+        info
+      } = renderPagination(currentPage, totalPages, totalRecord, take);
+      $('#pagination').html(pagination);
+      $('#pagination-info').text(info);
+
+      history.pushState({}, '', `?view=baocaoloi&task=default&page=${currentPage}${keyword ? `&keyword=${encodeURIComponent(keyword)}` : ''}`);
+      return {
+        page: currentPage,
+        take,
+        totalrecord: totalRecord
+      };
+    } catch (error) {
+      console.error('Error:', error);
+      $('#tbody_danhsach').html('<tr><td colspan="5" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
+      showToast('Lỗi khi tải dữ liệu', 'danger');
     }
-    //hành động search 
+  }
+
+  $(document).ready(function() {
+    // Initialize from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialPage = parseInt(urlParams.get('page')) || 1;
+    const initialKeyword = urlParams.get('keyword') || '';
+
+    // Load initial data
+    loadData(initialPage, initialKeyword);
+
+    // Search handler
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
+      const keyword = $('#keyword').val();
+      loadData(1, keyword);
+    });
 
-      let keyword = $('#keyword').val();
-      let page = 1;
-      loadData(page, keyword, 20)
-    })
-    //hành động chuyển trang
-    $('body').on('click', "#pagination .page-link", function(e) {
-      e.preventDefault()
-      let page = $(this).data('page')
-      $('#pagination .page-item').removeClass('active')
-      $(this).parent().addClass('active')
-      loadData(page, '', 20)
-    })
+    // Reset search handler
+    $('.un-collapsed-card[data-action="reload"]').on('click', function(e) {
+      e.preventDefault();
+      $('#keyword').val('');
+      loadData(1, '');
+    });
+
+    // Pagination handler
+    $('body').on('click', '#pagination .page-link', function(e) {
+      e.preventDefault();
+      const page = parseInt($(this).data('page'));
+      const keyword = $('#keyword').val();
+      $('#pagination .page-item').removeClass('active');
+      $(this).parent().addClass('active');
+      loadData(page, keyword);
+    });
   });
 </script>
 

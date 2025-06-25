@@ -42,6 +42,9 @@ use Joomla\CMS\Factory;
     color: #fff;
     background-color: #007bff;
   }
+  .nav-link{
+    background-color:#d1d1d1;
+  }
 
   .nav-tabs {
     border-color: #bbbbbb;

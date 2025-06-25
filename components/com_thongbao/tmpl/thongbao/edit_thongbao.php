@@ -36,26 +36,29 @@ $item = $this->item;
       <div class="form-group">
         <label for="vanbandinhkem">Tệp đính kèm</label>
         <?php echo Core::inputAttachmentOneFile('dinhkem_vanbanlienquan', null, 1, date('Y'), -1); ?>
-        <input id="idTepDinhKem" name="idTepDinhKem" type="hidden" value="<?= $item->vanbandinhkem ?>">
-        <?php if (!empty($item->vanbandinhkem)) : ?>
+        <?php if (!empty($item->vanban)) : ?>
           <small>Hiện tại:
             <div class="d-flex flex-column">
               <?php foreach ($item->vanban as $vanban) : ?>
-                <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam . '&code=' . $vanban->code; ?>">
-                  <?php echo $vanban->filename ?>
-                </a>
+                <div class="vanban_<?= $vanban['id'] ?>">
+                  <?php if ($vanban['type'] === 'application/pdf') { ?>
+                    <a href="<?php echo '/index.php?option=com_thongbao&view=thongbao&format=raw&task=viewpdf&file=' . $vanban['code']  ?>" class="mr-2">
+                      <?php echo $vanban['filename'] ?>
+                    </a>
+                  <?php } else { ?>
+                    <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban['nam'] . '&code=' . $vanban['code'] ?>" class="mr-2">
+                      <?php echo $vanban['filename'] ?>
+                    </a>
+                  <?php } ?>
+                  <button type="button" class="btn bnt-deleteVanBan" data-id="<?= $vanban['id'] ?>" title="Xóa">
+                    <i class="fa fa-trash-alt"></i>
+                  </button>
+                </div>
               <?php endforeach ?>
             </div>
           </small>
         <?php endif; ?>
       </div>
-
-      <?php if ($item->id > 0): ?>
-        <h5>Thông tin hệ thống</h5>
-        <p><strong>Người tạo:</strong> <?= htmlspecialchars($item->name) ?></p>
-        <p><strong>Ngày tạo mới:</strong> <?= htmlspecialchars($item->ngay_tao) ?></p>
-        <p><strong>Email người tạo:</strong> <?= htmlspecialchars($item->email) ?></p>
-      <?php endif ?>
 
       <input type="hidden" name="id" value="<?= (int)$item->id ?>">
       <?php echo HTMLHelper::_('form.token'); ?>
@@ -137,11 +140,6 @@ $item = $this->item;
         showToast('Vui lòng nhập đầy đủ thông tin', false)
         return;
       }
-
-      const fileInput = $('#dinhkem_vanbanlienquan .fileUploaded').val();
-      const idVanban = $('#dinhkem_vanbanlienquan input[name="idObject"]').val();
-      $('#idTepDinhKem').val(fileInput ? idVanban : '<?= $item->vanbandinhkem ?? '' ?>');
-
       const formData = new FormData(this);
 
       $.ajax({
@@ -162,6 +160,37 @@ $item = $this->item;
         error: function(xhr, status, error) {
           console.error('Submit error:', xhr.responseText);
           showToast('Đã xảy ra lỗi khi gửi dữ liệu', false);
+        }
+      });
+    });
+
+    $('body').on('click', '.bnt-deleteVanBan', function() {
+      if (!confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) return;
+
+      const idVanban = $(this).data('id');
+      const idThongbao = <?= (int)$item->id ?>;
+
+      $.ajax({
+        url: 'index.php?option=com_thongbao&task=thongbao.deleteVanBanCTL',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          idVanban: idVanban,
+          idThongbao: idThongbao
+        }),
+        success: function(response) {
+          showToast(response.message || 'Xóa file thành công', response.success ?? true);
+          $(`.vanban_${idVanban}`).remove();
+        },
+        error: function(xhr) {
+          let response = {};
+          try {
+            response = JSON.parse(xhr.responseText);
+          } catch (e) {
+            response.message = 'Có lỗi xảy ra trong quá trình xử lý';
+            response.success = false;
+          }
+          showToast(response.message || 'Có lỗi khi xóa file', response.success);
         }
       });
     });

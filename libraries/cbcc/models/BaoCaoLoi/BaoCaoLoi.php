@@ -12,7 +12,7 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
     return "Tie";
   }
 
-  public function getListError($keyword = '', $page = 1, $perPage = 20)
+  public function getListErrorReport($keyword, $page, $take)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
@@ -37,41 +37,36 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
       $query->where('(a.content LIKE ' . $quotedKeyword . ' OR c.name LIKE ' . $quotedKeyword . ' OR b.name_error LIKE ' . $quotedKeyword . ')');
     }
 
-    // Lọc theo trạng thái chưa xoá
     $query->where('a.deleted = 0');
-
-    // Sắp xếp giảm dần theo ngày tạo
     $query->order($db->quoteName('a.created_at') . ' DESC');
 
+    $totalQuery = clone $query;
+    $totalQuery->clear('select')->select('COUNT(DISTINCT a.id)');
+    $db->setQuery($totalQuery);
+    $totalRecord = $db->loadResult();
     // Phân trang
-    $startFrom = ($page - 1) * $perPage;
-    $query->setLimit((int)$perPage, (int)$startFrom);
-
-    $db->setQuery($query);
+    $take = (int) $take > 0 ? (int) $take : 20;
+    $skip = ($page - 1) * $take;
+    $query->setLimit($take, $skip);
 
     try {
-      $rows = $db->loadObjectList();
+      $db->setQuery($query);
+      $data = $db->loadObjectList();
 
-      // Gom lại nếu có nhiều văn bản cho một thông báo
-      $result = [];
-      foreach ($rows as $row) {
-        $id = $row->id;
-        if (!isset($result[$id])) {
-          $result[$id] = (object)[
-            'id' => $row->id,
-            'error_id' => $row->error_id,
-            'enter_error' => $row->enter_error,
-            'name_error' => $row->name_error,
-            'name_module' => $row->name_module,
-            'status' => $row->status,
-            'content' => $row->content,
-          ];
-        }
-      }
-      return array_values($result);
+      return [
+        'data' => $data,
+        'page' => (int) $page,
+        'take' => (int) $take,
+        'totalrecord' => (int) $totalRecord
+      ];
     } catch (Exception $e) {
-      Factory::getApplication()->enqueueMessage('Lỗi khi lấy danh sách thông báo: ' . $e->getMessage(), 'error');
-      return [];
+      return [
+        'data' => [],
+        'page' => (int) $page,
+        'take' => (int) $take,
+        'totalrecord' => (int) 0,
+        'message' => $e->getMessage()
+      ];
     }
   }
 
@@ -209,8 +204,8 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
     $db = Factory::getDbo();
 
     // Lấy dữ liệu đầu vào
-    $error_id = (int) ($formdata['nameError'] ?? 0);
-    $enter_error = ($error_id === 12) ? trim($formdata['name_otherError'] ?? '') : null;
+    $error_id = (int) ($formdata['type_error_id'] ?? 0);
+    $enter_error = ($error_id === 12) ? trim($formdata['name_other'] ?? '') : null;
     $module_id = $formdata['module_id'] ?? '';
     $content = $formdata['error_content'] ?? '';
 

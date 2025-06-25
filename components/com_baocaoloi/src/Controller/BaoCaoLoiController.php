@@ -46,24 +46,23 @@ class BaoCaoLoiController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
-    public function getDanhSachBaoCaoLoi()
-    {
-        // Session::checkToken() or die('Token không hợp lệ');
-        $input = Factory::getApplication()->input;
 
-        // Lấy dữ liệu gửi lên từ Ajax
-        $page = $input->getInt('page', 1); // Mặc định là 1 nếu không có
-        $perPage = $input->getInt('perPage', 20);
-        $keyword = $input->getString('keyword', '');
+    public function getListErrorReport()
+    {
+        $input = Factory::getApplication()->input;
+        $formData = $input->post->getArray();
+        $json = json_decode(file_get_contents('php://input'), true);
+        $formData = $json ?? $formData;
 
         try {
             $model = Core::model('BaoCaoLoi/BaoCaoLoi');
-            $res =  $model->getListError($keyword, $page, $perPage);
+            $result =  $model->getListErrorReport($formData['keyword'], $formData['page'], $formData['take']);
         } catch (Exception $e) {
-            $res = ['error' => $e->getMessage()];
+            $result = $e->getMessage();
         }
+
         header('Content-Type: application/json');
-        echo json_encode($res);
+        echo json_encode($result);
         jexit();
     }
 

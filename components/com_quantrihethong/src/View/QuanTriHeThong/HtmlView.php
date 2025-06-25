@@ -47,8 +47,7 @@ class HtmlView extends BaseHtmlView
 
     protected function loadAccountList()
     {
-        $model = Core::model('QuanTriHeThong/QuanTriHeThong');
-        $this->accounts = $model->getListAccount();
+        $this->loadAssets();
     }
 
     protected function loadAccountDataById()

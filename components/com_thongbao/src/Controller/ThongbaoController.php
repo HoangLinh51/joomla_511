@@ -48,17 +48,14 @@ class ThongBaoController extends BaseController
 
     public function getDanhSachThongBao()
     {
-        // Session::checkToken() or die('Token không hợp lệ');
         $input = Factory::getApplication()->input;
-
-        // Lấy dữ liệu gửi lên từ Ajax
-        $page = $input->getInt('page', 1); // Mặc định là 1 nếu không có
-        $perPage = $input->getInt('perPage', 20);
-        $keyword = $input->getString('keyword', '');
+        $formData = $input->post->getArray();
+        $json = json_decode(file_get_contents('php://input'), true);
+        $formData = $json ?? $formData;
 
         try {
             $model = Core::model('Thongbao/Thongbao');
-            $res =  $model->getListThongBao('all', $keyword, $page, $perPage);
+            $res =  $model->getListThongBao('all', $formData['keyword'], $formData['page'], $formData['take']);
         } catch (Exception $e) {
             $res = ['error' => $e->getMessage()];
         }
@@ -126,5 +123,31 @@ class ThongBaoController extends BaseController
         }
 
         Factory::getApplication()->close();
+    }
+
+    public function deleteVanBanCTL()
+    {
+        // Session::checkToken() or die('Token không hợp lệ');
+        $input = Factory::getApplication()->input;
+        $formData = $input->post->getArray();
+        $json = json_decode(file_get_contents('php://input'), true);
+        $formData = $json ?? $formData;
+
+        try {
+            $model = Core::model('Thongbao/Thongbao');
+            $result = $model->deleteVanBan($formData['idVanban'], $formData['idThongbao']);
+            return $response = [
+                'success' => $result,
+                'message' => 'Đã xóa file thành công',
+            ];
+        } catch (Exception $e) {
+            return  $response = [
+                'success' => false,
+                'message' => 'Có lỗi khi xóa dữ liệu:' . $e->getMessage(),
+            ];
+        }
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        jexit();
     }
 }
