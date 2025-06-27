@@ -31,6 +31,7 @@ return [
 	'Joomla\\Component\\Decentralization\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_decentralization/src'],
 	'Joomla\\Component\\DichVuNhayCam\\Site\\' => [JPATH_SITE . '/components/com_dichvunhaycam/src'],
 	'Joomla\\Component\\Dmluong\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_dmluong/src'],
+	'Joomla\\Component\\DoanHoi\\Site\\' => [JPATH_SITE . '/components/com_doanhoi/src'],
 	'Joomla\\Component\\Fields\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_fields/src'],
 	'Joomla\\Component\\Fields\\Api\\' => [JPATH_API . '/components/com_fields/src'],
 	'Joomla\\Component\\Fields\\Site\\' => [JPATH_SITE . '/components/com_fields/src'],

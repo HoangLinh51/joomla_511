@@ -485,7 +485,6 @@ $detaiCoSo = $this->detailCoSo;
         });
       }
     });
-    console.log(isLocked)
 
     $row.find('.btn_timnhankhau').prop('disabled', !isLocked);
     $row.find('.btn-xoa-nv').prop('disabled', false); // vẫn cho phép xóa
