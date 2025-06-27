@@ -1,4 +1,5 @@
 <?php
+
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die('Restricted access');
@@ -29,31 +30,11 @@ defined('_JEXEC') or die('Restricted access');
 </div>
 
 <script>
-  // Get user ID and CSRF token from Joomla
   const idUser = <?= (int)Factory::getUser()->id ?>;
   const doanhoi = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
   const csrfToken = Joomla.getOptions('csrf.token', '');
 
-  // Function to show toast notifications for success or error messages
-  function showToast(message, isSuccess = true) {
-    const toast = $('<div></div>')
-      .text(message)
-      .css({
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        background: isSuccess ? '#28a745' : '#dc3545',
-        color: 'white',
-        padding: '10px 20px',
-        borderRadius: '5px',
-        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-        zIndex: 9999
-      })
-      .appendTo('body');
-    setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
-  }
-
-  // Function to render table rows for member list
+  // hàm render tbody 
   function renderTableRows(items, startIndex) {
     if (!items || items.length === 0) {
       return '<tr><td colspan="8" class="text-center">Không có dữ liệu</td></tr>';
@@ -132,7 +113,7 @@ defined('_JEXEC') or die('Restricted access');
     };
   }
 
-  // Function to fetch member list data with filters
+  // hàm get list đoàn hôi
   async function loadMemberList(page = 1, filters, itemsPerPage = 20) {
     try {
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
@@ -175,11 +156,11 @@ defined('_JEXEC') or die('Restricted access');
     } catch (error) {
       console.error('Error loading data:', error);
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
-      showToast('Lỗi khi tải dữ liệu', false);
+      showToastDS('Lỗi khi tải dữ liệu', false);
     }
   }
 
-  // Function to get filter parameters from form inputs
+  // hàm get thông tin search 
   function getFilterParams() {
     return {
       hoten: $('#hoten').val() || '',
@@ -191,20 +172,19 @@ defined('_JEXEC') or die('Restricted access');
     };
   }
 
-  // Initialize page and event handlers
   $(document).ready(function() {
-    // Load initial data based on URL page parameter
+    // lấy url để gán page trên url 
     const urlParams = new URLSearchParams(window.location.search);
     const initialPage = parseInt(urlParams.get('page')) || 1;
     loadMemberList(initialPage, getFilterParams());
 
-    // Handle filter button click
+    // hành động search 
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
       loadMemberList(1, getFilterParams());
     });
 
-    // Handle pagination clicks
+    // hành động chuyển trang 
     $('body').on('click', '#pagination .page-link', function(e) {
       e.preventDefault();
       const page = parseInt($(this).data('page'));
@@ -213,7 +193,7 @@ defined('_JEXEC') or die('Restricted access');
       loadMemberList(page, getFilterParams());
     });
 
-    // Handle delete button click
+    // hành động xóa
     $('body').on('click', '.btn_xoa', async function() {
       if (!confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) return;
 
@@ -231,27 +211,35 @@ defined('_JEXEC') or die('Restricted access');
           })
         });
         const data = await response.json();
-        showToast(data.message || 'Xóa thành công', data.success !== false);
+        showToastDS(data.message || 'Xóa thành công', data.success !== false);
         if (data.success !== false) {
-          setTimeout(() => window.location.href = '/index.php/component/doanhoi/?view=doanhoi', 500);
+          setTimeout(() => window.location.reload());
         }
       } catch (error) {
         console.error('Error deleting:', error);
-        showToast('Đã xảy ra lỗi khi xóa dữ liệu', false);
+        showToastDS('Đã xảy ra lỗi khi xóa dữ liệu', false);
       }
     });
-
-    // Handle reset filter button
-    $('.un-collapsed-card[data-action="reload"]').on('click', function(e) {
-      e.preventDefault();
-      $('#hoten').val('');
-      $('#cccd').val('');
-      $('#phuongxa_id').val('').trigger('change');
-      $('#thonto_id').html('<option value=""></option>').trigger('change');
-      $('#gioitinh_id').val('').trigger('change');
-      loadMemberList(1, getFilterParams());
-    });
   });
+
+  //hàm thông báo
+  function showToastDS(message, isSuccess = true) {
+    const toast = $('<div></div>')
+      .text(message)
+      .css({
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        background: isSuccess ? '#28a745' : '#dc3545',
+        color: 'white',
+        padding: '10px 20px',
+        borderRadius: '5px',
+        boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+        zIndex: 9999
+      })
+      .appendTo('body');
+    setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
+  }
 </script>
 
 <style>

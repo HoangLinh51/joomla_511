@@ -50,7 +50,6 @@ class DoanHoiController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
-
     public function getListDoanHoi()
     {
         $input = Factory::getApplication()->input;
@@ -99,11 +98,11 @@ class DoanHoiController extends BaseController
         echo json_encode($result);
         jexit();
     }
-    public function getKhuvucByIdCha()
+    public function getThonTobyPhuongxa()
     {
-        $cha_id = Factory::getApplication()->input->getVar('cha_id', 0);
-        $model = Core::model('Vptk/Vptk');
-        $result = $model->getKhuvucByIdCha($cha_id);
+        $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
+        $model = Core::model('DoanHoi/DoanHoi');
+        $result = $model->getThonTobyPhuongxaId($phuongxa_id);
         header('Content-type: application/json');
         echo json_encode($result);
         jexit();
@@ -112,10 +111,11 @@ class DoanHoiController extends BaseController
     public function getDetailDoanHoi()
     {
         $idDoanHoi = Factory::getApplication()->input->getVar('doanhoi_id', 0);
-
+        $model = Core::model('DoanHoi/DoanHoi');
+        $result = $model->getDetailDoanHoi($idDoanHoi);
+        // var_dump($result);
+        // exit;
         try {
-            $model = Core::model('DoanHoi/DoanHoi');
-            $result = $model->getDetailDoanHoi($idDoanHoi);
             echo json_encode(
                 $result['data']
             );
@@ -134,8 +134,11 @@ class DoanHoiController extends BaseController
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
-        // var_dump($formData);
-        // exit;
+
+        $formData['dantoc_id'] = $formData['modal_dantoc_id'] ?? $formData['input_dantoc_id'];
+        $formData['tongiao_id'] = $formData['modal_tongiao_id'] ?? $formData['input_tongiao_id'];
+        $formData['phuongxa_id'] = $formData['modal_phuongxa_id'] ?? $formData['input_phuongxa_id'];
+        $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
 
         try {
             $model = Core::model('DoanHoi/DoanHoi');
@@ -168,7 +171,7 @@ class DoanHoiController extends BaseController
             $result = $model->deleteDoanHoi($formData['idUser'], $formData['idThanhvienDoanHoi']);
             $response = [
                 'success' => $result,
-                'message' => 'Đã xóa file thành công',
+                'message' => 'Xóa thành viên thành công',
             ];
         } catch (Exception $e) {
             $response = [
