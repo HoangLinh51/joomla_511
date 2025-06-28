@@ -56,19 +56,23 @@ class HtmlView extends BaseHtmlView
         $phanquyen = $model->getPhanQuyen();
         $doanhoiPhanQuyen = $model->getPhanQuyenDoanHoi($user->id);
         $danhMucGioiTinh = $model->getDanhMucGioiTinh();
-        $doanhoi = $model->getDoanHoi();
+        $dmdoanhoi = $model->getListDanhMucDoanHoi();
         $phuongxa = array();
         if ($phanquyen['phuongxa_id'] != '') {
             $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
         }
-        $chucdanh = $model->getChucDanh();
+        $is_dung = 1;
+        if($doanhoiPhanQuyen['is_doanvien'] != '1' ){
+            $is_dung= 2 ;
+        }
+        $chucdanh = $model->getChucDanhTheoDoanHoi($is_dung);
         $dantoc = $model->getDanToc();
         $tongiao = $model->getTonGiao();
         // var_dump($phuongxa);
 
         $this->gioitinh = $danhMucGioiTinh;
         $this->doanhoiPhanQuyen = $doanhoiPhanQuyen;
-        $this->doanhoi = $doanhoi;
+        $this->doanhoi = $dmdoanhoi;
         $this->chucdanh = $chucdanh;
         $this->dantoc = $dantoc;
         $this->tongiao = $tongiao;

@@ -9,7 +9,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
 
-
 <div class="danhsach" style="background-color:#fff">
   <div class="content-header">
     <div class="row mb-2">
@@ -94,10 +93,12 @@ use Joomla\CMS\HTML\HTMLHelper;
       <div class="modal-body">
         <form id="formDoanvienHoiVien" name="formDoanvienHoiVien" method="post" action="index.php?option=com_doanhoi&controller=doanhoi&task=save_doanhoi">
           <div class="card-body">
-            <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:10px">
+            <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
               <h5 style="margin: 0">Thông tin cá nhân</h5>
-              <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" data-bs-toggle="tooltip"
-                data-bs-placement="top" title="Chọn thành viên từ danh sách nhân khẩu">
+              <div class="d-flex align-items-center" style="gap:5px">
+                <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;">
+                <small>Chọn thành viên từ danh sách nhân khẩu</small>
+              </div>
             </div>
             <div id="select-container" style="display: none;" class="mb-3">
               <label for="select_top" class="form-label fw-bold">Chọn thành viên từ danh sách nhân khẩu</label>
@@ -125,11 +126,11 @@ use Joomla\CMS\HTML\HTMLHelper;
                 <input id="modal_namsinh" type="date" name="modal_namsinh" class="form-control">
               </div>
               <div class="col-md-4 mb-2">
-                <label for="modal_dienthoai" class="form-label fw-bold">Điện thoại <span class="text-danger">*</span></label>
+                <label for="modal_dienthoai" class="form-label fw-bold">Điện thoại</label>
                 <input id="modal_dienthoai" type="text" name="modal_dienthoai" class="form-control" placeholder="Nhập số điện thoại">
               </div>
               <div class="col-md-4 mb-2">
-                <label for="modal_dantoc_id" class="form-label fw-bold">Dân tộc <span class="text-danger">*</span></label>
+                <label for="modal_dantoc_id" class="form-label fw-bold">Dân tộc</label>
                 <input type="hidden" id="input_dantoc_id" name="input_dantoc_id" value="">
                 <select id="modal_dantoc_id" name="modal_dantoc_id" class="select2" data-placeholder="Chọn dân tộc">
                   <option value=""></option>
@@ -141,7 +142,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                 </select>
               </div>
               <div class="col-md-4 mb-2">
-                <label for="modal_tongiao_id" class="form-label fw-bold">Tôn giáo <span class="text-danger">*</span></label>
+                <label for="modal_tongiao_id" class="form-label fw-bold">Tôn giáo</label>
                 <input type="hidden" id="input_tongiao_id" name="input_tongiao_id" value="">
                 <select id="modal_tongiao_id" name="modal_tongiao_id" class="select2" data-placeholder="Chọn tôn giáo">
                   <option value=""></option>
@@ -169,14 +170,14 @@ use Joomla\CMS\HTML\HTMLHelper;
                 </select>
               </div>
               <div class="col-md-4">
-                <label for="modal_thonto_id" class="form-label fw-bold">Thôn tổ <span class="text-danger">*</span></label>
+                <label for="modal_thonto_id" class="form-label fw-bold">Thôn tổ</label>
                 <input type="hidden" id="input_thonto_id" name="input_thonto_id" value="">
                 <select id="modal_thonto_id" name="modal_thonto_id" class="select2" data-placeholder="Chọn thôn/tổ">
                   <option value=""></option>
                 </select>
               </div>
               <div class="col-md-4">
-                <label for="modal_diachi" class="form-label fw-bold">Địa chỉ <span class="text-danger">*</span></label>
+                <label for="modal_diachi" class="form-label fw-bold">Địa chỉ</label>
                 <input id="modal_diachi" type="text" name="modal_diachi" class="form-control" placeholder="Nhập địa chỉ">
               </div>
             </div>
@@ -193,7 +194,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                 <input type="hidden" name="doanhoi_id" value="<?php echo $this->doanhoiPhanQuyen[0]['is_doanvien']; ?>">
               </div>
               <div class="col-md-4">
-                <label for="modal_chucdanh_id" class="form-label fw-bold">Chức vụ đoàn/hội <span class="text-danger">*</span></label>
+                <label for="modal_chucdanh_id" class="form-label fw-bold">Chức vụ đoàn/hội</label>
                 <select id="modal_chucdanh_id" name="chucvu_id" class="select2" data-placeholder="Chọn chức vụ">
                   <option value=""></option>
                   <?php foreach ($this->chucdanh as $cd) { ?>
@@ -202,7 +203,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                 </select>
               </div>
               <div class="col-md-4">
-                <label class="form-label fw-bold">Thời gian tham gia <span class="text-danger">*</span></label>
+                <label class="form-label fw-bold">Thời gian tham gia </label>
                 <div class="d-flex" style="gap: 8px;">
                   <input type="date" name="thoidiem_batdau" class="form-control" placeholder="Ngày bắt đầu" style="width: 145px;">
                   <input type="date" name="thoidiem_ketthuc" class="form-control" placeholder="Ngày kết thúc" style="width: 145px;">
@@ -232,46 +233,33 @@ use Joomla\CMS\HTML\HTMLHelper;
   </div>
 </div>
 
-
 <script>
   const phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
-  const thonto_id = <?= json_encode($this->thonto_id ?? 0) ?>;
 
   $(document).ready(function() {
-    //khởi tạo select 2 
-    function initSelect2Modal($element, options = {}) {
-      $element.select2({
-        placeholder: $element.data('placeholder') || 'Chọn',
+    // Initialize Select2 for modal and filter dropdowns
+    const initSelect2 = (selector, width = '100%') => {
+      $(selector).select2({
+        placeholder: $(selector).data('placeholder') || 'Chọn',
         allowClear: true,
-        width: '100%',
-        ...options
+        width,
       });
-    }
-
-    function initSelect2($element, options = {}) {
-      $element.select2({
-        placeholder: $element.data('placeholder') || 'Chọn',
-        allowClear: true,
-        width: '67%',
-        ...options
-      });
-    }
+    };
 
     ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id', '#modal_chucdanh_id', '#doanhoi_id'].forEach(selector => {
-      initSelect2Modal($(selector));
+      initSelect2(selector);
     });
     ['#phuongxa_id', '#thonto_id', '#gioitinh_id'].forEach(selector => {
-      initSelect2($(selector));
+      initSelect2(selector, '67%');
     });
 
-    // hàm lấy dữ liệu thôn tổ cùng với đó select nếu có truyền thôn tổ 
-    function fetchThonTo(phuongxa_id, element = '#thonto_id', thontoSelect = 0) {
-      console.log('thontoSelect: ', thontoSelect)
+    // Fetch village data based on ward selection
+    const fetchThonTo = (phuongxa_id, element = '#thonto_id', thontoSelect = null) => {
       if (!phuongxa_id) {
         $(element).html('<option value=""></option>').trigger('change');
-        return;
+        return Promise.resolve();
       }
-      $.post('index.php', {
+      return $.post('index.php', {
         option: 'com_doanhoi',
         controller: 'doanhoi',
         task: 'getThonTobyPhuongxa',
@@ -283,42 +271,45 @@ use Joomla\CMS\HTML\HTMLHelper;
           options += `<option value="${village.id}"${selected}>${village.tenkhuvuc}</option>`;
         });
         $(element).html(options).trigger('change');
-      }, 'json').fail(function() {
+      }, 'json').fail(() => {
         showToast('Lỗi khi tải danh sách thôn/tổ', false);
       });
-    }
+    };
 
-    // hành động gọi lại hàm fechthonto nếu phường xã thay đổi
-    $('#modal_phuongxa_id').on('change', function() {
-      fetchThonTo($(this).val(), '#modal_thonto_id');
+    $('#btn_luu').on('click', function() {
+      $('#formDoanvienHoiVien').submit();
     });
+
+    // Handle ward change for filter and modal
     $('#phuongxa_id').on('change', function() {
       fetchThonTo($(this).val(), '#thonto_id');
     });
+    $('#modal_phuongxa_id').on('change', function() {
+      fetchThonTo($(this).val(), '#modal_thonto_id');
+    });
 
-    // checkbox disable các field
+    // Toggle input fields based on checkbox
     $('#checkbox_toggle').change(function() {
       const isChecked = $(this).is(':checked');
       const textFields = ['#modal_hoten', '#modal_cccd', '#modal_namsinh', '#modal_dienthoai', '#modal_diachi'];
       const selectFields = ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id'];
 
       $('#select-container').toggle(isChecked);
-
-      textFields.forEach(selector => {
-        $(selector).attr('readonly', isChecked);
-      });
-
-      selectFields.forEach(selector => {
-        $(selector).attr('disabled', isChecked);
-      });
+      textFields.forEach(selector => $(selector).prop('readonly', isChecked));
+      selectFields.forEach(selector => $(selector).prop('disabled', isChecked));
+      // Khi ấn vào checkbox, reset nhankhau_id và modal_gioitinh_id về rỗng
+      $('#nhankhau_id').val('');
+      $('#modal_gioitinh_id').val('');
 
       if (isChecked) {
-        // khởi tạo select 2 cho phần search nhân khẩu (kèm theo phân trang và search keyword )
-        initSelect2($('#select_top'), {
+        $('#select_top').select2({
+          placeholder: 'Chọn thành viên',
+          allowClear: true,
+          width: '100%',
           ajax: {
             url: 'index.php?option=com_doanhoi&task=doanhoi.timkiem_nhankhau&format=json',
             dataType: 'json',
-            delay: 200,
+            delay: 250,
             data: function(params) {
               return {
                 keyword: params.term || '',
@@ -341,16 +332,47 @@ use Joomla\CMS\HTML\HTMLHelper;
             },
             cache: true
           },
+          minimumInputLength: 0,
           templateResult: data => data.loading ? data.text : $('<div>' + data.text + '</div>'),
-          templateSelection: data => data.text || '',
-          dropdownParent: $('#formDoanvienHoiVien')
+          templateSelection: data => data.text || 'Chọn thành viên',
+          dropdownParent: $('#modalThemDoanHoi')
         });
+      } else {
+        $('#select_top').val('').trigger('change');
+        if ($.fn.select2 && $('#select_top').data('select2')) {
+          $('#select_top').select2('destroy');
+        }
+        $('#select_top').html('<option value="">-- Chọn --</option>');
       }
     });
 
-    // gán dữ liệu đã chọn vào các input 
-    $('#select_top').on('select2:select', function(e) {
+    // Populate form with selected member data
+    $('#select_top').on('select2:select', async function(e) {
       const data = e.params.data;
+      const doanhoiPhanQuyen = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
+
+      // Check if nhankhau_id already exists in doanhoi
+      try {
+        const response = await $.post('index.php', {
+          option: 'com_doanhoi',
+          controller: 'doanhoi',
+          task: 'checkNhankhauInDoanhoi',
+          nhankhau_id: data.id,
+          doanhoi_id: doanhoiPhanQuyen
+        }, null, 'json');
+
+        if (response.exists) {
+          showToast('Nhân khẩu này đã là thành viên của đoàn hội', false);
+          // Optionally, you can clear the selection and reset the form
+          $('#select_top').val('').trigger('change');
+          return;
+        }
+      } catch (error) {
+        console.log(error)
+        showToast('Lỗi khi kiểm tra trạng thái nhân khẩu trong đoàn hội', false);
+        return;
+      }
+
       $('#nhankhau_id').val(data.id || '');
       $('#modal_gioitinh_id').val(data.gioitinh_id || '');
       $('#modal_hoten').val(data.hoten || '');
@@ -358,24 +380,19 @@ use Joomla\CMS\HTML\HTMLHelper;
       $('#modal_namsinh').val(data.ngaysinh || '');
       $('#modal_dienthoai').val(data.dienthoai || '');
       $('#input_dantoc_id').val(data.dantoc_id || '').trigger('change');
-      $('#input_tongiao_id').val(data.tongiao_id || '').trigger('change');
-      $('#input_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
-      $('#input_thonto_id').val(data.thonto_id || '').trigger('change');
       $('#modal_dantoc_id').val(data.dantoc_id || '').trigger('change');
+      $('#input_tongiao_id').val(data.tongiao_id || '').trigger('change');
       $('#modal_tongiao_id').val(data.tongiao_id || '').trigger('change');
+      $('#input_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
       $('#modal_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
       $('#modal_diachi').val(data.diachi || '');
-      console.log(data.thonto_id)
-      fetchThonTo(data.phuongxa_id, '#modal_thonto_id', data.thonto_id);
+      await fetchThonTo(data.phuongxa_id, '#modal_thonto_id', data.thonto_id);
+      $('#input_thonto_id').val(data.thonto_id || '').trigger('change');
+      $('#modal_thonto_id').val(data.thonto_id || '').trigger('change');
     });
 
-    // gọi hành động submit
-    $('#btn_luu').on('click', function() {
-      $('#formDoanvienHoiVien').submit();
-    });
-
-    // hành động hiệu chỉnh
-    $('body').on('click', '.btn_hieuchinh', function() {
+    // Handle edit action
+    $('body').on('click', '.btn_hieuchinh', async function() {
       const memberId = $(this).data('doanhoi');
       const modalTitle = $(this).data('title') || 'Hiệu chỉnh thông tin đoàn viên hội viên';
       if (!memberId) {
@@ -385,95 +402,135 @@ use Joomla\CMS\HTML\HTMLHelper;
 
       const $modal = $('#modalThemDoanHoi');
       const $modalContent = $modal.find('.modal-content');
-
-      // hiện phần loadding 
       showLoadingOverlay($modalContent);
-
-      // cập nhật tiêu đề
       $('#modalThemDoanHoiLabel').text(modalTitle);
 
-      // gọi AJAX lấy detail 
-      $.post('index.php', {
-        option: 'com_doanhoi',
-        controller: 'doanhoi',
-        task: 'getDetailDoanHoi',
-        doanhoi_id: memberId
-      }, function(result) {
-        if (result && result.id) {
-          // gán dữ liệu vào input 
-          new Promise((resolve) => {
-            $('#nhankhau_id').val(result.nhankhau_id);
-            $('#modal_gioitinh_id').val(result.n_gioitinh_id);
-            $('#modal_hoten').val(result.n_hoten);
-            $('#modal_cccd').val(result.n_cccd);
-            $('#modal_namsinh').val(result.n_namsinh);
-            $('#modal_dienthoai').val(result.n_dienthoai);
-            $('#input_dantoc_id').val(result.n_dantoc_id);
-            $('#modal_dantoc_id').val(result.n_dantoc_id).trigger('change');
-            $('#input_tongiao_id').val(result.n_tongiao_id);
-            $('#modal_tongiao_id').val(result.n_tongiao_id).trigger('change');
-            $('#input_phuongxa_id').val(result.n_phuongxa_id);
-            $('#modal_phuongxa_id').val(result.n_phuongxa_id).trigger('change');
-            $('#modal_diachi').val(result.n_diachi);
-            $('#doanhoi_id').val(result.doanhoi_id).trigger('change');
-            $('input[name="doanhoi_id"]').val(result.doanhoi_id);
-            $('#modal_chucdanh_id').val(result.chucvu_id).trigger('change');
-            $('input[name="thoidiem_batdau"]').val(result.thoidiem_batdau);
-            $('input[name="thoidiem_ketthuc"]').val(result.thoidiem_ketthuc);
-            $('#lydo_biendong').val(result.lydobiendong);
-            $('#ghichu').val(result.ghichu);
-            $('input[name="id"]').val(result.id);
+      try {
+        const response = await $.post('index.php', {
+          option: 'com_doanhoi',
+          controller: 'doanhoi',
+          task: 'getDetailDoanHoi',
+          doanhoi_id: memberId
+        }, null, 'json');
 
-            // tích vào check box
-            if (parseInt(result.is_ngoai) === 0) {
-              $('#checkbox_toggle').prop('checked', true);
+        if (response && response.id) {
+          $('input[name="id"]').val(response.id || '');
+          $('#doanhoi_id').val(response.doanhoi_id || '').trigger('change');
+          $('input[name="doanhoi_id"]').val(response.doanhoi_id || '');
+          $('#modal_chucdanh_id').val(response.chucvu_id || '').trigger('change');
+          $('input[name="thoidiem_batdau"]').val(response.thoidiem_batdau || '');
+          $('input[name="thoidiem_ketthuc"]').val(response.thoidiem_ketthuc || '');
+          $('#lydo_biendong').val(response.lydobiendong || '');
+          $('#ghichu').val(response.ghichu || '');
+
+          const hasNhankhauId = !!response.nhankhau_id;
+          $('#checkbox_toggle').prop('checked', hasNhankhauId).trigger('change');
+
+          if (hasNhankhauId) {
+            // Use cccd_so as keyword to fetch nhankhau details
+            const nhankhauResponse = await $.post('index.php', {
+              option: 'com_doanhoi',
+              task: 'doanhoi.timkiem_nhankhau',
+              format: 'json',
+              keyword: response.n_cccd || '', // Use cccd_so as keyword
+              phuongxa_id: response.n_phuongxa_id ? [response.n_phuongxa_id] : phuongxa_id.map(item => item.id)
+            }, null, 'json');
+
+            if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
+              const nhankhau = nhankhauResponse.items.find(item => item.id === response.nhankhau_id) || nhankhauResponse.items[0];
+              if (nhankhau) {
+                // Add the fetched nhankhau as a selected option
+                const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
+                const newOption = new Option(optionText, nhankhau.id, true, true);
+                $('#select_top').append(newOption).trigger('change');
+
+                // Trigger select2:select to populate form
+                $('#select_top').trigger({
+                  type: 'select2:select',
+                  params: {
+                    data: {
+                      id: nhankhau.id,
+                      hoten: nhankhau.hoten,
+                      cccd_so: nhankhau.cccd_so,
+                      ngaysinh: nhankhau.ngaysinh,
+                      dienthoai: nhankhau.dienthoai,
+                      dantoc_id: nhankhau.dantoc_id,
+                      tongiao_id: nhankhau.tongiao_id,
+                      phuongxa_id: nhankhau.phuongxa_id,
+                      thonto_id: nhankhau.thonto_id,
+                      diachi: nhankhau.diachi
+                    }
+                  }
+                });
+              } else {
+                showToast('Không tìm thấy nhân khẩu phù hợp', false);
+                $('#checkbox_toggle').prop('checked', false).trigger('change');
+              }
             } else {
-              $('#checkbox_toggle').prop('checked', false);
+              showToast('Không tìm thấy thông tin nhân khẩu', false);
+              $('#checkbox_toggle').prop('checked', false).trigger('change');
             }
-            $('#checkbox_toggle').trigger('change');
+          } else {
+            // Populate manual input fields for non-nhankhau data
+            $('#nhankhau_id').val('');
+            $('#modal_gioitinh_id').val(response.n_gioitinh_id || '');
+            $('#modal_hoten').val(response.n_hoten || '');
+            $('#modal_cccd').val(response.n_cccd || '');
+            $('#modal_namsinh').val(response.n_namsinh || '');
+            $('#modal_dienthoai').val(response.n_dienthoai || '');
+            $('#input_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
+            $('#modal_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
+            $('#input_tongiao_id').val(response.n_tongiao_id || '').trigger('change');
+            $('#modal_tongiao_id').val(response.n_tongiao_id || '').trigger('change');
+            $('#input_phuongxa_id').val(response.n_phuongxa_id || '').trigger('change');
+            $('#modal_phuongxa_id').val(response.n_phuongxa_id || '').trigger('change');
+            $('#modal_diachi').val(response.n_diachi || '');
+            await fetchThonTo(response.n_phuongxa_id, '#modal_thonto_id', response.n_thonto_id);
+            $('#input_thonto_id').val(response.n_thonto_id || '').trigger('change');
+            $('#modal_thonto_id').val(response.n_thonto_id || '').trigger('change');
+          }
 
-            fetchThonTo(result.n_phuongxa_id, '#modal_thonto_id', result.n_thonto_id);
-            resolve();
-          }).then(() => {
-            // ẩn loadding
-            hideLoadingOverlay($modalContent);
-
-            $modal.modal({
-              show: true,
-              backdrop: 'static',
-              keyboard: false
-            }).css({
-              'opacity': 0,
-              'transition': 'opacity 0.3s ease-in-out'
-            }).animate({
-              opacity: 1
-            }, 300);
-          });
+          $modal.modal({
+            show: true,
+            backdrop: 'static',
+            keyboard: false
+          }).css({
+            'opacity': 0,
+            'transition': 'opacity 0.3s ease-in-out'
+          }).animate({
+            opacity: 1
+          }, 300);
         } else {
-          hideLoadingOverlay($modalContent);
-          showToast(result.message || 'Không thể lấy dữ liệu', false);
+          showToast(response.message || 'Không thể lấy dữ liệu', false);
         }
-      }, 'json').fail(function() {
-        hideLoadingOverlay($modalContent);
+      } catch (error) {
         showToast('Lỗi khi gửi yêu cầu AJAX', false);
-      });
+      } finally {
+        hideLoadingOverlay($modalContent);
+      }
     });
-
-    // validate form
     $('#formDoanvienHoiVien').validate({
       ignore: [],
       rules: {
         modal_hoten: {
-          required: true
+          required: function() {
+            return !$('#checkbox_toggle').is(':checked');
+          }
         },
         modal_cccd: {
-          required: true
+          required: function() {
+            return !$('#checkbox_toggle').is(':checked');
+          }
         },
         modal_namsinh: {
-          required: true
+          required: function() {
+            return !$('#checkbox_toggle').is(':checked');
+          }
         },
         modal_phuongxa_id: {
-          required: true
+          required: function() {
+            return !$('#checkbox_toggle').is(':checked');
+          }
         },
       },
       messages: {
@@ -523,27 +580,19 @@ use Joomla\CMS\HTML\HTMLHelper;
       });
     });
   });
-
-  // hàm để show loadding 
-  function showLoadingOverlay($container) {
+  const showLoadingOverlay = ($container) => {
     if ($container.find('.loading-overlay').length === 0) {
-      const $overlay = $(`
-      <div class="loading-overlay">
-        <div class="loading-spinner"></div>
-      </div>
-    `);
-      $container.css('position', 'relative');
-      $container.append($overlay);
+      $container.css('position', 'relative').append(`
+        <div class="loading-overlay">
+          <div class="loading-spinner"></div>
+        </div>
+      `);
     }
-  }
-  
-  // hàm để hide loadding 
-  function hideLoadingOverlay($container) {
+  };
+  const hideLoadingOverlay = ($container) => {
     $container.find('.loading-overlay').remove();
-  }
-
-  // hàm thông báo 
-  function showToast(message, isSuccess = true) {
+  };
+  const showToast = (message, isSuccess = true) => {
     const toast = $('<div></div>')
       .text(message)
       .css({
@@ -560,7 +609,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       })
       .appendTo('body');
     setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
-  }
+  };
 </script>
 
 <style>
@@ -640,7 +689,6 @@ use Joomla\CMS\HTML\HTMLHelper;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
-    /* Màu nền xám mờ */
     display: flex;
     justify-content: center;
     align-items: center;

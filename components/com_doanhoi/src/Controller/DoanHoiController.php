@@ -76,6 +76,7 @@ class DoanHoiController extends BaseController
         $input = $app->input;
 
         $keyword = $input->get('keyword', '', 'string');
+        $nhankhau_id = $input->getInt('nhankhau_id', 0);
         $page = $input->getInt('page', 1);
         $limit = 10;
         $offset = ($page - 1) * $limit;
@@ -85,7 +86,7 @@ class DoanHoiController extends BaseController
         $model = Core::model('DoanHoi/DoanHoi');
 
         try {
-            $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset);
+            $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
         } catch (Exception $e) {
             $result = [
                 'items' => [],
@@ -98,6 +99,7 @@ class DoanHoiController extends BaseController
         echo json_encode($result);
         jexit();
     }
+    
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
@@ -123,6 +125,49 @@ class DoanHoiController extends BaseController
             echo json_encode( $e->getMessage());
         }
         jexit();
+    }
+
+    public function checkNhankhauInDoanhoi()
+    {
+        $input = Factory::getApplication()->input;
+        $nhankhau_id = $input->getInt('nhankhau_id', 0);
+        $doanhoi_id = $input->getInt('doanhoi_id', 0);
+ 
+        // Validate input
+        if (!$nhankhau_id || !$doanhoi_id) {
+            $response = [
+                'success' => false,
+                'exists' => false,
+                'message' => 'Thiếu nhankhau_id hoặc doanhoi_id'
+            ];
+            echo json_encode($response);
+            Factory::getApplication()->close();
+            return;
+        }
+
+        // Load the model
+        $model = Core::model('DoanHoi/DoanHoi');
+
+        try {
+            // Check if nhankhau_id exists in doanhoi_id
+            $exists = $model->checkNhankhauInDoanhoi($nhankhau_id, $doanhoi_id);
+
+            $response = [
+                'success' => true,
+                'exists' => $exists,
+                'message' => $exists ? 'Nhân khẩu đã là thành viên của đoàn hội' : 'Nhân khẩu chưa là thành viên của đoàn hội'
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'success' => false,
+                'exists' => false,
+                'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
+            ];
+        }
+
+        // Return JSON response
+        echo json_encode($response);
+        Factory::getApplication()->close();
     }
 
     public function save_doanhoi()
@@ -164,8 +209,6 @@ class DoanHoiController extends BaseController
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
-// var_dump($formData);
-// exit;
         try {
             $model = Core::model('DoanHoi/DoanHoi');
             $result = $model->deleteDoanHoi($formData['idUser'], $formData['idThanhvienDoanHoi']);
@@ -181,14 +224,6 @@ class DoanHoiController extends BaseController
         }
         header('Content-Type: application/json');
         echo json_encode($response);
-        jexit();
-    }
-
-
-    private function outputJsonError($message)
-    {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => $message]);
         jexit();
     }
 }
