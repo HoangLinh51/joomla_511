@@ -28,6 +28,7 @@ return [
 	'Joomla\\Component\\Core\\Site\\' => [JPATH_SITE . '/components/com_core/src'],
 	'Joomla\\Component\\Cpanel\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_cpanel/src'],
 	'Joomla\\Component\\Danhmuc\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_danhmuc/src'],
+	'Joomla\\Component\\Dcxddt\\Site\\' => [JPATH_SITE . '/components/com_dcxddt/src'],
 	'Joomla\\Component\\Decentralization\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_decentralization/src'],
 	'Joomla\\Component\\DichVuNhayCam\\Site\\' => [JPATH_SITE . '/components/com_dichvunhaycam/src'],
 	'Joomla\\Component\\Dmluong\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_dmluong/src'],
