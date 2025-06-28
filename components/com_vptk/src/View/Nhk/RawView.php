@@ -55,8 +55,11 @@ class RawView extends BaseHtmlView
             case 'DETAIL':
                 $this->_getDetail();
                 break;
-            case 'DS_BDH':
-                $this->_pageBDH();
+            case 'DS_NHK':
+                $this->_pageNHK();
+                break;
+            case 'DS_THONGKE':
+                $this->_pageThongke();
                 break;
             case 'DETAIL_NHK':
                 $this->_pageDetailNHK();
@@ -85,7 +88,7 @@ class RawView extends BaseHtmlView
         // $this->quatrinh_bienche = $quatrinh_bienche; 	
         parent::display();
     }
-    private function _pageBDH()
+    private function _pageNHK()
     {
         $model = Core::model('Vptk/Vptk');
         $app = Factory::getApplication()->input;
@@ -108,6 +111,25 @@ class RawView extends BaseHtmlView
         $countitems = $model->countitems($params);
         $this->rows = $rows;
         $this->countitems = $countitems;
+        parent::display();
+    }
+    private function _pageThongke()
+    {
+        $model = Core::model('Vptk/Vptk');
+        $app = Factory::getApplication()->input;
+        $params = [
+            'phuongxa_id' => $app->getInt('phuongxa_id', 0),
+            'thonto_id' => $app->getString('thonto_id', '')
+        ];
+        if (!empty($params['thonto_id'])) {
+            $params['thonto_id'] = array_filter(explode(',', $params['thonto_id']), 'is_numeric');
+        } else {
+            $params['thonto_id'] = [];
+        }
+        $items = $model->getThongKeNhanHoKhau($params);
+        // var_dump($items);exit;
+
+        $this->items = $items;
         parent::display();
     }
     private function _pageDetailNHK()

@@ -35,7 +35,7 @@ $item = $this->item;
                 </tr>
                 <tr>
                     <td class="align-middle">
-                        <div class="mb-3" style="margin-bottom: 0rem !important;">
+                        <div class="mb-3">
                             <strong>Phường/Xã <span class="text-danger">*</span></strong>
                             <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn phường/xã">
                                 <option value="" data-quanhuyen="" data-tinhthanh=""></option>
@@ -51,7 +51,7 @@ $item = $this->item;
                         </div>
                     </td>
                     <td class="align-middle">
-                        <div class="mb-3" style="margin-bottom: 0rem !important;">
+                        <div class="mb-3">
                             <strong>Thôn/Tổ <span class="text-danger">*</span></strong>
                             <select id="thonto_id" name="thonto_id" class="custom-select" data-placeholder="Chọn thôn/tổ">
                                 <option value=""></option>
@@ -65,7 +65,7 @@ $item = $this->item;
                         </div>
                     </td>
                     <td class="align-middle">
-                        <div class="mb-3" style="margin-bottom: 0rem !important;">
+                        <div class="mb-3">
                             <strong>Nhiệm kỳ <span class="text-danger">*</span></strong>
                             <select id="nhiemky_id" name="nhiemky_id" class="custom-select" data-placeholder="Chọn nhiệm kỳ">
                                 <option value=""></option>
@@ -142,6 +142,7 @@ $item = $this->item;
                                     <input type="hidden" name="tinhtrang_id[]" value="<?php echo $nk['tinhtrang_id'] ?? ''; ?>" />
                                     <input type="hidden" name="lydoketthuc_id[]" value="<?php echo $nk['lydoketthuc'] ?? ''; ?>" />
                                     <input type="hidden" name="is_search[]" value="<?php echo ($nk['is_ngoai'] == 0 ? '1' : '0'); ?>" />
+                                    <!-- <span class="btn btn-small btn-primary edit-nhankhau" data-index="<?php echo $index; ?>"><i class="fas fa-edit"></i></span> -->
                                     <span class="btn btn-small btn-danger btn_xoa" data-xuly="<?php echo $nk['id'] ?? ''; ?>"><i class="fas fa-trash-alt"></i></span>
                                 </td>
                             </tr>
@@ -166,6 +167,7 @@ $item = $this->item;
             <div class="modal-header">
                 <h5 class="modal-title" id="modalBanDieuHanhLabel">Thêm thông tin thành viên</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -176,7 +178,7 @@ $item = $this->item;
                     </div>
                     <div id="search_fields">
                         <div class="mb-3">
-                            <label class="form-label">Chọn thành viên <span class="text-danger"> * </span></label>
+                            <label class="form-label">Chọn thành viên <span class="text-danger">*</span></label>
                             <select id="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn thành viên"></select>
                         </div>
                     </div>
@@ -356,7 +358,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                 <input type="hidden" id="modal_nhankhau_id" name="modal_nhankhau_id" value="">
 
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
@@ -364,136 +366,282 @@ $item = $this->item;
         </div>
     </div>
 </div>
+<style>
+    .table#tblThongtin td.align-middle {
+        width: 33.33%;
+        padding: .75rem 0rem .75rem .75rem;
+    }
 
+    .modal-backdrop {
+        display: none;
+    }
+
+    .table#tblThongtin .form-control,
+    .table#tblThongtin .custom-select,
+    .table#tblThongtin .input-group {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .table#tblThongtin .input-group .form-control {
+        flex: 1;
+    }
+
+    .status-verified {
+        color: green;
+    }
+
+    .status-unverified {
+        color: red;
+    }
+
+    .hideOpt {
+        display: none !important;
+    }
+
+    .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 38px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 28px;
+        padding-left: 8px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 38px;
+    }
+
+    table.tableFixHead {
+        border-collapse: collapse;
+        max-width: 800px;
+        overflow-x: scroll;
+        display: block;
+    }
+
+    table.tableFixHead thead {
+        background-color: #027be3;
+    }
+
+    table.tableFixHead thead,
+    table.tableFixHead tbody {
+        display: block;
+    }
+
+    table.tableFixHead tbody {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 250px;
+    }
+
+    td.stt,
+    th.stt {
+        min-width: 50px;
+        max-width: 80px;
+    }
+
+    td.hoten,
+    th.hoten {
+        min-width: 250px;
+        max-width: 300px;
+    }
+
+    td.diachi,
+    th.diachi {
+        min-width: 150px;
+        max-width: 200px;
+    }
+
+    td.thongtintdllct,
+    th.thongtintdllct {
+        min-width: 200px;
+        max-width: 250px;
+    }
+
+    td.thongtinchucdanh,
+    th.thongtinchucdanh {
+        min-width: 200px;
+        max-width: 250px;
+    }
+
+    td.tinhtrang,
+    th.tinhtrang {
+        min-width: 100px;
+        max-width: 150px;
+    }
+
+    td.lydo,
+    th.lydo {
+        min-width: 100px;
+        max-width: 200px;
+    }
+
+    td.chucnang,
+    th.chucnang {
+        min-width: 100px;
+        max-width: 150px;
+    }
+
+    .modal {
+        overflow-x: hidden;
+    }
+
+    .modal-body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal-dialog {
+        max-width: 1200px;
+        min-width: 300px;
+        width: 1000px;
+        margin-left: auto;
+        margin-right: 0;
+        margin-top: 1.75rem;
+        margin-bottom: 1.75rem;
+        transform: translateX(100%);
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .modal.show .modal-dialog {
+        transform: translateX(0);
+    }
+
+    .modal.fade .modal-dialog {
+        transition: transform 0.5s ease-in-out;
+        opacity: 1;
+    }
+
+    .modal.fade:not(.show) .modal-dialog {
+        transform: translateX(100%);
+    }
+
+    .modal-body {
+        padding: 20px;
+        word-break: break-word;
+    }
+
+    .modal-body p {
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .modal-content {
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .error_modal {
+        margin-bottom: 0px;
+        margin-top: 0;
+        font-size: 12px;
+        color: red;
+    }
+</style>
 
 <script type="text/javascript">
     jQuery(document).ready(function($) {
         // Hàm hiển thị thông báo
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
+        $(document).ready(function() {
+            let isRedirecting = false;
 
-        const selectElements = $('#thonto_id, #nhiemky_id'); // Khởi tạo selectElements ở đây
-        selectElements.select2({
-            width: '100%',
-            allowClear: true,
-            placeholder: function() {
-                return $(this).data('placeholder');
-            }
-        });
+            // Khởi tạo Select2
+            selectElements.select2({
+                width: '100%',
+                allowClear: true,
+                placeholder: $(this).data('placeholder')
+            });
+            const selectElements = $('#thonto_id, #nhiemky_id');
+            const REDIRECT_KEY = 'hasRedirectedBDH';
 
-        let isRedirecting = false;
-        let isChecking = false;
+            // Kiểm tra đúng URL: /index.php/component/vptk/?view=bdh&task=add_bdh
+            const currentPath = window.location.pathname;
+            const currentSearch = window.location.search;
 
-        const REDIRECT_KEY = 'hasRedirectedBDH';
+            const isCorrectPage =
+                currentPath === '/index.php/component/vptk/' &&
+                currentSearch.includes('view=bdh') &&
+                currentSearch.includes('task=add_bdh');
 
-        const currentPath = window.location.pathname;
-        const currentSearch = window.location.search;
-        const isCorrectPage =
-            (currentPath === '/index.php/component/vptk/' || currentPath === '/index.php') &&
-            currentSearch.includes('view=bdh') &&
-            currentSearch.includes('task=add_bdh');
-
-        console.log('isCorrectPage:', isCorrectPage, {
-            currentPath,
-            currentSearch
-        });
-
-        if (isCorrectPage && sessionStorage.getItem(REDIRECT_KEY) !== '1') {
-            function handleChange(e) {
-                console.log('handleChange called:', {
-                    phuongxa_id: $('#phuongxa_id').val(),
-                    thonto_id: $('#thonto_id').val(),
-                    nhiemky_id: $('#nhiemky_id').val(),
-                    event_target: e.target.id
-                });
-
-                if (isChecking) {
-                    console.log('Đang kiểm tra, bỏ qua');
-                    return;
-                }
-
-                const phuongxa_id = $('#phuongxa_id').val();
-                const thonto_id = $('#thonto_id').val();
-                const nhiemky_id = $('#nhiemky_id').val();
-
-                if (!phuongxa_id) {
-                    showToast('Vui lòng chọn xã/phường trước!', false);
-                    return;
-                }
-
-                if (thonto_id && nhiemky_id) {
-                    isChecking = true;
-                    $('#btn_luu_nhankhau').prop('disabled', true);
-                    selectElements.prop('disabled', true);
-
-                    $.ajax({
-                        url: 'index.php?option=com_vptk&controller=bdh&task=checkBanDieuHanh',
-                        type: 'POST',
-                        data: {
-                            thonto_id: thonto_id,
-                            nhiemky_id: nhiemky_id,
-                            [Joomla.getOptions('csrf.token')]: 1
-                        },
-                        dataType: 'json',
-                        beforeSend: function() {
-                            showToast('Đang kiểm tra ban điều hành...', true);
-                        },
-                        success: function(response) {
-                            console.log('AJAX response:', response);
-                            isChecking = false;
-                            $('#btn_luu_nhankhau').prop('disabled', false);
-                            selectElements.prop('disabled', false);
-
-                            if (response && response.exists) {
-                                sessionStorage.setItem(REDIRECT_KEY, '1');
-                                showToast('Ban điều hành đã tồn tại. Đang chuyển hướng...', false);
-
-                                setTimeout(function() {
-                                    const redirectUrl = `index.php?option=com_vptk&view=bdh&task=edit_bdh&thonto_id=${thonto_id}&nhiemky_id=${nhiemky_id}`;
-                                    window.location.assign(redirectUrl);
-                                }, 2000);
-                            } else {
-                                showToast('Có thể thêm ban điều hành mới', true);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX error:', status, error);
-                            isChecking = false;
-                            $('#btn_luu_nhankhau').prop('disabled', false);
-                            selectElements.prop('disabled', false);
-                            showToast('Lỗi khi kiểm tra ban điều hành!', false);
-                        }
-                    });
+            if (isCorrectPage) {
+                if (sessionStorage.getItem(REDIRECT_KEY) === '1') {
+                    console.log('Đã chuyển hướng trước đó, bỏ qua xử lý');
+                    sessionStorage.removeItem(REDIRECT_KEY); // Xoá để lần sau vẫn hoạt động nếu cần
                 } else {
-                    console.log('Thiếu thonto_id hoặc nhiemky_id:', {
-                        thonto_id,
-                        nhiemky_id
-                    });
+                    let isRedirecting = false;
+
+                    function debounce(func, wait) {
+                        let timeout;
+                        return function executedFunction(...args) {
+                            const later = () => {
+                                clearTimeout(timeout);
+                                func(...args);
+                            };
+                            clearTimeout(timeout);
+                            timeout = setTimeout(later, wait);
+                        };
+                    }
+
+                    function handleChange(e) {
+                        if (isRedirecting) {
+                            console.log('Đang chuyển hướng, bỏ qua');
+                            return;
+                        }
+
+                        const thonto_id = $('#thonto_id').val();
+                        const nhiemky_id = $('#nhiemky_id').val();
+
+                        if (thonto_id && nhiemky_id) {
+                            selectElements.off('change');
+
+                            $.ajax({
+                                url: 'index.php?option=com_vptk&controller=bdh&task=checkBanDieuHanh',
+                                type: 'POST',
+                                data: {
+                                    thonto_id: thonto_id,
+                                    nhiemky_id: nhiemky_id,
+                                    [Joomla.getOptions('csrf.token')]: 1
+                                },
+                                dataType: 'json',
+                                beforeSend: function() {
+                                    $('#btn_luu_nhankhau').prop('disabled', true);
+                                    selectElements.prop('disabled', true);
+                                },
+                                success: function(response) {
+                                    if (response && response.exists) {
+                                        isRedirecting = true;
+                                        sessionStorage.setItem(REDIRECT_KEY, '1'); // Đánh dấu đã chuyển hướng
+                                        showToast('Ban điều hành đã tồn tại. Đang chuyển hướng...', false);
+
+                                        setTimeout(function() {
+                                            const redirectUrl = `index.php?option=com_vptk&view=bdh&task=edit_bdh&thonto_id=${thonto_id}&nhiemky_id=${nhiemky_id}`;
+                                            window.location.assign(redirectUrl);
+                                        }, 2000);
+                                    } else {
+                                        $('#btn_luu_nhankhau').prop('disabled', false);
+                                        selectElements.prop('disabled', false);
+                                        selectElements.on('change', debouncedHandleChange);
+                                    }
+                                },
+                                error: function() {
+                                    $('#btn_luu_nhankhau').prop('disabled', false);
+                                    selectElements.prop('disabled', false);
+                                    selectElements.on('change', debouncedHandleChange);
+                                }
+                            });
+                        }
+                    }
+
+                    const debouncedHandleChange = debounce(handleChange, 500);
+                    selectElements.on('change', debouncedHandleChange);
                 }
             }
-
-            const debouncedHandleChange = debounce(handleChange, 500);
-            selectElements.on('change', debouncedHandleChange);
-
-            // Kiểm tra ngay khi tải trang
-            if ($('#thonto_id').val() && $('#nhiemky_id').val()) {
-                debouncedHandleChange({
-                    target: $('#thonto_id')[0]
-                });
-            }
-        } else if (sessionStorage.getItem(REDIRECT_KEY) === '1') {
-            console.log('Đã chuyển hướng trước đó, bỏ qua xử lý');
-            sessionStorage.removeItem(REDIRECT_KEY);
-        }
+        });
 
         function showToast(message, isSuccess = true) {
             const toast = $('<div></div>').text(message).css({
@@ -561,66 +709,24 @@ $item = $this->item;
         });
 
         // Khởi tạo Select2 cho form chính
-        initSelect2($('#phuongxa_id, #thonto_id, #nhiemky_id,#modal_nhankhau_search'), {
+        initSelect2($('#phuongxa_id, #thonto_id, #nhiemky_id'), {
             width: '100%',
             allowClear: true,
             placeholder: function() {
                 return $(this).data('placeholder');
             }
         });
-        $('#btn_themthanhvien').on('click', function(e) {
-            e.preventDefault();
-            const selectedThontoId = $('#thonto_id').val();
-            const selectedNhiemkyId = $('#nhiemky_id').val();
 
-            if (!selectedThontoId || !selectedNhiemkyId) {
-                showToast('Vui lòng chọn Thôn/Tổ và Nhiệm kỳ trước khi thêm thành viên', false);
-                return false;
-            }
-
-            $('#modalBanDieuHanhLabel').text('Thêm Thành Viên');
-            $('#modal_edit_index').val('');
-            $('#frmModalBanDieuHanh')[0].reset();
-            initializeModalSelect2();
-
-            // Gán giá trị và vô hiệu hóa modal_phuongxa_id
-            const selectedPhuongxaId = $('#phuongxa_id').val();
-            const phuongxa_text = $('#phuongxa_id option:selected').text();
-            const thonto_text = $('#thonto_id option:selected').text();
-
-            // Debug giá trị
-
-            // Đồng bộ danh sách option của modal_thonto_id với thonto_id
-            $('#modal_thonto_id').html($('#thonto_id').html()); // Sao chép toàn bộ <option> từ #thonto_id
-            $('#modal_phuongxa_id').val(selectedPhuongxaId).prop('disabled', true);
-            $('#modal_thonto_id').val(selectedThontoId).prop('disabled', true);
-
-
-
-            // Khởi tạo Select2 cho modal_phuongxa_id và modal_thonto_id
-            initSelect2($('#modal_phuongxa_id, #modal_thonto_id'), {
-                width: '100%',
-                allowClear: false,
-                placeholder: function() {
-                    return $(this).data('placeholder');
-                }
-            });
-
-            $('#modal_search_toggle').prop('checked', true).trigger('change');
-            // $('#modal_nhankhau_search').val('').trigger('change.select2');
-            $('#modalBanDieuHanh').modal('show');
-        });
+        // Xử lý sự kiện change của modal_search_toggle
         $('#modal_search_toggle').on('change', function() {
             const isChecked = $(this).is(':checked');
             $('#search_fields').toggle(isChecked);
 
             // Không vô hiệu hóa các trường dữ liệu khi tìm kiếm
-            $('#modal_hoten, #modal_cccd_so,#modal_dienthoai, #modal_diachi,  #modal_gioitinh_id').prop('disabled', false);
+            $('#manual_fields input, #modal_gioitinh_id').prop('disabled', false); // Để các trường không bị vô hiệu hóa
 
             if (isChecked) {
                 // Khởi tạo Select2 với AJAX cho #modal_nhankhau_search
-                $('#modal_hoten, #modal_cccd_so,#modal_dienthoai, #modal_diachi,  #modal_gioitinh_id').prop('disabled', true);
-
                 initSelect2($('#modal_nhankhau_search'), {
                     width: '100%',
                     allowClear: true,
@@ -704,7 +810,7 @@ $item = $this->item;
                 $('#modal_trinhdolyluanchinhtri_id').val('').trigger('change.select2');
                 $('#modal_chucdanh_id').val('').trigger('change.select2');
                 $('#modal_chucdanh_kiemnhiem').val('');
-                $('#_modal_thoigian_tungay, #modal_thoigian_denngay').val('');
+                $('#modal_thoigian_tungay, #modal_thoigian_denngay').val('');
                 $('#modal_tinhtrang_id').val('').trigger('change.select2');
                 initializeModalSelect2();
             }
@@ -764,38 +870,19 @@ $item = $this->item;
 
                 let nhankhauId, hoten, cccd_so, dienthoai, gioitinh_id, gioitinh_text, diachi;
                 if (isSearch) {
-                    if (isEditing) {
-                        // Khi chỉnh sửa ở chế độ tìm kiếm, sử dụng dữ liệu từ modal_nhankhau_id và các trường input
-                        nhankhauId = $('#modal_nhankhau_id').val() || '';
-                        hoten = $('#modal_hoten').val() || '';
-                        cccd_so = $('#modal_cccd_so').val() || '';
-                        dienthoai = $('#modal_dienthoai').val() || '';
-                        gioitinh_id = $('#modal_gioitinh_id').val() || '';
-                        gioitinh_text = $('#modal_gioitinh_id option:selected').data('text') || '';
-                        diachi = $('#modal_diachi').val() || '';
-
-                        // Kiểm tra nhankhauId để đảm bảo có thành viên
-                        if (!nhankhauId) {
-                            console.warn('Không có nhankhau_id trong chế độ chỉnh sửa tìm kiếm');
-                            showToast('Không tìm thấy thông tin thành viên!', false);
-                            return;
-                        }
+                    const selectedData = $('#modal_nhankhau_search').select2('data')[0] || $('#modal_nhankhau_search').data('select2-data');
+                    if (selectedData && selectedData.id && selectedData.data) {
+                        nhankhauId = selectedData.data.nhankhau_id || '';
+                        hoten = selectedData.data.hoten || '';
+                        cccd_so = selectedData.data.cccd_so || '';
+                        dienthoai = selectedData.data.dienthoai || '';
+                        gioitinh_id = selectedData.data.gioitinh_id || '';
+                        gioitinh_text = selectedData.data.gioitinh_text || $('#modal_gioitinh_id option:selected').data('text') || '';
+                        diachi = selectedData.data.diachi || '';
                     } else {
-                        // Khi thêm mới ở Babel
-                        const selectedData = $('#modal_nhankhau_search').select2('data')[0] || $('#modal_nhankhau_search').data('select2-data');
-                        if (selectedData && selectedData.id && selectedData.data) {
-                            nhankhauId = selectedData.data.nhankhau_id || '';
-                            hoten = selectedData.data.hoten || '';
-                            cccd_so = selectedData.data.cccd_so || '';
-                            dienthoai = selectedData.data.dienthoai || '';
-                            gioitinh_id = selectedData.data.gioitinh_id || '';
-                            gioitinh_text = selectedData.data.gioitinh_text || $('#modal_gioitinh_id option:selected').data('text') || '';
-                            diachi = selectedData.data.diachi || '';
-                        } else {
-                            console.warn('Không có thành viên được chọn trong chế độ tìm kiếm');
-                            showToast('Vui lòng chọn một thành viên!', false);
-                            return;
-                        }
+                        console.warn('Không có thành viên được chọn trong chế độ tìm kiếm');
+                        showToast('Vui lòng chọn một thành viên!', false);
+                        return;
                     }
                 } else {
                     nhankhauId = $('#modal_nhankhau_id').val() || '';
@@ -822,51 +909,73 @@ $item = $this->item;
                 const lydoketthuc = $('#modal_lydoketthuc').val() || '';
 
                 // Debug dữ liệu trước khi lưu
-
+                console.log('Dữ liệu lưu:', {
+                    nhankhauId,
+                    hoten,
+                    cccd_so,
+                    dienthoai,
+                    gioitinh_id,
+                    gioitinh_text,
+                    diachi,
+                    is_dangvien,
+                    is_dangvien_text,
+                    trinhdolyluanchinhtri_id,
+                    trinhdolyluanchinhtri_text,
+                    chucdanh_id,
+                    chucdanh_text,
+                    chucdanh_kiemnhiem_id,
+                    chucdanh_kiemnhiem,
+                    tungay,
+                    denngay,
+                    tinhtrang_id,
+                    tinhtrang_text,
+                    lydoketthuc,
+                    isSearch
+                });
 
                 const str = `
-            <tr>
-                <td class="align-middle text-center stt">${stt}</td>
-                <td class="align-middle hoten">
-                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $('#tblDanhsach tbody tr').length}" style="color: blue;">
-                        <strong>Họ tên:</strong> ${hoten}
-                    </a><br>
-                    <strong>CCCD:</strong> ${cccd_so}<br>
-                    <strong>Điện thoại:</strong> ${dienthoai}<br>
-                    <strong>Giới tính:</strong> ${gioitinh_text}
-                </td>
-                <td class="align-middle diachi">${diachi}</td>
-                <td class="align-middle thongtintdllct">
-                    <strong>Đảng viên:</strong> ${is_dangvien == '1' ? 'Có' : 'Không'}<br>
-                    <strong>Trình độ lý luận chính trị:</strong> ${trinhdolyluanchinhtri_text}
-                </td>
-                <td class="align-middle thongtinchucdanh">
-                    <strong>Chức danh:</strong> ${chucdanh_text}<br>
-                    <strong>Chức danh kiêm nhiệm:</strong> ${chucdanh_kiemnhiem}<br>
-                    <strong>Thời gian:</strong> ${tungay} - ${denngay}
-                </td>
-                <td class="align-middle tinhtrang">${tinhtrang_text}</td>
-                <td class="align-middle lydo">${lydoketthuc}</td>
-                <td class="align-middle text-center chucnang">
-                    <input type="hidden" name="bandieuhanh_id[]" value="${isEditing ? ($('#tblDanhsach tbody tr').eq(editIndex).find('input[name="bandieuhanh_id[]"]').val() || '') : ''}" />
-                    <input type="hidden" name="nhankhau_id[]" value="${nhankhauId}" />
-                    <input type="hidden" name="hoten[]" value="${hoten}" />
-                    <input type="hidden" name="cccd_so[]" value="${cccd_so}" />
-                    <input type="hidden" name="dienthoai[]" value="${dienthoai}" />
-                    <input type="hidden" name="gioitinh_id[]" value="${gioitinh_id}" />
-                    <input type="hidden" name="diachi[]" value="${diachi}" />
-                    <input type="hidden" name="is_dangvien[]" value="${is_dangvien}" />
-                    <input type="hidden" name="trinhdolyluanchinhtri_id[]" value="${trinhdolyluanchinhtri_id}" />
-                    <input type="hidden" name="chucdanh_id[]" value="${chucdanh_id}" />
-                    <input type="hidden" name="chucdanh_kiemnhiem_id[]" value="${chucdanh_kiemnhiem_id}" />
-                    <input type="hidden" name="tungay[]" value="${tungay}" />
-                    <input type="hidden" name="denngay[]" value="${denngay}" />
-                    <input type="hidden" name="tinhtrang_id[]" value="${tinhtrang_id}" />
-                    <input type="hidden" name="lydoketthuc_id[]" value="${lydoketthuc}" />
-                    <input type="hidden" name="is_search[]" value="${isSearch ? '1' : '0'}" />
-                    <span class="btn btn-small btn-danger btn_xoa" data-xuly="${nhankhauId}"><i class="fas fa-trash-alt"></i></span>
-                </td>
-            </tr>`;
+                <tr>
+                    <td class="align-middle text-center stt">${stt}</td>
+                    <td class="align-middle hoten">
+                        <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $('#tblDanhsach tbody tr').length}" style="color: blue;">
+                            <strong>Họ tên:</strong> ${hoten}
+                        </a><br>
+                        <strong>CCCD:</strong> ${cccd_so}<br>
+                        <strong>Điện thoại:</strong> ${dienthoai}<br>
+                        <strong>Giới tính:</strong> ${gioitinh_text}
+                    </td>
+                    <td class="align-middle diachi">${diachi}</td>
+                    <td class="align-middle thongtintdllct">
+                        <strong>Đảng viên:</strong> ${is_dangvien == '1' ? 'Có' : 'Không'}<br>
+                        <strong>Trình độ lý luận chính trị:</strong> ${trinhdolyluanchinhtri_text}
+                    </td>
+                    <td class="align-middle thongtinchucdanh">
+                        <strong>Chức danh:</strong> ${chucdanh_text}<br>
+                        <strong>Chức danh kiêm nhiệm:</strong> ${chucdanh_kiemnhiem}<br>
+                        <strong>Thời gian:</strong> ${tungay} - ${denngay}
+                    </td>
+                    <td class="align-middle tinhtrang">${tinhtrang_text}</td>
+                    <td class="align-middle lydo">${lydoketthuc}</td>
+                    <td class="align-middle text-center chucnang">
+                        <input type="hidden" name="bandieuhanh_id[]" value="${isEditing ? ($('#tblDanhsach tbody tr').eq(editIndex).find('input[name="bandieuhanh_id[]"]').val() || '') : ''}" />
+                        <input type="hidden" name="nhankhau_id[]" value="${nhankhauId}" />
+                        <input type="hidden" name="hoten[]" value="${hoten}" />
+                        <input type="hidden" name="cccd_so[]" value="${cccd_so}" />
+                        <input type="hidden" name="dienthoai[]" value="${dienthoai}" />
+                        <input type="hidden" name="gioitinh_id[]" value="${gioitinh_id}" />
+                        <input type="hidden" name="diachi[]" value="${diachi}" />
+                        <input type="hidden" name="is_dangvien[]" value="${is_dangvien}" />
+                        <input type="hidden" name="trinhdolyluanchinhtri_id[]" value="${trinhdolyluanchinhtri_id}" />
+                        <input type="hidden" name="chucdanh_id[]" value="${chucdanh_id}" />
+                        <input type="hidden" name="chucdanh_kiemnhiem_id[]" value="${chucdanh_kiemnhiem_id}" />
+                        <input type="hidden" name="tungay[]" value="${tungay}" />
+                        <input type="hidden" name="denngay[]" value="${denngay}" />
+                        <input type="hidden" name="tinhtrang_id[]" value="${tinhtrang_id}" />
+                        <input type="hidden" name="lydoketthuc_id[]" value="${lydoketthuc}" />
+                        <input type="hidden" name="is_search[]" value="${isSearch ? '1' : '0'}" />
+                        <span class="btn btn-small btn-danger btn_xoa" data-xuly="${nhankhauId}"><i class="fas fa-trash-alt"></i></span>
+                    </td>
+                </tr>`;
 
                 try {
                     if (isEditing) {
@@ -878,8 +987,6 @@ $item = $this->item;
                     $('#modalBanDieuHanh').modal('hide');
                     $('#frmModalBanDieuHanh')[0].reset();
                     $('#frmModalBanDieuHanh select').val('').trigger('change.select2');
-                    resetModal();
-
                     showToast('Lưu thành viên thành công', true);
                 } catch (e) {
                     console.error('Error processing row:', e);
@@ -910,19 +1017,13 @@ $item = $this->item;
             const tinhtrang_id = $row.find('input[name="tinhtrang_id[]"]').val() || '';
             const lydoketthuc = $row.find('input[name="lydoketthuc_id[]"]').val() || '';
 
-            // Lấy phuongxa_id và thonto_id (từ input ẩn trong hàng hoặc từ form chính)
-            const phuongxa_id = $row.find('input[name="phuongxa_id[]"]').val() || $('#phuongxa_id').val();
-            const thonto_id = $row.find('input[name="thonto_id[]"]').val() || $('#thonto_id').val();
-
             // Debug dữ liệu
             console.log('Dữ liệu từ hàng bảng:', {
                 nhankhauId,
                 hoten,
                 cccd_so,
                 diachi,
-                isSearch,
-                phuongxa_id,
-                thonto_id
+                isSearch
             });
 
             $('#modalBanDieuHanhLabel').text('Chỉnh sửa Thành Viên');
@@ -930,20 +1031,6 @@ $item = $this->item;
 
             // Khởi tạo select2 trước
             initializeModalSelect2();
-
-            // Gán giá trị cho modal_phuongxa_id và modal_thonto_id
-            $('#modal_phuongxa_id').val(phuongxa_id).prop('disabled', true);
-            $('#modal_thonto_id').html($('#thonto_id').html()); // Sao chép danh sách option từ #thonto_id
-            $('#modal_thonto_id').val(thonto_id).prop('disabled', true);
-
-            // Khởi tạo Select2 cho modal_phuongxa_id và modal_thonto_id
-            initSelect2($('#modal_phuongxa_id, #modal_thonto_id'), {
-                width: '100%',
-                allowClear: false,
-                placeholder: function() {
-                    return $(this).data('placeholder');
-                }
-            });
 
             // Gán trạng thái checkbox tìm kiếm và hiển thị/ẩn #search_fields
             $('#modal_search_toggle').prop('checked', isSearch);
@@ -1077,7 +1164,48 @@ $item = $this->item;
         });
 
 
+        $('#btn_themthanhvien').on('click', function(e) {
+            e.preventDefault();
+            const selectedThontoId = $('#thonto_id').val();
+            const selectedNhiemkyId = $('#nhiemky_id').val();
 
+            if (!selectedThontoId || !selectedNhiemkyId) {
+                showToast('Vui lòng chọn Thôn/Tổ và Nhiệm kỳ trước khi thêm thành viên', false);
+                return false;
+            }
+
+            $('#modalBanDieuHanhLabel').text('Thêm Thành Viên');
+            $('#modal_edit_index').val('');
+            $('#frmModalBanDieuHanh')[0].reset();
+            initializeModalSelect2();
+
+            // Gán giá trị và vô hiệu hóa modal_phuongxa_id
+            const selectedPhuongxaId = $('#phuongxa_id').val();
+            const phuongxa_text = $('#phuongxa_id option:selected').text();
+            const thonto_text = $('#thonto_id option:selected').text();
+
+            // Debug giá trị
+
+            // Đồng bộ danh sách option của modal_thonto_id với thonto_id
+            $('#modal_thonto_id').html($('#thonto_id').html()); // Sao chép toàn bộ <option> từ #thonto_id
+            $('#modal_phuongxa_id').val(selectedPhuongxaId).prop('disabled', true);
+            $('#modal_thonto_id').val(selectedThontoId).prop('disabled', true);
+
+
+
+            // Khởi tạo Select2 cho modal_phuongxa_id và modal_thonto_id
+            initSelect2($('#modal_phuongxa_id, #modal_thonto_id'), {
+                width: '100%',
+                allowClear: false,
+                placeholder: function() {
+                    return $(this).data('placeholder');
+                }
+            });
+
+            $('#modal_search_toggle').prop('checked', true).trigger('change');
+            $('#modal_nhankhau_search').val('').trigger('change.select2');
+            $('#modalBanDieuHanh').modal('show');
+        });
 
         // Xử lý sự kiện xóa
         $('body').on('click', '.btn_xoa', function() {
@@ -1256,17 +1384,74 @@ $item = $this->item;
             }
         });
 
-        function resetModal() {
+        // Kiểm tra chuyển hướng khi chọn Thôn/Tổ và Nhiệm kỳ
+        const REDIRECT_KEY = 'hasRedirectedBDH';
+        let isRedirecting = false;
+        const isCorrectPage = window.location.pathname === '/index.php/component/vptk/' && window.location.search.includes('view=bdh') && window.location.search.includes('task=add_bdh');
+
+        if (isCorrectPage && sessionStorage.getItem(REDIRECT_KEY) !== '1') {
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            function handleChange() {
+                if (isRedirecting) return;
+                const thonto_id = $('#thonto_id').val();
+                const nhiemky_id = $('#nhiemky_id').val();
+
+                if (thonto_id && nhiemky_id) {
+                    $.ajax({
+                        url: 'index.php?option=com_vptk&controller=bdh&task=checkBanDieuHanh',
+                        type: 'POST',
+                        data: {
+                            thonto_id: thonto_id,
+                            nhiemky_id: nhiemky_id,
+                            [Joomla.getOptions('csrf.token')]: 1
+                        },
+                        dataType: 'json',
+                        beforeSend: function() {
+                            $('#btn_luu_nhankhau').prop('disabled', true);
+                            $('#thonto_id, #nhiemky_id').prop('disabled', true);
+                        },
+                        success: function(response) {
+                            if (response && response.exists) {
+                                isRedirecting = true;
+                                sessionStorage.setItem(REDIRECT_KEY, '1');
+                                showToast('Ban điều hành đã tồn tại. Đang chuyển hướng...', false);
+                                setTimeout(() => {
+                                    window.location.assign(`index.php?option=com_vptk&view=bdh&task=edit_bdh&thonto_id=${thonto_id}&nhiemky_id=${nhiemky_id}`);
+                                }, 2000);
+                            } else {
+                                $('#btn_luu_nhankhau').prop('disabled', false);
+                                $('#thonto_id, #nhiemky_id').prop('disabled', false);
+                            }
+                        },
+                        error: function() {
+                            $('#btn_luu_nhankhau').prop('disabled', false);
+                            $('#thonto_id, #nhiemky_id').prop('disabled', false);
+                        }
+                    });
+                }
+            }
+
+            const debouncedHandleChange = debounce(handleChange, 500);
+            $('#thonto_id, #nhiemky_id').on('change', debouncedHandleChange);
+        }
+        // Xử lý khi modal đóng (bao gồm .btn-secondary, nút đóng, hoặc nhấp ngoài modal)
+        $('#modalBanDieuHanh').on('hidden.bs.modal', function() {
             // Reset form
             $('#frmModalBanDieuHanh').trigger('reset');
 
-            // Reset tất cả các trường Select2
-            $('#frmModalBanDieuHanh select').each(function() {
-                if ($(this).data('select2')) {
-                    $(this).select2('destroy');
-                }
-                $(this).val('').html('<option value=""></option>');
-            });
+            // Reset các trường Select2
+            $('#frmModalBanDieuHanh select').val('').trigger('change.select2');
 
             // Reset xác thực
             if ($('#frmModalBanDieuHanh').data('validator')) {
@@ -1276,91 +1461,21 @@ $item = $this->item;
             // Xóa thông báo lỗi
             $('#frmModalBanDieuHanh .error_modal').remove();
 
-            // Đặt lại trạng thái tìm kiếm
+            // Đặt lại trạng thái tìm kiếm (mặc định hiển thị #search_fields)
             $('#modal_search_toggle').prop('checked', true);
             $('#search_fields').show();
             $('#modal_hoten, #modal_cccd_so, #modal_dienthoai, #modal_diachi, #modal_gioitinh_id').prop('disabled', true);
-            $('#modal_nhankhau_id').val('');
 
-            // Khởi tạo lại Select2 cho các trường
-            initializeModalSelect2();
-
-            // Khởi tạo lại Select2 cho modal_nhankhau_search với AJAX
-            initSelect2($('#modal_nhankhau_search'), {
-                width: '100%',
-                allowClear: true,
-                placeholder: 'Nhập tên hoặc CCCD để tìm kiếm',
-                dropdownParent: $('#modalBanDieuHanh'),
-                minimumInputLength: 2,
-                ajax: {
-                    url: 'index.php?option=com_vptk&controller=bdh&task=getThanhVienBanDieuHanh',
-                    type: 'GET',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            search: params.term,
-                            thonto_id: $('#thonto_id').val(),
-                            nhiemky_id: $('#nhiemky_id').val(),
-                            [Joomla.getOptions('csrf.token')]: 1
-                        };
-                    },
-                    processResults: function(data) {
-                        const results = (data || []).map(v => {
-                            const member = v.bandieuhanh?.[0] || {};
-                            return {
-                                id: v.nhankhau_id,
-                                text: `${v.hoten || ''} - CCCD: ${v.cccd_so || ''} - Ngày sinh: ${v.ngaysinh || ''} - Địa chỉ: ${v.diachi || ''}`,
-                                data: {
-                                    hoten: v.hoten,
-                                    cccd_so: v.cccd_so,
-                                    dienthoai: v.dienthoai,
-                                    diachi: v.diachi,
-                                    gioitinh_id: v.gioitinh_id || member.gioitinh_id || '',
-                                    gioitinh_text: v.tengioitinh || '',
-                                    is_dangvien: member.is_dangvien || '2',
-                                    trinhdolyluanchinhtri_id: member.id_llct || '',
-                                    chucdanh_id: member.chucdanh_id || '',
-                                    chucdanh_kiemnhiem: member.chucvukn_id || '',
-                                    tungay: member.tungay || '',
-                                    denngay: member.denngay || '',
-                                    tinhtrang_id: member.tinhtrang_id || '',
-                                    nhankhau_id: v.nhankhau_id
-                                }
-                            };
-                        });
-                        return {
-                            results
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-            // Đồng bộ modal_phuongxa_id và modal_thonto_id
-            const selectedPhuongxaId = $('#phuongxa_id').val();
-            const selectedThontoId = $('#thonto_id').val();
-            $('#modal_phuongxa_id').html($('#phuongxa_id').html()).val(selectedPhuongxaId).prop('disabled', true);
-            $('#modal_thonto_id').html($('#thonto_id').html()).val(selectedThontoId).prop('disabled', true);
-
-            // Khởi tạo Select2 cho modal_phuongxa_id và modal_thonto_id
-            initSelect2($('#modal_phuongxa_id, #modal_thonto_id'), {
-                width: '100%',
-                allowClear: false,
-                placeholder: function() {
-                    return $(this).data('placeholder');
-                }
-            });
-        }
-        $('.btn-secondary').on('click', function() {
-            // Đóng modal
-            $('#frmModalBanDieuHanh').trigger('reset'); // Reset dữ liệu trong form
-            $('#frmModalBanDieuHanh').validate().resetForm(); // Reset các quy tắc xác thực
-            $('#frmModalBanDieuHanh .error_modal').remove(); // Xóa tất cả các thông báo lỗi
+            // Reset #modal_nhankhau_search
+            if ($('#modal_nhankhau_search').data('select2')) {
+                $('#modal_nhankhau_search').select2('destroy');
+            }
+            $('#modal_nhankhau_search').html('<option value=""></option>').data('select2-data', null);
         });
-        // Xử lý khi modal bị ẩn
-        $('#modalBanDieuHanh').on('hidden.bs.modal', function() {
-            resetModal(); // Gọi hàm reset modal
+
+        // Xử lý nút .btn-secondary (nếu vẫn cần)
+        $('.btn-secondary').on('click', function() {
+            $('#modalBanDieuHanh').modal('hide'); // Kích hoạt sự kiện hidden.bs.modal
         });
         $('#btn_quaylai').on('click', function() {
             window.location.href = '/index.php/component/vptk/?view=bdh&task=default';
@@ -1369,208 +1484,3 @@ $item = $this->item;
         $('#phuongxa_id').trigger('change');
     });
 </script>
-<style>
-    .select2-container .select2-selection--single {
-        height: 38px;
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 28px;
-        padding-left: 8px;
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 38px;
-    }
-
-    .table#tblThongtin td.align-middle {
-        width: 33.33%;
-        padding: .75rem 0rem .75rem .75rem;
-    }
-
-    .modal-backdrop {
-        display: none;
-    }
-
-    .table#tblThongtin .form-control,
-    .table#tblThongtin .custom-select,
-    .table#tblThongtin .input-group {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-
-    .table#tblThongtin .input-group .form-control {
-        flex: 1;
-    }
-
-    .status-verified {
-        color: green;
-    }
-
-    .status-unverified {
-        color: red;
-    }
-
-    .hideOpt {
-        display: none !important;
-    }
-
-    /* CSS cụ thể cho #modalBanDieuHanh */
-    #modalBanDieuHanh .modal-body {
-        max-height: 70vh;
-        overflow-y: auto;
-        padding: 20px;
-        word-break: break-word;
-    }
-
-    #modalBanDieuHanh .select2-container .select2-selection--single {
-        height: 38px;
-    }
-
-    #modalBanDieuHanh .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 28px;
-        padding-left: 8px;
-    }
-
-    #modalBanDieuHanh .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 38px;
-    }
-
-    #modalBanDieuHanh {
-        overflow-x: hidden;
-    }
-
-    #modalBanDieuHanh .modal-dialog {
-        max-width: 1200px;
-        min-width: 300px;
-        width: 1000px;
-        margin-left: auto;
-        margin-right: 0;
-        margin-top: 1.75rem;
-        margin-bottom: 1.75rem;
-        transform: translateX(100%);
-        transition: transform 0.5s ease-in-out;
-    }
-
-    #modalBanDieuHanh.show .modal-dialog {
-        transform: translateX(0);
-    }
-
-    #modalBanDieuHanh.fade .modal-dialog {
-        transition: transform 0.5s ease-in-out;
-        opacity: 1;
-    }
-
-    #modalBanDieuHanh.fade:not(.show) .modal-dialog {
-        transform: translateX(100%);
-    }
-
-    #modalBanDieuHanh .modal-content {
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    #modalBanDieuHanh .error_modal {
-        margin-bottom: 0px;
-        margin-top: 0;
-        font-size: 12px;
-        color: red;
-    }
-
-    /* CSS riêng cho modal thông báo xóa của Bootbox (nếu cần) */
-    .custom-bootbox .modal-dialog {
-        max-width: 500px;
-        /* Kích thước mặc định cho Bootbox */
-        margin: 1.75rem auto;
-        /* Căn giữa */
-        transform: none !important;
-        /* Vô hiệu hóa transform */
-        transition: none !important;
-        /* Vô hiệu hóa transition */
-    }
-
-    .custom-bootbox .modal-content {
-        border-radius: 4px;
-        /* Góc bo mặc định */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        /* Hiệu ứng bóng nhẹ */
-    }
-
-    .custom-bootbox .modal-body {
-        padding: 15px;
-        /* Padding mặc định của Bootbox */
-        word-break: normal;
-        /* Giữ giao diện mặc định */
-    }
-
-    /* CSS cho bảng tableFixHead (không liên quan đến modal) */
-    table.tableFixHead {
-        border-collapse: collapse;
-        max-width: 800px;
-        overflow-x: scroll;
-        display: block;
-    }
-
-    table.tableFixHead thead {
-        background-color: #027be3;
-    }
-
-    table.tableFixHead thead,
-    table.tableFixHead tbody {
-        display: block;
-    }
-
-    table.tableFixHead tbody {
-        overflow-y: scroll;
-        overflow-x: hidden;
-        height: 250px;
-    }
-
-    td.stt,
-    th.stt {
-        min-width: 50px;
-        max-width: 80px;
-    }
-
-    td.hoten,
-    th.hoten {
-        min-width: 250px;
-        max-width: 300px;
-    }
-
-    td.diachi,
-    th.diachi {
-        min-width: 150px;
-        max-width: 200px;
-    }
-
-    td.thongtintdllct,
-    th.thongtintdllct {
-        min-width: 200px;
-        max-width: 250px;
-    }
-
-    td.thongtinchucdanh,
-    th.thongtinchucdanh {
-        min-width: 200px;
-        max-width: 250px;
-    }
-
-    td.tinhtrang,
-    th.tinhtrang {
-        min-width: 100px;
-        max-width: 150px;
-    }
-
-    td.lydo,
-    th.lydo {
-        min-width: 100px;
-        max-width: 200px;
-    }
-
-    td.chucnang,
-    th.chucnang {
-        min-width: 100px;
-        max-width: 150px;
-    }
-</style>

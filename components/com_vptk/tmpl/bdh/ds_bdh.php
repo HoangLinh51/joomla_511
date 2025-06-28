@@ -1,24 +1,24 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
+
+use Joomla\CMS\Factory;
+
 $perPage = 20;
 $result = $this->countitems;
 $totalRecords = $result[0]['tongbandieudanh'];
 $totalPages = ceil($totalRecords / $perPage);
-$currentPage = JFactory::getApplication()->input->getInt('start', 0) / $perPage + 1;
+$currentPage = Factory::getApplication()->input->getInt('start', 0) / $perPage + 1;
+$startRecord = Factory::getApplication()->input->getInt('start', 0) + 1;
 
-// Tính toán START và END
-$startRecord = JFactory::getApplication()->input->getInt('start', 0) + 1;
-$endRecord = min($startRecord + $perPage - 1, $totalRecords);
-
-// Tính STT bắt đầu từ startRecord
-$stt = $startRecord - 1;
+// Biến này sẽ đếm số hàng thực sự được hiển thị
+$actualDisplayedRows = 0;
 ?>
 
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
             <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
+                <!-- <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th> -->
                 <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thôn/ Tổ dân phố</th>
                 <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Nhiệm kỳ</th>
                 <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên thành viên</th>
@@ -30,25 +30,16 @@ $stt = $startRecord - 1;
         </thead>
         <tbody id="tbody_danhsach">
             <?php
-            $stt = $startRecord; // STT bắt đầu từ giá trị phân trang
-            $displayedRows = 0; // Đếm số dòng đã hiển thị
+            // BỎ HOÀN TOÀN LOGIC KIỂM TRA ($displayedRows + $rowspan <= $perPage)
+            // Chỉ cần lặp và hiển thị tất cả những gì model trả về cho trang này
+            foreach ($this->items as $thontos => $nhiemkys) {
+                foreach ($nhiemkys as $nhiemky => $thanhviens) {
+                    $rowspan = count($thanhviens);
+                    foreach ($thanhviens as $index => $item) {
+                        $actualDisplayedRows++; // Đếm số hàng thực tế
             ?>
-            <?php foreach ($this->items as $thontos => $nhiemkys) { ?>
-                <?php foreach ($nhiemkys as $nhiemky => $thanhviens) { ?>
-                    <?php $rowspan = count($thanhviens); ?>
-                    <?php for ($i = 0, $n = count($thanhviens); $i < $n; $i++) { ?>
-                        <?php
-                        // Chỉ hiển thị tối đa $perPage dòng
-                        if ($displayedRows >= $perPage) break;
-
-                        $item = $thanhviens[$i];
-                        $displayedRows++;
-                        ?>
                         <tr>
-                            <?php if ($i == 0) { ?>
-                                <td style="vertical-align:middle;" class="text-center" rowspan="<?php echo $rowspan; ?>">
-                                    <?php echo $stt; ?>
-                                </td>
+                            <?php if ($index == 0) { ?>
                                 <td style="vertical-align:middle;" rowspan="<?php echo $rowspan; ?>">
                                     <?php echo htmlspecialchars($thontos); ?>
                                 </td>
@@ -66,38 +57,50 @@ $stt = $startRecord - 1;
                                     echo '<span class="text-danger"><i class="fas fa-times"></i> ' . htmlspecialchars($item['tentinhtrang']) . '</span>';
                                 } ?>
                             </td>
-                            <td style="vertical-align:middle;" class="text-center">
-                                <div class="btn-group" role="group">
-                                    <span class="btn btn-sm btn_hieuchinh" style="padding:10px; cursor: pointer;" data-nhiemky="<?php echo $item['nhiemky_id']; ?>" data-title="Hiệu chỉnh">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </span>
-                                    <span style="padding: 0 5px;font-size:18px;color:#999">|</span>
-                                    <span class="btn btn-sm btn_xoa" style="padding:10px; cursor: pointer;" data-hokhau="<?php echo $item['id']; ?>" data-title="Xóa">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </span>
-                                </div>
-                            </td>
+                            <?php if ($index == 0) { ?>
+                                <td style="vertical-align:middle;" class="text-center" rowspan="<?php echo $rowspan; ?>">
+                                    <div class="btn-group" role="group">
+
+                                        <span class="btn btn-sm btn_hieuchinh" style="padding:10px; cursor: pointer;" data-todanpho="<?php echo $item['thonto_id']; ?>" data-nhiemky="<?php echo $item['nhiemky_id']; ?>" data-title="Hiệu chỉnh">
+
+                                            <i class="fas fa-pencil-alt"></i>
+
+                                        </span>
+
+                                        <span style="padding: 0 5px;font-size:28px;color:#999">|</span>
+
+                                        <span class="btn btn-sm btn_xoa" style="padding:10px; cursor: pointer;" data-thonto="<?php echo $item['thonto_id']; ?>" data-nhiemky="<?php echo $item['nhiemky_id']; ?>" data-title="Xóa">
+
+                                            <i class="fas fa-trash-alt"></i>
+
+                                        </span>
+
+                                    </div>
+
+                                </td>
+                            <?php } ?>
                         </tr>
-                    <?php } ?>
-                    <?php
-                    // Tăng STT sau mỗi nhóm (bản ghi chính)
-                    if ($displayRowCounter < $perPage) {
-                        $stt++;
+            <?php
                     }
-                    ?>
-                <?php } ?>
-            <?php } ?>
+                }
+            }
+            ?>
         </tbody>
     </table>
-    <div class="pagination-container d-flex align-items-center mt-3">
+
+    <div class="pagination-container d-flex align-items-right mt-3">
+        <div id="pagination" class="mx-auto" style="margin-left:0 !important">
+        </div>
         <div id="pagination" class="mx-auto">
             <?php if ($totalPages > 1): ?>
                 <ul class="pagination">
                     <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="#" data-page="1">&laquo;</a>
+                        <a class="page-link" href="#" data-page="1">
+                            << </a>
                     </li>
                     <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="#" data-page="<?php echo max(1, $currentPage - 1); ?>">&lsaquo;</a>
+                        <a class="page-link" href="#" data-page="<?php echo max(1, $currentPage - 1); ?>">
+                            < </a>
                     </li>
                     <?php
                     $range = 2;
@@ -121,159 +124,198 @@ $stt = $startRecord - 1;
                     }
                     ?>
                     <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="#" data-page="<?php echo min($totalPages, $currentPage + 1); ?>">&rsaquo;</a>
+                        <a class="page-link" href="#" data-page="<?php echo min($totalPages, $currentPage + 1); ?>">></a>
                     </li>
                     <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
-                        <a class="page-link" href="#" data-page="<?php echo $totalPages; ?>">&raquo;</a>
+                        <a class="page-link" href="#" data-page="<?php echo $totalPages; ?>">>></a>
                     </li>
                 </ul>
             <?php endif; ?>
         </div>
 
-        <div class="pagination-info text-right">
+        <div id="pagination-info" class="pagination-info text-left">
             <?php if ($totalRecords > 0): ?>
-                Hiển thị <?php echo $startRecord; ?> - <?php echo $endRecord; ?> của tổng cộng <?php echo $totalRecords; ?> mục
+                Hiển thị <?php echo $startRecord; ?> - <?php echo min($startRecord + $actualDisplayedRows - 1, $totalRecords); ?> của tổng cộng <?php echo $totalRecords; ?> mục
                 (<?php echo $totalPages; ?> trang)
             <?php else: ?>
                 Không có dữ liệu
             <?php endif; ?>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">Thông tin chi tiết</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="detailContent">Đang tải...</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <input type="hidden" id="totalPages" value="<?php echo $totalPages; ?>">
-    <input type="hidden" id="currentPage" value="<?php echo $currentPage; ?>">
+<input type="hidden" id="totalPages" value="<?php echo $totalPages; ?>">
+<input type="hidden" id="currentPage" value="<?php echo $currentPage; ?>">
 </div>
 
 <script type="text/javascript">
     jQuery(document).ready(function($) {
         var totalPages = parseInt($('#totalPages').val());
         var currentPage = parseInt($('#currentPage').val());
-$(document).ready(function() {
-			// Khởi tạo DataTable
-			$('#tblDanhsach').DataTable({
-				pagingType: 'full_numbers',
-				lengthMenu: [
-					[10, 20, 50, 100, -1],
-					[10, 20, 50, 100, "Tất cả"]
-				],
-				ordering: true,
-				searching: true,
-				dom: '<"top-left"f>rt<"modal-footer"flip><"clear">',
-				language: {
-					paginate: {
-						first: '««',
-						previous: '«',
-						next: '»',
-						last: '»»'
-					},
-					search: " ",
-					info: " _START_ - _END_ của tổng cộng _TOTAL_ mục",
-					infoEmpty: "Không có dữ liệu để hiển thị",
-					infoFiltered: "(được lọc từ tổng cộng _MAX_ mục)"
-				},
-				drawCallback: function() {
-					$('.dataTables_paginate .paginate_button')
-						.not('.previous, .next, .first, .last')
-						.hide();
-				},
-				columnDefs: [{
-					orderable: false,
-					targets: [2, 3, 4]
-				}]
-			});
-
-			// Ẩn thanh tìm kiếm không cần thiết
-			$('.dataTables_filter').eq(1).hide();
-
-			// Chọn input tìm kiếm
-			let $searchInput = $(".dataTables_filter input[type='search']");
-
-			// Gán class cho input
-			$searchInput.addClass("inputsearch");
-			$searchInput.attr("placeholder", ""); // Placeholder trống để không hiển thị mặc định
-
-			// Bọc input trong div và thêm label + icon
-			$searchInput.wrap('<div class="search-container"></div>');
-			$searchInput.before('<label class="search-label">Tìm kiếm</label>');
-			$searchInput.before('<i class="icon-search"></i>');
-
-			// Floating label hoạt động khi nhập chữ
-			$searchInput.on("focus", function() {
-				$(this).siblings(".search-label").css({
-					top: "-3px",
-					fontSize: "12px",
-					color: "#3b71ca",
-					backgroundColor: "#fff"
-				});
-			});
-
-			$searchInput.on("blur", function() {
-				if ($(this).val().length === 0) {
-					$(this).siblings(".search-label").css({
-						top: "33%",
-						fontSize: "16px",
-						color: "#888"
-					});
-				}
-			});
 
 
 
-			// Đảm bảo input có chiều rộng bằng bảng
-			function setSearchWidth() {
-				let tableWidth = $("#tblDanhsach").outerWidth() - 35; // Trừ đi 10px
-				$(".inputsearch").attr("style", "width: " + tableWidth + "px !important;");
-			}
+        // Ẩn thanh tìm kiếm không cần thiết
+        $('.dataTables_filter').eq(1).hide();
 
+        // Chọn input tìm kiếm
+        let $searchInput = $(".dataTables_filter input[type='search']");
 
-			setSearchWidth();
-			$(window).resize(setSearchWidth);
-		});
-        // Xử lý click vào phân trang
+        // Gán class cho input
+        $searchInput.addClass("inputsearch");
+        $searchInput.attr("placeholder", "");
+
+        // Bọc input trong div và thêm label + icon
+        $searchInput.wrap('<div class="search-container"></div>');
+        $searchInput.before('<label class="search-label">Tìm kiếm</label>');
+        $searchInput.before('<i class="icon-search"></i>');
+
+        // Floating label
+        $searchInput.on("focus", function() {
+            $(this).siblings(".search-label").css({
+                top: "-3px",
+                fontSize: "12px",
+                color: "#3b71ca",
+                backgroundColor: "#fff"
+            });
+        });
+
+        $searchInput.on("blur", function() {
+            if ($(this).val().length === 0) {
+                $(this).siblings(".search-label").css({
+                    top: "33%",
+                    fontSize: "16px",
+                    color: "#888"
+                });
+            }
+        });
+
+        // Đảm bảo input có chiều rộng bằng bảng
+        function setSearchWidth() {
+            let tableWidth = $("#tblDanhsach").outerWidth() - 35;
+            $(".inputsearch").attr("style", "width: " + tableWidth + "px !important;");
+        }
+
+        setSearchWidth();
+        $(window).resize(setSearchWidth);
+
         $('.pagination').on('click', '.page-link', function(e) {
             e.preventDefault();
             var page = $(this).data('page');
+            console.log('Page clicked:', page, 'Current page:', currentPage);
             if (page && !$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
-                var start = (page - 1) * <?php echo $perPage; ?>; // Tính toán lại giá trị start
+                var start = (page - 1) * <?php echo $perPage; ?>;
+                console.log('Loading start from:', start);
                 loadDanhSach(start);
             }
         });
 
-
-        // Xử lý click vào tên chủ hộ
-        $(document).on('click', '.hoten-link', function(e) {
-            e.preventDefault();
-            var hokhauId = $(this).data('hokhau');
-            loadDetail(hokhauId);
+        // Xử lý click vào nút chỉnh sửa
+        $('body').on('click', '.btn_hieuchinh', function() {
+            var thonto_id = $(this).data('todanpho');
+            var nhiemky_id = $(this).data('nhiemky');
+            window.location.href = 'index.php?option=com_vptk&view=bdh&task=edit_bdh&thonto_id=' + thonto_id + '&nhiemky_id=' + nhiemky_id;
         });
 
-        // Xử lý click vào tên trong danh sách
-        $(document).on('click', '.name-link', function(e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            $('.detail-item').hide();
-            $('#detail-' + id).show();
-            $('.name-link').removeClass('active');
-            $(this).addClass('active');
+        $('body').on('click', '.btn_xoa', function() {
+            const thonto_id = $(this).data('thonto');
+            const nhiemky_id = $(this).data('nhiemky');
+
+            // Hàm hiển thị thông báo
+            function showToast(message, isSuccess = true) {
+                const toast = jQuery('<div></div>').text(message).css({
+                    position: 'fixed',
+                    top: '20px',
+                    right: '20px',
+                    background: isSuccess ? '#28a745' : '#dc3545',
+                    color: '#fff',
+                    padding: '10px 20px',
+                    borderRadius: '5px',
+                    boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+                    zIndex: 9999,
+                    transition: 'opacity 0.5s'
+                }).appendTo('body');
+                setTimeout(() => toast.fadeOut(500, () => toast.remove()), 2000);
+            }
+
+            // Hàm cập nhật số thứ tự (nếu sử dụng cột STT)
+            function updateSTT() {
+                $('#tblDanhsach tbody tr').each(function(index) {
+                    $(this).find('.stt').text(index + 1);
+                });
+            }
+
+            // Xác nhận xóa
+            bootbox.confirm({
+                title: `<span class='text-danger' style='font-weight:bold;font-size:20px;'>Thông báo</span>`,
+                message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa ban điều hành của Thôn/Tổ và Nhiệm kỳ này?</span>`,
+                buttons: {
+                    confirm: {
+                        label: '<i class="fas fa-check"></i> Đồng ý',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: '<i class="fas fa-times"></i> Không',
+                        className: 'btn-danger'
+                    }
+                },
+                className: 'custom-bootbox',
+                callback: function(result) {
+                    if (!result) return;
+
+                    console.log('Sending AJAX with thonto_id:', thonto_id, 'nhiemky_id:', nhiemky_id);
+
+                    // Lấy CSRF token an toàn
+                    const csrfToken = Joomla.getOptions('csrf.token', '');
+                    if (!csrfToken) {
+                        showToast('Lỗi: Không tìm thấy CSRF token.', false);
+                        return;
+                    }
+
+                    // Gửi yêu cầu AJAX
+                    $.ajax({
+                        url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vptk&controller=bdh&task=delDSBanDieuHanh',
+                        type: 'POST',
+                        data: {
+                            thonto_id: thonto_id,
+                            nhiemky_id: nhiemky_id,
+                            [csrfToken]: 1
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log('AJAX Success:', response);
+                            const message = response.success ?
+                                (response.message || 'Xóa thành công') :
+                                (response.message || 'Xóa thất bại!');
+                            showToast(message, response.success);
+
+                            if (response.success) {
+                                // Tính start từ currentPage
+                                const currentPage = parseInt($('#currentPage').val()) || 1;
+                                const perPage = <?php echo $perPage; ?>;
+                                const start = (currentPage - 1) * perPage;
+
+                                // Làm mới bảng và phân trang
+                                loadDanhSach(start);
+
+                                // Cập nhật số thứ tự (nếu sử dụng cột STT)
+                                updateSTT();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', xhr.status, error);
+                            let errorMessage = 'Lỗi hệ thống, vui lòng thử lại sau.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            } else if (xhr.status === 403) {
+                                errorMessage = 'Lỗi: Quyền truy cập bị từ chối hoặc CSRF token không hợp lệ.';
+                            }
+                            showToast(errorMessage, false);
+                        }
+                    });
+                }
+            });
         });
 
         // Hàm load danh sách
@@ -290,20 +332,18 @@ $(document).ready(function() {
                 tinhtrang_id: $('#tinhtrang_id').val(),
                 thonto_id: $('#thonto_id').val(),
                 chucdanh_kn: $('#chucdanh_kn').val(),
-
-                start: start,
-                limit: <?php echo $perPage; ?>
+                start: start // Đảm bảo tham số này được truyền đúng
             };
-            console.log('Pagination Params:', params);
+
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
                 data: params,
                 success: function(response) {
-                    $('#tbody_danhsach').html($(response).find('#tbody_danhsach').html());
-                    $('#pagination').html($(response).find('#pagination').html());
-                    $('#pagination-info').html($(response).find('#pagination-info').html());
+                    // Cập nhật toàn bộ nội dung div_danhsach
+                    $('#div_danhsach').html(response);
                     $('#currentPage').val(Math.floor(start / <?php echo $perPage; ?>) + 1);
+
                     $("#overlay").fadeOut(300);
                 },
                 error: function(xhr, status, error) {
@@ -313,114 +353,6 @@ $(document).ready(function() {
                 }
             });
         }
-
-        // Hàm load chi tiết
-        function loadDetail(hokhauId) {
-            $("#overlay").fadeIn(300);
-            var params = {
-                option: 'com_vptk',
-                view: 'nhk',
-                format: 'raw',
-                task: 'DETAIL_NHK',
-                hokhau_id: hokhauId
-            };
-            console.log('Detail Params:', params);
-            $.ajax({
-                url: 'index.php',
-                type: 'GET',
-                data: params,
-                success: function(response) {
-                    $('#detailContent').html(response);
-                    $('#detailModal').modal('show');
-                    $("#overlay").fadeOut(300);
-                },
-                error: function(xhr, status, error) {
-                    $('#detailContent').html('<p class="text-danger">Lỗi khi tải thông tin: ' + error + '</p>');
-                    $('#detailModal').modal('show');
-                    $("#overlay").fadeOut(300);
-                }
-            });
-        }
-
-        // Xử lý xóa
-        $('body').on('click', '.btn_xoa', function() {
-            var hokhau_id = $(this).data('hokhau');
-            bootbox.confirm({
-                title: "<span class='text-danger' style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-                message: '<span style="font-size:20px;">Bạn có chắc chắn muốn xóa dữ liệu này?</span>',
-                buttons: {
-                    confirm: {
-                        label: '<i class="fas fa-check"></i> Đồng ý',
-                        className: 'btn-success'
-                    },
-                    cancel: {
-                        label: '<i class="fas fa-times"></i> Không',
-                        className: 'btn-danger'
-                    }
-                },
-                callback: function(result) {
-                    if (result) {
-                        console.log('Sending AJAX with hokhau_id:', hokhau_id);
-                        $.ajax({
-                            url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vptk&task=vptk.delHoKhau&format=raw',
-                            type: 'POST',
-                            data: {
-                                hokhau_id: hokhau_id,
-                                [Joomla.getOptions('csrf.token')]: 1
-                            },
-                            success: function(response) {
-                                console.log('AJAX Success:', response);
-                                var res = typeof response === 'string' ? JSON.parse(response) : response;
-                                var message = res.success ? res.message : 'Xóa thất bại!';
-                                var icon = res.success ?
-                                    '<i class="fas fa-check-circle success-icon"></i>' :
-                                    '<i class="fas fa-exclamation-circle success-icon"></i>';
-                                bootbox.alert({
-                                    title: icon + "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-                                    message: '<span style="font-size:20px;">' + message + '</span>',
-                                    backdrop: true,
-                                    className: 'small-alert',
-                                    buttons: {
-                                        ok: {
-                                            label: 'OK',
-                                            className: 'hidden'
-                                        }
-                                    },
-                                    onShown: function() {
-                                        setTimeout(function() {
-                                            bootbox.hideAll();
-                                            if (res.success) {
-                                                window.location.reload();
-                                            }
-                                        }, 2000);
-                                    }
-                                });
-                            },
-                            error: function(xhr) {
-                                console.error('AJAX Error:', xhr.status, xhr.responseText);
-                                bootbox.alert({
-                                    title: "<i class='fas fa-exclamation-circle success-icon'></i><span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-                                    message: '<span style="font-size:20px;">Lỗi: ' + xhr.responseText + '</span>',
-                                    className: 'small-alert',
-                                    buttons: {
-                                        ok: {
-                                            label: 'OK',
-                                            className: 'hidden'
-                                        }
-                                    },
-                                    onShown: function() {
-                                        setTimeout(function() {
-                                            bootbox.hideAll();
-                                        }, 2000);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                },
-                className: 'custom-bootbox'
-            });
-        });
     });
 </script>
 
@@ -430,43 +362,7 @@ $(document).ready(function() {
         vertical-align: unset;
     }
 
-    .modal {
-        overflow-x: hidden;
-    }
 
-    .modal-dialog {
-        max-width: 1200px;
-        min-width: 300px;
-        width: 1000px;
-        margin-left: auto;
-        margin-right: 0;
-        margin-top: 1.75rem;
-        margin-bottom: 1.75rem;
-        transition: transform 0.5s ease-in-out;
-    }
-
-    .modal.show .modal-dialog {
-        transform: translateX(0);
-    }
-
-    .modal.fade .modal-dialog {
-        transform: translateX(100%);
-    }
-
-    .modal-body {
-        padding: 20px;
-        word-break: break-word;
-    }
-
-    .modal-content {
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-header,
-    .modal-footer {
-        padding: 15px 20px;
-    }
 
     .pagination-container {
         display: flex;
@@ -525,38 +421,5 @@ $(document).ready(function() {
     .text-danger i {
         font-size: 16px;
         vertical-align: middle;
-    }
-
-    .custom-bootbox .modal-dialog {
-        width: 498px !important;
-        margin: 30px auto !important;
-        transform: translateY(-50%);
-    }
-
-    .success-icon {
-        margin-right: 8px;
-        vertical-align: middle;
-    }
-
-    .small-alert .bootbox.modal {
-        width: 300px !important;
-        margin: 0 auto;
-    }
-
-    .small-alert .modal-dialog {
-        width: 300px !important;
-    }
-
-    .small-alert .modal-footer {
-        display: none;
-    }
-
-    .small-alert .modal-header {
-        height: 44px;
-        padding: 7px 20px;
-    }
-
-    .small-alert .modal-body {
-        padding: 14px;
     }
 </style>

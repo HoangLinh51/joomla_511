@@ -81,7 +81,7 @@ class BdhController extends BaseController
         echo json_encode($response);
         jexit();
     }
-       public function delNhanKhau()
+    public function delBandieuhanh()
     {
         $user = Factory::getUser();
         if (!$user->id) {
@@ -92,8 +92,31 @@ class BdhController extends BaseController
         $response = ['success' => false, 'message' => 'Xóa thất bại'];
 
         if ($nhankhau_id > 0) {
-            $model = Core::model('Vptk/Vptk');
-            if ($model->removeNhankhau($nhankhau_id, $user->id)) {
+            $model = Core::model('Vptk/Bdh');
+            if ($model->removeBanDieuHanh($nhankhau_id, $user->id)) {
+                $response = ['success' => true, 'message' => 'Đã xóa dữ liệu thành công'];
+            } else {
+                $response['message'] = 'Lỗi khi xóa bản ghi';
+            }
+        } else {
+            $response['message'] = 'ID không hợp lệ';
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        jexit();
+    }
+    public function delDSBandieuhanh()
+    {
+        $app = Factory::getApplication();
+
+
+        $thonto_id = $app->input->getInt('thonto_id', 0);
+        $nhiemky_id = $app->input->getInt('nhiemky_id', 0);
+
+        if ($thonto_id > 0) {
+            $model = Core::model('Vptk/Bdh');
+            if ($model->removeDSBanDieuHanh($thonto_id, $nhiemky_id)) {
                 $response = ['success' => true, 'message' => 'Đã xóa dữ liệu thành công'];
             } else {
                 $response['message'] = 'Lỗi khi xóa bản ghi';
@@ -221,18 +244,18 @@ class BdhController extends BaseController
             $this->outputJsonError('Lỗi khi xuất Excel: ' . $e->getMessage());
         }
     }
-    function saveNhanhokhau()
+    function saveBanDieuHanh()
     {
         Session::checkToken() or die('Invalid Token');
         $user = Factory::getUser();
 
 
 
-        $model = Core::model('Vptk/Vptk');
+        $model = Core::model('Vptk/Bdh');
         $input = Factory::getApplication()->input;
         $formData = $input->getArray($_POST);
         try {
-            if (!$model->saveNhanhokhau($formData)) {
+            if (!$model->saveBanDieuHanh($formData)) {
                 Factory::getApplication()->enqueueMessage('Lưu dữ liệu không thành công.', 'error');
                 return;
             }
@@ -242,7 +265,7 @@ class BdhController extends BaseController
 
         $session = Factory::getSession();
         $session->set('message_bootbox', 'Đã cập nhật dữ liệu thành công!');
-        $this->setRedirect("index.php/component/vptk/?view=nhk&task=default");
+        $this->setRedirect("index.php/component/vptk/?view=bdh&task=default");
     }
 
     private function outputJsonError($message)
@@ -263,6 +286,43 @@ class BdhController extends BaseController
 
         $writer->save('php://output');
         jexit();
+    }
+    public function getThanhVienBanDieuHanh()
+    {
+        $app = Factory::getApplication();
+        $thonto_id = $app->input->getInt('thonto_id', 0);
+        $nhiemky_id = $app->input->getInt('nhiemky_id', 0);
+        $search = $app->input->getString('search', ''); // Lấy tham số tìm kiếm
+
+        $model = Core::model('Vptk/Bdh');
+        $result = $model->getThanhVienBanDieuHanh($thonto_id, $nhiemky_id, $search);
+
+        header('Content-type: application/json');
+        echo json_encode($result);
+        $app->close();
+    }
+    public function checkBanDieuHanh()
+    {
+        $app = Factory::getApplication();
+        $thonto_id = $app->input->getInt('thonto_id');
+        $nhiemky_id = $app->input->getInt('nhiemky_id');
+
+        // Gọi model để kiểm tra
+        $model = Core::model('Vptk/Bdh');
+        $exists = $model->checkBanDieuHanhExists($thonto_id, $nhiemky_id);
+
+        // Trả về JSON
+        echo json_encode(['exists' => $exists]);
+        $app->close();
+    }
+    public function getNhankhauByThonToId()
+    {
+        $thonto_id = Factory::getApplication()->input->getInt('thonto_id', 0);
+        $model = Core::model('Vptk/Bdh');
+        $result = $model->getNhankhauByThonToId($thonto_id);
+        header('Content-type: application/json');
+        echo json_encode($result);
+        die;
     }
     public function getQuanHuyenByTinhThanh()
     {

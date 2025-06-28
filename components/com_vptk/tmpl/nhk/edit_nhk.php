@@ -6,6 +6,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\HTML\HTMLHelper;
 
 $item = $this->item;
+var_dump($item);
 $nhankhau = $item['nhankhau'];
 ?>
 <meta>
@@ -1141,6 +1142,8 @@ $nhankhau = $item['nhankhau'];
         $('#phuongxa_id').on('change', function() {
             var $phuongxa_id = $(this);
             var $thonto_id = $('#thonto_id');
+            console.log($thonto_id);
+
             var phuongxa_val = $phuongxa_id.val();
 
             $('#tinhthanh_id').val($phuongxa_id.find('option:selected').data('tinhthanh'));

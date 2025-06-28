@@ -30,10 +30,14 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('default');
                 $this->_initDefaultPage();
                 break;
+            case 'THONGKE':
+                $this->setLayout('thongke');
+                $this->_initDefaultPage();
+                break;
             case 'ADD_BDH':
             case 'EDIT_BDH':
                 $this->setLayout('edit_bdh');
-                $this->_getEditNhanhokhau();
+                $this->_getEditBanDieuHanh();
                 break;
             default:
                 $this->setLayout('default');
@@ -87,20 +91,19 @@ class HtmlView extends BaseHtmlView
         } else {
             $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0 AND id IN (' . $phanquyen['phuongxa_id'] . ')', 'tenkhuvuc ASC');
         }
-        $chucdanh = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0');
-        $tinhtrang = Core::loadAssocList('danhmuc_tinhtrang', 'id,tentinhtrang', 'trangthai = 1 AND daxoa = 0');
+        $chucdanh = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 1');
+        $tinhtrang = Core::loadAssocList('danhmuc_tinhtrang', 'id,tentinhtrang', 'trangthai = 1 AND daxoa = 0 ');
         $chucdanhkiemnhiem = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 99');
+        $nhiemky = Core::loadAssocList('danhmuc_nhiemky', 'id,tennhiemky', 'trangthai = 1 AND daxoa = 0');
+        $this->nhiemky = $nhiemky;
 
         $this->gioitinh = $gioitinh;
         $this->phuongxa = $phuongxa;
         $this->chucdanh = $chucdanh;
         $this->chucdanhkiemnhiem = $chucdanhkiemnhiem;
-
         $this->tinhtrang = $tinhtrang;
-
-
     }
-    public function _getEditNhanhokhau()
+    public function _getEditBanDieuHanh()
     {
         $document = Factory::getDocument();
         $app = Factory::getApplication()->input;
@@ -116,9 +119,10 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
         // $document->addScript(Uri::root(true).'/media/cbcc/js/jquery/jquery.min.js');
-        // $document->addScript(Uri::root(true).'/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         // $document->addScript(Uri::base(true).'/media/cbcc/js/jquery/jquery-validation/jquery.validate.js' );
         $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/jquery/jquery.min.js');
+        // $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/datatables-rowgroup/js/dataTables.rowGroup.js');
+
         $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js');
         $document->addScript(Uri::root(true) . '/media/cbcc/js/bootbox.min.js');
@@ -136,9 +140,7 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.toast.js');
         $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/pace.min.js');
 
-        $hokhau_id = $app->getInt('id', null);
-
-        $model = Core::model('Vptk/Vptk');
+        $model = Core::model('Vptk/Bdh');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
         if ($phanquyen['phuongxa_id'] != '') {
@@ -156,52 +158,42 @@ class HtmlView extends BaseHtmlView
             $db->setQuery($query);
             $phuongxa = $db->loadAssocList();
         }
-        $tinhthanh = Core::loadAssocList('danhmuc_tinhthanh', 'id,tentinhthanh', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC, tentinhthanh ASC');
-        $phuongxa2 = Core::loadAssocList('danhmuc_phuongxa', 'id,tenphuongxa', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC, tenphuongxa ASC');
-
-        $quanhe = Core::loadAssocList('danhmuc_quanhenhanthan', 'id,tenquanhenhanthan', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
         $gioitinh = Core::loadAssocList('danhmuc_gioitinh', 'id,tengioitinh', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $dantoc = Core::loadAssocList('danhmuc_dantoc', 'id,tendantoc', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $tongiao = Core::loadAssocList('danhmuc_tongiao', 'id,tentongiao', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $trinhdo = Core::loadAssocList('danhmuc_trinhdohocvan', 'id,tentrinhdohocvan', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $nghenghiep = Core::loadAssocList('danhmuc_nghenghiep', 'id,tennghenghiep', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $lydo = Core::loadAssocList('danhmuc_lydoxoathuongtru', 'id,tenlydo', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $quoctich = Core::loadAssocList('danhmuc_quoctich', 'id,tenquoctich', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $nhommau = Core::loadAssocList('danhmuc_nhommau', 'code,name', 'status = 1 AND daxoa = 0');
-        $qhhonnhan = Core::loadAssocList('danhmuc_tinhtranghonnhan', 'code,name', 'status = 1 AND daxoa = 0');
 
-        if ($hokhau_id != '') {
-            $item = $model->getHokhauById($hokhau_id);
+        $nhiemky = Core::loadAssocList('danhmuc_nhiemky', 'id,tennhiemky', 'trangthai = 1 AND daxoa = 0');
+        $trinhdollct = Core::loadAssocList('danhmuc_lyluanchinhtri', 'id,tentrinhdo', 'trangthai = 1 AND daxoa = 0');
 
-            $item['nhankhau'] = $model->getNhankhauByHokhauId($hokhau_id);
-            $phuongxa_id = $item['phuongxa_id'];
+        $phuongxa2 = Core::loadAssocList('danhmuc_phuongxa', 'id,tenphuongxa', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC, tenphuongxa ASC');
+        $chucdanhkiemnhiem = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 99');
+        $chucdanh = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 1');
+        $tinhtrang = Core::loadAssocList('danhmuc_tinhtrang', 'id,tentinhtrang', 'trangthai = 1 AND daxoa = 0');
+        $thonto_id = $app->getInt('thonto_id', null);
+        $nhiemky_id = $app->getInt('nhiemky_id', null);
+
+
+        if ($thonto_id != '') {
+            $item = $model->getThanhVienBanDieuHanhID($thonto_id, $nhiemky_id);
+            $tt_px = $model->getPhuongxa_thontoID($thonto_id, $nhiemky_id);
+
+            $phuongxa_id = $item[0]['phuongxa_id'];
         } else {
             $item = array();
-            $item['nhankhau'];
-            if (count($phuongxa) == 1) {
-                $phuongxa_id = $phuongxa[0]['id'];
-            }
         }
         if ((int)$phuongxa_id > 0) {
             $thonto = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc', 'sudung = 1 AND daxoa = 0 AND level = 3 AND cha_id = ' . (int)$phuongxa_id, 'tenkhuvuc ASC');
         } else {
             $thonto = array();
         }
-        $this->tinhthanh = $tinhthanh;
+        $this->nhiemky = $nhiemky;
         $this->phuongxa2 = $phuongxa2;
 
         $this->phuongxa = $phuongxa;
         $this->thonto = $thonto;
-        $this->quanhe = $quanhe;
         $this->gioitinh = $gioitinh;
-        $this->dantoc = $dantoc;
-        $this->tongiao = $tongiao;
-        $this->trinhdo = $trinhdo;
-        $this->nghenghiep = $nghenghiep;
-        $this->lydo = $lydo;
         $this->item = $item;
-        $this->quoctich = $quoctich;
-        $this->nhommau = $nhommau;
-        $this->qhhonnhan = $qhhonnhan;
+        $this->trinhdollct = $trinhdollct;
+        $this->chucdanh = $chucdanh;
+        $this->chucdanhkiemnhiem = $chucdanhkiemnhiem;
+        $this->tinhtrang = $tinhtrang;
     }
 }

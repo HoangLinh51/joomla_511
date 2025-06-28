@@ -52,39 +52,18 @@ class RawView extends BaseHtmlView
         $layout = ($layout == null) ? 'default' : strtoupper($layout);
         $this->setLayout(strtolower($layout));
         switch ($layout) {
-            case 'DETAIL':
-                $this->_getDetail();
-                break;
+
             case 'DS_BDH':
                 $this->_pageBDH();
                 break;
-            case 'DETAIL_NHK':
-                $this->_pageDetailNHK();
+            case 'DS_THONGKE':
+                $this->_pageThongke();
                 break;
         }
     }
 
 
 
-    private function _getDetail()
-    {
-        $model = Core::model('Tochuc/Tochuc');
-        $id = Factory::getApplication()->input->getInt('id');
-        $row = $model->read($id);
-        $quatrinh = $model->getAllQuaTrinhById($row->id);
-        $khenthuongkyluat = $model->getAllKhenthuongkyluatById($row->id);
-        // $quatrinh_bienche = $model->getQuatrinhBiencheByDeptId($row->id);
-
-
-        $this->id =  $id;
-        $this->row = $row;
-        // $this->sumBienchegiao = $model->sumBienchegiao($id); 	
-        // $this->sumBienchehienco = $model->sumBienchehienco($id); 	
-        $this->quatrinh = $quatrinh;
-        $this->khenthuongkyluat = $khenthuongkyluat;
-        // $this->quatrinh_bienche = $quatrinh_bienche; 	
-        parent::display();
-    }
     private function _pageBDH()
     {
         $model = Core::model('Vptk/Bdh');
@@ -92,190 +71,46 @@ class RawView extends BaseHtmlView
 
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', ''),
+            'thonto_id' => $app->getInt('thonto_id', ''),
             'hoten' => $app->getString('hoten', ''),
             'chucdanh_id' => $app->getInt('chucdanh_id', ''),
+            'chucvukn_id' => $app->getInt('chucvukn_id', ''),
             'tinhtrang_id' => $app->getInt('tinhtrang_id', ''),
             'chucdanh_kn' => $app->getInt('chucdanh_kn', ''),
+            'daxoa' => $app->getInt('daxoa', 0) // Giả sử có tham số này
         ];
 
         $perPage = 20;
         $startFrom = $app->getInt('start', 0);
 
-        // Lấy tất cả bản ghi (không phân trang ở SQL)
-        $allItems = $model->getDanhSachBanDieuHanh($params, 0, 0);
-        $countitems = $model->countitems($params);
+        // XÓA BỎ TOÀN BỘ LOGIC PHÂN TRANG THỦ CÔNG
+        // GỌI MODEL ĐÚNG CÁCH ĐỂ PHÂN TRANG TẠI SQL
+        $this->items = $model->getDanhSachBanDieuHanh($params, $startFrom, $perPage);
+        $this->countitems = $model->countitems($params);
 
-        // Áp dụng phân trang thủ công
-        $paginatedItems = [];
-        $count = 0;
-        $startIndex = $startFrom;
-        $endIndex = $startFrom + $perPage;
-
-        foreach ($allItems as $thonto => $nhiemkys) {
-            foreach ($nhiemkys as $nhiemky => $thanhviens) {
-                if ($count >= $endIndex) break 2;
-
-                if ($count >= $startIndex) {
-                    $paginatedItems[$thonto][$nhiemky] = $thanhviens;
-                }
-
-                $count += count($thanhviens);
-            }
-        }
-
-        $this->items = $paginatedItems;
-        $this->countitems = $countitems;
-
+        // Không cần xử lý gì thêm, chỉ cần gọi display
         parent::display();
     }
-    private function _pageDetailNHK()
+    private function _pageThongke()
     {
+        $model = Core::model('Vptk/Bdh');
         $app = Factory::getApplication()->input;
-        $hokhauId = $app->getInt('hokhau_id', 0);
-        $model = Core::model('Vptk/Vptk');
+        $params = [
+            'phuongxa_id' => $app->getInt('phuongxa_id', 0),
+            'thonto_id' => $app->getString('thonto_id', ''),
+            'chucdanh_id' => $app->getInt('chucdanh_id', 0),
+            'nhiemky_id' => $app->getInt('nhiemky_id', 0),
 
-        $details = $model->getDetailNhanHoKhau($hokhauId);
-
-        if (!is_array($details) || empty($details)) {
-            echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
-            Factory::getApplication()->close();
-            return;
-        }
-
-        echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css"/>';
-
-        echo '<div class="detail-container d-flex">';
-
-        // Danh sách họ tên bên trái
-        echo '<div class="name-list" style="width: 30%; border-right: 1px solid #ddd; padding-right: 10px;">';
-        echo '<h6>Danh sách thành viên</h6>';
-        echo '<ul class="list-unstyled">';
-        foreach ($details as $index => $detail) {
-            if (!is_array($detail) || !isset($detail['id'], $detail['hoten'])) {
-                echo '<li class="text-danger">Lỗi: Bản ghi không hợp lệ tại index ' . $index . '</li>';
-                continue;
-            }
-            $activeClass = $index === 0 ? 'active' : '';
-            echo '<li><a href="#" class="name-link ' . $activeClass . '" data-id="' . htmlspecialchars($detail['id']) . '">' . htmlspecialchars($detail['hoten']) . ' (' . htmlspecialchars($detail['tenquanhenhanthan'] ?? 'Không có') . ')</a></li>';
-        }
-        echo '</ul>';
-        echo '</div>';
-
-        // Thông tin chi tiết bên phải (bảng 2 cột)
-        echo '<div class="detail-content" style="width: 70%; padding-left: 10px;">';
-        $firstDetail = $details[0];
-        if (is_array($firstDetail) && isset($firstDetail['id'])) {
-            $isTamTru = $firstDetail['is_tamtru'] ?? 0;
-            $isLydo = $firstDetail['tenlydo'] ?? null;
-            $trangthai = $firstDetail['trangthaihoso'] ?? 0;
-            $locationStatus = $isTamTru == 0 ? 'Thường trú' : 'Tạm trú';
-            $traithaiHS = $trangthai == 0 ? 'Chưa xác thực' : 'Đã xác thực';
-            $colorStyle = 'border: 1px solid green; color: green; padding: 2px;';
-            $RedcolorStyle = 'border: 1px solid red; color: red; padding: 2px;font-weight:bold';
-            $HosoStyle = $trangthai == 0 ? 'border: 1px solid red; color: red; padding: 2px;' : $colorStyle;
-            $genderStyle = $firstDetail['tengioitinh'] === 'Nữ' ? 'border: 1px solid red; color: red; padding: 2px;' : $colorStyle;
-            $locationStyle = $isTamTru == 0 ? 'border: 1px solid green; color: green; padding: 2px;' : 'border: 1px solid red; color: red; padding: 2px;';
-            $countryCode = !empty($firstDetail['icon']) ? strtolower($firstDetail['icon']) : 'vn';
-            $tinhTrangHonNhan = htmlspecialchars($firstDetail['tentinhtranghonnhan'] ?? '');
-            $tinhTrangHonNhanStyle = empty($tinhTrangHonNhan) ? 'border: none;' : $colorStyle;
-            $trinhdoHV = htmlspecialchars($firstDetail['tentrinhdohocvan'] ?? '');
-            $trinhdoHVStyle = empty($trinhdoHV) ? 'border: none;' : $colorStyle;
-            $nhommau = htmlspecialchars($firstDetail['tennhommau'] ?? '');
-            $nhommauStyle = empty($nhommau) ? 'border: none;' : $RedcolorStyle;
-            echo '<div id="detail-' . htmlspecialchars($firstDetail['id']) . '" class="detail-item active">';
-            echo '<table class="table table-sm">';
-            echo '<tbody>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày sinh:</strong> ' . htmlspecialchars($firstDetail['ngaysinh'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Giới tính:</strong> <span style="' . $genderStyle . '">' . htmlspecialchars($firstDetail['tengioitinh'] ?? '') . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số CCCD:</strong> ' . htmlspecialchars($firstDetail['cccd_so'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày cấp CCCD:</strong> ' . htmlspecialchars($firstDetail['cccd_ngaycap'] ?? '') . '</td></tr>';
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi cấp CCCD:</strong> ' . htmlspecialchars($firstDetail['cccd_coquancap'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Thường trú/Tạm trú:</strong> <span style="' . $locationStyle . '">' . $locationStatus . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"></td></tr>';
-            if ($isTamTru == 0) {
-                echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi ở hiện tại:</strong> ' . htmlspecialchars($firstDetail['diachi'] ?? '') . '</td></tr>';
-            } else {
-                echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi ở hiện tại:</strong> ' . htmlspecialchars($firstDetail['diachi'] ?? '') . '</td></tr>';
-                echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi thường trú trước:</strong> ' . htmlspecialchars($firstDetail['diachi_cu'] ?? 'Chưa có') . '</td></tr>';
-            }
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số điện thoại:</strong> ' . htmlspecialchars($firstDetail['dienthoai'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Dân tộc:</strong> ' . htmlspecialchars($firstDetail['tendantoc'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tôn giáo:</strong> ' . htmlspecialchars($firstDetail['tentongiao'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trình độ học vấn:</strong> <span style="' . $trinhdoHVStyle . '">' . $trinhdoHV . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tình trạng hôn nhân:</strong> <span style="' . $tinhTrangHonNhanStyle . '">' . $tinhTrangHonNhan . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nhóm máu:</strong> <span style="' . $nhommauStyle . '">' . $nhommau . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Quốc tịch:</strong> ' . htmlspecialchars($firstDetail['tenquoctich'] ?? 'Việt Nam') . ' <span class="fi fi-' . $countryCode . '"></span></td></tr>';
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nghề nghiệp:</strong> ' . htmlspecialchars($firstDetail['tennghenghiep'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số hộ khẩu:</strong> ' . htmlspecialchars($firstDetail['hokhau_so'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày cấp hộ khẩu:</strong> ' . htmlspecialchars($firstDetail['hokhau_ngaycap'] ?? '') . '</td></tr>';
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi cấp hộ khẩu:</strong> ' . htmlspecialchars($firstDetail['hokhau_coquancap'] ?? '') . '</td></tr>';
-            if ($isLydo !== null) {
-                echo '<tr>
-            <td colspan="2" style="padding: 0.5rem; border-top: 0px solid #dee2e6">
-                <strong>Lý do xóa thường trú:</strong> ' . htmlspecialchars($isLydo) . '
-            </td>
-          </tr>';
-            }
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trạng thái:</strong> <span style="' . $HosoStyle . '">' . htmlspecialchars($traithaiHS) . '</span></td></tr>';
-            echo '</tbody>';
-            echo '</table>';
-            echo '</div>';
+        ];
+        if (!empty($params['thonto_id'])) {
+            $params['thonto_id'] = array_filter(explode(',', $params['thonto_id']), 'is_numeric');
         } else {
-            echo '<p class="text-danger">Lỗi: Bản ghi đầu tiên không hợp lệ.</p>';
+            $params['thonto_id'] = [];
         }
+        $items = $model->getThongKeBanDieuHanh($params);
+        // var_dump($items);exit;
 
-        // Chi tiết các thành viên khác (ẩn)
-        for ($i = 1; $i < count($details); $i++) {
-            $detail = $details[$i];
-            if (!is_array($detail) || !isset($detail['id'])) {
-                echo '<p class="text-danger">Lỗi: Bản ghi không hợp lệ tại index ' . $i . '</p>';
-                continue;
-            }
-            $isTamTru = $detail['is_tamtru'] ?? 0;
-            $isLydo = $detail['tenlydo'] ?? null;
-            $trangthai = $detail['trangthaihoso'] ?? 0;
-            $locationStatus = $isTamTru == 0 ? 'Thường trú' : 'Tạm trú';
-            $traithaiHS = $trangthai == 0 ? 'Chưa xác thực' : 'Đã xác thực';
-            $colorStyle = 'border: 1px solid green; color: green; padding: 2px;';
-            $RedcolorStyle = 'border: 1px solid red; color: red; padding: 2px;font-weight:bold';
-            $HosoStyle = $trangthai == 0 ? 'border: 1px solid red; color: red; padding: 2px;' : $colorStyle;
-            $genderStyle = $detail['tengioitinh'] === 'Nữ' ? 'border: 1px solid red; color: red; padding: 2px;' : $colorStyle;
-            $locationStyle = $isTamTru == 0 ? 'border: 1px solid green; color: green; padding: 2px;' : 'border: 1px solid red; color: red; padding: 2px;';
-            $countryCode = !empty($detail['icon']) ? strtolower($detail['icon']) : 'vn';
-            $tinhTrangHonNhan = htmlspecialchars($detail['tentinhtranghonnhan'] ?? '');
-            $tinhTrangHonNhanStyle = empty($tinhTrangHonNhan) ? 'border: none;' : $colorStyle;
-            $trinhdoHV = htmlspecialchars($detail['tentrinhdohocvan'] ?? '');
-            $trinhdoHVStyle = empty($trinhdoHV) ? 'border: none;' : $colorStyle;
-            $nhommau = htmlspecialchars($detail['tennhommau'] ?? '');
-            $nhommauStyle = empty($nhommau) ? 'border: none;' : $RedcolorStyle;
-            echo '<div id="detail-' . htmlspecialchars($detail['id']) . '" class="detail-item" style="display: none;">';
-            echo '<table class="table table-sm">';
-            echo '<tbody>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày sinh:</strong> ' . htmlspecialchars($detail['ngaysinh'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Giới tính:</strong> <span style="' . $genderStyle . '">' . htmlspecialchars($detail['tengioitinh'] ?? '') . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số CCCD:</strong> ' . htmlspecialchars($detail['cccd_so'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày cấp CCCD:</strong> ' . htmlspecialchars($detail['cccd_ngaycap'] ?? '') . '</td></tr>';
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi cấp CCCD:</strong> ' . htmlspecialchars($detail['cccd_coquancap'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Thường trú/Tạm trú:</strong> <span style="' . $locationStyle . '">' . $locationStatus . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"></td></tr>';
-            if ($isTamTru == 0) {
-                echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi ở hiện tại:</strong> ' . htmlspecialchars($detail['diachi'] ?? '') . '</td></tr>';
-            } else {
-                echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi ở hiện tại:</strong> ' . htmlspecialchars($detail['diachi'] ?? '') . '</td></tr>';
-                echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi thường trú trước:</strong> ' . htmlspecialchars($detail['diachi_cu'] ?? 'Chưa có') . '</td></tr>';
-            }
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số điện thoại:</strong> ' . htmlspecialchars($detail['dienthoai'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Dân tộc:</strong> ' . htmlspecialchars($detail['tendantoc'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tôn giáo:</strong> ' . htmlspecialchars($detail['tentongiao'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trình độ học vấn:</strong> <span style="' . $trinhdoHVStyle . '">' . $trinhdoHV . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tình trạng hôn nhân:</strong> <span style="' . $tinhTrangHonNhanStyle . '">' . $tinhTrangHonNhan . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nhóm máu:</strong> <span style="' . $nhommauStyle . '">' . $nhommau . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Quốc tịch:</strong> ' . htmlspecialchars($detail['tenquoctich'] ?? 'Việt Nam') . ' <span class="fi fi-' . $countryCode . '"></span></td></tr>';
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nghề nghiệp:</strong> ' . htmlspecialchars($detail['tennghenghiep'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số hộ khẩu:</strong> ' . htmlspecialchars($detail['hokhau_so'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày cấp hộ khẩu:</strong> ' . htmlspecialchars($detail['hokhau_ngaycap'] ?? '') . '</td></tr>';
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi cấp hộ khẩu:</strong> ' . htmlspecialchars($detail['hokhau_coquancap'] ?? '') . '</td></tr>';
-            if ($isLydo !== null) {
-                echo '<tr>
-            <td colspan="2" style="padding: 0.5rem; border-top: 0px solid #dee2e6">
-                <strong>Lý do xóa thường trú:</strong> ' . htmlspecialchars($isLydo) . '
-            </td>
-          </tr>';
-            }
-            echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trạng thái:</strong> <span style="' . $HosoStyle . '">' . htmlspecialchars($traithaiHS) . '</span></td></tr>';
-            echo '</tbody>';
-            echo '</table>';
-            echo '</div>';
-        }
-        echo '</div>';
-
-        echo '</div>';
-        Factory::getApplication()->close();
+        $this->items = $items;
+        parent::display();
     }
 }
