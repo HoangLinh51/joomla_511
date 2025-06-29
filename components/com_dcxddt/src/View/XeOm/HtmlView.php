@@ -45,6 +45,7 @@ class HtmlView extends BaseHtmlView
         $phanquyen = $model->getPhanQuyen();
         $dmLoaixe = $model->getListDanhMucLoaiXe();
         $danhMucGioiTinh = $model->getDanhMucGioiTinh();
+        $danhMuctinhtrangthe = $model->getDanhMucTinhTrangThe();
 
         $phuongxa = array();
         if ($phanquyen['phuongxa_id'] != '') {
@@ -54,7 +55,8 @@ class HtmlView extends BaseHtmlView
         $tongiao = $model->getTonGiao();
         // var_dump($phuongxa);
 
-        $this->doanhoi = $dmLoaixe;
+        $this->dmtinhtrangthe = $danhMuctinhtrangthe;
+        $this->dmLoaixe = $dmLoaixe;
         $this->gioitinh = $danhMucGioiTinh;
         $this->dantoc = $dantoc;
         $this->tongiao = $tongiao;
@@ -65,27 +67,23 @@ class HtmlView extends BaseHtmlView
     private function import()
     {
         $document = Factory::getDocument();
-
-        // CSS: Framework trước, sau đó đến plugin
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/style.bundle.css');
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/plugins.bundle.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');;
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.toast.css');
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
-        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css'); // Xóa dòng trùng lặp
-        // $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.css');
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2-bootstrap.css');
+        
 
-
-        // JS: jQuery trước, sau đó đến plugin  media/cbcc/js/datetimepicker-master/jquery.datetimepicker.full.min.js
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js'); // Chỉ giữ một phiên bản jQuery
-        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js'); // Tải ngay sau jQuery
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js'); // Bootstrap JS
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js'); 
+        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js'); 
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js'); 
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js'); // Chỉ giữ phiên bản nén
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js'); 
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');

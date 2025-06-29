@@ -3,8 +3,11 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
+
 ?>
 
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
@@ -84,14 +87,14 @@ use Joomla\CMS\HTML\HTMLHelper;
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="mb-0 text-primary">
-          <span class="title-edit"></span> xe ôm
+          <span class="title-edit"></span> thông tin xe ôm
         </h4>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <div class="modal-body">
-        <form id="formDoanvienHoiVien" name="formDoanvienHoiVien" method="post" action="index.php?option=com_dcxddt&controller=xeom&task=save_xeom">
+        <form id="formXeOm" name="formXeOm" method="post" action="index.php?option=com_dcxddt&controller=xeom&task=save_xeom">
           <div class="card-body">
             <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
               <h5 style="margin: 0">Thông tin cá nhân</h5>
@@ -185,39 +188,40 @@ use Joomla\CMS\HTML\HTMLHelper;
             <h5 class="border-bottom pb-2 mb-4">Thông tin phương tiện</h5>
             <div class="row g-3 mb-4">
               <div class="col-md-4">
-                <label for="xeom_id" class="form-label fw-bold">Biển số xe <span class="text-danger">*</span></label>
-                <select id="xeom_id" class="select2" data-placeholder="Chọn đoàn hội" disabled>
-                  <?php foreach ($this->xeom as $dh) { ?>
-                    <option value="<?php echo $dh['id']; ?>" <?php echo ($this->xeomPhanQuyen[0]['is_doanvien'] == $dh['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($dh['tenxeom']); ?></option>
-                  <?php } ?>
-                </select>
-                <input type="hidden" name="xeom_id" value="<?php echo $this->xeomPhanQuyen[0]['is_doanvien']; ?>">
+                <label for="modal_biensoxe" class="form-label fw-bold">Biển số xe <span class="text-danger">*</span></label>
+                <input id="modal_biensoxe" type="text" name="modal_biensoxe" class="form-control" placeholder="Nhập biển số xe">
               </div>
               <div class="col-md-4">
-                <label for="modal_chucdanh_id" class="form-label fw-bold">Loại xe</label>
-                <select id="modal_chucdanh_id" name="chucvu_id" class="select2" data-placeholder="Chọn chức vụ">
+                <label for="modal_loaixe_id" class="form-label fw-bold">Loại xe</label>
+                <select id="modal_loaixe_id" name="loaixe_id" class="select2" data-placeholder="Chọn loại xe">
                   <option value=""></option>
-                  <?php foreach ($this->chucdanh as $cd) { ?>
-                    <option value="<?php echo $cd['id']; ?>"><?php echo htmlspecialchars($cd['tenchucdanh']); ?></option>
+                  <?php foreach ($this->dmLoaixe as $lx) { ?>
+                    <option value="<?php echo $lx['id']; ?>"><?php echo htmlspecialchars($lx['tenloaixe']); ?></option>
                   <?php } ?>
                 </select>
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-bold">Thẻ hành nghề </label>
-                <div class="d-flex" style="gap: 8px;">
-                  <input type="date" name="thoidiem_batdau" class="form-control" placeholder="Ngày bắt đầu" style="width: 145px;">
-                  <input type="date" name="thoidiem_ketthuc" class="form-control" placeholder="Ngày kết thúc" style="width: 145px;">
-                </div>
+                <input id="modal_thehanhnghe" type="text" name="modal_sothehanhnghe" class="form-control" placeholder="Nhập số thẻ hành nghề  ">
               </div>
             </div>
             <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <label for="lydo_biendong" class="form-label fw-bold">Giấy phép </label>
-                <textarea id="lydo_biendong" name="lydobiendong" class="form-control" rows="3" placeholder="Nhập lý do biến động"></textarea>
+              <div class="col-md-4">
+                <label for="modal_giayphep" class="form-label fw-bold">Giấy phép </label>
+                <input id="modal_giayphep" name="giayphep" class="form-control" rows="3" placeholder="Nhập số giấy phép lái xe">
               </div>
-              <div class="col-md-6">
-                <label for="ghichu" class="form-label fw-bold">Tình trạng</label>
-                <textarea id="ghichu" name="ghichu" class="form-control" rows="3" placeholder="Nhập ghi chú nếu có"></textarea>
+              <div class="col-md-4">
+                <label class="form-label fw-bold">Ngày hết hạn thẻ hành nghề </label>
+                <input id="modal_ngayhethan_thehanhnghe" type="date" name="modal_ngayhethan_thehanhnghe" class="form-control">
+              </div>
+              <div class="col-md-4 ">
+                <label for="modal_tinhtrang" class="form-label fw-bold">Tình trạng thẻ hành nghề</label>
+                <select id="modal_tinhtrang" name="tinhtrang_id" class="select2" data-placeholder="Chọn tình trạng thẻ hành nghề">
+                  <option value=""></option>
+                  <?php foreach ($this->dmtinhtrangthe as $tt) { ?>
+                    <option value="<?php echo $tt['id']; ?>"><?php echo htmlspecialchars($tt['tentinhtrang']); ?></option>
+                  <?php } ?>
+                </select>
               </div>
             </div>
             <input type="hidden" name="id" value="">
@@ -235,9 +239,13 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 <script>
   const phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
-
+  let isEditMode = false;
   $(document).ready(function() {
     // Initialize Select2 for modal and filter dropdowns
+    $('.date-picker').datepicker({
+      autoclose: true,
+      language: 'vi'
+    });
     const initSelect2 = (selector, width = '100%') => {
       $(selector).select2({
         placeholder: $(selector).data('placeholder') || 'Chọn',
@@ -246,7 +254,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       });
     };
 
-    ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id', '#modal_chucdanh_id', '#xeom_id'].forEach(selector => {
+    ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id', '#modal_loaixe_id', '#modal_tinhtrang'].forEach(selector => {
       initSelect2(selector);
     });
     ['#phuongxa_id', '#thonto_id', '#gioitinh_id'].forEach(selector => {
@@ -277,7 +285,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     };
 
     $('#btn_luu').on('click', function() {
-      $('#formDoanvienHoiVien').submit();
+      $('#formXeOm').submit();
     });
 
     // Handle ward change for filter and modal
@@ -345,32 +353,46 @@ use Joomla\CMS\HTML\HTMLHelper;
         $('#select_top').html('<option value="">-- Chọn --</option>');
       }
     });
+    $('.btn-themmoi').on('click', function() {
+      isEditMode = false;
+      $('.title-edit').text('Thêm mới');
+      $('#formXeOm')[0].reset();
+      $('.select2').val('').trigger('change');
+      $('#checkbox_toggle').prop('checked', false).trigger('change');
+    });
+
+    $('#modalThemXeOm').on('hidden.bs.modal', function() {
+      isEditMode = false;
+      $('.title-edit').text('');
+      $('#formXeOm')[0].reset();
+      $('#select_top').val('').trigger('change');
+      $('.select2').val('').trigger('change');
+    });
 
     // Populate form with selected member data
     $('#select_top').on('select2:select', async function(e) {
       const data = e.params.data;
-      const xeomPhanQuyen = <?= json_encode($this->xeomPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
 
       // Check if nhankhau_id already exists in xeom
-      try {
-        const response = await $.post('index.php', {
-          option: 'com_dcxddt',
-          controller: 'xeom',
-          task: 'checkNhankhauInXeOm',
-          nhankhau_id: data.id,
-          xeom_id: xeomPhanQuyen
-        }, null, 'json');
+      if (!isEditMode) {
+        try {
+          const response = await $.post('index.php', {
+            option: 'com_dcxddt',
+            controller: 'xeom',
+            task: 'checkNhankhauInXeOm',
+            nhankhau_id: data.id,
+          }, null, 'json');
 
-        if (response.exists) {
-          showToast('Nhân khẩu này đã là thành viên của đoàn hội', false);
-          // Optionally, you can clear the selection and reset the form
-          $('#select_top').val('').trigger('change');
+          if (response.exists) {
+            showToast('Nhân khẩu này đã có trong danh sách tài xế', false);
+            $('#select_top').val('').trigger('change');
+            return;
+          }
+        } catch (error) {
+          console.error('Check nhankhau error:', error);
+          showToast('Lỗi khi kiểm tra trạng thái nhân khẩu', false);
           return;
         }
-      } catch (error) {
-        console.log(error)
-        showToast('Lỗi khi kiểm tra trạng thái nhân khẩu trong đoàn hội', false);
-        return;
       }
 
       $('#nhankhau_id').val(data.id || '');
@@ -393,17 +415,17 @@ use Joomla\CMS\HTML\HTMLHelper;
 
     // Handle edit action
     $('body').on('click', '.btn_hieuchinh', async function() {
+      $('.title-edit').text('Hiệu chỉnh');
       const memberId = $(this).data('xeom');
-      const modalTitle = $(this).data('title') || 'Hiệu chỉnh thông tin đoàn viên hội viên';
       if (!memberId) {
-        showToast('ID đoàn hội không hợp lệ', false);
+        showToast('ID tài xế xe không hợp lệ', false);
         return;
       }
 
+      isEditMode = true; // Đặt trạng thái là chỉnh sửa
       const $modal = $('#modalThemXeOm');
       const $modalContent = $modal.find('.modal-content');
       showLoadingOverlay($modalContent);
-      $('#modalThemXeOmLabel').text(modalTitle);
 
       try {
         const response = await $.post('index.php', {
@@ -415,32 +437,30 @@ use Joomla\CMS\HTML\HTMLHelper;
 
         if (response && response.id) {
           $('input[name="id"]').val(response.id || '');
-          $('#xeom_id').val(response.xeom_id || '').trigger('change');
-          $('input[name="xeom_id"]').val(response.xeom_id || '');
-          $('#modal_chucdanh_id').val(response.chucvu_id || '').trigger('change');
-          $('input[name="thoidiem_batdau"]').val(response.thoidiem_batdau || '');
-          $('input[name="thoidiem_ketthuc"]').val(response.thoidiem_ketthuc || '');
-          $('#lydo_biendong').val(response.lydobiendong || '');
-          $('#ghichu').val(response.ghichu || '');
+          $('input[name="nhankhau_id"]').val(response.nhankhau_id || '');
+          $('#modal_biensoxe').val(response.biensoxe || '');
+          $('#modal_loaixe_id').val(response.loaixe_id || '').trigger('change');
+          $('#modal_thehanhnghe').val(response.thehanhnghe_so || '');
+          $('#modal_giayphep').val(response.sogiaypheplaixe || '');
+          $('#tinhtrangthe_id').val(response.tinhtrangthe_id || '');
+          $('#modal_ngayhethan_thehanhnghe').val(response.thehanhnghe_ngayhethan || '');
 
           const hasNhankhauId = !!response.nhankhau_id;
           $('#checkbox_toggle').prop('checked', hasNhankhauId).trigger('change');
 
           if (hasNhankhauId) {
-            // Use cccd_so as keyword to fetch nhankhau details
             const nhankhauResponse = await $.post('index.php', {
               option: 'com_dcxddt',
               task: 'xeom.timkiem_nhankhau',
               format: 'json',
-              keyword: response.n_cccd || '', // Use cccd_so as keyword
+              keyword: response.n_cccd,
               phuongxa_id: response.n_phuongxa_id ? [response.n_phuongxa_id] : phuongxa_id.map(item => item.id)
             }, null, 'json');
 
             if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
               const nhankhau = nhankhauResponse.items.find(item => item.id === response.nhankhau_id) || nhankhauResponse.items[0];
               if (nhankhau) {
-                // Add the fetched nhankhau as a selected option
-                const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
+                const optionText = `${nhankhau.hoten || ''} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
                 const newOption = new Option(optionText, nhankhau.id, true, true);
                 $('#select_top').append(newOption).trigger('change');
 
@@ -466,12 +486,8 @@ use Joomla\CMS\HTML\HTMLHelper;
                 showToast('Không tìm thấy nhân khẩu phù hợp', false);
                 $('#checkbox_toggle').prop('checked', false).trigger('change');
               }
-            } else {
-              showToast('Không tìm thấy thông tin nhân khẩu', false);
-              $('#checkbox_toggle').prop('checked', false).trigger('change');
             }
           } else {
-            // Populate manual input fields for non-nhankhau data
             $('#nhankhau_id').val('');
             $('#modal_gioitinh_id').val(response.n_gioitinh_id || '');
             $('#modal_hoten').val(response.n_hoten || '');
@@ -507,9 +523,10 @@ use Joomla\CMS\HTML\HTMLHelper;
         showToast('Lỗi khi gửi yêu cầu AJAX', false);
       } finally {
         hideLoadingOverlay($modalContent);
+        isEditMode = false; // Reset trạng thái sau khi đóng modal
       }
     });
-    $('#formDoanvienHoiVien').validate({
+    $('#formXeOm').validate({
       ignore: [],
       rules: {
         modal_hoten: {
@@ -551,7 +568,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     });
 
     // submit form 
-    $('#formDoanvienHoiVien').on('submit', function(e) {
+    $('#formXeOm').on('submit', function(e) {
       e.preventDefault();
       if (!$(this).valid()) {
         showToast('Vui lòng nhập đầy đủ thông tin', false);

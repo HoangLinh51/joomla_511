@@ -49,7 +49,17 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     $query = $db->getQuery(true);
     $query->select('id, tenloaixe')
       ->from('danhmuc_loaixe')
-      ->where('daxoa =  0' );
+      ->where('daxoa =  0');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
+
+  public function getDanhMucTinhTrangThe(){
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id, tentinhtrang')
+      ->from('danhmuc_tinhtrangthe')
+      ->where('daxoa = 0 AND trangthai = 1');
     $db->setQuery($query);
     return $db->loadAssocList();
   }
@@ -195,32 +205,29 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
 
     // Select fields
     $query->select([
-      'tvd.id',
-      'tvd.thanhviendoanhoi_id',
-      'tvd.doanhoi_id',
-      'tvd.chucvu_id',
-      'tvd.thoidiem_batdau',
-      'tvd.thoidiem_ketthuc',
-      'tvd.lydobiendong',
-      'tvd.ghichu',
-      'tv.nhankhau_id',
-      'tv.n_hoten',
-      'tv.n_gioitinh_id',
-      'tv.n_cccd',
-      'tv.n_namsinh',
-      'tv.n_dienthoai',
-      'tv.n_dantoc_id',
-      'tv.n_tongiao_id',
-      'tv.n_phuongxa_id',
-      'tv.n_thonto_id',
-      'tv.n_diachi',
-      'tv.is_ngoai',
+      'id',
+      'nhankhau_id',
+      'biensoxe',
+      'loaixe_id',
+      'sogiaypheplaixe',
+      'thehanhnghe_so',
+      'thehanhnghe_ngayhethan',
+      'tinhtrangthe_id',
+      'n_hoten',
+      'n_namsinh',
+      'n_cccd',
+      'n_gioitinh_id',
+      'n_diachi',
+      'n_dienthoai',
+      'n_dantoc_id',
+      'n_tongiao_id',
+      'n_phuongxa_id',
+      'n_thonto_id',
+      'is_ngoai',
     ])
-      ->from($db->quoteName('vhxhytgd_thanhvien2doanhoithamgia', 'tvd'))
-      ->innerJoin($db->quoteName('vhxhytgd_thanhviendoanhoi', 'tv') . ' ON tv.id = tvd.thanhviendoanhoi_id')
-      ->where($db->quoteName('tvd.id') . ' = ' . (int)$id)
-      ->where($db->quoteName('tvd.daxoa') . ' = 0')
-      ->where($db->quoteName('tv.daxoa') . ' = 0');
+      ->from($db->quoteName('dcxddtmt_xeom'))
+      ->where($db->quoteName('id') . ' = ' . (int)$id)
+      ->where('daxoa = 0');
 
     try {
       $db->setQuery($query);
@@ -297,17 +304,14 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     ];
   }
 
-  public function checkNhankhauInDoanhoi($nhankhau_id, $doanhoi_id)
+  public function checkNhankhauInXeOm($nhankhau_id)
   {
     // Get database object
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
-    // Build query to check if nhankhau_id exists in doanhoi_id
     $query->select('COUNT(*)')
-      ->from($db->quoteName('vhxhytgd_thanhviendoanhoi', 'tv'))
-      ->leftJoin($db->quoteName('vhxhytgd_thanhvien2doanhoithamgia', 'tvd') . ' ON tvd.thanhviendoanhoi_id = tv.id')
-      ->where($db->quoteName('tv.nhankhau_id') . ' = ' . (int)$nhankhau_id)
-      ->where($db->quoteName('tvd.doanhoi_id') . ' = ' . (int)$doanhoi_id);
+      ->from($db->quoteName('dcxddtmt_xeom'))
+      ->where($db->quoteName('nhankhau_id') . ' = ' . (int)$nhankhau_id);
 
     // Execute query
     $db->setQuery($query);
@@ -320,17 +324,16 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     }
   }
 
-  public function saveThanhVienXeOm($formdata, $idUser)
+  public function saveXeOm($formdata, $idUser)
   {
     $db = Factory::getDbo();
     $now = Factory::getDate()->toSql();
-    $thamgiaId = (int)($formdata['id'] ?? 0); // ID bảng liên kết
+    $id = $formdata['id'];
+    var_dump($formdata);
 
-    // Chuẩn bị dữ liệu lưu vào bảng thanhviendoanhoi
     $columns = [
       'n_hoten' => $formdata['modal_hoten'],
       'n_cccd' => $formdata['modal_cccd'],
-      'n_namsinh' => (new \DateTime($formdata['modal_namsinh']))->format('Y-m-d'),
       'n_dienthoai' => $formdata['modal_dienthoai'],
       'n_gioitinh_id' => (int)$formdata['modal_gioitinh_id'],
       'n_dantoc_id' => (int)$formdata['dantoc_id'],
@@ -338,8 +341,24 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
       'n_phuongxa_id' => (int)$formdata['phuongxa_id'],
       'n_thonto_id' => (int)$formdata['thonto_id'],
       'n_diachi' => $formdata['modal_diachi'],
+      'biensoxe' => $formdata['modal_biensoxe'],
+      'thehanhnghe_so' => $formdata['modal_sothehanhnghe'],
+      'sogiaypheplaixe' => $formdata['giayphep'],
       'daxoa' => 0
     ];
+
+    if (!empty($formdata['loaixe_id'])) {
+      $columns['loaixe_id'] = $formdata['loaixe_id'];
+    }
+    if (!empty($formdata['modal_namsinh'])) {
+      $columns['n_namsinh'] = (new \DateTime($formdata['modal_namsinh']))->format('Y-m-d');
+    }
+    if (!empty($formdata['modal_ngayhethan_thehanhnghe'])){
+      $columns['thehanhnghe_ngayhethan'] = $formdata['loaixe_id'];
+    }
+    if (!empty($formdata['tinhtrangthe_id'])) {
+      $columns['tinhtrangthe_id'] = $formdata['tinhtrang_id'];
+    }
 
     // Xác định là người ngoài hay có nhân khẩu
     if (empty($formdata['nhankhau_id']) || $formdata['nhankhau_id'] == '0') {
@@ -349,100 +368,36 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
       $columns['is_ngoai'] = 0;
       $columns['nhankhau_id'] = (int)$formdata['nhankhau_id'];
     }
-
-    // var_dump($formdata);
-    // exit;
     $db->transactionStart();
-
     try {
-      $thanhvienId = 0;
+      if ($id > 0) {
+        $columns['nguoihieuchinh_id'] = (int)$idUser;
+        $columns['ngayhieuchinh'] = $now;
 
-      // Nếu truyền lên thamgiaId (id bảng liên kết), thì cần tìm thanhviendoanhoi_id trước
-      if ($thamgiaId > 0) {
         $query = $db->getQuery(true)
-          ->select($db->quoteName('thanhviendoanhoi_id'))
-          ->from($db->quoteName('vhxhytgd_thanhvien2doanhoithamgia'))
-          ->where($db->quoteName('id') . ' = ' . $thamgiaId)
-          ->where($db->quoteName('daxoa') . ' = 0')
-          ->setLimit(1);
-        $db->setQuery($query);
-        $thanhvienId = (int)$db->loadResult();
-
-        if ($thanhvienId > 0) {
-          // Cập nhật bảng thanhviendoanhoi
-          $columns['nguoihieuchinh_id'] = (int)$idUser;
-          $columns['ngayhieuchinh'] = $now;
-
-          $query = $db->getQuery(true)
-            ->update($db->quoteName('vhxhytgd_thanhviendoanhoi'))
-            ->set($this->buildQuerySet($db, $columns))
-            ->where($db->quoteName('id') . ' = ' . $thanhvienId);
-          $db->setQuery($query)->execute();
-        } else {
-          throw new \RuntimeException('Không tìm thấy bản ghi đoàn hội để hiệu chỉnh.', 404);
-        }
+          ->update($db->quoteName('dcxddtmt_xeom'))
+          ->set($this->buildQuerySet($db, $columns))
+          ->where($db->quoteName('id') . ' = ' . $formdata['id']);
+        $db->setQuery($query)->execute();
       } else {
         // Tạo mới
         $columns['nguoitao_id'] = (int)$idUser;
         $columns['ngaytao'] = $now;
 
         $query = $db->getQuery(true)
-          ->insert($db->quoteName('vhxhytgd_thanhviendoanhoi'))
+          ->insert($db->quoteName('dcxddtmt_xeom'))
           ->columns(array_keys($columns))
           ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
         $db->setQuery($query)->execute();
 
-        $thanhvienId = $db->insertid();
+        $id =  $db->insertid();
       }
 
-      // Lưu bảng liên kết
-      $this->saveXeOmThamGia($db, $formdata, $idUser, $thanhvienId, $now);
-
       $db->transactionCommit();
-      return $thamgiaId ?: $thanhvienId; // có thể trả về id liên kết nếu cần
+      return $id;
     } catch (\RuntimeException $e) {
       $db->transactionRollback();
       throw new \RuntimeException('Lỗi lưu dữ liệu: ' . $e->getMessage(), 500);
-    }
-  }
-  public function saveXeOmThamGia($db, $formdata, $idUser, $thanhviendoanhoi_id, $now)
-  {
-    $thamgiaId = (int)($formdata['id'] ?? 0); // ID bảng liên kết
-
-    $columns = [
-      'thanhviendoanhoi_id' => (int)$thanhviendoanhoi_id,
-      'doanhoi_id' => (int)$formdata['doanhoi_id'],
-      'chucvu_id' => (int)$formdata['chucvu_id'],
-      'lydobiendong' => $formdata['lydobiendong'],
-      'ghichu' => $formdata['ghichu'],
-    ];
-
-    if (!empty($formdata['thoidiem_batdau'])) {
-      $columns['thoidiem_batdau'] = (new \DateTime($formdata['thoidiem_batdau']))->format('Y-m-d');
-    }
-    if (!empty($formdata['thoidiem_ketthuc'])) {
-      $columns['thoidiem_ketthuc'] = (new \DateTime($formdata['thoidiem_ketthuc']))->format('Y-m-d');
-    }
-
-    if ($thamgiaId > 0) {
-      $columns['nguoihieuchinh_id'] = (int)$idUser;
-      $columns['ngayhieuchinh'] = $now;
-
-      $query = $db->getQuery(true)
-        ->update($db->quoteName('vhxhytgd_thanhvien2doanhoithamgia'))
-        ->set($this->buildQuerySet($db, $columns))
-        ->where('id = ' . $thamgiaId);
-      $db->setQuery($query)->execute();
-    } else {
-      $columns['nguoitao_id'] = (int)$idUser;
-      $columns['ngaytao'] = $now;
-      $columns['daxoa'] = 0;
-
-      $query = $db->getQuery(true)
-        ->insert($db->quoteName('vhxhytgd_thanhvien2doanhoithamgia'))
-        ->columns(array_keys($columns))
-        ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
-      $db->setQuery($query)->execute();
     }
   }
 

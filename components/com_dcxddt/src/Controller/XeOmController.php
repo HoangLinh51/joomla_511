@@ -126,10 +126,8 @@ class XeOmController extends BaseController
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
-        $xeom_id = $input->getInt('xeom_id', 0);
- 
         // Validate input
-        if (!$nhankhau_id || !$xeom_id) {
+        if (!$nhankhau_id) {
             $response = [
                 'success' => false,
                 'exists' => false,
@@ -145,7 +143,7 @@ class XeOmController extends BaseController
 
         try {
             // Check if nhankhau_id exists in xeom_id
-            $exists = $model->checkNhankhauInXeOm($nhankhau_id, $xeom_id);
+            $exists = $model->checkNhankhauInXeOm($nhankhau_id);
 
             $response = [
                 'success' => true,
@@ -165,7 +163,7 @@ class XeOmController extends BaseController
         Factory::getApplication()->close();
     }
 
-    public function save_deom()
+    public function save_xeom()
     {
         Session::checkToken() or die('Token không hợp lệ');
         $user = Factory::getUser();
@@ -183,7 +181,7 @@ class XeOmController extends BaseController
         try {
             $model = Core::model('Dcxddt/XeOm');
 
-            $result = $model->saveThanhVienXeOm($formData, $user->id);
+            $result = $model->saveXeOm($formData, $user->id);
             if ((int)$result && $result > 0) {
                 $response = ['success' => true, 'result' => $result,  'message' => 'Đã lưu dữ liệu thành công'];
             } else {

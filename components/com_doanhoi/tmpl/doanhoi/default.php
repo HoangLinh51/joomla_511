@@ -16,7 +16,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý đoàn viên hội viên</h3>
       </div>
       <div class="col-sm-6 text-right" style="padding:0;">
-        <button type="button" data-bs-toggle="modal" data-bs-target="#modalThemDoanHoi" class="btn btn-primary">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#modalThemDoanHoi" class="btn btn-primary btn-themmoi">
           <i class="fas fa-plus"></i> Thêm mới
         </button>
       </div>
@@ -84,7 +84,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="mb-0 text-primary" data-editTitle="Thêm mới thông tin đoàn viên, hội viên">
-          <?php echo ((int)$item['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin đoàn viên, hội viên
+          <span class="title-edit"></span> thông tin đoàn viên, hội viên
         </h4>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
@@ -235,7 +235,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 <script>
   const phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
-
+  let isEditMode = false
   $(document).ready(function() {
     // Initialize Select2 for modal and filter dropdowns
     const initSelect2 = (selector, width = '100%') => {
@@ -346,31 +346,49 @@ use Joomla\CMS\HTML\HTMLHelper;
       }
     });
 
+    $('.btn-themmoi').on('click', function() {
+      isEditMode = false;
+      $('.title-edit').text('Thêm mới');
+      $('#formXeOm')[0].reset();
+      $('.select2').val('').trigger('change');
+      $('#checkbox_toggle').prop('checked', false).trigger('change');
+    });
+
+    $('#modalThemDoanHoi').on('hidden.bs.modal', function() {
+      isEditMode = false;
+      $('.title-edit').text('');
+      $('#formDoanvienHoiVien')[0].reset();
+      $('#select_top').val('').trigger('change');
+      $('.select2').val('').trigger('change');
+    });
+
     // Populate form with selected member data
     $('#select_top').on('select2:select', async function(e) {
       const data = e.params.data;
       const doanhoiPhanQuyen = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
 
-      // Check if nhankhau_id already exists in doanhoi
-      try {
-        const response = await $.post('index.php', {
-          option: 'com_doanhoi',
-          controller: 'doanhoi',
-          task: 'checkNhankhauInDoanhoi',
-          nhankhau_id: data.id,
-          doanhoi_id: doanhoiPhanQuyen
-        }, null, 'json');
+      // Check if nhankhau_id already exists in doanhoi      
+      if (!isEditMode) {
+        try {
+          const response = await $.post('index.php', {
+            option: 'com_doanhoi',
+            controller: 'doanhoi',
+            task: 'checkNhankhauInDoanhoi',
+            nhankhau_id: data.id,
+            doanhoi_id: doanhoiPhanQuyen
+          }, null, 'json');
 
-        if (response.exists) {
-          showToast('Nhân khẩu này đã là thành viên của đoàn hội', false);
-          // Optionally, you can clear the selection and reset the form
-          $('#select_top').val('').trigger('change');
+          if (response.exists) {
+            showToast('Nhân khẩu này đã là thành viên của đoàn hội', false);
+            // Optionally, you can clear the selection and reset the form
+            $('#select_top').val('').trigger('change');
+            return;
+          }
+        } catch (error) {
+          console.log(error)
+          showToast('Lỗi khi kiểm tra trạng thái nhân khẩu trong đoàn hội', false);
           return;
         }
-      } catch (error) {
-        console.log(error)
-        showToast('Lỗi khi kiểm tra trạng thái nhân khẩu trong đoàn hội', false);
-        return;
       }
 
       $('#nhankhau_id').val(data.id || '');
@@ -393,17 +411,17 @@ use Joomla\CMS\HTML\HTMLHelper;
 
     // Handle edit action
     $('body').on('click', '.btn_hieuchinh', async function() {
+      $('.title-edit').text('Hiệu chỉnh');
       const memberId = $(this).data('doanhoi');
-      const modalTitle = $(this).data('title') || 'Hiệu chỉnh thông tin đoàn viên hội viên';
       if (!memberId) {
         showToast('ID đoàn hội không hợp lệ', false);
         return;
       }
 
+      isEditMode = true;
       const $modal = $('#modalThemDoanHoi');
       const $modalContent = $modal.find('.modal-content');
       showLoadingOverlay($modalContent);
-      $('#modalThemDoanHoiLabel').text(modalTitle);
 
       try {
         const response = await $.post('index.php', {
@@ -507,6 +525,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         showToast('Lỗi khi gửi yêu cầu AJAX', false);
       } finally {
         hideLoadingOverlay($modalContent);
+        isEditMode = false; // Reset trạng thái sau khi đóng modal
       }
     });
     $('#formDoanvienHoiVien').validate({
