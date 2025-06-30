@@ -22,7 +22,7 @@ $item = $this->item;
         <h2 class="mb-3 text-primary" style="margin-bottom: 0 !important;line-height:2">
             <?php echo ((int)$item[0]['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> ban điều hành tổ dân phố
             <span class="float-right">
-                <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>
+                <button type="button" id="btn_quaylai" class="btn btn-secondary" style="font-size:18px;"><i class="fas fa-arrow-left"></i> Quay lại</button>
                 <button type="submit" id="btn_luu" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
             </span>
         </h2>

@@ -6,7 +6,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\HTML\HTMLHelper;
 
 $item = $this->item;
-var_dump($item);
+// var_dump($item);
 $nhankhau = $item['nhankhau'];
 ?>
 <meta>
