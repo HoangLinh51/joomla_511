@@ -58,6 +58,9 @@ class RawView extends BaseHtmlView
             case 'DS_NHK':
                 $this->_pageNHK();
                 break;
+            case 'DS_THONGKE':
+                $this->_pageThongke();
+                break;
             case 'DETAIL_NHK':
                 $this->_pageDetailNHK();
                 break;
@@ -110,6 +113,25 @@ class RawView extends BaseHtmlView
         $this->countitems = $countitems;
         parent::display();
     }
+    private function _pageThongke()
+    {
+        $model = Core::model('Vptk/Vptk');
+        $app = Factory::getApplication()->input;
+        $params = [
+            'phuongxa_id' => $app->getInt('phuongxa_id', 0),
+            'thonto_id' => $app->getString('thonto_id', '')
+        ];
+        if (!empty($params['thonto_id'])) {
+            $params['thonto_id'] = array_filter(explode(',', $params['thonto_id']), 'is_numeric');
+        } else {
+            $params['thonto_id'] = [];
+        }
+        $items = $model->getThongKeNhanHoKhau($params);
+        // var_dump($items);exit;
+
+        $this->items = $items;
+        parent::display();
+    }
     private function _pageDetailNHK()
     {
         $app = Factory::getApplication()->input;
@@ -158,6 +180,12 @@ class RawView extends BaseHtmlView
             $genderStyle = $firstDetail['tengioitinh'] === 'Nữ' ? 'border: 1px solid red; color: red; padding: 2px;' : $colorStyle;
             $locationStyle = $isTamTru == 0 ? 'border: 1px solid green; color: green; padding: 2px;' : 'border: 1px solid red; color: red; padding: 2px;';
             $countryCode = !empty($firstDetail['icon']) ? strtolower($firstDetail['icon']) : 'vn';
+            $tinhTrangHonNhan = htmlspecialchars($firstDetail['tentinhtranghonnhan'] ?? '');
+            $tinhTrangHonNhanStyle = empty($tinhTrangHonNhan) ? 'border: none;' : $colorStyle;
+            $trinhdoHV = htmlspecialchars($firstDetail['tentrinhdohocvan'] ?? '');
+            $trinhdoHVStyle = empty($trinhdoHV) ? 'border: none;' : $colorStyle;
+            $nhommau = htmlspecialchars($firstDetail['tennhommau'] ?? '');
+            $nhommauStyle = empty($nhommau) ? 'border: none;' : $RedcolorStyle;
             echo '<div id="detail-' . htmlspecialchars($firstDetail['id']) . '" class="detail-item active">';
             echo '<table class="table table-sm">';
             echo '<tbody>';
@@ -172,9 +200,9 @@ class RawView extends BaseHtmlView
                 echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi thường trú trước:</strong> ' . htmlspecialchars($firstDetail['diachi_cu'] ?? 'Chưa có') . '</td></tr>';
             }
             echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số điện thoại:</strong> ' . htmlspecialchars($firstDetail['dienthoai'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Dân tộc:</strong> ' . htmlspecialchars($firstDetail['tendantoc'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tôn giáo:</strong> ' . htmlspecialchars($firstDetail['tentongiao'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trình độ học vấn:</strong> <span style="' . $colorStyle . '">' . htmlspecialchars($firstDetail['tentrinhdohocvan'] ?? '') . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tình trạng hôn nhân:</strong> <span style="' . $colorStyle . '">' . htmlspecialchars($firstDetail['tentinhtranghonnhan'] ?? 'Chưa xác định') . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nhóm máu:</strong> <span style="' . $RedcolorStyle . '">' . htmlspecialchars($firstDetail['tennhommau'] ?? 'Chưa xác định') . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Quốc tịch:</strong> ' . htmlspecialchars($firstDetail['tenquoctich'] ?? 'Việt Nam') . ' <span class="fi fi-' . $countryCode . '"></span></td></tr>';
+            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tôn giáo:</strong> ' . htmlspecialchars($firstDetail['tentongiao'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trình độ học vấn:</strong> <span style="' . $trinhdoHVStyle . '">' . $trinhdoHV . '</span></td></tr>';
+            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tình trạng hôn nhân:</strong> <span style="' . $tinhTrangHonNhanStyle . '">' . $tinhTrangHonNhan . '</span></td></tr>';
+            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nhóm máu:</strong> <span style="' . $nhommauStyle . '">' . $nhommau . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Quốc tịch:</strong> ' . htmlspecialchars($firstDetail['tenquoctich'] ?? 'Việt Nam') . ' <span class="fi fi-' . $countryCode . '"></span></td></tr>';
             echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nghề nghiệp:</strong> ' . htmlspecialchars($firstDetail['tennghenghiep'] ?? '') . '</td></tr>';
             echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số hộ khẩu:</strong> ' . htmlspecialchars($firstDetail['hokhau_so'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày cấp hộ khẩu:</strong> ' . htmlspecialchars($firstDetail['hokhau_ngaycap'] ?? '') . '</td></tr>';
             echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi cấp hộ khẩu:</strong> ' . htmlspecialchars($firstDetail['hokhau_coquancap'] ?? '') . '</td></tr>';
@@ -206,24 +234,24 @@ class RawView extends BaseHtmlView
             $locationStatus = $isTamTru == 0 ? 'Thường trú' : 'Tạm trú';
             $traithaiHS = $trangthai == 0 ? 'Chưa xác thực' : 'Đã xác thực';
             $colorStyle = 'border: 1px solid green; color: green; padding: 2px;';
-
             $RedcolorStyle = 'border: 1px solid red; color: red; padding: 2px;font-weight:bold';
             $HosoStyle = $trangthai == 0 ? 'border: 1px solid red; color: red; padding: 2px;' : $colorStyle;
-            // Xác định màu cho giới tính
             $genderStyle = $detail['tengioitinh'] === 'Nữ' ? 'border: 1px solid red; color: red; padding: 2px;' : $colorStyle;
-            // Xác định màu cho Thường trú/Tạm trú
             $locationStyle = $isTamTru == 0 ? 'border: 1px solid green; color: green; padding: 2px;' : 'border: 1px solid red; color: red; padding: 2px;';
-            // Lấy mã ISO từ $detail['icon']
             $countryCode = !empty($detail['icon']) ? strtolower($detail['icon']) : 'vn';
+            $tinhTrangHonNhan = htmlspecialchars($detail['tentinhtranghonnhan'] ?? '');
+            $tinhTrangHonNhanStyle = empty($tinhTrangHonNhan) ? 'border: none;' : $colorStyle;
+            $trinhdoHV = htmlspecialchars($detail['tentrinhdohocvan'] ?? '');
+            $trinhdoHVStyle = empty($trinhdoHV) ? 'border: none;' : $colorStyle;
+            $nhommau = htmlspecialchars($detail['tennhommau'] ?? '');
+            $nhommauStyle = empty($nhommau) ? 'border: none;' : $RedcolorStyle;
             echo '<div id="detail-' . htmlspecialchars($detail['id']) . '" class="detail-item" style="display: none;">';
             echo '<table class="table table-sm">';
             echo '<tbody>';
             echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày sinh:</strong> ' . htmlspecialchars($detail['ngaysinh'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Giới tính:</strong> <span style="' . $genderStyle . '">' . htmlspecialchars($detail['tengioitinh'] ?? '') . '</span></td></tr>';
             echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số CCCD:</strong> ' . htmlspecialchars($detail['cccd_so'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày cấp CCCD:</strong> ' . htmlspecialchars($detail['cccd_ngaycap'] ?? '') . '</td></tr>';
             echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi cấp CCCD:</strong> ' . htmlspecialchars($detail['cccd_coquancap'] ?? '') . '</td></tr>';
-
             echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Thường trú/Tạm trú:</strong> <span style="' . $locationStyle . '">' . $locationStatus . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"></td></tr>';
-            // Hiển thị địa chỉ dựa trên $isTamTru
             if ($isTamTru == 0) {
                 echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi ở hiện tại:</strong> ' . htmlspecialchars($detail['diachi'] ?? '') . '</td></tr>';
             } else {
@@ -231,9 +259,9 @@ class RawView extends BaseHtmlView
                 echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi thường trú trước:</strong> ' . htmlspecialchars($detail['diachi_cu'] ?? 'Chưa có') . '</td></tr>';
             }
             echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số điện thoại:</strong> ' . htmlspecialchars($detail['dienthoai'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Dân tộc:</strong> ' . htmlspecialchars($detail['tendantoc'] ?? '') . '</td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tôn giáo:</strong> ' . htmlspecialchars($detail['tentongiao'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trình độ học vấn:</strong> <span style="' . $colorStyle . '">' . htmlspecialchars($detail['tentrinhdohocvan'] ?? 'Chưa xác định') . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tình trạng hôn nhân:</strong> <span style="' . $colorStyle . '">' . htmlspecialchars($detail['tentinhtranghonnhan'] ?? 'Chưa xác định') . '</span></td></tr>';
-            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nhóm máu:</strong> <span style="' . $RedcolorStyle . '">' . htmlspecialchars($detail['tennhommau'] ?? 'Chưa xác định') . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Quốc tịch:</strong> ' . htmlspecialchars($detail['tenquoctich'] ?? 'Việt Nam') . ' <span class="fi fi-' . $countryCode . '"></span></td></tr>';
+            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tôn giáo:</strong> ' . htmlspecialchars($detail['tentongiao'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Trình độ học vấn:</strong> <span style="' . $trinhdoHVStyle . '">' . $trinhdoHV . '</span></td></tr>';
+            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Tình trạng hôn nhân:</strong> <span style="' . $tinhTrangHonNhanStyle . '">' . $tinhTrangHonNhan . '</span></td></tr>';
+            echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nhóm máu:</strong> <span style="' . $nhommauStyle . '">' . $nhommau . '</span></td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Quốc tịch:</strong> ' . htmlspecialchars($detail['tenquoctich'] ?? 'Việt Nam') . ' <span class="fi fi-' . $countryCode . '"></span></td></tr>';
             echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nghề nghiệp:</strong> ' . htmlspecialchars($detail['tennghenghiep'] ?? '') . '</td></tr>';
             echo '<tr><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Số hộ khẩu:</strong> ' . htmlspecialchars($detail['hokhau_so'] ?? '') . '</td><td style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Ngày cấp hộ khẩu:</strong> ' . htmlspecialchars($detail['hokhau_ngaycap'] ?? '') . '</td></tr>';
             echo '<tr><td colspan="2" style="padding: 0.5rem;border-top: 0px solid #dee2e6"><strong>Nơi cấp hộ khẩu:</strong> ' . htmlspecialchars($detail['hokhau_coquancap'] ?? '') . '</td></tr>';

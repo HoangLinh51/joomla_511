@@ -6,6 +6,7 @@ use Joomla\CMS\Session\Session;
 use Joomla\CMS\HTML\HTMLHelper;
 
 $item = $this->item;
+// var_dump($item);
 $nhankhau = $item['nhankhau'];
 ?>
 <meta>
@@ -149,9 +150,9 @@ $nhankhau = $item['nhankhau'];
                                     <strong>Tôn giáo:</strong> <?php echo htmlspecialchars($nk['tentongiao'] ?? ''); ?><br>
                                     <strong>Trình độ:</strong> <?php echo htmlspecialchars($nk['tentrinhdohocvan'] ?? ''); ?><br>
                                     <strong>Nghề nghiệp:</strong> <?php echo htmlspecialchars($nk['tennghenghiep'] ?? ''); ?><br>
-                                    <strong>Quốc tịch:</strong> <?php echo htmlspecialchars($nk['tenquoctich'] ?? 'Chưa xác định'); ?><br>
-                                    <strong>Nhóm máu:</strong> <?php echo htmlspecialchars($nk['name'] ?? 'Chưa xác định'); ?><br>
-                                    <strong>Quan hệ hôn nhân:</strong> <?php echo htmlspecialchars($nk['qhhonnhan'] ?? 'Chưa xác định'); ?>
+                                    <strong>Quốc tịch:</strong> <?php echo htmlspecialchars($nk['tenquoctich'] ?? ''); ?><br>
+                                    <strong>Nhóm máu:</strong> <?php echo htmlspecialchars($nk['name'] ?? ''); ?><br>
+                                    <strong>Quan hệ hôn nhân:</strong> <?php echo htmlspecialchars($nk['qhhonnhan'] ?? ''); ?>
                                 </td>
                                 <td class="align-middle noihientai">
                                     <?php echo htmlspecialchars($nk['is_tamtru'] == 0 ? 'Thường trú' : 'Tạm trú'); ?>
@@ -205,7 +206,7 @@ $nhankhau = $item['nhankhau'];
                         <?php } ?>
                     <?php } else { ?>
                         <tr>
-                            <td colspan="8" class="text-center">Không có dữ liệu</td>
+                            <td colspan="10" class="text-center">Không có dữ liệu</td>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -744,6 +745,7 @@ $nhankhau = $item['nhankhau'];
 
 <script type="text/javascript">
     jQuery(document).ready(function($) {
+
         $('.date-picker').datepicker({
             autoclose: true,
             language: 'vi'
@@ -793,7 +795,6 @@ $nhankhau = $item['nhankhau'];
             }
         }
 
-        console.log($('#modal_tamtru').val()); // Kiểm tra giá trị hiện tại
 
         if ($.fn.select2) {
             // Khởi tạo Select2 cho các select ngoài modal
@@ -1031,8 +1032,8 @@ $nhankhau = $item['nhankhau'];
                 const trinhdo_text = $('#modal_trinhdohocvan_id option:selected').data('text') || '';
                 const nghenghiep_text = $('#modal_nghenghiep_id option:selected').data('text') || '';
                 const quoctich_text = $('#modal_quoctich_id option:selected').data('text') || 'Việt Nam';
-                const nhommau_text = $('#modal_nhommau_id option:selected').data('text') || 'Chưa xác định';
-                const qhhonnhan_text = $('#modal_qhhonnhan_id option:selected').data('text') || 'Chưa xác định';
+                const nhommau_text = $('#modal_nhommau_id option:selected').data('text') || '';
+                const qhhonnhan_text = $('#modal_qhhonnhan_id option:selected').data('text') || '';
 
                 const is_tamtru_text = $('#modal_is_tamtru option:selected').data('text') || 'Thường trú';
                 let thuongtrucu = '';
@@ -1141,6 +1142,8 @@ $nhankhau = $item['nhankhau'];
         $('#phuongxa_id').on('change', function() {
             var $phuongxa_id = $(this);
             var $thonto_id = $('#thonto_id');
+            console.log($thonto_id);
+
             var phuongxa_val = $phuongxa_id.val();
 
             $('#tinhthanh_id').val($phuongxa_id.find('option:selected').data('tinhthanh'));
@@ -1369,14 +1372,23 @@ $nhankhau = $item['nhankhau'];
         $('#btn_quaylai').on('click', function() {
             window.location.href = '/index.php/component/vptk/?view=nhk&task=default';
         });
-
+        $('select.custom-select').on('change.select2 blur', function() {
+            $(this).closest('form').validate().element(this);
+        });
+        $('select.custom-select').on('select2:close', function() {
+            $(this).trigger('blur'); // Kích hoạt blur để validate
+        });
         // Validation for main form
         if ($.fn.validate) {
+
             $('#frmNhanhokhau').validate({
                 ignore: [],
                 errorPlacement: function(error, element) {
                     error.addClass('error_modal');
                     error.appendTo(element.closest('.mb-3').find('label.error_modal'));
+                },
+                success: function(label) {
+                    label.remove(); // Xóa thông báo lỗi khi valid
                 },
                 rules: {
                     phuongxa_id: {
@@ -1394,6 +1406,7 @@ $nhankhau = $item['nhankhau'];
                     thonto_id: 'Chọn Thôn/Tổ',
                     diachi: 'Nhập địa chỉ'
                 }
+
             });
         }
 

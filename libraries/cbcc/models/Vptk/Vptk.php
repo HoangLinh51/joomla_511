@@ -133,7 +133,7 @@ class Vptk_Model_Vptk extends JModelLegacy
         $query = $db->getQuery(true);
 
         $query->select('a.id, a.hoten, DATE_FORMAT(a.ngaysinh, "%d/%m/%Y") AS ngaysinh, DATE_FORMAT(a.cccd_ngaycap, "%d/%m/%Y") AS cccd_ngaycap,a.cccd_coquancap,a.is_tamtru, b.tengioitinh, a.cccd_so, a.dienthoai, 
-            d.tendantoc, e.tentongiao, CONCAT(c.diachi, " - ", g.tenkhuvuc, " - ", f.tenkhuvuc) AS diachi, k.tennghenghiep,c.hokhau_coquancap,CONCAT(a.thuongtrucu_diachi, " - ", px.tenphuongxa, " - ", qh.tenquanhuyen, " - ", tt.tentinhthanh) AS diachi_cu,
+            d.tendantoc, e.tentongiao, CONCAT(c.diachi, " - ", g.tenkhuvuc, " - ", f.tenkhuvuc) AS diachi, k.tennghenghiep,c.hokhau_coquancap,CONCAT(a.thuongtrucu_diachi, " - ", px.tenphuongxa, " - ", tt.tentinhthanh) AS diachi_cu,
             c.phuongxa_id, c.thonto_id, a.gioitinh_id,a.lydoxoathuongtru_id, g.tenkhuvuc as tenthonto, a.quanhenhanthan_id, h.tenquanhenhanthan, c.hokhau_so, DATE_FORMAT(c.hokhau_ngaycap, "%d/%m/%Y") AS hokhau_ngaycap, j.tentrinhdohocvan,qt.tenquoctich, qt.icon,a.trangthaihoso,nm.name as tennhommau, l.tenlydo ');
         $query->from('vptk_hokhau2nhankhau AS a');
         $query->innerJoin('danhmuc_gioitinh AS b ON a.gioitinh_id = b.id');
@@ -395,8 +395,9 @@ class Vptk_Model_Vptk extends JModelLegacy
                         (!empty($formData['nhommau_id'][$i]) ? $db->quote($formData['nhommau_id'][$i]) : 'NULL') . ',' .
                         (!empty($formData['tinhtranghonnhan_id'][$i]) ? $db->quote($formData['qhhonnhan_id'][$i]) : 'NULL') . ',' .
 
-
                         $db->quote($formData['is_tamtru'][$i] ?? '0') . ',' .
+                        $db->quote('0') . ',' .
+
                         (!empty($formData['lydoxoathuongtru_id'][$i]) ? $db->quote($formData['lydoxoathuongtru_id'][$i]) : 'NULL') . ',' .
                         $db->quote($user_id) . ',NOW(),' .
                         $db->quote($user_id) . ',NOW()';
@@ -416,7 +417,7 @@ class Vptk_Model_Vptk extends JModelLegacy
                     $query->set('dantoc_id = ' . (!empty($formData['dantoc_id'][$i]) ? $db->quote($formData['dantoc_id'][$i]) : 'NULL'));
                     $query->set('tongiao_id = ' . (!empty($formData['tongiao_id'][$i]) ? $db->quote($formData['tongiao_id'][$i]) : 'NULL'));
                     $query->set('trinhdohocvan_id = ' . (!empty($formData['trinhdohocvan_id'][$i]) ? $db->quote($formData['trinhdohocvan_id'][$i]) : 'NULL'));
-                    $query->set('nghenghiep_id = ' . (isset($formData['nghenghiep_id'][$i]) && $formData['nghenghiep_id'][$i] !== 'null' ? $db->quote($formData['nghenghiep_id'][$i]) : 'NULL'));
+                    $query->set('nghenghiep_id = ' . (empty($formData['nghenghiep_id'][$i]) || $formData['nghenghiep_id'][$i] === 'null' ? 'NULL' : $db->quote($formData['nghenghiep_id'][$i])));
 
                     $query->set('thuongtrucu_tinhthanh_id = ' . (empty($formData['thuongtrucu_tinhthanh_id'][$i]) || $formData['thuongtrucu_tinhthanh_id'][$i] === 'null' ? 'NULL' : $db->quote($formData['thuongtrucu_tinhthanh_id'][$i])));
                     $query->set('thuongtrucu_phuongxa_id = ' . (empty($formData['thuongtrucu_phuongxa_id'][$i]) || $formData['thuongtrucu_phuongxa_id'][$i] === 'null' ? 'NULL' : $db->quote($formData['thuongtrucu_phuongxa_id'][$i])));
@@ -451,7 +452,7 @@ class Vptk_Model_Vptk extends JModelLegacy
         if (!empty($value_insert)) {
             $query = $db->getQuery(true);
             $query->insert('vptk_hokhau2nhankhau');
-            $query->columns('hokhau_id,hoten,ngaysinh,gioitinh_id,cccd_so,cccd_ngaycap,cccd_coquancap,quanhenhanthan_id,dienthoai,dantoc_id,tongiao_id,trinhdohocvan_id,nghenghiep_id,thuongtrucu_tinhthanh_id,thuongtrucu_phuongxa_id,thuongtrucu_thonto_id,thuongtrucu_diachi,quoctich_id,nhommau_id,tinhtranghonnhan_id,is_tamtru,lydoxoathuongtru_id,nguoitao_id,ngaytao,nguoihieuchinh_id,ngayhieuchinh');
+            $query->columns('hokhau_id,hoten,ngaysinh,gioitinh_id,cccd_so,cccd_ngaycap,cccd_coquancap,quanhenhanthan_id,dienthoai,dantoc_id,tongiao_id,trinhdohocvan_id,nghenghiep_id,thuongtrucu_tinhthanh_id,thuongtrucu_phuongxa_id,thuongtrucu_thonto_id,thuongtrucu_diachi,quoctich_id,nhommau_id,tinhtranghonnhan_id,is_tamtru,trangthaihoso,lydoxoathuongtru_id,nguoitao_id,ngaytao,nguoihieuchinh_id,ngayhieuchinh');
             $query->values($value_insert);
 
             $db->setQuery($query);
@@ -462,5 +463,58 @@ class Vptk_Model_Vptk extends JModelLegacy
         }
 
         return true;
+    }
+    public function getThongKeNhanHoKhau($params = array())
+    {
+        $db = Factory::getDbo();
+        $query_left = $db->getQuery(true);
+        $query_left->select([
+            'b.phuongxa_id',
+            'd.tenkhuvuc AS phuongxa',
+            'b.thonto_id',
+            'c.tenkhuvuc AS thonto',
+            'COUNT(IF(a.gioitinh_id = 1, 1, NULL)) AS nam',
+            'COUNT(IF(a.gioitinh_id = 2, 1, NULL)) AS nu',
+            'COUNT(IF(a.is_tamtru = 0, 1, NULL)) AS thuongtru',
+            'COUNT(IF(a.is_tamtru = 1, 1, NULL)) AS tamtru',
+            'COUNT(IF(DATE_ADD(a.ngaysinh, INTERVAL 18 YEAR) < CURDATE(), 1, NULL)) AS tren18'
+        ]);
+        $query_left->from($db->quoteName('vptk_hokhau2nhankhau', 'a'));
+        $query_left->innerJoin($db->quoteName('vptk_hokhau', 'b') . ' ON a.hokhau_id = b.id');
+        $query_left->innerJoin($db->quoteName('danhmuc_khuvuc', 'c') . ' ON b.thonto_id = c.id');
+        $query_left->innerJoin($db->quoteName('danhmuc_khuvuc', 'd') . ' ON b.phuongxa_id = d.id');
+        $query_left->group('b.thonto_id');
+
+        if (!empty($params['phuongxa_id'])) {
+            $query_left->where('b.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query_left->where('b.thonto_id IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+        $query = $db->getQuery(true);
+        $query->select([
+            'a.id',
+            'a.cha_id',
+            'a.tenkhuvuc',
+            'a.level',
+            'SUM(ab.nam) AS nam',
+            'SUM(ab.nu) AS nu',
+            'SUM(ab.thuongtru) AS thuongtru',
+            'SUM(ab.tamtru) AS tamtru',
+            'SUM(ab.tren18) AS tren18'
+        ]);
+        $query->from($db->quoteName('danhmuc_khuvuc', 'a'));
+        $query->leftJoin('(' . $query_left . ') AS ab ON a.id = ab.thonto_id OR a.id = ab.phuongxa_id');
+
+        if (!empty($params['phuongxa_id'])) {
+            $query->where('a.id = ' . $db->quote($params['phuongxa_id']) . ' OR a.cha_id = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query->where('a.id IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+        $query->group('a.id');
+        $db->setQuery($query);
+        return $db->loadAssocList();
     }
 }
