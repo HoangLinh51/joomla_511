@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Site
- * @subpackage  com_doanhoi
+ * @subpackage  com_vhytgd
  *
  * @copyright   (C) 2009 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\DoanHoi\Site\Controller;
+namespace Joomla\Component\Vhytgd\Site\Controller;
 
 use Core;
 use Exception;
@@ -57,7 +57,7 @@ class DoanHoiController extends BaseController
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $model = Core::model('DoanHoi/DoanHoi');
+        $model = Core::model('Vhytgd/DoanHoi');
 
         try {
             $result =  $model->getListDoanHoi($formData);
@@ -83,7 +83,7 @@ class DoanHoiController extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('DoanHoi/DoanHoi');;
+        $model = Core::model('Vhytgd/DoanHoi');;
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
         } catch (Exception $e) {
@@ -102,7 +102,7 @@ class DoanHoiController extends BaseController
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
-        $model = Core::model('DoanHoi/DoanHoi');
+        $model = Core::model('Vhytgd/DoanHoi');
         $result = $model->getThonTobyPhuongxaId($phuongxa_id);
         header('Content-type: application/json');
         echo json_encode($result);
@@ -112,7 +112,7 @@ class DoanHoiController extends BaseController
     public function getDetailDoanHoi()
     {
         $idDoanHoi = Factory::getApplication()->input->getVar('doanhoi_id', 0);
-        $model = Core::model('DoanHoi/DoanHoi');
+        $model = Core::model('Vhytgd/DoanHoi');
         $result = $model->getDetailDoanHoi($idDoanHoi);
         // var_dump($result);
         // exit;
@@ -145,7 +145,7 @@ class DoanHoiController extends BaseController
         }
 
         // Load the model
-        $model = Core::model('DoanHoi/DoanHoi');
+        $model = Core::model('Vhytgd/DoanHoi');
 
         try {
             // Check if nhankhau_id exists in doanhoi_id
@@ -185,7 +185,7 @@ class DoanHoiController extends BaseController
         $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
 
         try {
-            $model = Core::model('DoanHoi/DoanHoi');
+            $model = Core::model('Vhytgd/DoanHoi');
 
             $result = $model->saveThanhVienDoanHoi($formData, $user->id);
             if ((int)$result && $result > 0) {
@@ -209,7 +209,7 @@ class DoanHoiController extends BaseController
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
         try {
-            $model = Core::model('DoanHoi/DoanHoi');
+            $model = Core::model('Vhytgd/DoanHoi');
             $result = $model->deleteDoanHoi($formData['idUser'], $formData['idThanhvienDoanHoi']);
             $response = [
                 'success' => $result,

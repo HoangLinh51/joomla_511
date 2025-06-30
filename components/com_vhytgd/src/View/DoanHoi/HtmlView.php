@@ -8,7 +8,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\DoanHoi\Site\View\DoanHoi;
+namespace Joomla\Component\Vhytgd\Site\View\DoanHoi;
 
 defined('_JEXEC') or die;
 
@@ -23,25 +23,13 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
         $task = $app->input->get('task', '', 'CMD');
-
-        // Phân biệt edit vs add
-        if (strtolower($task) === 'edit_doanhoi') {
-            $layout = $id > 0 ? 'EDIT_DOANHOI' : 'ADD_DOANHOI';
-        } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
-        }
+        $layout = $task ? strtoupper($task) : 'DEFAULT';
 
         switch ($layout) {
             case 'DEFAULT':
                 $this->setLayout('default');
                 $this->_initDefaultPage();
-                break;
-            case 'ADD_DOANHOI':
-            case 'EDIT_DOANHOI':
-                $this->setLayout('edit_doanhoi');
-                // $this->_editDVNhayCam();
                 break;
         }
 
@@ -51,7 +39,7 @@ class HtmlView extends BaseHtmlView
     private function _initDefaultPage()
     {
         $this->import();
-        $model = Core::model('DoanHoi/DoanHoi');
+        $model = Core::model('Vhytgd/DoanHoi');
         $user = Factory::getUser();
         $phanquyen = $model->getPhanQuyen();
         $doanhoiPhanQuyen = $model->getPhanQuyenDoanHoi($user->id);

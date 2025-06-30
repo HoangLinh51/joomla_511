@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
-class DoanHoi_Model_DoanHoi extends BaseDatabaseModel
+class Vhytgd_Model_DoanHoi extends BaseDatabaseModel
 {
 
   public function getTitle()

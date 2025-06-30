@@ -8,7 +8,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\DichVuNhayCam\Site\View\DichVuNhayCam;
+namespace Joomla\Component\Vhytgd\Site\View\DichVuNhayCam;
 
 defined('_JEXEC') or die;
 
@@ -52,7 +52,7 @@ class HtmlView extends BaseHtmlView
     private function _initDefaultPage()
     {
         $this->import();
-        $model = Core::model('DichVuNhayCam/DichVuNhayCam');
+        $model = Core::model('Vhytgd/DichVuNhayCam');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
         if ($phanquyen['phuongxa_id'] != '') {
@@ -87,7 +87,7 @@ class HtmlView extends BaseHtmlView
     {
         $this->import();
         $app = Factory::getApplication()->input;
-        $model = Core::model('DichVuNhayCam/DichVuNhayCam');
+        $model = Core::model('Vhytgd/DichVuNhayCam');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
         $detailCoSo = null; 

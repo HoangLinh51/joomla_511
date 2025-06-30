@@ -5,11 +5,11 @@
  * @CreatedDate           : 2025-06-25                                        *
  * @LastEditors           : LinhLH                                            *
  * @LastEditDate          :                                                   *
- * @FilePath              : Joomla_511_svn/components/com_doanhoi/src/View/DoanHoi/RawView.php*
+ * @FilePath              : Joomla_511_svn/components/com_vhytgd/src/View/DoanHoi/RawView.php*
  * @CopyRight             : Dnict                                             *
  ****************************************************************************/
 
-namespace Joomla\Component\DoanHoi\Site\View\DoanHoi;
+namespace Joomla\Component\Vhytgd\Site\View\DoanHoi;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 

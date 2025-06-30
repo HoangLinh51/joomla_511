@@ -10,7 +10,7 @@ $detaiCoSo = $this->detailCoSo;
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 
-<form id="formCoSoNhayCam" name="formCoSoNhayCam" method="post" action="index.php?option=com_dichvunhaycam&controller=dichvunhaycam&task=save_dichvunhaycam">
+<form id="formCoSoNhayCam" name="formCoSoNhayCam" method="post" action="index.php?option=com_vhytgd&controller=dichvunhaycam&task=save_dichvunhaycam">
   <div class="container-fluid px-3">
     <h2 class="mb-3 text-primary" style="margin-bottom: 0 !important;line-height:2">
       <?php echo ((int)$item['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin cơ sở dịch vụ nhạy cảm
@@ -151,7 +151,7 @@ $detaiCoSo = $this->detailCoSo;
         </button>
       </div>
       <div class="modal-body">
-        <form action="<?= Route::_('index.php?option=com_dichvunhaycam&task=dichvunhaycam.timkiem_nhankhau') ?>" id="frmmodalThemNhanVien" name="frmmodalThemNhanVien" method="post">
+        <form action="<?= Route::_('index.php?option=com_vhytgd&task=dichvunhaycam.timkiem_nhankhau') ?>" id="frmmodalThemNhanVien" name="frmmodalThemNhanVien" method="post">
           <div class="d-flex flex-column">
             <div class="d-flex justify-content-between mb-3" style="gap:20px">
               <div class="input-thongtin" style="width: 100%">

@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Site
- * @subpackage  com_dichvunhaycam
+ * @subpackage  com_vhytgd
  *
  * @copyright   (C) 2009 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\DichVuNhayCam\Site\Controller;
+namespace Joomla\Component\Vhytgd\Site\Controller;
 
 use Core;
 use Exception;
@@ -58,7 +58,7 @@ class DichVuNhayCamController extends BaseController
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $model = Core::model('DichVuNhayCam/DichVuNhayCam');
+        $model = Core::model('Vhytgd/DichVuNhayCam');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
 
@@ -84,7 +84,7 @@ class DichVuNhayCamController extends BaseController
         $json = json_decode(file_get_contents('php://input'), true);
         $formDataSearch = $json ?? $formDataSearch;
 
-        $model = Core::model('DichVuNhayCam/DichVuNhayCam');
+        $model = Core::model('Vhytgd/DichVuNhayCam');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
 
@@ -145,7 +145,7 @@ class DichVuNhayCamController extends BaseController
         }
 
         try {
-            $model = Core::model('DichVuNhayCam/DichVuNhayCam');
+            $model = Core::model('Vhytgd/DichVuNhayCam');
             $result = $model->saveDichVuNhayCam($formData, $user->id);
             if ((int)$result && $result > 0) {
                 $response = ['success' => true, 'result' => $result,  'message' => 'Đã lưu dữ liệu thành công'];
@@ -169,7 +169,7 @@ class DichVuNhayCamController extends BaseController
         $formData = $json ?? $formData;
 
         try {
-            $model = Core::model('DichVuNhayCam/DichVuNhayCam');
+            $model = Core::model('Vhytgd/DichVuNhayCam');
             $result = $model->deleteDichVuNhayCam($formData['idUser'], $formData['idCoso']);
             $response = [
                 'success' => $result,
@@ -209,7 +209,7 @@ class DichVuNhayCamController extends BaseController
 
         try {
             // Tải model
-            $model = Core::model('DichVuNhayCam/DichVuNhayCam');
+            $model = Core::model('Vhytgd/DichVuNhayCam');
 
             // Lấy tham số tìm kiếm
             $input = Factory::getApplication()->input;

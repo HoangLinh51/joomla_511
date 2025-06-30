@@ -131,7 +131,7 @@ defined('_JEXEC') or die('Restricted access');
     try {
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
       const response = await $.ajax({
-        url: 'index.php?option=com_doanhoi&controller=doanhoi&task=getListDoanHoi',
+        url: 'index.php?option=com_vhytgd&controller=doanhoi&task=getListDoanHoi',
         method: 'POST',
         data: {
           page,
@@ -212,7 +212,7 @@ defined('_JEXEC') or die('Restricted access');
 
       const memberId = $(this).data('doanhoi');
       try {
-        const response = await fetch(`index.php?option=com_doanhoi&controller=doanhoi&task=xoa_doanhoi`, {
+        const response = await fetch(`index.php?option=com_vhytgd&controller=doanhoi&task=xoa_doanhoi`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -91,7 +91,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         </button>
       </div>
       <div class="modal-body">
-        <form id="formDoanvienHoiVien" name="formDoanvienHoiVien" method="post" action="index.php?option=com_doanhoi&controller=doanhoi&task=save_doanhoi">
+        <form id="formDoanvienHoiVien" name="formDoanvienHoiVien" method="post" action="index.php?option=com_vhytgd&controller=doanhoi&task=save_doanhoi">
           <div class="card-body">
             <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
               <h5 style="margin: 0">Thông tin cá nhân</h5>
@@ -309,7 +309,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         return Promise.resolve();
       }
       return $.post('index.php', {
-        option: 'com_doanhoi',
+        option: 'com_vhytgd',
         controller: 'doanhoi',
         task: 'getThonTobyPhuongxa',
         phuongxa_id: phuongxa_id
@@ -358,7 +358,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           allowClear: true,
           width: '100%',
           ajax: {
-            url: 'index.php?option=com_doanhoi&task=doanhoi.timkiem_nhankhau&format=json',
+            url: 'index.php?option=com_vhytgd&task=doanhoi.timkiem_nhankhau&format=json',
             dataType: 'json',
             delay: 250,
             data: function(params) {
@@ -413,7 +413,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       if (!isEditMode) {
         try {
           const response = await $.post('index.php', {
-            option: 'com_doanhoi',
+            option: 'com_vhytgd',
             controller: 'doanhoi',
             task: 'checkNhankhauInDoanhoi',
             nhankhau_id: data.id,
@@ -471,7 +471,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
       try {
         const response = await $.post('index.php', {
-          option: 'com_doanhoi',
+          option: 'com_vhytgd',
           controller: 'doanhoi',
           task: 'getDetailDoanHoi',
           doanhoi_id: memberId
@@ -491,7 +491,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           if (hasNhankhauId) {
             // Use cccd_so as keyword to fetch nhankhau details
             const nhankhauResponse = await $.post('index.php', {
-              option: 'com_doanhoi',
+              option: 'com_vhytgd',
               task: 'doanhoi.timkiem_nhankhau',
               format: 'json',
               keyword: response.n_cccd || '', // Use cccd_so as keyword

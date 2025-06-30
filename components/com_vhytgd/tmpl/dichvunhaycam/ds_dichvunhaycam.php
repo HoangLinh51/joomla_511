@@ -16,7 +16,7 @@ defined('_JEXEC') or die('Restricted access');
         <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý cơ sở dịch vụ nhạy cảm</h3>
       </div>
       <div class="col-sm-6 text-right" style="padding:0;">
-        <a href="<?php echo Route::_('index.php?option=com_dichvunhaycam&view=dichvunhaycam&task=edit_dichvunhaycam') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
+        <a href="<?php echo Route::_('index.php?option=com_vhytgd&view=dichvunhaycam&task=edit_dichvunhaycam') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
           <i class="fas fa-plus"></i> Thêm mới
         </a>
       </div>
@@ -237,7 +237,7 @@ defined('_JEXEC') or die('Restricted access');
     try {
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
       const response = await $.ajax({
-        url: 'index.php?option=com_dichvunhaycam&controller=dichvunhaycam&task=getListDichVuNhayCam',
+        url: 'index.php?option=com_vhytgd&controller=dichvunhaycam&task=getListDichVuNhayCam',
         method: 'POST',
         data: {
           page,
@@ -306,7 +306,7 @@ defined('_JEXEC') or die('Restricted access');
     });
 
     $('body').delegate('.btn_hieuchinh', 'click', function() {
-      window.location.href = '/index.php?option=com_dichvunhaycam&view=dichvunhaycam&task=edit_dichvunhaycam&id=' + $(this).data('idcoso');
+      window.location.href = '/index.php?option=com_vhytgd&view=dichvunhaycam&task=edit_dichvunhaycam&id=' + $(this).data('idcoso');
     });
 
     $('#btn_filter').on('click', function(e) {
@@ -349,7 +349,7 @@ defined('_JEXEC') or die('Restricted access');
       const idCoso = $(this).data('idcoso');
       console.log('idCoso', idCoso)
       try {
-        const response = await fetch(`index.php?option=com_dichvunhaycam&controller=dichvunhaycam&task=xoa_dichvunhaycam`, {
+        const response = await fetch(`index.php?option=com_vhytgd&controller=dichvunhaycam&task=xoa_dichvunhaycam`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -375,7 +375,7 @@ defined('_JEXEC') or die('Restricted access');
 
     $('#btn_xuatexcel').on('click', function() {
       let params = {
-        option: 'com_dichvunhaycam',
+        option: 'com_vhytgd',
         controller: 'dichvunhaycam',
         task: 'exportExcel',
         tenchucoso: $('#tenchucoso').val() || '',
