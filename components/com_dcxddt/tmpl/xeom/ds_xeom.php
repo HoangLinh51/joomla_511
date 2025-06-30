@@ -63,11 +63,11 @@ defined('_JEXEC') or die('Restricted access');
   function renderTextTinhTrang(id, tentinhtrang) {
     let stringtinhtrang = ""
     if (id === 1) {
-      stringtinhtrang = `<span class="badge bg-success">${tentinhtrang}</span>`
+      stringtinhtrang = `<span class="badge bg-success" style="padding: 0.4em; font-size: 80%" >${tentinhtrang}</span>`
     } else if (id === 2) {
-      stringtinhtrang = `<span class="badge bg-warning">${tentinhtrang}</span>`
+      stringtinhtrang = `<span class="badge bg-warning" style="padding: 0.4em; font-size: 80%" >${tentinhtrang}</span>`
     } else if (id === 3) {
-      stringtinhtrang = `<span class="badge bg-danger">${tentinhtrang}</span>`
+      stringtinhtrang = `<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%" >${tentinhtrang}</span>`
     }
     return stringtinhtrang
   }

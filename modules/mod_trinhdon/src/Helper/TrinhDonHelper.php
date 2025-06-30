@@ -60,14 +60,17 @@ class TrinhdonHelper
         foreach ($parent_nodes as $parent_node) {
             $conditions[] = '(a.lft BETWEEN ' . $db->quote($parent_node['lft']) . ' AND ' . $db->quote($parent_node['rgt']) . ' AND a.published = 1 AND b.published = 1)';
         }
-
         $query = $db->getQuery(true)
             ->select('a.icon, a.id, a.link, a.is_system, a.name AS name, a.params, a.lft, a.rgt, a.published, a.component, a.controller, a.task, a.level')
             ->from($db->quoteName('core_menu', 'a'))
             ->join('LEFT', 'core_menu AS b ON a.parent_id = b.id')
-            ->where('(a.published = 1 AND a.id <> 1 AND b.published = 1)')
-            ->where(implode(' OR ', $conditions))
-            ->order('a.lft');
+            ->where('(a.published = 1 AND a.id > 1 AND b.published = 1)');
+
+        if (!empty($conditions)) {
+            $query->where(implode(' OR ', $conditions));
+        }
+
+        $query->order('a.lft');
         $db->setQuery($query);
         $rows = $db->loadAssocList();
         $query = $db->getQuery(true)

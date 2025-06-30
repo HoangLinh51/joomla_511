@@ -15,10 +15,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 <div class="danhsach" style="background-color:#fff">
   <div class="content-header">
     <div class="row mb-2">
-      <div class="col-sm-6">
-        <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý xe ôm</h3>
+      <div class="col-sm-8">
+        <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý đăng ký nghĩa vụ quân sự tuổi 17</h3>
       </div>
-      <div class="col-sm-6 text-right" style="padding:0;">
+      <div class="col-sm-4 text-right" style="padding:0;">
         <button type="button" data-bs-toggle="modal" data-bs-target="#modalThemDkTuoi17" class="btn btn-primary btn-themmoi">
           <i class="fas fa-plus"></i> Thêm mới
         </button>
