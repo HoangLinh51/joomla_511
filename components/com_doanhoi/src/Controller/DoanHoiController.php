@@ -83,8 +83,7 @@ class DoanHoiController extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('DoanHoi/DoanHoi');
-
+        $model = Core::model('DoanHoi/DoanHoi');;
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
         } catch (Exception $e) {
@@ -181,7 +180,7 @@ class DoanHoiController extends BaseController
         $formData = $json ?? $formData;
 
         $formData['dantoc_id'] = $formData['modal_dantoc_id'] ?? $formData['input_dantoc_id'];
-        $formData['tongiao_id'] = $formData['modal_tongiao_id'] ?? $formData['input_tongiao_id'];
+        $formData['gioitinh_id'] = $formData['modal_gioitinh_id'] ?? $formData['input_gioitinh_id'];
         $formData['phuongxa_id'] = $formData['modal_phuongxa_id'] ?? $formData['input_phuongxa_id'];
         $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
 

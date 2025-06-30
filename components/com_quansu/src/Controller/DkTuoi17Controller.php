@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Site
- * @subpackage  com_doanhoi
+ * @subpackage  com_quansu
  *
  * @copyright   (C) 2009 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Dcxddt\Site\Controller;
+namespace Joomla\Component\QuanSu\Site\Controller;
 
 use Core;
 use Exception;
@@ -20,11 +20,11 @@ use Joomla\CMS\Session\Session;
 defined('_JEXEC') or die;
 
 /**
- * The XeOm List Controller
+ * The QuanSu List Controller
  *
  * @since  3.1
  */
-class XeOmController extends BaseController
+class DkTuoi17Controller extends BaseController
 {
     public function __construct($config = [])
     {
@@ -45,17 +45,17 @@ class XeOmController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
-    public function getListXeOm()
+    public function getListDktuoi17()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $model = Core::model('Dcxddt/XeOm');
+        $model = Core::model('QuanSu/Dktuoi17');
 
         try {
-            $result =  $model->getListXeOm($formData);
+            $result =  $model->getListDktuoi17($formData);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }
@@ -78,7 +78,7 @@ class XeOmController extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('Dcxddt/XeOm');
+        $model = Core::model('QuanSu/Dktuoi17');
 
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
@@ -98,18 +98,18 @@ class XeOmController extends BaseController
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
-        $model = Core::model('Dcxddt/XeOm');
+        $model = Core::model('QuanSu/Dktuoi17');
         $result = $model->getThonTobyPhuongxaId($phuongxa_id);
         header('Content-type: application/json');
         echo json_encode($result);
         jexit();
     }
 
-    public function getDetailXeOm()
+    public function getDetailDktuoi17()
     {
-        $idXeOm = Factory::getApplication()->input->getVar('xeom_id', 0);
-        $model = Core::model('Dcxddt/XeOm');
-        $result = $model->getDetailXeOm($idXeOm);
+        $idDktuoi17 = Factory::getApplication()->input->getVar('dktuoi17_id', 0);
+        $model = Core::model('QuanSu/Dktuoi17');
+        $result = $model->getDetailDktuoi17($idDktuoi17);
         // var_dump($result);
         // exit;
         try {
@@ -122,7 +122,7 @@ class XeOmController extends BaseController
         jexit();
     }
 
-    public function checkNhankhauInXeOm()
+    public function checkNhankhauInDktuoi17()
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
@@ -131,7 +131,7 @@ class XeOmController extends BaseController
             $response = [
                 'success' => false,
                 'exists' => false,
-                'message' => 'Thiếu nhankhau_id hoặc xeom_id'
+                'message' => 'Thiếu nhankhau_id hoặc dktuoi17_id'
             ];
             echo json_encode($response);
             Factory::getApplication()->close();
@@ -139,11 +139,11 @@ class XeOmController extends BaseController
         }
 
         // Load the model
-        $model = Core::model('Dcxddt/XeOm');
+        $model = Core::model('QuanSu/Dktuoi17');
 
         try {
-            // Check if nhankhau_id exists in xeom_id
-            $exists = $model->checkNhankhauInXeOm($nhankhau_id);
+            // Check if nhankhau_id exists in dktuoi17_id
+            $exists = $model->checkNhankhauInDktuoi17($nhankhau_id);
 
             $response = [
                 'success' => true,
@@ -163,7 +163,7 @@ class XeOmController extends BaseController
         Factory::getApplication()->close();
     }
 
-    public function save_xeom()
+    public function save_dktuoi17()
     {
         Session::checkToken() or die('Token không hợp lệ');
         $user = Factory::getUser();
@@ -174,14 +174,14 @@ class XeOmController extends BaseController
         $formData = $json ?? $formData;
 
         $formData['dantoc_id'] = $formData['modal_dantoc_id'] ?? $formData['input_dantoc_id'];
-        $formData['gioitinh_id'] = $formData['modal_gioitinh_id'] ?? $formData['input_gioitinh_id'];
+        $formData['tongiao_id'] = $formData['modal_tongiao_id'] ?? $formData['input_tongiao_id'];
         $formData['phuongxa_id'] = $formData['modal_phuongxa_id'] ?? $formData['input_phuongxa_id'];
         $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
 
         try {
-            $model = Core::model('Dcxddt/XeOm');
+            $model = Core::model('QuanSu/Dktuoi17');
 
-            $result = $model->saveXeOm($formData, $user->id);
+            $result = $model->saveDktuoi17($formData, $user->id);
             if ((int)$result && $result > 0) {
                 $response = ['success' => true, 'result' => $result,  'message' => 'Đã lưu dữ liệu thành công'];
             } else {
@@ -196,15 +196,15 @@ class XeOmController extends BaseController
         jexit();
     }
 
-    public function xoa_xeom()
+    public function xoa_dktuoi17()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
         try {
-            $model = Core::model('Dcxddt/XeOm');
-            $result = $model->deleteXeOm($formData['idUser'], $formData['idTaiXe']);
+            $model = Core::model('QuanSu/Dktuoi17');
+            $result = $model->deleteDktuoi17($formData['idUser'], $formData['idTaiXe']);
             $response = [
                 'success' => $result,
                 'message' => 'Xóa thành viên thành công',

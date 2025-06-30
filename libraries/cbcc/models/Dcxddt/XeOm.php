@@ -140,10 +140,11 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
       'a.n_dienthoai',
       'a.n_diachi',
       'gt.tengioitinh',
-      'lx.tenloaixe'
+      'a.tinhtrangthe_id',
+      'ttt.tentinhtrang'
     ]);
     $query->from($db->quoteName('dcxddtmt_xeom', 'a'))
-      ->leftJoin($db->quoteName('danhmuc_loaixe', 'lx') . ' ON lx.id = a.loaixe_id')
+      ->leftJoin($db->quoteName('danhmuc_tinhtrangthe', 'ttt') . ' ON ttt.id = a.tinhtrangthe_id')
       ->leftJoin($db->quoteName('danhmuc_gioitinh', 'gt') . ' ON gt.id = a.n_gioitinh_id AND gt.daxoa = 0')
       ->where('a.daxoa = 0');
     // Apply filters
@@ -273,15 +274,14 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     if ($nhankhau_id > 0) {
       $query->where('nk.id = ' . (int)$nhankhau_id);
     } else {
-      if (!empty($phuongxa) && is_array($phuongxa)) {
-        $phuongxa = array_map('intval', $phuongxa);
-        $quotedIds = implode(',', $phuongxa);
-        $query->where("hk.phuongxa_id IN ($quotedIds)");
-      }
-
       if (!empty($keyword)) {
         $search = $db->quote('%' . $db->escape($keyword, true) . '%');
         $query->where("nk.hoten LIKE $search OR nk.cccd_so LIKE $search");
+      }
+      if (!empty($phuongxa) && is_array($phuongxa)) {
+        $phuongxa = array_map('intval', $phuongxa);
+        // Chỉ lấy những bản ghi có phường xã nằm trong danh sách, loại bỏ các bản ghi phường xã null hoặc không thuộc danh sách
+        $query->where('hk.phuongxa_id IS NOT NULL AND hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
       }
     }
     $query->order('nk.hokhau_id DESC');
@@ -329,13 +329,12 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     $db = Factory::getDbo();
     $now = Factory::getDate()->toSql();
     $id = $formdata['id'];
-    var_dump($formdata);
 
     $columns = [
       'n_hoten' => $formdata['modal_hoten'],
       'n_cccd' => $formdata['modal_cccd'],
       'n_dienthoai' => $formdata['modal_dienthoai'],
-      'n_gioitinh_id' => (int)$formdata['modal_gioitinh_id'],
+      'n_gioitinh_id' => (int)$formdata['gioitinh_id'],
       'n_dantoc_id' => (int)$formdata['dantoc_id'],
       'n_tongiao_id' => (int)$formdata['tongiao_id'],
       'n_phuongxa_id' => (int)$formdata['phuongxa_id'],
@@ -354,9 +353,9 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
       $columns['n_namsinh'] = (new \DateTime($formdata['modal_namsinh']))->format('Y-m-d');
     }
     if (!empty($formdata['modal_ngayhethan_thehanhnghe'])){
-      $columns['thehanhnghe_ngayhethan'] = $formdata['loaixe_id'];
+      $columns['thehanhnghe_ngayhethan'] =  (new \DateTime($formdata['modal_ngayhethan_thehanhnghe']))->format('Y-m-d');
     }
-    if (!empty($formdata['tinhtrangthe_id'])) {
+    if (!empty($formdata['tinhtrang_id'])) {
       $columns['tinhtrangthe_id'] = $formdata['tinhtrang_id'];
     }
 

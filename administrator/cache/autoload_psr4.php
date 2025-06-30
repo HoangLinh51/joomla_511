@@ -66,6 +66,7 @@ return [
 	'Joomla\\Component\\Privacy\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_privacy/src'],
 	'Joomla\\Component\\Privacy\\Api\\' => [JPATH_API . '/components/com_privacy/src'],
 	'Joomla\\Component\\Privacy\\Site\\' => [JPATH_SITE . '/components/com_privacy/src'],
+	'Joomla\\Component\\QuanSu\\Site\\' => [JPATH_SITE . '/components/com_quansu/src'],
 	'Joomla\\Component\\QuanTriHeThong\\Site\\' => [JPATH_SITE . '/components/com_quantrihethong/src'],
 	'Joomla\\Component\\Redirect\\Administrator\\' => [JPATH_ADMINISTRATOR . '/components/com_redirect/src'],
 	'Joomla\\Component\\Redirect\\Api\\' => [JPATH_API . '/components/com_redirect/src'],

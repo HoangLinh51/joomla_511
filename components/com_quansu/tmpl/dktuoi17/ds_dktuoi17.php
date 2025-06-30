@@ -14,7 +14,7 @@ defined('_JEXEC') or die('Restricted access');
       <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center text-dark">Giới tính</th>
       <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">CCCD/CMND</th>
       <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Số điện thoại</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Tình trạng thẻ</th>
+      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Loại xe</th>
       <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center text-dark">Chức năng</th>
     </tr>
   </thead>
@@ -46,7 +46,7 @@ defined('_JEXEC') or die('Restricted access');
       <td style="vertical-align: middle">${item.tengioitinh || ''}</td>
       <td style="vertical-align: middle">${item.n_cccd || ''}</td>
       <td style="vertical-align: middle">${item.n_dienthoai || ''}</td>
-      <td style="vertical-align: middle; text-align:center">${renderTextTinhTrang(item.tinhtrangthe_id, item.tentinhtrang)}</td>
+      <td style="vertical-align: middle">${item.tenloaixe || ''}</td>
       <td class="text-center" style="vertical-align: middle">
         <span class="btn btn-sm btn_hieuchinh" data-bs-toggle="modal" data-bs-target="#modalThemXeOm" style="font-size:18px;padding:10px; cursor: pointer;" data-xeom="${item.id}" data-title="Hiệu chỉnh">
           <i class="fas fa-pencil-alt"></i>
@@ -58,18 +58,6 @@ defined('_JEXEC') or die('Restricted access');
       </td>
     </tr>
   `).join('');
-  }
-
-  function renderTextTinhTrang(id, tentinhtrang) {
-    let stringtinhtrang = ""
-    if (id === 1) {
-      stringtinhtrang = `<span class="badge bg-success">${tentinhtrang}</span>`
-    } else if (id === 2) {
-      stringtinhtrang = `<span class="badge bg-warning">${tentinhtrang}</span>`
-    } else if (id === 3) {
-      stringtinhtrang = `<span class="badge bg-danger">${tentinhtrang}</span>`
-    }
-    return stringtinhtrang
   }
 
   // Function to render pagination controls and info
@@ -129,7 +117,7 @@ defined('_JEXEC') or die('Restricted access');
     try {
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
       const response = await $.ajax({
-        url: 'index.php?option=com_dcxddt&controller=xeom&task=getListXeOm',
+        url: 'index.php?option=com_quansu&controller=xeom&task=getListXeOm',
         method: 'POST',
         data: {
           page,
@@ -208,15 +196,13 @@ defined('_JEXEC') or die('Restricted access');
 
       const idTaiXe = $(this).data('xeom');
       try {
-        const response = await fetch(`index.php?option=com_dcxddt&controller=xeom&task=xoa_xeom`, {
+        const response = await fetch(`index.php?option=com_quansu&controller=xeom&task=xoa_xeom`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            idUser,
-            idTaiXe,
-            [csrfToken]: 1
+            idUser,idTaiXe,[csrfToken]: 1
           })
         });
         const data = await response.json();

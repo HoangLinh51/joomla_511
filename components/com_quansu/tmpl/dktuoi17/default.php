@@ -19,7 +19,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý xe ôm</h3>
       </div>
       <div class="col-sm-6 text-right" style="padding:0;">
-        <button type="button" data-bs-toggle="modal" data-bs-target="#modalThemXeOm" class="btn btn-primary btn-themmoi">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#modalThemDkTuoi17" class="btn btn-primary btn-themmoi">
           <i class="fas fa-plus"></i> Thêm mới
         </button>
       </div>
@@ -37,12 +37,12 @@ use Joomla\CMS\HTML\HTMLHelper;
     <div class="card-body">
       <div class="d-flex align-items-center py-2" style="gap: 10px;">
         <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 19.5%;">Họ tên </b>
-        <input type="text" name="hoten" id="hoten" class="form-control" style="width: 100%; font-size:16px;" placeholder="Nhập họ tên" />
+        <input type="text" name="hoten" id="hoten" class="form-control" style="width: 100%; font-size:16px;" placeholder="Nhập họ tên chủ cơ sở" />
       </div>
       <div class="d-flex align-items-center py-2" style="gap: 10px;">
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
           <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">CCCD/CMND</b>
-          <input type="text" name="cccd" id="cccd" class="form-control" style="width: 67%; font-size:16px;" placeholder="Nhập CCCD/CMND" />
+          <input type="text" name="cccd" id="cccd" class="form-control" style="width: 67%; font-size:16px;" placeholder="Nhập tên cơ sở" />
         </div>
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
           <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Giới tính</b>
@@ -56,7 +56,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       </div>
       <div class="d-flex align-items-center py-2" style="gap: 10px;">
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
-          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Phường/xã</b>
+          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Phường xã</b>
           <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn xã/phường" style="width: 67%;">
             <option value=""></option>
             <?php foreach ($this->phuongxa as $px) { ?>
@@ -65,7 +65,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           </select>
         </div>
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
-          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Thôn/tổ</b>
+          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Thôn tổ dân phố</b>
           <select id="thonto_id" name="thonto_id" class="custom-select" data-placeholder="Chọn thôn/tổ" style="width: 67%;">
             <option value=""></option>
           </select>
@@ -78,11 +78,11 @@ use Joomla\CMS\HTML\HTMLHelper;
   </div>
 
   <div id="div_danhsach">
-    <?php require_once 'ds_xeom.php'; ?>
+    <?php require_once 'ds_dktuoi17.php'; ?>
   </div>
 </div>
 
-<div class="modal modal-right fade" id="modalThemXeOm" tabindex="-1" aria-labelledby="modalThemXeOmLabel">
+<div class="modal modal-right fade" id="modalThemDkTuoi17" tabindex="-1" aria-labelledby="modalThemDkTuoi17Label">
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -94,7 +94,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         </button>
       </div>
       <div class="modal-body">
-        <form id="formXeOm" name="formXeOm" method="post" action="index.php?option=com_dcxddt&controller=xeom&task=save_xeom">
+        <form id="formDkTuoi17" name="formDkTuoi17" method="post" action="index.php?option=com_quansu&controller=dktuoi17&task=save_dktuoi17">
           <div class="card-body">
             <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
               <h5 style="margin: 0">Thông tin cá nhân</h5>
@@ -114,6 +114,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             </div>
 
             <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="">
+            <input type="hidden" name="modal_gioitinh_id" id="modal_gioitinh_id" value="">
             <div class="row g-3 mb-4">
               <div class="col-md-4 mb-2">
                 <label for="modal_hoten" class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
@@ -144,13 +145,13 @@ use Joomla\CMS\HTML\HTMLHelper;
                 </select>
               </div>
               <div class="col-md-4 mb-2">
-                <label for="modal_gioitinh_id" class="form-label fw-bold">Giới tính</label>
-                <input type="hidden" id="input_gioitinh_id" name="input_gioitinh_id" value="">
-                <select id="modal_gioitinh_id" name="modal_gioitinh_id" class="select2" data-placeholder="Chọn giới tính">
+                <label for="modal_tongiao_id" class="form-label fw-bold">Tôn giáo</label>
+                <input type="hidden" id="input_tongiao_id" name="input_tongiao_id" value="">
+                <select id="modal_tongiao_id" name="modal_tongiao_id" class="select2" data-placeholder="Chọn tôn giáo">
                   <option value=""></option>
-                  <?php if (is_array($this->gioitinh)) { ?>
-                    <?php foreach ($this->gioitinh as $gt) { ?>
-                      <option value="<?php echo $gt['id']; ?>"><?php echo htmlspecialchars($gt['tengioitinh']); ?></option>
+                  <?php if (is_array($this->tongiao)) { ?>
+                    <?php foreach ($this->tongiao as $tg) { ?>
+                      <option value="<?php echo $tg['id']; ?>"><?php echo htmlspecialchars($tg['tentongiao']); ?></option>
                     <?php } ?>
                   <?php } ?>
                 </select>
@@ -239,7 +240,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 <script>
   const phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
   let isEditMode = false;
-  let isFetchingFromSelect = false;
   $(document).ready(function() {
     // Initialize Select2 for modal and filter dropdowns
     $('.date-picker').datepicker({
@@ -254,7 +254,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       });
     };
 
-    ['#modal_dantoc_id', '#modal_gioitinh_id', '#modal_phuongxa_id', '#modal_thonto_id', '#modal_loaixe_id', '#modal_tinhtrang'].forEach(selector => {
+    ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id', '#modal_loaixe_id', '#modal_tinhtrang'].forEach(selector => {
       initSelect2(selector);
     });
     ['#phuongxa_id', '#thonto_id', '#gioitinh_id'].forEach(selector => {
@@ -268,8 +268,8 @@ use Joomla\CMS\HTML\HTMLHelper;
         return Promise.resolve();
       }
       return $.post('index.php', {
-        option: 'com_dcxddt',
-        controller: 'xeom',
+        option: 'com_quansu',
+        controller: 'dktuoi17',
         task: 'getThonTobyPhuongxa',
         phuongxa_id: phuongxa_id
       }, function(response) {
@@ -285,7 +285,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     };
 
     $('#btn_luu').on('click', function() {
-      $('#formXeOm').submit();
+      $('#formDkTuoi17').submit();
     });
 
     // Handle ward change for filter and modal
@@ -293,22 +293,21 @@ use Joomla\CMS\HTML\HTMLHelper;
       fetchThonTo($(this).val(), '#thonto_id');
     });
     $('#modal_phuongxa_id').on('change', function() {
-      if (!isFetchingFromSelect) {
-        fetchThonTo($(this).val(), '#modal_thonto_id');
-      }
+      fetchThonTo($(this).val(), '#modal_thonto_id');
     });
 
     // Toggle input fields based on checkbox
     $('#checkbox_toggle').change(function() {
       const isChecked = $(this).is(':checked');
       const textFields = ['#modal_hoten', '#modal_cccd', '#modal_namsinh', '#modal_dienthoai', '#modal_diachi'];
-      const selectFields = ['#modal_dantoc_id', '#modal_gioitinh_id', '#modal_phuongxa_id', '#modal_thonto_id'];
+      const selectFields = ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id'];
 
       $('#select-container').toggle(isChecked);
       textFields.forEach(selector => $(selector).prop('readonly', isChecked));
       selectFields.forEach(selector => $(selector).prop('disabled', isChecked));
-
+      // Khi ấn vào checkbox, reset nhankhau_id và modal_gioitinh_id về rỗng
       $('#nhankhau_id').val('');
+      $('#modal_gioitinh_id').val('');
 
       if (isChecked) {
         $('#select_top').select2({
@@ -316,7 +315,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           allowClear: true,
           width: '100%',
           ajax: {
-            url: 'index.php?option=com_dcxddt&task=xeom.timkiem_nhankhau&format=json',
+            url: 'index.php?option=com_quansu&task=dktuoi17.timkiem_nhankhau&format=json',
             dataType: 'json',
             delay: 250,
             data: function(params) {
@@ -344,35 +343,43 @@ use Joomla\CMS\HTML\HTMLHelper;
           minimumInputLength: 0,
           templateResult: data => data.loading ? data.text : $('<div>' + data.text + '</div>'),
           templateSelection: data => data.text || 'Chọn thành viên',
-          dropdownParent: $('#modalThemXeOm')
+          dropdownParent: $('#modalThemDkTuoi17')
         });
+      } else {
+        $('#select_top').val('').trigger('change');
+        if ($.fn.select2 && $('#select_top').data('select2')) {
+          $('#select_top').select2('destroy');
+        }
+        $('#select_top').html('<option value="">-- Chọn --</option>');
       }
     });
     $('.btn-themmoi').on('click', function() {
       isEditMode = false;
       $('.title-edit').text('Thêm mới');
-      $('#formXeOm')[0].reset();
+      $('#formDkTuoi17')[0].reset();
       $('.select2').val('').trigger('change');
-      $('input[name="id"]').val('');
       $('#checkbox_toggle').prop('checked', false).trigger('change');
     });
 
-    $('#modalThemXeOm').on('hidden.bs.modal', function() {
+    $('#modalThemDkTuoi17').on('hidden.bs.modal', function() {
       isEditMode = false;
       $('.title-edit').text('');
+      $('#formDkTuoi17')[0].reset();
+      $('#select_top').val('').trigger('change');
+      $('.select2').val('').trigger('change');
     });
 
     // Populate form with selected member data
     $('#select_top').on('select2:select', async function(e) {
       const data = e.params.data;
 
-      // Check if nhankhau_id already exists in xeom
+      // Check if nhankhau_id already exists in dktuoi17
       if (!isEditMode) {
         try {
           const response = await $.post('index.php', {
-            option: 'com_dcxddt',
-            controller: 'xeom',
-            task: 'checkNhankhauInXeOm',
+            option: 'com_quansu',
+            controller: 'dktuoi17',
+            task: 'checkNhankhauInDkTuoi17',
             nhankhau_id: data.id,
           }, null, 'json');
 
@@ -387,7 +394,6 @@ use Joomla\CMS\HTML\HTMLHelper;
           return;
         }
       }
-      console.log(data)
 
       $('#nhankhau_id').val(data.id || '');
       $('#modal_gioitinh_id').val(data.gioitinh_id || '');
@@ -395,61 +401,57 @@ use Joomla\CMS\HTML\HTMLHelper;
       $('#modal_cccd').val(data.cccd_so || '');
       $('#modal_namsinh').val(data.ngaysinh || '');
       $('#modal_dienthoai').val(data.dienthoai || '');
-      $('#input_dantoc_id').val(data.dantoc_id || '');
+      $('#input_dantoc_id').val(data.dantoc_id || '').trigger('change');
       $('#modal_dantoc_id').val(data.dantoc_id || '').trigger('change');
-      $('#input_gioitinh_id').val(data.gioitinh_id || '');
-      $('#modal_gioitinh_id').val(data.gioitinh_id || '').trigger('change');
-
-      isFetchingFromSelect = true;
-      $('#input_phuongxa_id').val(data.phuongxa_id || '');
+      $('#input_tongiao_id').val(data.tongiao_id || '').trigger('change');
+      $('#modal_tongiao_id').val(data.tongiao_id || '').trigger('change');
+      $('#input_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
       $('#modal_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
-      await fetchThonTo(data.phuongxa_id, '#modal_thonto_id', data.thonto_id);
-      isFetchingFromSelect = false;
-
       $('#modal_diachi').val(data.diachi || '');
-      $('#input_thonto_id').val(data.thonto_id || '');
+      await fetchThonTo(data.phuongxa_id, '#modal_thonto_id', data.thonto_id);
+      $('#input_thonto_id').val(data.thonto_id || '').trigger('change');
       $('#modal_thonto_id').val(data.thonto_id || '').trigger('change');
     });
 
     // Handle edit action
     $('body').on('click', '.btn_hieuchinh', async function() {
       $('.title-edit').text('Hiệu chỉnh');
-      const memberId = $(this).data('xeom');
+      const memberId = $(this).data('dktuoi17');
       if (!memberId) {
         showToast('ID tài xế xe không hợp lệ', false);
         return;
       }
 
       isEditMode = true; // Đặt trạng thái là chỉnh sửa
-      const $modal = $('#modalThemXeOm');
+      const $modal = $('#modalThemDkTuoi17');
       const $modalContent = $modal.find('.modal-content');
       showLoadingOverlay($modalContent);
 
       try {
         const response = await $.post('index.php', {
-          option: 'com_dcxddt',
-          controller: 'xeom',
-          task: 'getDetailXeOm',
-          xeom_id: memberId
+          option: 'com_quansu',
+          controller: 'dktuoi17',
+          task: 'getDetailDkTuoi17',
+          dktuoi17_id: memberId
         }, null, 'json');
 
         if (response && response.id) {
           $('input[name="id"]').val(response.id || '');
-          // $('input[name="nhankhau_id"]').val(response.nhankhau_id || '');
+          $('input[name="nhankhau_id"]').val(response.nhankhau_id || '');
           $('#modal_biensoxe').val(response.biensoxe || '');
           $('#modal_loaixe_id').val(response.loaixe_id || '').trigger('change');
           $('#modal_thehanhnghe').val(response.thehanhnghe_so || '');
           $('#modal_giayphep').val(response.sogiaypheplaixe || '');
+          $('#tinhtrangthe_id').val(response.tinhtrangthe_id || '');
           $('#modal_ngayhethan_thehanhnghe').val(response.thehanhnghe_ngayhethan || '');
-          $('#modal_tinhtrang').val(response.tinhtrangthe_id || '').trigger('change');
 
           const hasNhankhauId = !!response.nhankhau_id;
           $('#checkbox_toggle').prop('checked', hasNhankhauId).trigger('change');
 
           if (hasNhankhauId) {
             const nhankhauResponse = await $.post('index.php', {
-              option: 'com_dcxddt',
-              task: 'xeom.timkiem_nhankhau',
+              option: 'com_quansu',
+              task: 'dktuoi17.timkiem_nhankhau',
               format: 'json',
               keyword: response.n_cccd,
               phuongxa_id: response.n_phuongxa_id ? [response.n_phuongxa_id] : phuongxa_id.map(item => item.id)
@@ -473,7 +475,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                       ngaysinh: nhankhau.ngaysinh,
                       dienthoai: nhankhau.dienthoai,
                       dantoc_id: nhankhau.dantoc_id,
-                      gioitinh_id: nhankhau.gioitinh_id,
+                      tongiao_id: nhankhau.tongiao_id,
                       phuongxa_id: nhankhau.phuongxa_id,
                       thonto_id: nhankhau.thonto_id,
                       diachi: nhankhau.diachi
@@ -486,21 +488,21 @@ use Joomla\CMS\HTML\HTMLHelper;
               }
             }
           } else {
-            $('#nhankhau_id').val(response.nhankhau_id);
+            $('#nhankhau_id').val('');
             $('#modal_gioitinh_id').val(response.n_gioitinh_id || '');
             $('#modal_hoten').val(response.n_hoten || '');
             $('#modal_cccd').val(response.n_cccd || '');
             $('#modal_namsinh').val(response.n_namsinh || '');
             $('#modal_dienthoai').val(response.n_dienthoai || '');
-            $('#input_dantoc_id').val(response.n_dantoc_id || '');
+            $('#input_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
             $('#modal_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
-            $('#input_gioitinh_id').val(response.n_gioitinh_id || '');
-            $('#modal_gioitinh_id').val(response.n_gioitinh_id || '').trigger('change');
-            $('#input_phuongxa_id').val(response.n_phuongxa_id || '');
+            $('#input_tongiao_id').val(response.n_tongiao_id || '').trigger('change');
+            $('#modal_tongiao_id').val(response.n_tongiao_id || '').trigger('change');
+            $('#input_phuongxa_id').val(response.n_phuongxa_id || '').trigger('change');
             $('#modal_phuongxa_id').val(response.n_phuongxa_id || '').trigger('change');
             $('#modal_diachi').val(response.n_diachi || '');
             await fetchThonTo(response.n_phuongxa_id, '#modal_thonto_id', response.n_thonto_id);
-            $('#input_thonto_id').val(response.n_thonto_id || '');
+            $('#input_thonto_id').val(response.n_thonto_id || '').trigger('change');
             $('#modal_thonto_id').val(response.n_thonto_id || '').trigger('change');
           }
 
@@ -524,14 +526,9 @@ use Joomla\CMS\HTML\HTMLHelper;
         isEditMode = false; // Reset trạng thái sau khi đóng modal
       }
     });
-    $('#formXeOm').validate({
+    $('#formDkTuoi17').validate({
       ignore: [],
       rules: {
-        select_top: {
-          required: function() {
-            return $('#checkbox_toggle').is(':checked');
-          }
-        },
         modal_hoten: {
           required: function() {
             return !$('#checkbox_toggle').is(':checked');
@@ -554,7 +551,6 @@ use Joomla\CMS\HTML\HTMLHelper;
         },
       },
       messages: {
-        select_top: 'Vui lòng chọn nhân khẩu',
         modal_hoten: 'Vui lòng nhập họ tên',
         modal_cccd: 'Vui lòng nhập CCCD/CMND',
         modal_namsinh: 'Vui lòng chọn năm sinh',
@@ -572,7 +568,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     });
 
     // submit form 
-    $('#formXeOm').on('submit', function(e) {
+    $('#formDkTuoi17').on('submit', function(e) {
       e.preventDefault();
       if (!$(this).valid()) {
         showToast('Vui lòng nhập đầy đủ thông tin', false);

@@ -34,12 +34,12 @@ use Joomla\CMS\HTML\HTMLHelper;
     <div class="card-body">
       <div class="d-flex align-items-center py-2" style="gap: 10px;">
         <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 19.5%;">Họ tên </b>
-        <input type="text" name="hoten" id="hoten" class="form-control" style="width: 100%; font-size:16px;" placeholder="Nhập họ tên chủ cơ sở" />
+        <input type="text" name="hoten" id="hoten" class="form-control" style="width: 100%; font-size:16px;" placeholder="Nhập họ tên" />
       </div>
       <div class="d-flex align-items-center py-2" style="gap: 10px;">
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
           <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">CCCD/CMND</b>
-          <input type="text" name="cccd" id="cccd" class="form-control" style="width: 67%; font-size:16px;" placeholder="Nhập tên cơ sở" />
+          <input type="text" name="cccd" id="cccd" class="form-control" style="width: 67%; font-size:16px;" placeholder="Nhập CCCD/CMND" />
         </div>
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
           <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Giới tính</b>
@@ -53,7 +53,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       </div>
       <div class="d-flex align-items-center py-2" style="gap: 10px;">
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
-          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Phường xã</b>
+          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Phường/xã</b>
           <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn xã/phường" style="width: 67%;">
             <option value=""></option>
             <?php foreach ($this->phuongxa as $px) { ?>
@@ -62,7 +62,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           </select>
         </div>
         <div class="d-flex align-items-center w-50" style="gap: 10px;">
-          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Thôn tổ dân phố</b>
+          <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Thôn/tổ</b>
           <select id="thonto_id" name="thonto_id" class="custom-select" data-placeholder="Chọn thôn/tổ" style="width: 67%;">
             <option value=""></option>
           </select>
@@ -111,7 +111,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             </div>
 
             <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="">
-            <input type="hidden" name="modal_gioitinh_id" id="modal_gioitinh_id" value="">
+            <!-- <input type="hidden" name="modal_gioitinh_id" id="modal_gioitinh_id" value=""> -->
             <div class="row g-3 mb-4">
               <div class="col-md-4 mb-2">
                 <label for="modal_hoten" class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
@@ -142,13 +142,13 @@ use Joomla\CMS\HTML\HTMLHelper;
                 </select>
               </div>
               <div class="col-md-4 mb-2">
-                <label for="modal_tongiao_id" class="form-label fw-bold">Tôn giáo</label>
-                <input type="hidden" id="input_tongiao_id" name="input_tongiao_id" value="">
-                <select id="modal_tongiao_id" name="modal_tongiao_id" class="select2" data-placeholder="Chọn tôn giáo">
+                <label for="modal_gioitinh_id" class="form-label fw-bold">Giới tính</label>
+                <input type="hidden" id="input_gioitinh_id" name="input_gioitinh_id" value="">
+                <select id="modal_gioitinh_id" name="modal_gioitinh_id" class="select2" data-placeholder="Chọn giới tính ">
                   <option value=""></option>
-                  <?php if (is_array($this->tongiao)) { ?>
-                    <?php foreach ($this->tongiao as $tg) { ?>
-                      <option value="<?php echo $tg['id']; ?>"><?php echo htmlspecialchars($tg['tentongiao']); ?></option>
+                  <?php if (is_array($this->gioitinh)) { ?>
+                    <?php foreach ($this->gioitinh as $gt) { ?>
+                      <option value="<?php echo $gt['id']; ?>"><?php echo htmlspecialchars($gt['tengioitinh']); ?></option>
                     <?php } ?>
                   <?php } ?>
                 </select>
@@ -236,6 +236,55 @@ use Joomla\CMS\HTML\HTMLHelper;
 <script>
   const phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
   let isEditMode = false
+  let isFetchingFromSelect = false;
+
+
+  function resetFormManually() {
+    // Các trường cần reset
+    const fieldsToReset = [
+      '#modal_hoten',
+      '#modal_cccd',
+      '#modal_namsinh',
+      '#modal_dienthoai',
+      '#modal_dantoc_id',
+      '#modal_gioitinh_id',
+      '#modal_phuongxa_id',
+      '#modal_thonto_id',
+      '#modal_diachi',
+      '#modal_chucdanh_id',
+      'input[name="thoidiem_batdau"]',
+      'input[name="thoidiem_ketthuc"]',
+      '#lydo_biendong',
+      '#ghichu',
+      '#nhankhau_id',
+      '#input_dantoc_id',
+      '#input_gioitinh_id',
+      '#input_phuongxa_id',
+      '#input_thonto_id',
+      '#select_top'
+    ];
+
+    // Reset từng trường
+    fieldsToReset.forEach(selector => {
+      const $element = $(selector);
+      if ($element.is('input:text, input:hidden')) {
+        $element.val('');
+      } else if ($element.is('select')) {
+        $element.val('').trigger('change'); // Trigger change để cập nhật Select2
+      } else if ($element.is('textarea')) {
+        $element.val('');
+      }
+    });
+
+    // Reset validation
+    const validator = $('#formDoanvienHoiVien').validate();
+    validator.resetForm();
+    $('.select2').each(function() {
+      $(this).next('.select2-container').find('.select2-selection').removeClass('error');
+    });
+    $('.error').remove();
+  }
+
   $(document).ready(function() {
     // Initialize Select2 for modal and filter dropdowns
     const initSelect2 = (selector, width = '100%') => {
@@ -246,7 +295,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       });
     };
 
-    ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id', '#modal_chucdanh_id', '#doanhoi_id'].forEach(selector => {
+    ['#modal_dantoc_id', '#modal_gioitinh_id', '#modal_phuongxa_id', '#modal_thonto_id', '#modal_chucdanh_id', '#doanhoi_id'].forEach(selector => {
       initSelect2(selector);
     });
     ['#phuongxa_id', '#thonto_id', '#gioitinh_id'].forEach(selector => {
@@ -285,21 +334,23 @@ use Joomla\CMS\HTML\HTMLHelper;
       fetchThonTo($(this).val(), '#thonto_id');
     });
     $('#modal_phuongxa_id').on('change', function() {
-      fetchThonTo($(this).val(), '#modal_thonto_id');
+      if (!isFetchingFromSelect) {
+        fetchThonTo($(this).val(), '#modal_thonto_id');
+      }
     });
 
     // Toggle input fields based on checkbox
     $('#checkbox_toggle').change(function() {
       const isChecked = $(this).is(':checked');
       const textFields = ['#modal_hoten', '#modal_cccd', '#modal_namsinh', '#modal_dienthoai', '#modal_diachi'];
-      const selectFields = ['#modal_dantoc_id', '#modal_tongiao_id', '#modal_phuongxa_id', '#modal_thonto_id'];
+      const selectFields = ['#modal_dantoc_id', '#modal_gioitinh_id', '#modal_phuongxa_id', '#modal_thonto_id'];
 
       $('#select-container').toggle(isChecked);
       textFields.forEach(selector => $(selector).prop('readonly', isChecked));
       selectFields.forEach(selector => $(selector).prop('disabled', isChecked));
-      // Khi ấn vào checkbox, reset nhankhau_id và modal_gioitinh_id về rỗng
+
       $('#nhankhau_id').val('');
-      $('#modal_gioitinh_id').val('');
+
 
       if (isChecked) {
         $('#select_top').select2({
@@ -337,29 +388,20 @@ use Joomla\CMS\HTML\HTMLHelper;
           templateSelection: data => data.text || 'Chọn thành viên',
           dropdownParent: $('#modalThemDoanHoi')
         });
-      } else {
-        $('#select_top').val('').trigger('change');
-        if ($.fn.select2 && $('#select_top').data('select2')) {
-          $('#select_top').select2('destroy');
-        }
-        $('#select_top').html('<option value="">-- Chọn --</option>');
       }
     });
 
     $('.btn-themmoi').on('click', function() {
       isEditMode = false;
       $('.title-edit').text('Thêm mới');
-      $('#formXeOm')[0].reset();
-      $('.select2').val('').trigger('change');
+      resetFormManually()
       $('#checkbox_toggle').prop('checked', false).trigger('change');
     });
 
     $('#modalThemDoanHoi').on('hidden.bs.modal', function() {
       isEditMode = false;
       $('.title-edit').text('');
-      $('#formDoanvienHoiVien')[0].reset();
-      $('#select_top').val('').trigger('change');
-      $('.select2').val('').trigger('change');
+      resetFormManually()
     });
 
     // Populate form with selected member data
@@ -397,16 +439,20 @@ use Joomla\CMS\HTML\HTMLHelper;
       $('#modal_cccd').val(data.cccd_so || '');
       $('#modal_namsinh').val(data.ngaysinh || '');
       $('#modal_dienthoai').val(data.dienthoai || '');
-      $('#input_dantoc_id').val(data.dantoc_id || '').trigger('change');
+      $('#input_dantoc_id').val(data.dantoc_id || '');
       $('#modal_dantoc_id').val(data.dantoc_id || '').trigger('change');
-      $('#input_tongiao_id').val(data.tongiao_id || '').trigger('change');
-      $('#modal_tongiao_id').val(data.tongiao_id || '').trigger('change');
-      $('#input_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
+      $('#input_gioitinh_id').val(data.gioitinh_id || '');
+      $('#modal_gioitinh_id').val(data.gioitinh_id || '').trigger('change');
+
+      isFetchingFromSelect = true;
+      $('#input_phuongxa_id').val(data.phuongxa_id || '');
       $('#modal_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
-      $('#modal_diachi').val(data.diachi || '');
       await fetchThonTo(data.phuongxa_id, '#modal_thonto_id', data.thonto_id);
-      $('#input_thonto_id').val(data.thonto_id || '').trigger('change');
+      isFetchingFromSelect = false;
+
+      $('#input_thonto_id').val(data.thonto_id || '');
       $('#modal_thonto_id').val(data.thonto_id || '').trigger('change');
+      $('#modal_diachi').val(data.diachi || '');
     });
 
     // Handle edit action
@@ -433,8 +479,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 
         if (response && response.id) {
           $('input[name="id"]').val(response.id || '');
-          $('#doanhoi_id').val(response.doanhoi_id || '').trigger('change');
-          $('input[name="doanhoi_id"]').val(response.doanhoi_id || '');
           $('#modal_chucdanh_id').val(response.chucvu_id || '').trigger('change');
           $('input[name="thoidiem_batdau"]').val(response.thoidiem_batdau || '');
           $('input[name="thoidiem_ketthuc"]').val(response.thoidiem_ketthuc || '');
@@ -473,7 +517,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                       ngaysinh: nhankhau.ngaysinh,
                       dienthoai: nhankhau.dienthoai,
                       dantoc_id: nhankhau.dantoc_id,
-                      tongiao_id: nhankhau.tongiao_id,
+                      gioitinh_id: nhankhau.gioitinh_id,
                       phuongxa_id: nhankhau.phuongxa_id,
                       thonto_id: nhankhau.thonto_id,
                       diachi: nhankhau.diachi
@@ -490,22 +534,22 @@ use Joomla\CMS\HTML\HTMLHelper;
             }
           } else {
             // Populate manual input fields for non-nhankhau data
-            $('#nhankhau_id').val('');
+            $('#nhankhau_id').val(response.nhankhau_id);
             $('#modal_gioitinh_id').val(response.n_gioitinh_id || '');
             $('#modal_hoten').val(response.n_hoten || '');
             $('#modal_cccd').val(response.n_cccd || '');
             $('#modal_namsinh').val(response.n_namsinh || '');
             $('#modal_dienthoai').val(response.n_dienthoai || '');
-            $('#input_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
+            $('#input_dantoc_id').val(response.n_dantoc_id || '');
             $('#modal_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
-            $('#input_tongiao_id').val(response.n_tongiao_id || '').trigger('change');
-            $('#modal_tongiao_id').val(response.n_tongiao_id || '').trigger('change');
-            $('#input_phuongxa_id').val(response.n_phuongxa_id || '').trigger('change');
+            $('#input_gioitinh_id').val(response.n_gioitinh_id || '');
+            $('#modal_gioitinh_id').val(response.n_gioitinh_id || '').trigger('change');
+            $('#input_phuongxa_id').val(response.n_phuongxa_id || '');
             $('#modal_phuongxa_id').val(response.n_phuongxa_id || '').trigger('change');
-            $('#modal_diachi').val(response.n_diachi || '');
-            await fetchThonTo(response.n_phuongxa_id, '#modal_thonto_id', response.n_thonto_id);
-            $('#input_thonto_id').val(response.n_thonto_id || '').trigger('change');
+            $('#input_thonto_id').val(response.n_thonto_id || '');
             $('#modal_thonto_id').val(response.n_thonto_id || '').trigger('change');
+            await fetchThonTo(response.n_phuongxa_id, '#modal_thonto_id', response.n_thonto_id);
+            $('#modal_diachi').val(response.n_diachi || '');
           }
 
           $modal.modal({
@@ -531,6 +575,11 @@ use Joomla\CMS\HTML\HTMLHelper;
     $('#formDoanvienHoiVien').validate({
       ignore: [],
       rules: {
+        select_top: {
+          required: function() {
+            return $('#checkbox_toggle').is(':checked');
+          }
+        },
         modal_hoten: {
           required: function() {
             return !$('#checkbox_toggle').is(':checked');
@@ -553,6 +602,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         },
       },
       messages: {
+        select_top: 'Vui lòng chọn công dân',
         modal_hoten: 'Vui lòng nhập họ tên',
         modal_cccd: 'Vui lòng nhập CCCD/CMND',
         modal_namsinh: 'Vui lòng chọn năm sinh',
@@ -599,6 +649,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       });
     });
   });
+
   const showLoadingOverlay = ($container) => {
     if ($container.find('.loading-overlay').length === 0) {
       $container.css('position', 'relative').append(`
@@ -608,9 +659,11 @@ use Joomla\CMS\HTML\HTMLHelper;
       `);
     }
   };
+
   const hideLoadingOverlay = ($container) => {
     $container.find('.loading-overlay').remove();
   };
+
   const showToast = (message, isSuccess = true) => {
     const toast = $('<div></div>')
       .text(message)

@@ -47,7 +47,7 @@ defined('_JEXEC') or die('Restricted access');
       <td style="vertical-align: middle">${item.tengioitinh || ''}</td>
       <td style="vertical-align: middle">${item.n_cccd || ''}</td>
       <td style="vertical-align: middle">${item.n_dienthoai || ''}</td>
-      <td style="vertical-align: middle">${item.tenchucdanh || ''}</td>
+      <td style="vertical-align: middle; text-align:center">${renderTextChucVu(item.chucvu_id, item.tenchucdanh)}</td>
       <td class="text-center" style="vertical-align: middle">
         <span class="btn btn-sm btn_hieuchinh" data-bs-toggle="modal" data-bs-target="#modalThemDoanHoi" style="font-size:18px;padding:10px; cursor: pointer;" data-doanhoi="${item.id}" data-title="Hiệu chỉnh">
           <i class="fas fa-pencil-alt"></i>
@@ -60,6 +60,19 @@ defined('_JEXEC') or die('Restricted access');
     </tr>
   `).join('');
   }
+
+  function renderTextChucVu(id, tenchucdanh) {
+    let stringchucvu = ""
+    if (id === 5 || id === 7 || id === 15) {
+      stringchucvu = `<span class="badge bg-danger">${tenchucdanh}</span>`
+    } else if (id === 8 || id === 10 || id === 14) {
+      stringchucvu = `<span class="badge bg-primary">${tenchucdanh}</span>`
+    } else if (id === 6 || id === 9 || id === 15) {
+      stringchucvu = `<span class="badge bg-success">${tenchucdanh}</span>`
+    }
+    return stringchucvu
+  }
+
 
   // Function to render pagination controls and info
   function renderPagination(currentPage, totalPages, totalRecords, itemsPerPage) {
