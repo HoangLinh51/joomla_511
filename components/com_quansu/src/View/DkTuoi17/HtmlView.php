@@ -25,31 +25,47 @@ class HtmlView extends BaseHtmlView
         $app = Factory::getApplication();
         $id = $app->input->getInt('id');
         $task = $app->input->get('task', '', 'CMD');
-        $layout = $task ? strtoupper($task) : 'DEFAULT';
+
+        // Phân biệt edit vs add
+        if (strtolower($task) === 'edit_dktuoi17') {
+            $layout = $id > 0 ? 'EDIT_DKTUOI17' : 'ADD_DKTUOI17';
+        } else {
+            $layout = $task ? strtoupper($task) : 'DEFAULT';
+        }
 
         switch ($layout) {
             case 'DEFAULT':
+            case 'DS_DKTUOI17':
                 $this->setLayout('default');
                 $this->_initDefaultPage();
+                break;
+            case 'ADD_DKTUOI17':
+            case 'EDIT_DKTUOI17':
+                $this->setLayout('edit_dktuoi17');
+                $this->_editDkTuoi17();
                 break;
         }
 
         parent::display($tpl);
     }
 
+
     private function _initDefaultPage()
     {
         $this->import();
-        $model = Core::model('QuanSu/DkTuoi17');
-        $user = Factory::getUser();
-        $phanquyen = $model->getPhanQuyen();
+    }
 
-        $phuongxa = array();
-        if ($phanquyen['phuongxa_id'] != '') {
-            $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+    public function _editDkTuoi17()
+    {
+        $this->import();
+        $app = Factory::getApplication()->input;
+        $model = Core::model('QuanSu/DkTuoi17');
+        $detailCoSo = null;
+        $idNguoiDK = $app->getInt('id', null);
+        if ($idNguoiDK) {
+            $detailCoSo = $model->getDetailDichVuNhayCam($idNguoiDK);
         }
-        // var_dump($phuongxa);
-        $this->phuongxa = $phuongxa;
+        $this->detailCoSo = $detailCoSo;
     }
     
 
@@ -81,6 +97,24 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true) . '/media/cbcc/js/bootbox.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.gritter.min.js');
 
+        
+        $model = Core::model('QuanSu/Base');
+        $phanquyen = $model->getPhanQuyen();
+        $phuongxa = array();
+        if ($phanquyen['phuongxa_id'] != '') {
+            $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+        }
+        $gioitinh = $model->getDanhMucGioiTinh();
+        $tinhtrang = $model->getDanhMucTrangThai();
+        $dantoc = $model->getDanhMucDanToc();
+        $trinhdohocvan = $model->getDanhMucTrinhDoHocVan();
+
+
+        $this->trinhdohocvan = $trinhdohocvan;
+        $this->dantoc = $dantoc;
+        $this->phuongxa = $phuongxa;
+        $this->tinhtrang = $tinhtrang;
+        $this->gioitinh = $gioitinh;
         return $document;
     }
 }

@@ -11,11 +11,11 @@ defined('_JEXEC') or die('Restricted access');
       <th style="vertical-align: middle" class="text-center text-dark">STT</th>
       <th style="vertical-align: middle" class="text-center text-dark">Họ và tên</th>
       <th style="vertical-align: middle" class="text-center text-dark">Địa chỉ</th>
-      <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center text-dark">Giới tính</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">CCCD/CMND</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Số điện thoại</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Loại xe</th>
-      <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center text-dark">Chức năng</th>
+      <th style="vertical-align: middle" class="text-center text-dark">Giới tính</th>
+      <th style="vertical-align: middle" class="text-center text-dark">CCCD/CMND</th>
+      <th style="vertical-align: middle" class="text-center text-dark">Số điện thoại</th>
+      <th style="vertical-align: middle" class="text-center text-dark">Tình trạng đăng ký</th>
+      <th style="vertical-align: middle" class="text-center text-dark">Chức năng</th>
     </tr>
   </thead>
   <tbody id="tbody_danhsach">
@@ -31,47 +31,52 @@ defined('_JEXEC') or die('Restricted access');
 
 <script>
   const idUser = <?= (int)Factory::getUser()->id ?>;
-  const csrfToken = Joomla.getOptions('csrf.token', '');
 
-  // hàm render tbody 
-  function renderTableRows(items, startIndex) {
+  function renderTextDiaChi(diachi = '', thonto = '', phuongxa = '') {
+    const parts = [diachi, thonto, phuongxa].filter(part => part && part.trim() !== '');
+    return parts.length > 0 ? parts.join(' - ') : '';
+  }
+
+  //hàm render tbody
+  function renderTBody(items, start) {
     if (!items || items.length === 0) {
       return '<tr><td colspan="8" class="text-center">Không có dữ liệu</td></tr>';
     }
     return items.map((item, index) => `
-    <tr>
-      <td class="text-center" style="vertical-align: middle">${startIndex + index}</td>
-      <td style="vertical-align: middle">${item.n_hoten || ''}</td>
-      <td style="vertical-align: middle">${item.n_diachi || ''}</td>
-      <td style="vertical-align: middle">${item.tengioitinh || ''}</td>
-      <td style="vertical-align: middle">${item.n_cccd || ''}</td>
-      <td style="vertical-align: middle">${item.n_dienthoai || ''}</td>
-      <td style="vertical-align: middle">${item.tenloaixe || ''}</td>
-      <td class="text-center" style="vertical-align: middle">
-        <span class="btn btn-sm btn_hieuchinh" data-bs-toggle="modal" data-bs-target="#modalThemXeOm" style="font-size:18px;padding:10px; cursor: pointer;" data-xeom="${item.id}" data-title="Hiệu chỉnh">
-          <i class="fas fa-pencil-alt"></i>
-        </span>
-        <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-        <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;" data-xeom="${item.id}" data-title="Xóa">
-          <i class="fas fa-trash-alt"></i>
-        </span>
-      </td>
-    </tr>
-  `).join('');
+      <tr>
+        <td class="text-center" style="vertical-align: middle">${start + index}</td>
+        <td style="vertical-align: middle">${item.n_hoten || ''}</td>
+        <td style="vertical-align:middle;">${renderTextDiaChi((item.n_diachi || ''), (item.thonto || ''), (item.phuongxa || ''))}</td>
+        <td style="vertical-align:middle;">${item.tengioitinh || ''}</td>
+        <td style="vertical-align:middle;">${item.n_cccd || ''}</td>
+        <td style="vertical-align:middle;">${item.n_dienthoai || ''}</td>
+        <td style="vertical-align:middle;">${item.tentrangthai || ''}</td>
+        <td class="text-center" style="vertical-align: middle;min-width: 120px" >
+         <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:7px; cursor: pointer;" data-iddktuoi17="${item.id}" data-title="Hiệu chỉnh">
+            <i class="fas fa-pencil-alt"></i>
+          </span>
+          <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
+          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:7px; cursor: pointer;" data-iddktuoi17="${item.id}" data-title="Xóa">
+            <i class="fas fa-trash-alt"></i>
+          </span>
+        </td>
+      </tr>
+    `).join('');
   }
 
-  // Function to render pagination controls and info
-  function renderPagination(currentPage, totalPages, totalRecords, itemsPerPage) {
+  // hàm render phân trang 
+  function renderPagination(currentPage, totalPages, totalRecord, take) {
     let html = '<ul class="pagination">';
+
     // First and Previous buttons
     html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="1">&lt;&lt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="1">&lt;&lt;</a>
+    </li>`;
     html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${Math.max(1, currentPage - 1)}">&lt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${Math.max(1, currentPage - 1)}">&lt;</a>
+    </li>`;
 
-    // Page numbers with a range of 2 pages before and after current page
+    // Page numbers
     const range = 2;
     const startPage = Math.max(1, currentPage - range);
     const endPage = Math.min(totalPages, currentPage + range);
@@ -82,8 +87,8 @@ defined('_JEXEC') or die('Restricted access');
 
     for (let i = startPage; i <= endPage; i++) {
       html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-      <a class="page-link" href="#" data-page="${i}">${i}</a>
-    </li>`;
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>`;
     }
 
     if (totalPages > 1 && endPage < totalPages) {
@@ -92,18 +97,18 @@ defined('_JEXEC') or die('Restricted access');
 
     // Next and Last buttons
     html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${Math.min(totalPages, currentPage + 1)}">&gt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${Math.min(totalPages, currentPage + 1)}">&gt;</a>
+    </li>`;
     html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${totalPages}">&gt;&gt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${totalPages}">&gt;&gt;</a>
+    </li>`;
     html += '</ul>';
 
-    // Pagination info (e.g., "Showing 1-20 of 50 items")
-    const startRecord = (currentPage - 1) * itemsPerPage + 1;
-    const endRecord = Math.min(startRecord + itemsPerPage - 1, totalRecords);
-    const info = totalRecords > 0 ?
-      `Hiển thị ${startRecord} - ${endRecord} của ${totalRecords} mục (${totalPages} trang)` :
+    // Pagination info
+    const startRecord = (currentPage - 1) * take + 1;
+    const endRecord = Math.min(startRecord + take - 1, totalRecord);
+    const info = totalRecord > 0 ?
+      `Hiển thị ${startRecord} - ${endRecord} của ${totalRecord} mục (${totalPages} trang)` :
       'Không có dữ liệu trang';
 
     return {
@@ -113,48 +118,48 @@ defined('_JEXEC') or die('Restricted access');
   }
 
   // hàm get list đoàn hôi
-  async function loadMemberList(page = 1, filters, itemsPerPage = 20) {
+  async function loadData(page = 1, filterSearch, take = 20) {
     try {
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
       const response = await $.ajax({
-        url: 'index.php?option=com_quansu&controller=xeom&task=getListXeOm',
+        url: 'index.php?option=com_quansu&controller=dktuoi17&task=getListdktuoi17',
         method: 'POST',
         data: {
           page,
-          take: itemsPerPage,
-          hoten: filters.hoten,
-          cccd: filters.cccd,
-          phuongxa_id: filters.phuongxa_id,
-          thonto_id: filters.thonto_id,
-          gioitinh_id: filters.gioitinh_id,
-          [csrfToken]: 1
+          take,
+          hoten: filterSearch.hoten,
+          cccd: filterSearch.cccd,
+          gioitinh_id: filterSearch.gioitinh_id,
+          doituong_id: filterSearch.tinhtrang_id,
+          phuongxa_id: filterSearch.phuongxa_id,
+          thonto_id: filterSearch.thonto_id,
         }
       });
 
       const items = response.data || [];
       const currentPage = response.page || page;
-      const totalRecords = response.totalrecord || items.length;
-      const totalPages = Math.ceil(totalRecords / itemsPerPage);
-      const startIndex = (currentPage - 1) * itemsPerPage + 1;
+      const totalRecord = response.totalrecord || items.length;
+      const totalPages = Math.ceil(totalRecord / take);
+      const start = (currentPage - 1) * take + 1;
 
-      $('#tbody_danhsach').html(renderTableRows(items, startIndex));
+      $('#tbody_danhsach').html(renderTBody(items, start));
       const {
         pagination,
         info
-      } = renderPagination(currentPage, totalPages, totalRecords, itemsPerPage);
+      } = renderPagination(currentPage, totalPages, totalRecord, take);
       $('#pagination').html(pagination);
       $('#pagination-info').text(info);
 
-      history.pushState({}, '', `?view=xeom&task=default&page=${currentPage}`);
+      history.pushState({}, '', `?view=dktuoi17&task=default&page=${currentPage}`);
       return {
         page: currentPage,
-        take: itemsPerPage,
-        totalrecord: totalRecords
+        take,
+        totalrecord: totalRecord
       };
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error('Error:', error);
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
-      showToastDS('Lỗi khi tải dữ liệu', false);
+      showToast('Lỗi khi tải dữ liệu', 'danger');
     }
   }
 
@@ -163,9 +168,10 @@ defined('_JEXEC') or die('Restricted access');
     return {
       hoten: $('#hoten').val() || '',
       cccd: $('#cccd').val() || '',
+      gioitinh_id: $('#gioitinh_id').val() || '',
+      tinhtrang_id: $('#tinhtrang_id').val() || '',
       phuongxa_id: $('#phuongxa_id').val() || '',
       thonto_id: $('#thonto_id').val() || '',
-      gioitinh_id: $('#gioitinh_id').val() || 0,
     };
   }
 
@@ -173,42 +179,50 @@ defined('_JEXEC') or die('Restricted access');
     // lấy url để gán page trên url 
     const urlParams = new URLSearchParams(window.location.search);
     const initialPage = parseInt(urlParams.get('page')) || 1;
-    loadMemberList(initialPage, getFilterParams());
+
+    loadData(initialPage, getFilterParams());
+    $('body').delegate('.btn_hieuchinh', 'click', function() {
+      window.location.href = '/index.php?option=com_quansu&view=dktuoi17&task=edit_dktuoi17&id=' + $(this).data('iddktuoi17');
+    });
 
     // hành động search 
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
-      loadMemberList(1, getFilterParams());
+      loadData(1, getFilterParams());
     });
 
     // hành động chuyển trang 
     $('body').on('click', '#pagination .page-link', function(e) {
       e.preventDefault();
+
       const page = parseInt($(this).data('page'));
       $('#pagination .page-item').removeClass('active');
       $(this).parent().addClass('active');
-      loadMemberList(page, getFilterParams());
+      loadData(page, getFilterParams());
     });
 
     // hành động xóa
     $('body').on('click', '.btn_xoa', async function() {
-      if (!confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) return;
+      if (!confirm('Bạn có chắc chắn muốn xóa người đăng ký này?')) return;
 
-      const idTaiXe = $(this).data('xeom');
+      const iddktuoi17 = $(this).data('iddktuoi17');
       try {
-        const response = await fetch(`index.php?option=com_quansu&controller=xeom&task=xoa_xeom`, {
+        const response = await fetch(`index.php?option=com_vhytgd&controller=dktuoi17&task=xoa_dktuoi17`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            idUser,idTaiXe,[csrfToken]: 1
+            idUser,
+            iddktuoi17
           })
         });
         const data = await response.json();
         showToastDS(data.message || 'Xóa thành công', data.success !== false);
         if (data.success !== false) {
-          setTimeout(() => window.location.reload());
+          setTimeout(() => {
+            window.location.reload()
+          }, 500);
         }
       } catch (error) {
         console.error('Error deleting:', error);
@@ -279,6 +293,7 @@ defined('_JEXEC') or die('Restricted access');
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
     border: 1px solid #ccc;
   }
+
 
   .btn_hieuchinh:hover::after,
   .btn_xoa:hover::after {

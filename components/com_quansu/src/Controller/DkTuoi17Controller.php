@@ -15,6 +15,7 @@ use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
+use DateTime;
 
 
 defined('_JEXEC') or die;
@@ -78,7 +79,7 @@ class DkTuoi17Controller extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('QuanSu/Dktuoi17');
+        $model = Core::model('QuanSu/Base');
 
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
@@ -93,6 +94,47 @@ class DkTuoi17Controller extends BaseController
         header('Content-Type: application/json');
         echo json_encode($result);
         jexit();
+    }
+
+    public function checkNhankhauInDSDkTuoi17()
+    {
+        $input = Factory::getApplication()->input;
+        $nhankhau_id = $input->getInt('nhankhau_id', 0);
+        // Validate input
+        if (!$nhankhau_id) {
+            $response = [
+                'success' => false,
+                'exists' => false,
+                'message' => 'Thiếu nhankhau_id hoặc xeom_id'
+            ];
+            echo json_encode($response);
+            Factory::getApplication()->close();
+            return;
+        }
+
+        // Load the model
+        $model = Core::model('QuanSu/Base');
+
+        try {
+            // Check if nhankhau_id exists in xeom_id
+            $exists = $model->checkNhankhauInDSDkTuoi17($nhankhau_id);
+
+            $response = [
+                'success' => true,
+                'exists' => $exists,
+                'message' => $exists ? 'Nhân khẩu đã là thành viên của đoàn hội' : 'Nhân khẩu chưa là thành viên của đoàn hội'
+            ];
+        } catch (Exception $e) {
+            $response = [
+                'success' => false,
+                'exists' => false,
+                'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
+            ];
+        }
+
+        // Return JSON response
+        echo json_encode($response);
+        Factory::getApplication()->close();
     }
     
     public function getThonTobyPhuongxa()
@@ -122,46 +164,6 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-    public function checkNhankhauInDktuoi17()
-    {
-        $input = Factory::getApplication()->input;
-        $nhankhau_id = $input->getInt('nhankhau_id', 0);
-        // Validate input
-        if (!$nhankhau_id) {
-            $response = [
-                'success' => false,
-                'exists' => false,
-                'message' => 'Thiếu nhankhau_id hoặc dktuoi17_id'
-            ];
-            echo json_encode($response);
-            Factory::getApplication()->close();
-            return;
-        }
-
-        // Load the model
-        $model = Core::model('QuanSu/Dktuoi17');
-
-        try {
-            // Check if nhankhau_id exists in dktuoi17_id
-            $exists = $model->checkNhankhauInDktuoi17($nhankhau_id);
-
-            $response = [
-                'success' => true,
-                'exists' => $exists,
-                'message' => $exists ? 'Nhân khẩu đã là thành viên của đoàn hội' : 'Nhân khẩu chưa là thành viên của đoàn hội'
-            ];
-        } catch (Exception $e) {
-            $response = [
-                'success' => false,
-                'exists' => false,
-                'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
-            ];
-        }
-
-        // Return JSON response
-        echo json_encode($response);
-        Factory::getApplication()->close();
-    }
 
     public function save_dktuoi17()
     {
@@ -173,11 +175,15 @@ class DkTuoi17Controller extends BaseController
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $formData['dantoc_id'] = $formData['modal_dantoc_id'] ?? $formData['input_dantoc_id'];
-        $formData['tongiao_id'] = $formData['modal_tongiao_id'] ?? $formData['input_tongiao_id'];
-        $formData['phuongxa_id'] = $formData['modal_phuongxa_id'] ?? $formData['input_phuongxa_id'];
-        $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
-
+        $formData['gioitinh'] = $formData['select_gioitinh_id'] ?? $formData['input_gioitinh_id'];
+        $formData['dantoc_id'] = $formData['select_dantoc_id'] ?? $formData['input_dantoc_id'];
+        $formData['phuongxa_id'] = $formData['select_phuongxa_id'] ?? $formData['input_phuongxa_id'];
+        $formData['thonto_id'] = $formData['select_thonto_id'] ?? $formData['input_thonto_id'];
+        $namsinh = $formData['select_namsinh'] ?? $formData['input_namsinh'] ?? '';
+        $formData['namsinh'] = !empty($namsinh) ? $this->formatDate($namsinh) : '';
+        
+        $formData['ngaydangky'] = $formData['form_ngaydangky'] ?? '';
+        $formData['ngaydangky'] = !empty($formData['ngaydangky']) ? $this->formatDate($formData['ngaydangky']) : '';
         try {
             $model = Core::model('QuanSu/Dktuoi17');
 
@@ -196,6 +202,14 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
+    function formatDate($dateString){
+        $date = DateTime::createFromFormat('d/m/Y', $dateString);
+        if ($date === false || $date->format('d/m/Y') !== $dateString) {
+            throw new Exception('Invalid date format for namsinh');
+        }
+        // Format to YYYY-MM-DD for database
+        return $date->format('Y-m-d');
+    }
     public function xoa_dktuoi17()
     {
         $input = Factory::getApplication()->input;
