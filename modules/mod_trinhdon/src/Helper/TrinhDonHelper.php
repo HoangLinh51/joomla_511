@@ -30,7 +30,7 @@ class TrinhdonHelper
      * @since   1.5
      */
     public static function getMenu($params)
-    {
+    {  
         $user = Factory::getUser();
         if ($user->id == null) {
             return '';
@@ -53,6 +53,7 @@ class TrinhdonHelper
             ->where('a.id IN (' . implode(',', $menu_ids) . ')');
         $db->setQuery($query);
         $parent_nodes = $db->loadAssocList();
+
 		if($controller == ''){
 			$controller = $view;
 		}
@@ -64,13 +65,10 @@ class TrinhdonHelper
             ->select('a.icon, a.id, a.link, a.is_system, a.name AS name, a.params, a.lft, a.rgt, a.published, a.component, a.controller, a.task, a.level')
             ->from($db->quoteName('core_menu', 'a'))
             ->join('LEFT', 'core_menu AS b ON a.parent_id = b.id')
-            ->where('(a.published = 1 AND a.id > 1 AND b.published = 1)');
+            ->where('(a.published = 1 AND a.id <> 1 AND b.published = 1)')
+            ->where(implode(' OR ', $conditions))
+            ->order('a.lft');
 
-        if (!empty($conditions)) {
-            $query->where(implode(' OR ', $conditions));
-        }
-
-        $query->order('a.lft');
         $db->setQuery($query);
         $rows = $db->loadAssocList();
         $query = $db->getQuery(true)
@@ -131,7 +129,6 @@ class TrinhdonHelper
                 $result .= str_repeat('</li></ul>', $current_depth - $node_depth) . '</li>';
                 $current_depth--;
             }
-
 
 			$liKlass = '';
 			if ($flag == false) {	
