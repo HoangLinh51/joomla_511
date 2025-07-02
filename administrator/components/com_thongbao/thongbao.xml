@@ -2,7 +2,7 @@
 <extension type="component" method="upgrade">
 	<name>Thông báo</name>
 	<author>LinhLH</author>
-	<creationDate>2025-04</creationDate>
+	<creationDate>2025-05-07</creationDate>
 	<copyright>(C) 2006 Open Source Matters, Inc.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>you@example.com</authorEmail>

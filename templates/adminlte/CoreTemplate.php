@@ -298,13 +298,13 @@ class CoreTemplate{
 	{
 		$db = Factory::getDbo();
 		$base_url = Uri::root(true);
-		$avatar_id = $user->avatar_id;
+		$avatarId = $user->avatar_id;
 		$avatarUrl = $base_url . "/uploader/defaultImage.png";
-		if (!empty($avatar_id)) {
+		if (!empty($avatarId)) {
 			$query = $db->getQuery(true)
 				->select($db->quoteName('code'))
 				->from($db->quoteName('core_attachment'))
-				->where($db->quoteName('object_id') . ' = ' . $db->quote($avatar_id))
+				->where($db->quoteName('id') . ' = ' . $db->quote($avatarId))
 				->order($db->quoteName('created_at') . ' DESC');
 			$db->setQuery($query);
 			$result = $db->loadObject();
