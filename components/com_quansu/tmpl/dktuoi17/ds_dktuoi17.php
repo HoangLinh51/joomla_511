@@ -37,6 +37,17 @@ defined('_JEXEC') or die('Restricted access');
     return parts.length > 0 ? parts.join(' - ') : '';
   }
 
+  function renderTextTrangThai(id, tentrangthai) {
+    let stringchucvu = ""
+    if (id == 2) {
+      stringchucvu = `<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
+    } else if (id == 3) {
+      stringchucvu = `<span class="badge bg-warning" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
+    } else if (id == 1) {
+      stringchucvu = `<span class="badge bg-success" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
+    }
+    return stringchucvu
+  }
   //hàm render tbody
   function renderTBody(items, start) {
     if (!items || items.length === 0) {
@@ -50,7 +61,7 @@ defined('_JEXEC') or die('Restricted access');
         <td style="vertical-align:middle;">${item.tengioitinh || ''}</td>
         <td style="vertical-align:middle;">${item.n_cccd || ''}</td>
         <td style="vertical-align:middle;">${item.n_dienthoai || ''}</td>
-        <td style="vertical-align:middle;">${item.tentrangthai || ''}</td>
+        <td style="vertical-align:middle; text-align: center">${renderTextTrangThai(item.trangthaiquansu_id,item.tentrangthai)}</td>
         <td class="text-center" style="vertical-align: middle;min-width: 120px" >
          <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:7px; cursor: pointer;" data-iddktuoi17="${item.id}" data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>
@@ -130,7 +141,7 @@ defined('_JEXEC') or die('Restricted access');
           hoten: filterSearch.hoten,
           cccd: filterSearch.cccd,
           gioitinh_id: filterSearch.gioitinh_id,
-          doituong_id: filterSearch.tinhtrang_id,
+          tinhtrang_id: filterSearch.tinhtrang_id,
           phuongxa_id: filterSearch.phuongxa_id,
           thonto_id: filterSearch.thonto_id,
         }
@@ -207,7 +218,7 @@ defined('_JEXEC') or die('Restricted access');
 
       const iddktuoi17 = $(this).data('iddktuoi17');
       try {
-        const response = await fetch(`index.php?option=com_vhytgd&controller=dktuoi17&task=xoa_dktuoi17`, {
+        const response = await fetch(`index.php?option=com_quansu&controller=dktuoi17&task=xoa_dktuoi17`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

@@ -60,12 +60,12 @@ class HtmlView extends BaseHtmlView
         $this->import();
         $app = Factory::getApplication()->input;
         $model = Core::model('QuanSu/DkTuoi17');
-        $detailCoSo = null;
+        $detailDkTuoi17 = null;
         $idNguoiDK = $app->getInt('id', null);
         if ($idNguoiDK) {
-            $detailCoSo = $model->getDetailDichVuNhayCam($idNguoiDK);
+            $detailDkTuoi17 = $model->getDetailDkTuoi17($idNguoiDK);
         }
-        $this->detailCoSo = $detailCoSo;
+        $this->detailDkTuoi17 = $detailDkTuoi17;
     }
     
 
@@ -108,8 +108,12 @@ class HtmlView extends BaseHtmlView
         $tinhtrang = $model->getDanhMucTrangThai();
         $dantoc = $model->getDanhMucDanToc();
         $trinhdohocvan = $model->getDanhMucTrinhDoHocVan();
+        $quanhethannhan = $model->getDanhMucQuanHeThanNhan();
+        $nghenghiep = $model->getDanhMucNgheNghiep();
+        
 
-
+        $this->nghenghiep = $nghenghiep;
+        $this->quanhethannhan = $quanhethannhan;
         $this->trinhdohocvan = $trinhdohocvan;
         $this->dantoc = $dantoc;
         $this->phuongxa = $phuongxa;

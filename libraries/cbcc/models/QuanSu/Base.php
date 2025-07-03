@@ -16,7 +16,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
   public function getPhanquyen()
   {
     $user_id = Factory::getUser()->id;
-    $db = Factory::getDbo();
+    $db = Factory::getContainer()->get('DatabaseDriver');
     $query = $db->getQuery(true);
     $query->select('quanhuyen_id,phuongxa_id');
     $query->from('phanquyen_user2khuvuc AS a');
@@ -30,6 +30,17 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     } else {
       return $result;
     }
+  }
+  public function getThonTobyPhuongxaId($phuongxa_id)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id,tenkhuvuc');
+    $query->from('danhmuc_khuvuc');
+    $query->where('daxoa = 0 AND cha_id = ' . $db->quote($phuongxa_id));
+    $query->order('tenkhuvuc ASC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
   }
 
   //get phường xã theo quyền user 
@@ -49,7 +60,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
-
+ 
   //get trạng thái hoạt động
   public function getDanhMucGioiTinh()
   {
@@ -84,7 +95,31 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
+  public function getDanhMucQuanHeThanNhan()
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id, tenquanhenhanthan')
+      ->from('danhmuc_quanhenhanthan')
+      ->where('daxoa = 0')
+      ->where('sapxep IS NOT NULL')
+      ->order('sapxep ASC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
 
+  public function getDanhMucNgheNghiep()
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id, tennghenghiep')
+      ->from('danhmuc_nghenghiep')
+      ->where('daxoa = 0')
+      ->order('id ASC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
+  
   public function getDanhMucTrinhDoHocVan()
   {
     $db = Factory::getDbo();
@@ -96,63 +131,6 @@ class QuanSu_Model_Base extends BaseDatabaseModel
       ->order('sapxep ASC');
     $db->setQuery($query);
     return $db->loadAssocList();
-  }
-
-
-  public function getDanhSachNhanKhau($phuongxa = [], $keyword = '', $limit = 10, $offset = 0, $nhankhau_id = 0)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select([
-        'nk.id',
-        'nk.hoten',
-        'nk.cccd_so',
-        'nk.ngaysinh',
-        'nk.dienthoai',
-        'hk.diachi',
-        'nk.gioitinh_id',
-        'nk.dantoc_id',
-        'nk.tongiao_id',
-        'hk.phuongxa_id',
-        'hk.thonto_id',
-        'hk.diachi',
-      ])
-      ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
-      ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
-      ->where('nk.daxoa = 0')
-      ->where('hk.daxoa = 0');
-
-    if ($nhankhau_id > 0) {
-      $query->where('nk.id = ' . (int)$nhankhau_id);
-    } else {
-      if (!empty($keyword)) {
-        $search = $db->quote('%' . $db->escape($keyword, true) . '%');
-        $query->where("nk.hoten LIKE $search OR nk.cccd_so LIKE $search");
-      }
-      if (!empty($phuongxa) && is_array($phuongxa)) {
-        $phuongxa = array_map('intval', $phuongxa);
-        // Chỉ lấy những bản ghi có phường xã nằm trong danh sách, loại bỏ các bản ghi phường xã null hoặc không thuộc danh sách
-        $query->where('hk.phuongxa_id IS NOT NULL AND hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
-      }
-    }
-    $query->order('nk.hokhau_id DESC');
-
-    // Clone query để đếm tổng số
-    $countQuery = clone $query;
-    $countQuery->clear('select')->select('COUNT(*)');
-
-    $db->setQuery($countQuery);
-    $total = (int) $db->loadResult();
-
-    // Lấy dữ liệu trang hiện tại
-    $query->setLimit($limit, $offset);
-    $db->setQuery($query);
-    $items = $db->loadObjectList();
-
-    return [
-      'items' => $items,
-      'has_more' => ($offset + count($items)) < $total
-    ];
   }
 
   public function checkNhankhauInDSDkTuoi17($nhankhau_id)

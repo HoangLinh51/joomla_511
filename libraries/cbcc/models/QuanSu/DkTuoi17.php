@@ -18,15 +18,16 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
       ->select([
-      'a.id',
-      'a.n_hoten',
-      'a.n_cccd',
-      'a.n_dienthoai',
-      'a.n_diachi',
-      'ttqs.tentrangthai',
-      'px.tenkhuvuc as phuongxa',
-      'tt.tenkhuvuc as thonto',
-      'gt.tengioitinh'
+        'a.id',
+        'a.n_hoten',
+        'a.n_cccd',
+        'a.n_dienthoai',
+        'a.n_diachi',
+        'a.trangthaiquansu_id',
+        'ttqs.tentrangthai',
+        'px.tenkhuvuc as phuongxa',
+        'tt.tenkhuvuc as thonto',
+        'gt.tengioitinh'
       ])
       ->from($db->quoteName('qs_dangkytuoi17', 'a'))
       ->leftJoin($db->quoteName('danhmuc_trangthaiquansu', 'ttqs') . ' ON a.trangthaiquansu_id = ttqs.id')
@@ -34,8 +35,6 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON a.n_thonto_id = tt.id')
       ->leftJoin($db->quoteName('danhmuc_gioitinh', 'gt') . ' ON a.n_gioitinh_id = gt.id')
       ->where('a.daxoa = 0');
-
-
 
     $filterPhuongXaId = !empty($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : null;
 
@@ -70,10 +69,10 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       $query->where('a.n_cccd COLLATE utf8mb4_unicode_ci LIKE ' . $db->quote('%' . $filters['cccd'] . '%'));
     }
 
-    if (!empty($filters['trangthai_id'])) {
-      $query->where('a.trangthaiquansu_id = ' . (int) $filters['trangthai_id']);
+    if (!empty($filters['tinhtrang_id'])) {
+      $query->where('a.trangthaiquansu_id = ' . (int) $filters['tinhtrang_id']);
     }
-    
+
     if (!empty($filters['gioitinh_id'])) {
       $query->where('a.n_gioitinh_id = ' . (int) $filters['gioitinh_id']);
     }
@@ -107,166 +106,75 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     ];
   }
 
-  //get detail cơ sở dịch vụ nhạy cảm
-  public function getDetailDichVuNhayCam($idcoso)
+  public function getDetailDkTuoi17($idDkTuoi17)
   {
     $db = Factory::getDbo();
 
     try {
       $query = $db->getQuery(true);
       $query->select([
-        'cs.id',
-        'cs.coso_ten',
-        'cs.coso_diachi',
-        'cs.ngaykhaosat',
-        'cs.phuongxa_id',
-        'cs.thonto_id',
-        'cs.trangthaihoatdong_id',
-        'tt.tentrangthaihoatdong',
-        'cs.chucoso_ten',
-        'cs.chucoso_cccd',
-        'cs.chucoso_dienthoai'
+        'a.id',
+        'a.nhankhau_id',
+        'a.n_hoten',
+        'a.n_gioitinh_id',
+        'a.n_cccd',
+        'a.n_dienthoai',
+        'a.n_dantoc_id',
+        'a.n_tongiao_id',
+        'a.n_phuongxa_id',
+        'a.n_thonto_id',
+        'a.n_diachi',
+        'a.n_trinhdohocvan_id',
+        'a.n_namsinh',
+        'a.ngaydangky',
+        'a.trangthaiquansu_id',
+        'a.chieucao',
+        'a.cannang',
+        'a.tiensubenhtat',
+        'a.noilamviec',
+        'a.macbenh',
+        'a.is_ngoai'
       ])
-        ->from($db->quoteName('vhxhytgd_cosonhaycam', 'cs'))
-        ->leftJoin($db->quoteName('danhmuc_trangthaihoatdong', 'tt') . ' ON tt.id = cs.trangthaihoatdong_id')
-        ->where('cs.id = ' . (int)$idcoso)
-        ->where('cs.daxoa = 0');
+        ->from($db->quoteName('qs_dangkytuoi17', 'a'))
+        ->where('a.id = ' . (int)$idDkTuoi17)
+        ->where('a.daxoa = 0');
 
       $db->setQuery($query);
-      $coso = $db->loadObject();
+      $row = $db->loadObject();
 
-      if (!$coso) {
-        return null;
+      // Nếu có bản ghi và tồn tại nhankhau_id
+      if ($row && !empty($row->nhankhau_id)) {
+        $row->thannhan = $this->getThanNhan($row->nhankhau_id);
+      } else {
+        // Nếu không có nhankhau_id, lấy thân nhân từ bảng qs_thannhantuoi17
+        $query = $db->getQuery(true);
+        $query->select([
+          'tn.id',
+          'tn.hoten',
+          'tn.namsinh',
+          'tn.quanhenhanthan_id',
+          'tn.nghenghiep_id',
+        ])
+          ->from($db->quoteName('qs_thannhantuoi17', 'tn'))
+          ->where('tn.dangkytuoi17_id = ' . (int)$idDkTuoi17)
+          ->where('tn.daxoa = 0');
+
+        $db->setQuery($query);
+        $row->thannhan = $db->loadObjectList();
       }
 
-      $queryNhanVien = $db->getQuery(true);
-      $queryNhanVien->select([
-        'nv.nhankhau_id',
-        'nv.tennhanvien',
-        'gt.tengioitinh',
-        'nv.cccd',
-        'nv.dienthoai',
-        'nv.is_thuongtru',
-        'nv.diachi',
-        'nv.trangthai'
-      ])
-        ->from($db->quoteName('vhxhytgd_cosonhaycam2nhanvien', 'nv'))
-        ->leftJoin($db->quoteName('danhmuc_gioitinh', 'gt') . ' ON gt.id = nv.gioitinh_id')
-        ->where('nv.cosonhaycam_id = ' . (int)$idcoso)
-        ->where('nv.daxoa = 0');
-
-      $db->setQuery($queryNhanVien);
-      $nhanviens = $db->loadObjectList();
-
-      return (object)[
-        'id' => $coso->id,
-        'coso_ten' => $coso->coso_ten,
-        'coso_diachi' => $coso->coso_diachi,
-        'ngaykhaosat' => date('d/m/Y', strtotime($coso->ngaykhaosat)),
-        'phuongxa_id' => $coso->phuongxa_id,
-        'thonto_id' => $coso->thonto_id,
-        'trangthaihoatdong_id' => $coso->trangthaihoatdong_id,
-        'tentrangthaihoatdong' => $coso->tentrangthaihoatdong,
-        'chucoso_ten' => $coso->chucoso_ten,
-        'chucoso_cccd' => $coso->chucoso_cccd,
-        'chucoso_dienthoai' => $coso->chucoso_dienthoai,
-        'nhanvien' => $nhanviens
-      ];
+      return $row;
     } catch (Exception $e) {
-      return $e->getMessage(); // hoặc throw lại nếu muốn controller xử lý
+      return $e->getMessage();
     }
   }
 
-  //get thông tin nhân viên
-  public function getDanhSachNhanKhau($formSearch, $phuongxa)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select([
-        'nk.id',
-        'nk.hoten',
-        'hk.diachi',
-        'dg.tengioitinh',
-        'nk.cccd_so',
-        'nk.dienthoai',
-        'nk.is_tamtru'
-      ])
-      ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
-      ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
-      ->leftJoin($db->quoteName('danhmuc_gioitinh', 'dg') . ' ON nk.gioitinh_id = dg.id')
-      ->where('nk.daxoa = 0')
-      ->where('hk.daxoa = 0')
-      ->where('TIMESTAMPDIFF(YEAR, nk.ngaysinh, CURDATE()) >= 18')
-      ->order('nk.hokhau_id DESC');
-
-    $filterPhuongXaId = !empty($formSearch['modal_phuongxaid']) ? (int)$formSearch['modal_phuongxaid'] : null;
-
-    // Phân quyền
-    if (!empty($phuongxa) && is_array($phuongxa)) {
-      $phuongxaIds = array_map('intval', array_column($phuongxa, 'id'));
-
-      if (!empty($phuongxaIds)) {
-        if ($filterPhuongXaId !== null) {
-          if (in_array($filterPhuongXaId, $phuongxaIds)) {
-            $query->where('hk.phuongxa_id = ' . $filterPhuongXaId);
-          } else {
-            $query->where('1 = 0'); // Không có quyền → trả về rỗng
-          }
-        } else {
-          $query->where('hk.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
-        }
-      }
-    } elseif ($filterPhuongXaId !== null) {
-      $query->where('hk.phuongxa_id = ' . $filterPhuongXaId);
-    }
-
-    // họ tên nhân khẩu
-    if (!empty($formSearch['modal_tennhankhau'])) {
-      $query->where('nk.hoten LIKE ' . $db->quote('%' . $formSearch['modal_tennhankhau'] . '%'));
-    }
-
-    // CCCD
-    if (!empty($formSearch['modal_cccd'])) {
-      $query->where('nk.cccd_so LIKE ' . $db->quote('%' . $formSearch['modal_cccd'] . '%'));
-    }
-
-    // thôn tổ
-    if (!empty($formSearch['modal_thontoid'])) {
-      $query->where('hk.thonto_id = ' . (int)$formSearch['modal_thontoid']);
-    }
-
-    // tổng bảng ghi
-    $totalQuery = clone $query;
-    $totalQuery->clear('select')->select('COUNT(DISTINCT nk.id)');
-    $db->setQuery($totalQuery);
-    $totalRecord = (int) $db->loadResult();
-
-    // pagiation
-    $take = max(1, (int)($formSearch['take'] ?? 20));
-    $page = max(1, (int)($formSearch['page'] ?? 1));
-    $offset = ($page - 1) * $take;
-
-    $query->setLimit($take, $offset);
-
-    $db->setQuery($query);
-    $rows = $db->loadObjectList();
-
-    return [
-      'data' => $rows,
-      'page' => $page,
-      'take' => $take,
-      'totalrecord' => $totalRecord,
-    ];
-  }
-
-  //hàm lưu dịch vụ nhạy cảm
   public function saveDktuoi17($formdata, $idUser)
   {
     $db = Factory::getDbo();
     $now = Factory::getDate()->toSql();
     $id = $formdata['id'];
-    // var_dump($formdata);
-    // exit;
+
     $columns = [
       'nhankhau_id' => (int)$formdata['nhankhau_id'],
       'n_hoten' => $formdata['hoten'],
@@ -281,20 +189,23 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       'noilamviec' => $formdata['noilamviec'],
       'chieucao' => $formdata['chieucao'],
       'cannang' => $formdata['cannang'],
-      'trangthaiquansu_id' => $formdata['tinhtrangdangky'],
       'tiensubenhtat' => $formdata['thongtinsuckhoegiadinh'],
       'macbenh' => $formdata['thongtinsuckhoebanthan'],
       'daxoa' => 0
     ];
 
-    // Các trường tùy chọn
+    if (!empty($formdata['tinhtrangdangky'])) {
+      $columns['trangthaiquansu_id'] = $formdata['tinhtrangdangky'];
+    }
+
     if (!empty($formdata['namsinh'])) {
       $columns['n_namsinh'] = (new \DateTime($formdata['namsinh']))->format('Y-m-d');
     }
+
     if (!empty($formdata['ngaydangky'])) {
       $columns['ngaydangky'] = (new \DateTime($formdata['ngaydangky']))->format('Y-m-d');
     }
-    // Xác định là người ngoài hay có nhân khẩu
+
     if (empty($formdata['nhankhau_id']) || $formdata['nhankhau_id'] == '0') {
       $columns['is_ngoai'] = 1;
       $columns['nhankhau_id'] = 0;
@@ -306,18 +217,18 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     $db->transactionStart();
     try {
       if ($id > 0) {
-        // Cập nhật
         $columns['nguoihieuchinh_id'] = (int)$idUser;
         $columns['ngayhieuchinh'] = $now;
+
         $query = $db->getQuery(true)
           ->update($db->quoteName('qs_dangkytuoi17'))
           ->set($this->buildQuerySet($db, $columns))
           ->where($db->quoteName('id') . ' = ' . (int)$id);
         $db->setQuery($query)->execute();
       } else {
-        // Tạo mới
         $columns['nguoitao_id'] = (int)$idUser;
         $columns['ngaytao'] = $now;
+
         $query = $db->getQuery(true)
           ->insert($db->quoteName('qs_dangkytuoi17'))
           ->columns(array_keys($columns))
@@ -325,6 +236,50 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
         $db->setQuery($query)->execute();
         $id = $db->insertid();
       }
+
+      if ((int)$columns['is_ngoai'] === 1) {
+        // Nếu đang cập nhật bản ghi có sẵn
+        if ((int)$id > 0) {
+          // Xóa thân nhân cũ liên kết với bản ghi này
+            $queryDeleteTN = $db->getQuery(true)
+            ->delete($db->quoteName('qs_thannhantuoi17'))
+            ->where($db->quoteName('dangkytuoi17_id') . ' = ' . (int)$id);
+            $db->setQuery($queryDeleteTN)->execute();
+        }
+
+        // Chỉ lưu nếu có thân nhân mới
+        if (!empty($formdata['thannhan']) && is_array($formdata['thannhan'])) {
+          foreach ($formdata['thannhan'] as $tn) {
+            // Bỏ qua nếu không có thông tin gì
+            if (empty($tn['hoten']) && empty($tn['namsinh']) && empty($tn['quanhe_id']) && empty($tn['nghenghiep'])) {
+              continue;
+            }
+
+            $columnsTN = [
+              'dangkytuoi17_id' => (int)$id,
+              'hoten' => $tn['hoten'] ?? null,
+              'namsinh' => !empty($tn['namsinh']) ? $tn['namsinh'] : null,
+              'nghenghiep_id' => isset($tn['nghenghiep']) ? (int)$tn['nghenghiep'] : null,
+              'quanhenhanthan_id' => isset($tn['quanhe_id']) ? (int)$tn['quanhe_id'] : null,
+              'nguoitao_id' => (int)$idUser,
+              'ngaytao' => $now,
+              'daxoa' => 0,
+            ];
+
+            if (!empty($tn['nghenghiep'])) {
+              $columns['nghenghiep_id'] = $tn['nghenghiep'];
+            }
+
+
+            $queryTN = $db->getQuery(true)
+              ->insert($db->quoteName('qs_thannhantuoi17'))
+              ->columns(array_keys($columnsTN))
+              ->values(implode(',', array_map([$db, 'quote'], array_values($columnsTN))));
+            $db->setQuery($queryTN)->execute();
+          }
+        }
+      }
+
       $db->transactionCommit();
       return $id;
     } catch (\RuntimeException $e) {
@@ -345,6 +300,100 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     return implode(', ', $setParts);
   }
 
+  public function getDanhSachNhanKhau($phuongxa = [], $keyword = '', $limit = 10, $offset = 0, $nhankhau_id = 0)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true)
+      ->select([
+        'nk.id',
+        'nk.hoten',
+        'nk.cccd_so',
+        'nk.ngaysinh',
+        'nk.dienthoai',
+        'hk.diachi',
+        'nk.gioitinh_id',
+        'nk.dantoc_id',
+        'nk.tongiao_id',
+        'hk.phuongxa_id',
+        'hk.thonto_id',
+        'hk.diachi',
+      ])
+      ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
+      ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
+      ->where('nk.daxoa = 0')
+      ->where('hk.daxoa = 0')
+      ->where('nk.ngaysinh IS NOT NULL')
+      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 17 YEAR)')
+      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 18 YEAR)');
+
+    if ($nhankhau_id > 0) {
+      $query->where('nk.id = ' . (int)$nhankhau_id);
+    } else {
+      if (!empty($keyword)) {
+        $search = $db->quote('%' . $db->escape($keyword, true) . '%');
+        // Dùng biểu thức có ngoặc để kết hợp OR đúng cách
+        $query->where('(' . implode(' OR ', [
+          "nk.hoten LIKE $search",
+          "nk.cccd_so LIKE $search"
+        ]) . ')');
+      }
+
+      if (!empty($phuongxa) && is_array($phuongxa)) {
+        $phuongxa = array_map('intval', $phuongxa);
+        $query->where('hk.phuongxa_id IS NOT NULL')
+          ->where('hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
+      }
+    }
+
+    $query->order('nk.hokhau_id DESC');
+    // Clone query để đếm tổng số
+    $countQuery = clone $query;
+    $countQuery->clear('select')->select('COUNT(*)');
+
+    $db->setQuery($countQuery);
+    $total = (int) $db->loadResult();
+
+    // Lấy dữ liệu trang hiện tại
+    $query->setLimit($limit, $offset);
+    $db->setQuery($query);
+    $items = $db->loadObjectList();
+
+    return [
+      'items' => $items,
+      'has_more' => ($offset + count($items)) < $total
+    ];
+  }
+
+
+  public function getThanNhan($nhankhauId)
+  {
+    $db = Factory::getDbo();
+
+    try {
+      $query = $db->getQuery(true);
+      $query->select([
+        $db->quoteName('nk.id'),
+        $db->quoteName('nk.hoten'),
+        $db->quoteName('nk.ngaysinh'),
+        $db->quoteName('nk.is_chuho'),
+        $db->quoteName('qh.tenquanhenhanthan'),
+        $db->quoteName('nn.tennghenghiep')
+      ])
+        ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
+        ->innerJoin($db->quoteName('vptk_hokhau2nhankhau', 'sub') . ' ON ' . $db->quoteName('nk.hokhau_id') . ' = ' . $db->quoteName('sub.hokhau_id'))
+        ->leftJoin($db->quoteName('danhmuc_quanhenhanthan', 'qh') . ' ON ' . $db->quoteName('nk.quanhenhanthan_id') . ' = ' . $db->quoteName('qh.id'))
+        ->leftJoin($db->quoteName('danhmuc_nghenghiep', 'nn') . ' ON ' . $db->quoteName('nk.nghenghiep_id') . ' = ' . $db->quoteName('nn.id'))
+        ->where($db->quoteName('sub.id') . ' = ' . (int)$nhankhauId)
+        ->order($db->quoteName('qh.sapxep') . ' ASC');
+
+      $db->setQuery($query);
+      return $db->loadObjectList();;
+    } catch (Exception $e) {
+      return $e->getMessage(); // Trả về thông báo lỗi giống hàm mẫu
+    }
+  }
+
+
   //sau khi hàm lưu dvnc chạy thì lưu user
   public function saveNhanVien($db, $nhanviens, $idUser, $coso_id, $now)
   {
@@ -360,7 +409,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       $hoten = trim($nv['hoten_nhanvien'] ?? '');
       $cccd = trim($nv['cccd_nhanvien'] ?? '');
 
-      if ($idNhanVien === 0 && $hoten === '' && $cccd === '' ) {
+      if ($idNhanVien === 0 && $hoten === '' && $cccd === '') {
         continue; // Bỏ qua bản ghi rỗng
       }
 
@@ -386,20 +435,19 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       $db->setQuery($query)->execute();
     }
   }
-  
+
   //xóa cơ sở dịch vụ nhạy cảm
-  public function deleteDichVuNhayCam($idUser, $idDichVuNhayCam)
+  public function deleteDktuoi17($idUser, $iddktuoi17)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
-      ->update('vhxhytgd_cosonhaycam')
+      ->update('qs_dangkytuoi17')
       ->set('daxoa = 1')
       ->set('nguoixoa_id = ' . $db->quote($idUser))
       ->set('ngayxoa = NOW()')
-      ->where('id =' . $db->quote($idDichVuNhayCam));
+      ->where('id =' . $db->quote($iddktuoi17));
 
     $db->setQuery($query);
     return $db->execute();
   }
-
 }

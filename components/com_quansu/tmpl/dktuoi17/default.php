@@ -131,7 +131,7 @@ defined('_JEXEC') or die('Restricted access');
         $('#thonto_id').html('<option value=""></option>').trigger('change');
       } else {
         $.post('index.php', {
-          option: 'com_vhytgd',
+          option: 'com_quansu',
           controller: 'dktuoi17',
           task: 'getThonTobyPhuongxa',
           phuongxa_id: $('#phuongxa_id').val()

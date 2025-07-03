@@ -54,9 +54,16 @@ class DkTuoi17Controller extends BaseController
         $formData = $json ?? $formData;
 
         $model = Core::model('QuanSu/Dktuoi17');
+        $modelBase = Core::model('QuanSu/Base');
+        $phanquyen = $modelBase->getPhanquyen();
+        $phuongxa = array();
+
+        if ($phanquyen['phuongxa_id'] != '') {
+            $phuongxa = $modelBase->getPhuongXaById($phanquyen['phuongxa_id']);
+        }
 
         try {
-            $result =  $model->getListDktuoi17($formData);
+            $result =  $model->getListDktuoi17($formData, $phuongxa);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }
@@ -79,7 +86,7 @@ class DkTuoi17Controller extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('QuanSu/Base');
+        $model = Core::model('QuanSu/DkTuoi17');
 
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
@@ -140,7 +147,7 @@ class DkTuoi17Controller extends BaseController
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
-        $model = Core::model('QuanSu/Dktuoi17');
+        $model = Core::model('QuanSu/Base');
         $result = $model->getThonTobyPhuongxaId($phuongxa_id);
         header('Content-type: application/json');
         echo json_encode($result);
@@ -152,14 +159,28 @@ class DkTuoi17Controller extends BaseController
         $idDktuoi17 = Factory::getApplication()->input->getVar('dktuoi17_id', 0);
         $model = Core::model('QuanSu/Dktuoi17');
         $result = $model->getDetailDktuoi17($idDktuoi17);
-        // var_dump($result);
-        // exit;
         try {
             echo json_encode(
                 $result['data']
             );
         } catch (Exception $e) {
             echo json_encode( $e->getMessage());
+        }
+        jexit();
+    }
+
+
+    public function getThanNhan()
+    {
+        $model = Core::model('QuanSu/Dktuoi17');
+        $nhankhau_id = Factory::getApplication()->input->getInt('nhankhau_id', 0);
+        $result = $model->getThanNhan($nhankhau_id);
+        try {
+            echo json_encode(
+                $result
+            );
+        } catch (Exception $e) {
+            echo json_encode($e->getMessage());
         }
         jexit();
     }
@@ -184,6 +205,36 @@ class DkTuoi17Controller extends BaseController
         
         $formData['ngaydangky'] = $formData['form_ngaydangky'] ?? '';
         $formData['ngaydangky'] = !empty($formData['ngaydangky']) ? $this->formatDate($formData['ngaydangky']) : '';
+
+        $thanNhanFormatted = [];
+
+        $quanheList = $formData['thannhan_quanhe_id'] ?? [];
+        $hotenList = $formData['thannhan_hoten'] ?? [];
+        $namsinhList = $formData['thannhan_namsinh'] ?? [];
+        $nghenghiepList = $formData['thannhan_nghenghiep'] ?? [];
+
+        $max = max(count($quanheList), count($hotenList), count($namsinhList), count($nghenghiepList));
+
+        for ($i = 0; $i < $max; $i++) {
+            // Bỏ qua nếu tất cả đều rỗng
+            if (
+                empty($hotenList[$i]) &&
+                empty($namsinhList[$i]) &&
+                empty($quanheList[$i]) &&
+                empty($nghenghiepList[$i])
+            ) {
+                continue;
+            }
+
+            $thanNhanFormatted[] = [
+                'quanhe_id'   => $quanheList[$i] ?? null,
+                'hoten'       => $hotenList[$i] ?? null,
+                'namsinh'     => $namsinhList[$i] ?? null,
+                'nghenghiep'  => $nghenghiepList[$i] ?? null,
+            ];
+        }
+        $formData['thannhan'] = $thanNhanFormatted;
+
         try {
             $model = Core::model('QuanSu/Dktuoi17');
 
@@ -210,6 +261,7 @@ class DkTuoi17Controller extends BaseController
         // Format to YYYY-MM-DD for database
         return $date->format('Y-m-d');
     }
+
     public function xoa_dktuoi17()
     {
         $input = Factory::getApplication()->input;
@@ -218,10 +270,10 @@ class DkTuoi17Controller extends BaseController
         $formData = $json ?? $formData;
         try {
             $model = Core::model('QuanSu/Dktuoi17');
-            $result = $model->deleteDktuoi17($formData['idUser'], $formData['idTaiXe']);
+            $result = $model->deleteDktuoi17($formData['idUser'], $formData['iddktuoi17']);
             $response = [
                 'success' => $result,
-                'message' => 'Xóa thành viên thành công',
+                'message' => 'Xóa thành công',
             ];
         } catch (Exception $e) {
             $response = [
