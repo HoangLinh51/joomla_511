@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Site
- * @subpackage  com_vhytgd
+ * @subpackage  com_quansu
  *
  * @copyright   (C) 2009 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Vhytgd\Site\Controller;
+namespace Joomla\Component\QuanSu\Site\Controller;
 
 use Core;
 use Exception;
@@ -21,17 +21,16 @@ use DateTime;
 defined('_JEXEC') or die;
 
 /**
- * The DoanHoi List Controller
+ * The QuanSu List Controller
  *
  * @since  3.1
  */
-class DoanHoiController extends BaseController
+class DknvqsController extends BaseController
 {
     public function __construct($config = [])
     {
         parent::__construct($config);
         $user = Factory::getUser();
-        $this->registerTask('edit_baocaoloi', 'edit_baocaoloi');
         if (!$user->id) {
             if (Factory::getApplication()->input->getVar('format') == 'raw') {
                 echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
@@ -47,17 +46,24 @@ class DoanHoiController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
-    public function getListDoanHoi()
+    public function getListDknvqs()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $model = Core::model('Vhytgd/DoanHoi');
+        $model = Core::model('QuanSu/Dknvqs');
+        $modelBase = Core::model('QuanSu/Base');
+        $phanquyen = $modelBase->getPhanquyen();
+        $phuongxa = array();
+
+        if ($phanquyen['phuongxa_id'] != '') {
+            $phuongxa = $modelBase->getPhuongXaById($phanquyen['phuongxa_id']);
+        }
 
         try {
-            $result =  $model->getListDoanHoi($formData);
+            $result =  $model->getListDknvqs($formData, $phuongxa);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }
@@ -80,7 +86,8 @@ class DoanHoiController extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('Vhytgd/DoanHoi');;
+        $model = Core::model('QuanSu/Dknvqs');
+
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
         } catch (Exception $e) {
@@ -96,45 +103,16 @@ class DoanHoiController extends BaseController
         jexit();
     }
 
-    public function getThonTobyPhuongxa()
-    {
-        $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
-        $model = Core::model('Vhytgd/DoanHoi');
-        $result = $model->getThonTobyPhuongxaId($phuongxa_id);
-        header('Content-type: application/json');
-        echo json_encode($result);
-        jexit();
-    }
-
-    public function getDetailDoanHoi()
-    {
-        $idDoanHoi = Factory::getApplication()->input->getVar('doanhoi_id', 0);
-        $model = Core::model('Vhytgd/DoanHoi');
-        $result = $model->getDetailDoanHoi($idDoanHoi);
-        // var_dump($result);
-        // exit;
-        try {
-            echo json_encode(
-                $result['data']
-            );
-        } catch (Exception $e) {
-            echo json_encode($e->getMessage());
-        }
-        jexit();
-    }
-
-    public function checkNhankhauInDoanhoi()
+    public function checkNhankhauInDSDknvqs()
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
-        $doanhoi_id = $input->getInt('doanhoi_id', 0);
-
         // Validate input
-        if (!$nhankhau_id || !$doanhoi_id) {
+        if (!$nhankhau_id) {
             $response = [
                 'success' => false,
                 'exists' => false,
-                'message' => 'Thiếu nhankhau_id hoặc doanhoi_id'
+                'message' => 'Thiếu nhankhau_id hoặc xeom_id'
             ];
             echo json_encode($response);
             Factory::getApplication()->close();
@@ -142,11 +120,11 @@ class DoanHoiController extends BaseController
         }
 
         // Load the model
-        $model = Core::model('Vhytgd/DoanHoi');
+        $model = Core::model('QuanSu/Base');
 
         try {
-            // Check if nhankhau_id exists in doanhoi_id
-            $exists = $model->checkNhankhauInDoanhoi($nhankhau_id, $doanhoi_id);
+            // Check if nhankhau_id exists in xeom_id
+            $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_dangkyquansu');
 
             $response = [
                 'success' => true,
@@ -165,8 +143,50 @@ class DoanHoiController extends BaseController
         echo json_encode($response);
         Factory::getApplication()->close();
     }
+    
+    public function getThonTobyPhuongxa()
+    {
+        $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
+        $model = Core::model('QuanSu/Base');
+        $result = $model->getThonTobyPhuongxaId($phuongxa_id);
+        header('Content-type: application/json');
+        echo json_encode($result);
+        jexit();
+    }
 
-    public function save_doanhoi()
+    public function getDetailDknvqs()
+    {
+        $idDknvqs = Factory::getApplication()->input->getVar('dknvqs_id', 0);
+        $model = Core::model('QuanSu/Dknvqs');
+        $result = $model->getDetailDknvqs($idDknvqs);
+        try {
+            echo json_encode(
+                $result['data']
+            );
+        } catch (Exception $e) {
+            echo json_encode( $e->getMessage());
+        }
+        jexit();
+    }
+
+
+    public function getThanNhan()
+    {
+        $model = Core::model('QuanSu/Dknvqs');
+        $nhankhau_id = Factory::getApplication()->input->getInt('nhankhau_id', 0);
+        $result = $model->getThanNhan($nhankhau_id);
+        try {
+            echo json_encode(
+                $result
+            );
+        } catch (Exception $e) {
+            echo json_encode($e->getMessage());
+        }
+        jexit();
+    }
+
+
+    public function save_dknvqs()
     {
         Session::checkToken() or die('Token không hợp lệ');
         $user = Factory::getUser();
@@ -176,25 +196,49 @@ class DoanHoiController extends BaseController
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $formData['dantoc_id'] = $formData['modal_dantoc_id'] ?? $formData['input_dantoc_id'];
-        $formData['gioitinh_id'] = $formData['modal_gioitinh_id'] ?? $formData['input_gioitinh_id'];
-        $formData['phuongxa_id'] = $formData['modal_phuongxa_id'] ?? $formData['input_phuongxa_id'];
-        $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
+        $formData['gioitinh'] = $formData['select_gioitinh_id'] ?? $formData['input_gioitinh_id'];
+        $formData['dantoc_id'] = $formData['select_dantoc_id'] ?? $formData['input_dantoc_id'];
+        $formData['phuongxa_id'] = $formData['select_phuongxa_id'] ?? $formData['input_phuongxa_id'];
+        $formData['thonto_id'] = $formData['select_thonto_id'] ?? $formData['input_thonto_id'];
+        $namsinh = $formData['select_namsinh'] ?? $formData['input_namsinh'] ?? '';
+        $formData['namsinh'] = !empty($namsinh) ? $this->formatDate($namsinh) : '';
+        
+        $formData['ngaydangky'] = $formData['form_ngaydangky'] ?? '';
+        $formData['ngaydangky'] = !empty($formData['ngaydangky']) ? $this->formatDate($formData['ngaydangky']) : '';
 
+        $thanNhanFormatted = [];
 
-        $formData['namsinh'] = $formData['modal_namsinh'] ?? '';
-        $formData['namsinh'] = !empty($formData['namsinh']) ? $this->formatDate($formData['namsinh']) : '';
-        $formData['thoidiem_batdau'] = $formData['form_thoidiem_batdau'] ?? '';
-        $formData['thoidiem_batdau'] = !empty($formData['thoidiem_batdau']) ? $this->formatDate($formData['thoidiem_batdau']) : '';
-        $formData['thoidiem_ketthuc'] = $formData['form_thoidiem_ketthuc'] ?? '';
-        $formData['thoidiem_ketthuc'] = !empty($formData['thoidiem_ketthuc']) ? $this->formatDate($formData['thoidiem_ketthuc']) : '';
+        $quanheList = $formData['thannhan_quanhe_id'] ?? [];
+        $hotenList = $formData['thannhan_hoten'] ?? [];
+        $namsinhList = $formData['thannhan_namsinh'] ?? [];
+        $nghenghiepList = $formData['thannhan_nghenghiep'] ?? [];
 
-        // var_dump($formData);
-        // exit;
+        $max = max(count($quanheList), count($hotenList), count($namsinhList), count($nghenghiepList));
+
+        for ($i = 0; $i < $max; $i++) {
+            // Bỏ qua nếu tất cả đều rỗng
+            if (
+                empty($hotenList[$i]) &&
+                empty($namsinhList[$i]) &&
+                empty($quanheList[$i]) &&
+                empty($nghenghiepList[$i])
+            ) {
+                continue;
+            }
+
+            $thanNhanFormatted[] = [
+                'quanhe_id'   => $quanheList[$i] ?? null,
+                'hoten'       => $hotenList[$i] ?? null,
+                'namsinh'     => $namsinhList[$i] ?? null,
+                'nghenghiep'  => $nghenghiepList[$i] ?? null,
+            ];
+        }
+        $formData['thannhan'] = $thanNhanFormatted;
+
         try {
-            $model = Core::model('Vhytgd/DoanHoi');
+            $model = Core::model('QuanSu/Dknvqs');
 
-            $result = $model->saveThanhVienDoanHoi($formData, $user->id);
+            $result = $model->saveDknvqs($formData, $user->id);
             if ((int)$result && $result > 0) {
                 $response = ['success' => true, 'result' => $result,  'message' => 'Đã lưu dữ liệu thành công'];
             } else {
@@ -209,8 +253,7 @@ class DoanHoiController extends BaseController
         jexit();
     }
 
-    function formatDate($dateString)
-    {
+    function formatDate($dateString){
         $date = DateTime::createFromFormat('d/m/Y', $dateString);
         if ($date === false || $date->format('d/m/Y') !== $dateString) {
             throw new Exception('Invalid date format for namsinh');
@@ -219,19 +262,18 @@ class DoanHoiController extends BaseController
         return $date->format('Y-m-d');
     }
 
-
-    public function xoa_doanhoi()
+    public function xoa_Dknvqs()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
         try {
-            $model = Core::model('Vhytgd/DoanHoi');
-            $result = $model->deleteDoanHoi($formData['idUser'], $formData['idThanhvienDoanHoi']);
+            $model = Core::model('QuanSu/Dknvqs');
+            $result = $model->deleteDknvqs($formData['idUser'], $formData['iddknvqs']);
             $response = [
                 'success' => $result,
-                'message' => 'Xóa thành viên thành công',
+                'message' => 'Xóa thành công',
             ];
         } catch (Exception $e) {
             $response = [

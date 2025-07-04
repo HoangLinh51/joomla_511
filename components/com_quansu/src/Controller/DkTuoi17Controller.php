@@ -124,7 +124,7 @@ class DkTuoi17Controller extends BaseController
 
         try {
             // Check if nhankhau_id exists in xeom_id
-            $exists = $model->checkNhankhauInDSDkTuoi17($nhankhau_id);
+            $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_dangkytuoi17');
 
             $response = [
                 'success' => true,

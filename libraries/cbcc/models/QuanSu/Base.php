@@ -84,6 +84,18 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
+  public function getDanhMucDoiTuong()
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id, tentrangthai')
+      ->from('danhmuc_trangthaiquansu')
+      ->where('type = 2')
+      ->where('daxoa = 0');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
+
 
   public function getDanhMucDanToc()
   {
@@ -133,7 +145,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
-  public function checkNhankhauInDSDkTuoi17($nhankhau_id)
+  public function checkNhankhauInDanhSachQuanSu($nhankhau_id, $table)
   {
     // Get database object
     $db = Factory::getDbo();
