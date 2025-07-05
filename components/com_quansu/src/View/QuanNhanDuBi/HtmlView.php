@@ -8,7 +8,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\QuanSu\Site\View\Dknvqs;
+namespace Joomla\Component\QuanSu\Site\View\QuanNhanDuBi;
 
 defined('_JEXEC') or die;
 
@@ -27,22 +27,22 @@ class HtmlView extends BaseHtmlView
         $task = $app->input->get('task', '', 'CMD');
 
         // Phân biệt edit vs add
-        if (strtolower($task) === 'edit_dknvqs') {
-            $layout = $id > 0 ? 'EDIT_DKNVQS' : 'ADD_DKNVQS';
+        if (strtolower($task) === 'edit_quannhandubi') {
+            $layout = $id > 0 ? 'EDIT_QUANNHANDUBI' : 'ADD_QUANNHANDUBI';
         } else {
             $layout = $task ? strtoupper($task) : 'DEFAULT';
         }
 
         switch ($layout) {
             case 'DEFAULT':
-            case 'DS_DKNVQS':
+            case 'DS_QUANNHANDUBI':
                 $this->setLayout('default');
                 $this->_initDefaultPage();
                 break;
-            case 'ADD_DKNVQS':
-            case 'EDIT_DKNVQS':
-                $this->setLayout('edit_dknvqs');
-                $this->_editDknvqs();
+            case 'ADD_QUANNHANDUBI':
+            case 'EDIT_QUANNHANDUBI':
+                $this->setLayout('edit_quannhandubi');
+                $this->_editQuanNhanDuBi();
                 break;
         }
 
@@ -55,17 +55,17 @@ class HtmlView extends BaseHtmlView
         $this->import();
     }
 
-    public function _editDknvqs()
+    public function _editQuanNhanDuBi()
     {
         $this->import();
         $app = Factory::getApplication()->input;
-        $model = Core::model('QuanSu/Dknvqs');
-        $detailDknvqs = null;
+        $model = Core::model('QuanSu/QuanNhanDuBi');
+        $detailQuanNhanDuBi = null;
         $idNguoiDK = $app->getInt('id', null);
         if ($idNguoiDK) {
-            $detailDknvqs = $model->getDetailDknvqs($idNguoiDK);
+            $detailQuanNhanDuBi = $model->getDetailQuanNhanDuBi($idNguoiDK);
         }
-        $this->detailDknvqs = $detailDknvqs;
+        $this->detailQuanNhanDuBi = $detailQuanNhanDuBi;
     }
     
 
@@ -105,19 +105,20 @@ class HtmlView extends BaseHtmlView
             $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
         }
         $gioitinh = $model->getDanhMucGioiTinh();
-        $doituong = $model->getDanhMucTrangThaiQuanSu(2);
         $dantoc = $model->getDanhMucDanToc();
         $trinhdohocvan = $model->getDanhMucTrinhDoHocVan();
         $quanhethannhan = $model->getDanhMucQuanHeThanNhan();
         $nghenghiep = $model->getDanhMucNgheNghiep();
-        
+        $capbac = $model->getDanhMucCapBac();
+        $trangthai = $model->getDanhMucTrangThaiQuanSu(3);
 
+        $this->trangthai = $trangthai;
         $this->nghenghiep = $nghenghiep;
         $this->quanhethannhan = $quanhethannhan;
         $this->trinhdohocvan = $trinhdohocvan;
         $this->dantoc = $dantoc;
         $this->phuongxa = $phuongxa;
-        $this->doituong = $doituong;
+        $this->capbac = $capbac;
         $this->gioitinh = $gioitinh;
         return $document;
     }

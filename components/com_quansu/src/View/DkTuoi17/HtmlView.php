@@ -105,7 +105,7 @@ class HtmlView extends BaseHtmlView
             $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
         }
         $gioitinh = $model->getDanhMucGioiTinh();
-        $tinhtrang = $model->getDanhMucTrangThai();
+        $tinhtrang = $model->getDanhMucTrangThaiQuanSu(1);
         $dantoc = $model->getDanhMucDanToc();
         $trinhdohocvan = $model->getDanhMucTrinhDoHocVan();
         $quanhethannhan = $model->getDanhMucQuanHeThanNhan();

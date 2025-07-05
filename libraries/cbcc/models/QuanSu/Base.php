@@ -31,6 +31,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
       return $result;
     }
   }
+  
   public function getThonTobyPhuongxaId($phuongxa_id)
   {
     $db = Factory::getDbo();
@@ -73,29 +74,29 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
-  public function getDanhMucTrangThai()
+  public function getDanhMucTrangThaiQuanSu($type)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
     $query->select('id, tentrangthai')
       ->from('danhmuc_trangthaiquansu')
-      ->where('type = 1')
-      ->where('daxoa = 0');
-    $db->setQuery($query);
-    return $db->loadAssocList();
-  }
-  public function getDanhMucDoiTuong()
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true);
-    $query->select('id, tentrangthai')
-      ->from('danhmuc_trangthaiquansu')
-      ->where('type = 2')
+      ->where('type = ' . (int)$type)
       ->where('daxoa = 0');
     $db->setQuery($query);
     return $db->loadAssocList();
   }
 
+  public function getDanhMucCapBac()
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id, tencapbac')
+      ->from('danhmuc_capbac')
+      ->where('daxoa = 0')
+      ->order('sapxep ASC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
 
   public function getDanhMucDanToc()
   {
@@ -107,6 +108,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
+
   public function getDanhMucQuanHeThanNhan()
   {
     $db = Factory::getDbo();
