@@ -536,31 +536,31 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
             isdisabled = 'disabled'
           }
           const newRow = `
-          <tr>
-            <td class="text-center" style="max-width: 50px;">${stt}</td>
-            <td style="max-width: 175px;">
-              <select name="thannhan_quanhe_id[]" class="form-control select-quanhe">
-                ${quanheOptions}
-              </select>
-            </td>
-            <td style="max-width: 200px;">
-              <input type="text" name="thannhan_hoten[]" placeholder="Nhập họ tên" value="${item.hoten || ''}" class="form-control">
-            </td>
-            <td style="max-width: 150px;"> 
-              <select name="thannhan_namsinh[]" class="form-control select-namsinh">
-                ${namsinhOption}
-              </select>
-            </td>
-            <td style="max-width: 300px">
-              <select name="thannhan_nghenghiep[]" class="form-control select-nghenghiep">
-                ${nghenghiepOptions}
-              </select>
-            </td>
-            <td class="text-center" >
-              <button type"button" class="btn btn-danger btn-xoathannhan" ${isdisabled}><i class="fa fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
+            <tr>
+              <td class="text-center" style="max-width: 50px;">${stt}</td>
+              <td style="max-width: 175px;">
+                <select name="thannhan_quanhe_id[]" class="form-control select-quanhe">
+                  ${quanheOptions}
+                </select>
+              </td>
+              <td style="max-width: 200px;">
+                <input type="text" name="thannhan_hoten[]" placeholder="Nhập họ tên" value="${item.hoten || ''}" class="form-control">
+              </td>
+              <td style="max-width: 150px;"> 
+                <select name="thannhan_namsinh[]" class="form-control select-namsinh">
+                  ${namsinhOption}
+                </select>
+              </td>
+              <td style="max-width: 300px">
+                <select name="thannhan_nghenghiep[]" class="form-control select-nghenghiep">
+                  ${nghenghiepOptions}
+                </select>
+              </td>
+              <td class="text-center" >
+                <button type"button" class="btn btn-danger btn-xoathannhan" ${isdisabled}><i class="fa fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
 
           $('.dsThanNhan').append(newRow);
         });
@@ -825,7 +825,7 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
           const isSuccess = response.success ?? true;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
-            setTimeout(() => location.href = "/index.php/component/quansu/?view=dktuoi17&task=default", 500);
+            // setTimeout(() => location.href = "/index.php/component/quansu/?view=dktuoi17&task=default", 500);
           }
         },
         error: function(xhr) {

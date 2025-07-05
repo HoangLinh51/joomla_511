@@ -128,6 +128,7 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
         'a.ngaydangky',
         'a.trangthaiquansu_id',
         'a.nghenghiep_id',
+        'a.noilamviec',
         'a.ghichu',
         'a.is_ngoai'
       ])
@@ -169,8 +170,6 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
     $db = Factory::getDbo();
     $now = Factory::getDate()->toSql();
     $id = $formdata['id'];
-    // var_dump($formdata);
-    // exit;
 
     $columns = [
       'nhankhau_id' => (int)$formdata['nhankhau_id'],
@@ -182,6 +181,7 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
       'n_phuongxa_id' => (int)$formdata['phuongxa_id'],
       'n_thonto_id' => (int)$formdata['thonto_id'],
       'n_diachi' => $formdata['diachi'],
+      'noilamviec' => (int)$formdata['noilamviec'],
       'trinhdohocvan_id' => (int)$formdata['trinhdohocvan_id'],
       'trangthaiquansu_id' => $formdata['doituong_id'],
       'ghichu' => $formdata['ghichu'],
@@ -250,22 +250,14 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
 
             $columnsTN = [
               'dangkyquansu_id' => (int)$id,
-              'hoten' => $tn['hoten'] ?? null,
+              'namsinh' => !empty($tn['namsinh']) ? $tn['namsinh'] : null,
               'nghenghiep_id' => isset($tn['nghenghiep']) ? (int)$tn['nghenghiep'] : null,
+              'hoten' => $tn['hoten'] ?? null,
               'quanhenhanthan_id' => isset($tn['quanhe_id']) ? (int)$tn['quanhe_id'] : null,
               'nguoitao_id' => (int)$idUser,
               'ngaytao' => $now,
               'daxoa' => 0,
             ];
-
-            if (!empty($tn['namsinh'])) {
-              $columns['namsinh'] = $tn['namsinh'];
-            }
-
-            if (!empty($tn['nghenghiep'])) {
-              $columns['nghenghiep_id'] = $tn['nghenghiep'];
-            }
-
 
             $queryTN = $db->getQuery(true)
               ->insert($db->quoteName('qs_thannhanquansu'))

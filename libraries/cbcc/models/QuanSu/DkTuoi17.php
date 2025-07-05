@@ -174,6 +174,8 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     $db = Factory::getDbo();
     $now = Factory::getDate()->toSql();
     $id = $formdata['id'];
+    var_dump($formdata['thannhan']);
+    exit; 
 
     $columns = [
       'nhankhau_id' => (int)$formdata['nhankhau_id'],
@@ -265,11 +267,6 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
               'ngaytao' => $now,
               'daxoa' => 0,
             ];
-
-            if (!empty($tn['nghenghiep'])) {
-              $columns['nghenghiep_id'] = $tn['nghenghiep'];
-            }
-
 
             $queryTN = $db->getQuery(true)
               ->insert($db->quoteName('qs_thannhantuoi17'))
@@ -393,48 +390,6 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     }
   }
 
-
-  //sau khi hàm lưu dvnc chạy thì lưu user
-  public function saveNhanVien($db, $nhanviens, $idUser, $coso_id, $now)
-  {
-    // Xoá tất cả nhân viên cũ của cơ sở
-    $query = $db->getQuery(true)
-      ->delete($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
-      ->where($db->quoteName('cosonhaycam_id') . ' = ' . (int) $coso_id);
-    $db->setQuery($query)->execute();
-
-    // Chèn lại danh sách nhân viên
-    foreach ($nhanviens as $nv) {
-      $idNhanVien = (int)($nv['id_nhanvien'] ?? 0);
-      $hoten = trim($nv['hoten_nhanvien'] ?? '');
-      $cccd = trim($nv['cccd_nhanvien'] ?? '');
-
-      if ($idNhanVien === 0 && $hoten === '' && $cccd === '') {
-        continue; // Bỏ qua bản ghi rỗng
-      }
-
-      $columns = [
-        'cosonhaycam_id' => (int)$coso_id,
-        'tennhanvien' => $hoten,
-        'nhankhau_id' => $idNhanVien,
-        'gioitinh_id' => (int)($nv['gioitinh_nhanvien'] ?? 0),
-        'cccd' => $cccd,
-        'dienthoai' => $nv['dienthoai_nhanvien'] ?? '',
-        'diachi' => $nv['diachi_nhanvien'] ?? '',
-        'is_thuongtru' => (int)($nv['tinhtrang_cutru_nhanvien'] ?? 0),
-        'trangthai' => (int)($nv['trangthai_nhanvien'] ?? 0),
-        'nguoitao_id' => (int)$idUser,
-        'ngaytao' => $now,
-        'daxoa' => 0,
-      ];
-
-      $query = $db->getQuery(true)
-        ->insert($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
-        ->columns(array_keys($columns))
-        ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
-      $db->setQuery($query)->execute();
-    }
-  }
 
   //xóa cơ sở dịch vụ nhạy cảm
   public function deleteDktuoi17($idUser, $iddktuoi17)

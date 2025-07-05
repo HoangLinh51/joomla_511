@@ -289,10 +289,6 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
               'daxoa' => 0,
             ];
 
-            if (!empty($tn['nghenghiep'])) {
-              $columns['nghenghiep_id'] = $tn['nghenghiep'];
-            }
-
             $queryTN = $db->getQuery(true)
               ->insert($db->quoteName('qs_thannhanquannhan'))
               ->columns(array_keys($columnsTN))

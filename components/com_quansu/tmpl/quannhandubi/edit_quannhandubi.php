@@ -181,6 +181,8 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
           <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
         </div>
       </div>
+    </div>
+    <div class="row g-3 mb-4">
       <div class="col-md-4">
         <label for="chucvu" class="form-label fw-bold">Chức vụ</label>
         <input id="chucvu" type="text" name="chucvu" class="form-control" value="<?php echo $detailQuanNhanDuBi->chucvu; ?>">
@@ -196,6 +198,8 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
           <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
         </div>
       </div>
+    </div>
+    <div class="row g-3 mb-4">
       <div class="col-md-12">
         <label for="donvixuatngu" class="form-label fw-bold">Đơn vị xuất ngũ</label>
         <input id="donvixuatngu" type="text" name="donvixuatngu" class="form-control" placeholder="Nhập đơn vị xuất ngũ" value="<?php echo $detailQuanNhanDuBi->donvixuatngu ?>">
@@ -229,7 +233,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
 
     <h5 class="border-bottom pb-2 mb-4">Thông tin bổ nhiệm và cỡ số quân trang</h5>
     <div class="row g-3 mb-4">
-      <div class="col-md-12">
+      <div class="col-md-12 mb-4">
         <label for="bonhiemvao" class="form-label fw-bold">Bổ nhiệm vào đơn vị dự bị động việc</label>
         <input id="bonhiemvao" type="text" name="bonhiemvao" class="form-control" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->bonhiem); ?>">
       </div>
@@ -595,31 +599,31 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
             isdisabled = 'disabled'
           }
           const newRow = `
-          <tr>
-            <td class="text-center" style="max-width: 50px;">${stt}</td>
-            <td style="max-width: 175px;">
-              <select name="thannhan_quanhe_id[]" class="form-control select-quanhe">
-                ${quanheOptions}
-              </select>
-            </td>
-            <td style="max-width: 200px;">
-              <input type="text" name="thannhan_hoten[]" placeholder="Nhập họ tên" value="${item.hoten || ''}" class="form-control">
-            </td>
-            <td style="max-width: 150px;"> 
-              <select name="thannhan_namsinh[]" class="form-control select-namsinh">
-                ${namsinhOption}
-              </select>
-            </td>
-            <td style="max-width: 300px">
-              <select name="thannhan_nghenghiep[]" class="form-control select-nghenghiep">
-                ${nghenghiepOptions}
-              </select>
-            </td>
-            <td class="text-center" >
-              <button type"button" class="btn btn-danger btn-xoathannhan" ${isdisabled}><i class="fa fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
+            <tr>
+              <td class="text-center" style="max-width: 50px;">${stt}</td>
+              <td style="max-width: 175px;">
+                <select name="thannhan_quanhe_id[]" class="form-control select-quanhe">
+                  ${quanheOptions}
+                </select>
+              </td>
+              <td style="max-width: 200px;">
+                <input type="text" name="thannhan_hoten[]" placeholder="Nhập họ tên" value="${item.hoten || ''}" class="form-control">
+              </td>
+              <td style="max-width: 150px;"> 
+                <select name="thannhan_namsinh[]" class="form-control select-namsinh">
+                  ${namsinhOption}
+                </select>
+              </td>
+              <td style="max-width: 300px">
+                <select name="thannhan_nghenghiep[]" class="form-control select-nghenghiep">
+                  ${nghenghiepOptions}
+                </select>
+              </td>
+              <td class="text-center" >
+                <button type"button" class="btn btn-danger btn-xoathannhan" ${isdisabled}><i class="fa fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
 
           $('.dsThanNhan').append(newRow);
         });

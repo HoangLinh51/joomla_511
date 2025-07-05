@@ -204,8 +204,6 @@ $detailDknvqs = $this->detailDknvqs;
   let isEditMode = <?php echo ((int)$detailDknvqs->id > 0) ? 'true' : 'false'; ?>;
   let isFetchingFromSelect = false;
 
-  console.log(detailDknvqs)
-
   $(document).ready(function() {
     $('#btn_quaylai').click(() => {
       window.location.href = '<?php echo Route::_('/index.php/component/quansu/?view=dknvqs&task=default'); ?>';
@@ -313,7 +311,6 @@ $detailDknvqs = $this->detailDknvqs;
           $('#select_top').val('');
         }
       }
-
     }
 
     // lấy thôn tổ theo phường xã cung cấp
@@ -427,7 +424,7 @@ $detailDknvqs = $this->detailDknvqs;
       const endYear = currentYear;
       let namsinhOption = '<option value="">Chọn năm sinh</option>';
       for (let y = endYear; y >= startYear; y--) {
-        namsinhOption += `<option value="${y}">${y}</option>`;
+        namsinhOption += `<option value="${y}" >${y}</option>`;
       }
       let isdisabled = ''
       if ($('#checkbox_toggle').is(':checked')) {
@@ -496,7 +493,6 @@ $detailDknvqs = $this->detailDknvqs;
     if (detailDknvqs && detailDknvqs.thannhan) {
       if (Array.isArray(detailDknvqs.thannhan)) {
         $('.dsThanNhan').empty(); // Xóa dữ liệu cũ nếu có
-
         detailDknvqs.thannhan.forEach((item, index) => {
           const stt = index + 1;
           // Tạo options cho quan hệ
@@ -526,31 +522,31 @@ $detailDknvqs = $this->detailDknvqs;
             isdisabled = 'disabled'
           }
           const newRow = `
-          <tr>
-            <td class="text-center" style="max-width: 50px;">${stt}</td>
-            <td style="max-width: 175px;">
-              <select name="thannhan_quanhe_id[]" class="form-control select-quanhe">
-                ${quanheOptions}
-              </select>
-            </td>
-            <td style="max-width: 200px;">
-              <input type="text" name="thannhan_hoten[]" placeholder="Nhập họ tên" value="${item.hoten || ''}" class="form-control">
-            </td>
-            <td style="max-width: 150px;"> 
-              <select name="thannhan_namsinh[]" class="form-control select-namsinh">
-                ${namsinhOption}
-              </select>
-            </td>
-            <td style="max-width: 300px">
-              <select name="thannhan_nghenghiep[]" class="form-control select-nghenghiep">
-                ${nghenghiepOptions}
-              </select>
-            </td>
-            <td class="text-center" >
-              <button type"button" class="btn btn-danger btn-xoathannhan" ${isdisabled}><i class="fa fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
+            <tr>
+              <td class="text-center" style="max-width: 50px;">${stt}</td>
+              <td style="max-width: 175px;">
+                <select name="thannhan_quanhe_id[]" class="form-control select-quanhe">
+                  ${quanheOptions}
+                </select>
+              </td>
+              <td style="max-width: 200px;">
+                <input type="text" name="thannhan_hoten[]" placeholder="Nhập họ tên" value="${item.hoten || ''}" class="form-control">
+              </td>
+              <td style="max-width: 150px;"> 
+                <select name="thannhan_namsinh[]" class="form-control select-namsinh">
+                  ${namsinhOption}
+                </select>
+              </td>
+              <td style="max-width: 300px">
+                <select name="thannhan_nghenghiep[]" class="form-control select-nghenghiep">
+                  ${nghenghiepOptions}
+                </select>
+              </td>
+              <td class="text-center" >
+                <button type"button" class="btn btn-danger btn-xoathannhan" ${isdisabled}><i class="fa fa-trash"></i></button>
+              </td>
+            </tr>
+          `;
 
           $('.dsThanNhan').append(newRow);
         });
