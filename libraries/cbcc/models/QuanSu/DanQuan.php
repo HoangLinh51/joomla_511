@@ -68,8 +68,8 @@ class QuanSu_Model_DanQuan extends BaseDatabaseModel
             $query->where('a.n_cccd COLLATE utf8mb4_unicode_ci LIKE ' . $db->quote('%' . $filters['cccd'] . '%'));
         }
 
-        if (!empty($filters['doituong_id'])) {
-            $query->where('a.trangthaiquansu_id = ' . (int) $filters['doituong_id']);
+        if (!empty($filters['tinhtrang_id'])) {
+            $query->where('a.trangthaiquansu_id = ' . (int) $filters['tinhtrang_id']);
         }
 
         if (!empty($filters['gioitinh_id'])) {
@@ -208,8 +208,6 @@ class QuanSu_Model_DanQuan extends BaseDatabaseModel
         $now = Factory::getDate()->toSql();
         $id = $formdata['id'];
 
-        var_dump($formdata);
-        exit;
         $columns = [
             'nhankhau_id' => (int)$formdata['nhankhau_id'],
             'n_hoten' => $formdata['hoten'],
@@ -243,43 +241,23 @@ class QuanSu_Model_DanQuan extends BaseDatabaseModel
         if (!empty($formdata['ngayquyetdinhvao'])) {
             $columns['ngayquyetdinhvao'] = (new \DateTime($formdata['ngayquyetdinhvao']))->format('Y-m-d');
         }
+        $vanbanvaoList = [];
 
-        if (!empty($formdata['idFile-vanbanvao']) || !empty($formdata['vanbanvaohientai'])) {
-            $newFiles = [];
-
-            // TH1: Chỉ có file mới
-            if (!empty($formdata['idFile-vanbanvao']) && empty($formdata['vanbanvaohientai'])) {
-                $newFiles = is_array($formdata['idFile-vanbanvao'])
-                    ? $formdata['idFile-vanbanvao']
-                    : [$formdata['idFile-vanbanvao']];
-            }
-
-            // TH2: Chỉ có file cũ
-            elseif (empty($formdata['idFile-vanbanvao']) && !empty($formdata['vanbanvaohientai'])) {
-                $newFiles = is_array($formdata['vanbanvaohientai'])
-                    ? $formdata['vanbanvaohientai']
-                    : [$formdata['vanbanvaohientai']];
-            }
-
-            // TH3: Có cả file mới và cũ
-            elseif (!empty($formdata['idFile-vanbanvao']) && !empty($formdata['vanbanvaohientai'])) {
-                $currentFiles = is_array($formdata['vanbanvaohientai'])
-                    ? $formdata['vanbanvaohientai']
-                    : [$formdata['vanbanvaohientai']];
-                $uploadedFiles = is_array($formdata['idFile-vanbanvao'])
-                    ? $formdata['idFile-vanbanvao']
-                    : [$formdata['idFile-vanbanvao']];
-
-                $newFiles = array_merge($currentFiles, $uploadedFiles);
-            }
-
-            // Loại bỏ trùng và ép kiểu số nguyên
-            $newFiles = array_unique(array_filter(array_map('intval', $newFiles)));
-
-            if (!empty($newFiles)) {
-                $columns['vanbanvao_id'] = implode(',', $newFiles);
-            }
+        if (!empty($formdata['vanbanvaohientai'])) {
+            $vanbanvaoList = is_array($formdata['vanbanvaohientai'])
+                ? $formdata['vanbanvaohientai']
+                : explode(',', $formdata['vanbanvaohientai']);
         }
+
+        if (!empty($formdata['idFile-vanbanvao'])) {
+            $uploaded = is_array($formdata['idFile-vanbanvao'])
+                ? $formdata['idFile-vanbanvao']
+                : [$formdata['idFile-vanbanvao']];
+            $vanbanvaoList = array_merge($vanbanvaoList, $uploaded);
+        }
+
+        $vanbanvaoList = array_unique(array_filter(array_map('intval', $vanbanvaoList)));
+        $columns['vanbanvao_id'] = !empty($vanbanvaoList) ? implode(',', $vanbanvaoList) : '';
 
         if (!empty($formdata['ngayra'])) {
             $columns['ngayra'] = (new \DateTime($formdata['ngayra']))->format('Y-m-d');
@@ -287,43 +265,24 @@ class QuanSu_Model_DanQuan extends BaseDatabaseModel
         if (!empty($formdata['ngayquyetdinhra'])) {
             $columns['ngayquyetdinhra'] = (new \DateTime($formdata['ngayquyetdinhra']))->format('Y-m-d');
         }
+        $vanbanraList = [];
 
-        if (!empty($formdata['idFile-vanbanra']) || !empty($formdata['vanbanrahientai'])) {
-            $newFiles = [];
-
-            // TH1: Chỉ có file mới
-            if (!empty($formdata['idFile-vanbanra']) && empty($formdata['vanbanrahientai'])) {
-                $newFiles = is_array($formdata['idFile-vanbanra'])
-                    ? $formdata['idFile-vanbanra']
-                    : [$formdata['idFile-vanbanra']];
-            }
-
-            // TH2: Chỉ có file cũ
-            elseif (empty($formdata['idFile-vanbanra']) && !empty($formdata['vanbanrahientai'])) {
-                $newFiles = is_array($formdata['vanbanrahientai'])
-                    ? $formdata['vanbanrahientai']
-                    : [$formdata['vanbanrahientai']];
-            }
-
-            // TH3: Có cả file mới và cũ
-            elseif (!empty($formdata['idFile-vanbanra']) && !empty($formdata['vanbanrahientai'])) {
-                $currentFiles = is_array($formdata['vanbanrahientai'])
-                    ? $formdata['vanbanrahientai']
-                    : [$formdata['vanbanrahientai']];
-                $uploadedFiles = is_array($formdata['idFile-vanbanra'])
-                    ? $formdata['idFile-vanbanra']
-                    : [$formdata['idFile-vanbanra']];
-
-                $newFiles = array_merge($currentFiles, $uploadedFiles);
-            }
-
-            // Loại bỏ trùng và ép kiểu số nguyên
-            $newFiles = array_unique(array_filter(array_map('intval', $newFiles)));
-
-            if (!empty($newFiles)) {
-                $columns['vanbanra_id'] = implode(',', $newFiles);
-            }
+        if (!empty($formdata['vanbanrahientai'])) {
+            $vanbanraList = is_array($formdata['vanbanrahientai'])
+                ? $formdata['vanbanrahientai']
+                : explode(',', $formdata['vanbanrahientai']);
         }
+
+        if (!empty($formdata['idFile-vanbanra'])) {
+            $uploaded = is_array($formdata['idFile-vanbanra'])
+                ? $formdata['idFile-vanbanra']
+                : [$formdata['idFile-vanbanra']];
+            $vanbanraList = array_merge($vanbanraList, $uploaded);
+        }
+
+        $vanbanraList = array_unique(array_filter(array_map('intval', $vanbanraList)));
+        $columns['vanbanra_id'] = !empty($vanbanraList) ? implode(',', $vanbanraList) : '';
+
         if (empty($formdata['nhankhau_id']) || $formdata['nhankhau_id'] == '0') {
             $columns['is_ngoai'] = 1;
             $columns['nhankhau_id'] = 0;

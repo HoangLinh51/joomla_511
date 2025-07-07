@@ -16,7 +16,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 use DateTime;
-
+use Webauthn\TrustPath\EcdaaKeyIdTrustPath;
 
 defined('_JEXEC') or die;
 
@@ -273,6 +273,7 @@ class QuanNhanDuBiController extends BaseController
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
+
         try {
             $model = Core::model('QuanSu/QuanNhanDuBi');
             $result = $model->deleteQuanNhanDuBi($formData['idUser'], $formData['idquannhandubi']);

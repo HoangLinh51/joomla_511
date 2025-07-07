@@ -138,8 +138,8 @@ $detailDanQuan = $this->detailDanQuan;
       <h5 class="">Thông tin nhân thân</h5>
       <button type="button" class="btn btn-success btn-themnhanthan">Thêm nhân thân</button>
     </div>
-    <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto;">
-      <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%;">
+    <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto; border: 1px solid #d9d9d9; border-radius: 4px;">
+      <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
         <thead class="table-primary">
           <tr>
             <th style="width: 50px; text-align: center;">STT</th>
@@ -159,12 +159,14 @@ $detailDanQuan = $this->detailDanQuan;
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <label for="loaidanquan" class="form-label fw-bold">Loại dân quân <span class="text-danger">*</span></label>
-        <select id="loaidanquan" name="loaidanquan" class="form-control" data-placeholder="Chọn loại dân quân">
-          <option value=""></option>
-          <?php foreach ($this->loaidanquan as $ldq) { ?>
-            <option value="<?php echo $ldq['id']; ?>" <?php echo $detailDanQuan->loaidanquan_id == $ldq['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($ldq['tenloai']); ?></option>
-          <?php } ?>
-        </select>
+        <div class="input-group">
+          <select id="loaidanquan" name="loaidanquan" class="form-control" data-placeholder="Chọn loại dân quân">
+            <option value=""></option>
+            <?php foreach ($this->loaidanquan as $ldq) { ?>
+              <option value="<?php echo $ldq['id']; ?>" <?php echo $detailDanQuan->loaidanquan_id == $ldq['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($ldq['tenloai']); ?></option>
+            <?php } ?>
+          </select>
+        </div>
       </div>
       <div class="col-md-4">
         <label for="chucvu" class="form-label fw-bold">Chức vụ</label>
@@ -198,12 +200,14 @@ $detailDanQuan = $this->detailDanQuan;
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <label for="tinhtrang_id" class="form-label fw-bold">Tình trạng <span class="text-danger">*</span></label>
-        <select id="tinhtrang_id" name="tinhtrang_id" class="custom-select" data-placeholder="Chọn tình trạng">
-          <option value=""></option>
-          <?php foreach ($this->trangthai as $tt) { ?>
-            <option value="<?php echo $tt['id']; ?>" <?php echo $detailDanQuan->trangthaiquansu_id == $tt['id'] ? 'selected' : ''; ?>><?php echo $tt['tentrangthai']; ?></option>
-          <?php } ?>
-        </select>
+        <div class="input-group">
+          <select id="tinhtrang_id" name="tinhtrang_id" class="custom-select" data-placeholder="Chọn tình trạng">
+            <option value=""></option>
+            <?php foreach ($this->trangthai as $tt) { ?>
+              <option value="<?php echo $tt['id']; ?>" <?php echo $detailDanQuan->trangthaiquansu_id == $tt['id'] ? 'selected' : ''; ?>><?php echo $tt['tentrangthai']; ?></option>
+            <?php } ?>
+          </select>
+        </div>
       </div>
       <div class="col-md-8">
         <label for="vanbanvao" class="form-label fw-bold">Văn bản đính kèm</label>
@@ -265,7 +269,7 @@ $detailDanQuan = $this->detailDanQuan;
         </div>
         <div class="col-md-4">
           <label for="vanbanra" class="form-label fw-bold">Văn bản đính kém</label>
-          <div class="d-flex" style="gap:50px">
+          <div class="d-flex" style="gap:45px">
             <?php echo Core::inputAttachmentOneFile('vanbanra', null, 1, date('Y'), -1); ?>
             <?php if (!empty($detailDanQuan->vanbanra)) : ?>
               <small>Hiện tại:
@@ -273,7 +277,7 @@ $detailDanQuan = $this->detailDanQuan;
                   <?php foreach ($detailDanQuan->vanbanra as $vanban) : ?>
                     <div class="vanban_<?= $vanban->id  ?>">
                       <?php if ($vanban->mime === 'application/pdf') { ?>
-                        <a href="<?php echo '/index.php?option=com_thongbao&view=thongbao&format=raw&task=viewpdf&file=' . $vanban->code . '&folder=' . $vanban->folder  ?>" class="mr-2">
+                        <a href="<?php echo '/index.php?option=com_quansu&view=danquan&format=raw&task=viewpdf&file=' . $vanban->code . '&folder=' . $vanban->folder  ?>" class="mr-2">
                           <?php echo $vanban->filename  ?>
                         </a>
                       <?php } else { ?>
@@ -313,7 +317,6 @@ $detailDanQuan = $this->detailDanQuan;
   let isEditMode = <?php echo ((int)$detailDanQuan->id > 0) ? 'true' : 'false'; ?>;
   let isFetchingFromSelect = false;
 
-  console.log(detailDanQuan)
   $(document).ready(function() {
     $('#btn_quaylai').click(() => {
       window.location.href = '<?php echo Route::_('/index.php/component/quansu/?view=danquan&task=default'); ?>';
@@ -636,14 +639,16 @@ $detailDanQuan = $this->detailDanQuan;
       var selector = '.vanban_' + id;
 
       bootbox.confirm({
-        title: "Xác nhận xóa",
-        message: "Bạn có chắc chắn muốn xóa văn bản này không?",
+        title: `<span class='text-danger' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
+        message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa văn bản này không?</span>`,
         buttons: {
-          cancel: {
-            label: '<i class="fa fa-times"></i> Hủy'
-          },
           confirm: {
-            label: '<i class="fa fa-check"></i> Xóa'
+            label: '<i class="fas fa-check"></i> Đồng ý',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '<i class="fas fa-times"></i> Không',
+            className: 'btn-danger'
           }
         },
         callback: function(result) {
@@ -813,6 +818,7 @@ $detailDanQuan = $this->detailDanQuan;
       $('#input_thonto_id').val(data.thonto_id || '');
       $('#select_thonto_id').val(data.thonto_id || '').trigger('change');
 
+      isEditMode = false
       try {
         const response = await $.post('index.php', {
           option: 'com_quansu',
@@ -981,7 +987,7 @@ $detailDanQuan = $this->detailDanQuan;
           const isSuccess = response.success ?? true;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
-            // setTimeout(() => location.href = "/index.php/component/quansu/?view=danquan&task=default", 500);
+            setTimeout(() => location.href = "/index.php/component/quansu/?view=danquan&task=default", 500);
           }
         },
         error: function(xhr) {

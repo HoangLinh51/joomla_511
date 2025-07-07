@@ -139,8 +139,8 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
       <h5 class="">Thông tin nhân thân</h5>
       <button type="button" class="btn btn-success btn-themnhanthan">Thêm nhân thân</button>
     </div>
-    <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto;">
-      <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%;">
+    <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto; border: 1px solid #d9d9d9; border-radius: 4px;">
+      <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
         <thead class="table-primary">
           <tr>
             <th style="width: 50px; text-align: center;">STT</th>
@@ -663,6 +663,7 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
       $('#input_thonto_id').val(data.thonto_id || '');
       $('#select_thonto_id').val(data.thonto_id || '').trigger('change');
 
+      isEditMode = false
       try {
         const response = await $.post('index.php', {
           option: 'com_quansu',

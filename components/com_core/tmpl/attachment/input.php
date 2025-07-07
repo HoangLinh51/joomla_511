@@ -85,7 +85,7 @@ if ($this->isCapnhat == 12) {
 		<input type="hidden" name="id_user" value="<?php echo $this->id_user ?>" />
 	</form>
 <?php } ?>
-<span class="form-text text-muted">Kích thước tệp tối đa là 1MB và số lượng tệp tối đa là 5.</span>
+<span class="form-text text-muted">Kích thước tệp tối đa là 1MB.</span>
 <span id="<?php echo $this->iddiv ?>-error" data-dz-errormessage></span>
 <?php
 $stt = 0;
@@ -106,8 +106,8 @@ if (count($this->data) > $maxFiles) {
 		$stt++;
 ?>
 		<?php if ($this->isCapnhat == 1) { ?>
-			<input type="hidden" name="fileupload_id[]" value="<?php echo $item['id']; ?>">
-			<input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>>
+			<input type="hidden" name="idFile-<?php echo $this->iddiv; ?>[]" value="<?php echo $item['id']; ?>">
+			<input type="hidden" class="fileUploaded" name="codeFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>>
 			<!-- <input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> -->
 		<?php } else
 			echo $stt . ".";

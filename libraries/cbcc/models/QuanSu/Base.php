@@ -180,6 +180,8 @@ class QuanSu_Model_Base extends BaseDatabaseModel
 
     // Execute query
     $db->setQuery($query);
+    // echo $query;
+    // exit;
 
     try {
       $count = $db->loadResult();

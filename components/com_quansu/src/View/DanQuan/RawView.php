@@ -58,8 +58,6 @@ class RawView extends BaseHtmlView
     $file = $_GET['file'];
     $folder = $_GET['folder'];
     $filePath = JPATH_ROOT .'/'. $folder . '/' . basename($file); // đảm bảo chống path traversal
-    var_dump($filePath);
-    exit;
 
     if (file_exists($filePath)) {
       header('Content-Type: application/pdf');

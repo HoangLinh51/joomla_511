@@ -412,12 +412,13 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
-      ->update('qs_dangkytuoi17')
+      ->update('qs_quannhandubi')
       ->set('daxoa = 1')
       ->set('nguoixoa_id = ' . $db->quote($idUser))
       ->set('ngayxoa = NOW()')
       ->where('id =' . $db->quote($idQuanNhanDuBi));
-
+// echo $query;
+// exit;
     $db->setQuery($query);
     return $db->execute();
   }

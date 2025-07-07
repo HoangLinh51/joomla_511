@@ -125,7 +125,6 @@ class DanQuanController extends BaseController
 
         try {
             $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_danquan');
-
             $response = [
                 'success' => true,
                 'exists' => $exists,
