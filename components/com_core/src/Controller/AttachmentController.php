@@ -64,6 +64,8 @@ class AttachmentController extends BaseController
         $user = Factory::getUser();
         $mapper = Core::model('Core/Attachment');
         $dirPath = $mapper->getDir($date['year'], $date['mon']);
+        var_dump($files);
+        exit;
 
         // Loop through all uploaded files
         if (count($files['name']) <= 5) {

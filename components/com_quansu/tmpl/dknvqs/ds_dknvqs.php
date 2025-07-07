@@ -215,32 +215,50 @@ defined('_JEXEC') or die('Restricted access');
     });
 
     // hành động xóa
-    $('body').on('click', '.btn_xoa', async function() {
-      if (!confirm('Bạn có chắc chắn muốn xóa người đăng ký này?')) return;
-
+    $('body').on('click', '.btn_xoa', function() {
       const iddknvqs = $(this).data('iddknvqs');
-      try {
-        const response = await fetch(`index.php?option=com_quansu&controller=dknvqs&task=xoa_dknvqs`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
+
+      bootbox.confirm({
+        title: `<span class='text-danger' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
+        message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa người đăng ký nghĩa vụ quân sự này?</span>`,
+        buttons: {
+          confirm: {
+            label: '<i class="fas fa-check"></i> Đồng ý',
+            className: 'btn-success'
           },
-          body: JSON.stringify({
-            idUser,
-            iddknvqs
-          })
-        });
-        const data = await response.json();
-        showToastDS(data.message || 'Xóa thành công', data.success !== false);
-        if (data.success !== false) {
-          setTimeout(() => {
-            window.location.reload()
-          }, 500);
+          cancel: {
+            label: '<i class="fas fa-times"></i> Không',
+            className: 'btn-danger'
+          }
+        },
+        callback: async function(result) {
+          if (!result) return;
+
+          try {
+            const response = await fetch(`index.php?option=com_quansu&controller=dknvqs&task=xoa_dknvqs`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                idUser,
+                iddknvqs
+              })
+            });
+
+            const data = await response.json();
+            showToastDS(data.message || 'Xóa thành công', data.success !== false);
+            if (data.success !== false) {
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }
+          } catch (error) {
+            console.error('Lỗi khi xóa:', error);
+            showToastDS('Đã xảy ra lỗi khi xóa dữ liệu', false);
+          }
         }
-      } catch (error) {
-        console.error('Error deleting:', error);
-        showToastDS('Đã xảy ra lỗi khi xóa dữ liệu', false);
-      }
+      });
     });
   });
 

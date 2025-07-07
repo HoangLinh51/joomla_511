@@ -31,18 +31,6 @@ class QuanSu_Model_Base extends BaseDatabaseModel
       return $result;
     }
   }
-  
-  public function getThonTobyPhuongxaId($phuongxa_id)
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true);
-    $query->select('id,tenkhuvuc');
-    $query->from('danhmuc_khuvuc');
-    $query->where('daxoa = 0 AND cha_id = ' . $db->quote($phuongxa_id));
-    $query->order('tenkhuvuc ASC');
-    $db->setQuery($query);
-    return $db->loadAssocList();
-  }
 
   //get phường xã theo quyền user 
   public function getPhuongXaById($id)
@@ -61,8 +49,21 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
- 
-  //get trạng thái hoạt động
+
+  // lấy danh sách thôn tổ theo phường xã
+  public function getThonTobyPhuongxaId($phuongxa_id)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id,tenkhuvuc');
+    $query->from('danhmuc_khuvuc');
+    $query->where('daxoa = 0 AND cha_id = ' . $db->quote($phuongxa_id));
+    $query->order('tenkhuvuc ASC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
+
+  //lấy danh sách giới tính
   public function getDanhMucGioiTinh()
   {
     $db = Factory::getDbo();
@@ -74,6 +75,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
+  // lấy danh sách trạng thái quân sự
   public function getDanhMucTrangThaiQuanSu($type)
   {
     $db = Factory::getDbo();
@@ -86,18 +88,9 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
-  public function getDanhMucCapBac()
-  {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true);
-    $query->select('id, tencapbac')
-      ->from('danhmuc_capbac')
-      ->where('daxoa = 0')
-      ->order('sapxep ASC');
-    $db->setQuery($query);
-    return $db->loadAssocList();
-  }
 
+
+  // lấy danh sách dân tộc
   public function getDanhMucDanToc()
   {
     $db = Factory::getDbo();
@@ -109,6 +102,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
+  // lấy danh sách tên quan hệ thân nhân
   public function getDanhMucQuanHeThanNhan()
   {
     $db = Factory::getDbo();
@@ -122,6 +116,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
+  // lây danh sách tên nghề nghiệp
   public function getDanhMucNgheNghiep()
   {
     $db = Factory::getDbo();
@@ -134,6 +129,7 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
   
+  // lấy danh sách tên trình độ học vấn
   public function getDanhMucTrinhDoHocVan()
   {
     $db = Factory::getDbo();
@@ -147,13 +143,38 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
+  // lấy danh sách cấp bậc
+  public function getDanhMucCapBac()
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id, tencapbac')
+      ->from('danhmuc_capbac')
+      ->where('daxoa = 0')
+      ->order('sapxep ASC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
+
+  // lấy danh sách tên loại dân quân 
+  public function getDanhMucLoaiDanQuan()
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $query->select('id, tenloai')
+      ->from('danhmuc_loaidanquan')
+      ->where('daxoa = 0');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
+  
   public function checkNhankhauInDanhSachQuanSu($nhankhau_id, $table)
   {
     // Get database object
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
     $query->select('COUNT(*)')
-      ->from($db->quoteName('qs_dangkytuoi17'))
+      ->from($db->quoteName($table))
       ->where($db->quoteName('nhankhau_id') . ' = ' . (int)$nhankhau_id)
       ->where('daxoa = 0');
 

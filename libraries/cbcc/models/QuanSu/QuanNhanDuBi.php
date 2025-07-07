@@ -12,7 +12,6 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
     return "Tie";
   }
 
-  //get list danh sách cơ sở dịch vụ nhạy cảm
   public function getListQuanNhanDuBi($filters)
   {
     $db = Factory::getDbo();
@@ -261,19 +260,19 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
       }
 
       if ((int)$columns['is_ngoai'] === 1) {
-        // Nếu đang cập nhật bản ghi có sẵn
+        // nếu đang cập nhật bản ghi có sẵn
         if ((int)$id > 0) {
-          // Xóa thân nhân cũ liên kết với bản ghi này
+          // xóa thân nhân cũ liên kết với bản ghi này
             $queryDeleteTN = $db->getQuery(true)
             ->delete($db->quoteName('qs_thannhanquannhan'))
             ->where($db->quoteName('quannhandubi_id') . ' = ' . (int)$id);
             $db->setQuery($queryDeleteTN)->execute();
         }
 
-        // Chỉ lưu nếu có thân nhân mới
+        // chỉ lưu nếu có thân nhân mới
         if (!empty($formdata['thannhan']) && is_array($formdata['thannhan'])) {
           foreach ($formdata['thannhan'] as $tn) {
-            // Bỏ qua nếu không có thông tin gì
+            // bỏ qua nếu không có thông tin gì
             if (empty($tn['hoten']) && empty($tn['namsinh']) && empty($tn['quanhe_id']) && empty($tn['nghenghiep'])) {
               continue;
             }
@@ -341,15 +340,14 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
       ->where('nk.daxoa = 0')
       ->where('hk.daxoa = 0')
       ->where('nk.ngaysinh IS NOT NULL')
-      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 17 YEAR)')
-      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 18 YEAR)');
+      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR)')
+      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 45 YEAR)');
 
     if ($nhankhau_id > 0) {
       $query->where('nk.id = ' . (int)$nhankhau_id);
     } else {
       if (!empty($keyword)) {
         $search = $db->quote('%' . $db->escape($keyword, true) . '%');
-        // Dùng biểu thức có ngoặc để kết hợp OR đúng cách
         $query->where('(' . implode(' OR ', [
           "nk.hoten LIKE $search",
           "nk.cccd_so LIKE $search"
@@ -364,14 +362,14 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
     }
 
     $query->order('nk.hokhau_id DESC');
-    // Clone query để đếm tổng số
+    // clone query để đếm tổng số
     $countQuery = clone $query;
     $countQuery->clear('select')->select('COUNT(*)');
 
     $db->setQuery($countQuery);
     $total = (int) $db->loadResult();
 
-    // Lấy dữ liệu trang hiện tại
+    // lấy dữ liệu trang hiện tại
     $query->setLimit($limit, $offset);
     $db->setQuery($query);
     $items = $db->loadObjectList();
@@ -381,7 +379,6 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
       'has_more' => ($offset + count($items)) < $total
     ];
   }
-
 
   public function getThanNhan($nhankhauId)
   {
@@ -411,50 +408,6 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
     }
   }
 
-
-  //sau khi hàm lưu dvnc chạy thì lưu user
-  public function saveNhanVien($db, $nhanviens, $idUser, $coso_id, $now)
-  {
-    // Xoá tất cả nhân viên cũ của cơ sở
-    $query = $db->getQuery(true)
-      ->delete($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
-      ->where($db->quoteName('cosonhaycam_id') . ' = ' . (int) $coso_id);
-    $db->setQuery($query)->execute();
-
-    // Chèn lại danh sách nhân viên
-    foreach ($nhanviens as $nv) {
-      $idNhanVien = (int)($nv['id_nhanvien'] ?? 0);
-      $hoten = trim($nv['hoten_nhanvien'] ?? '');
-      $cccd = trim($nv['cccd_nhanvien'] ?? '');
-
-      if ($idNhanVien === 0 && $hoten === '' && $cccd === '') {
-        continue; // Bỏ qua bản ghi rỗng
-      }
-
-      $columns = [
-        'cosonhaycam_id' => (int)$coso_id,
-        'tennhanvien' => $hoten,
-        'nhankhau_id' => $idNhanVien,
-        'gioitinh_id' => (int)($nv['gioitinh_nhanvien'] ?? 0),
-        'cccd' => $cccd,
-        'dienthoai' => $nv['dienthoai_nhanvien'] ?? '',
-        'diachi' => $nv['diachi_nhanvien'] ?? '',
-        'is_thuongtru' => (int)($nv['tinhtrang_cutru_nhanvien'] ?? 0),
-        'trangthai' => (int)($nv['trangthai_nhanvien'] ?? 0),
-        'nguoitao_id' => (int)$idUser,
-        'ngaytao' => $now,
-        'daxoa' => 0,
-      ];
-
-      $query = $db->getQuery(true)
-        ->insert($db->quoteName('vhxhytgd_cosonhaycam2nhanvien'))
-        ->columns(array_keys($columns))
-        ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
-      $db->setQuery($query)->execute();
-    }
-  }
-
-  //xóa cơ sở dịch vụ nhạy cảm
   public function deleteQuanNhanDuBi($idUser, $idQuanNhanDuBi)
   {
     $db = Factory::getDbo();

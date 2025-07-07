@@ -46,6 +46,7 @@ class DkTuoi17Controller extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
+    // lấy danh sách đăng ký tuổi 17
     public function getListDktuoi17()
     {
         $input = Factory::getApplication()->input;
@@ -73,6 +74,7 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
+    // tìm kiếm nhân khẩu
     public function timkiem_nhankhau()
     {
         $app = Factory::getApplication();
@@ -103,33 +105,30 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
+    // kiểm tra xem nhân khẩu đã có trong danh sách đăng ký tuổi 17 chưa 
     public function checkNhankhauInDSDkTuoi17()
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
-        // Validate input
         if (!$nhankhau_id) {
             $response = [
                 'success' => false,
                 'exists' => false,
-                'message' => 'Thiếu nhankhau_id hoặc xeom_id'
+                'message' => 'Thiếu nhankhau_id'
             ];
             echo json_encode($response);
             Factory::getApplication()->close();
             return;
         }
-
-        // Load the model
         $model = Core::model('QuanSu/Base');
 
         try {
-            // Check if nhankhau_id exists in xeom_id
             $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_dangkytuoi17');
 
             $response = [
                 'success' => true,
                 'exists' => $exists,
-                'message' => $exists ? 'Nhân khẩu đã là thành viên của đoàn hội' : 'Nhân khẩu chưa là thành viên của đoàn hội'
+                'message' => $exists ? 'Nhân khẩu đã có trong danh sách đăng ký tuổi 17' : 'Nhân khẩu chưa có trong danh sách đăng ký tuổi 17'
             ];
         } catch (Exception $e) {
             $response = [
@@ -138,12 +137,11 @@ class DkTuoi17Controller extends BaseController
                 'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
             ];
         }
-
-        // Return JSON response
         echo json_encode($response);
         Factory::getApplication()->close();
     }
     
+    // lấy danh sách thôn tổ theo phường xã 
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
@@ -154,6 +152,7 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
+    // lấy thông tin của người đăng ký tuổi 17
     public function getDetailDktuoi17()
     {
         $idDktuoi17 = Factory::getApplication()->input->getVar('dktuoi17_id', 0);
@@ -169,7 +168,7 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-
+    // lấy thông tin của thân nhân 
     public function getThanNhan()
     {
         $model = Core::model('QuanSu/Dktuoi17');
@@ -185,7 +184,7 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-
+    // lưu người đăng ký 
     public function save_dktuoi17()
     {
         Session::checkToken() or die('Token không hợp lệ');
@@ -216,7 +215,7 @@ class DkTuoi17Controller extends BaseController
         $max = max(count($quanheList), count($hotenList), count($namsinhList), count($nghenghiepList));
 
         for ($i = 0; $i < $max; $i++) {
-            // Bỏ qua nếu tất cả đều rỗng
+            // bỏ qua nếu tất cả đều rỗng
             if (
                 empty($hotenList[$i]) &&
                 empty($namsinhList[$i]) &&
@@ -253,15 +252,16 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
+    // hàm format ngày từ dd/mm/yyyy sang yyyy-mm-dd
     function formatDate($dateString){
         $date = DateTime::createFromFormat('d/m/Y', $dateString);
         if ($date === false || $date->format('d/m/Y') !== $dateString) {
-            throw new Exception('Invalid date format for namsinh');
+            throw new Exception('Định dạng ngày tháng không hợp lệ cho năm sinh');
         }
-        // Format to YYYY-MM-DD for database
         return $date->format('Y-m-d');
     }
 
+    // xóa đăng ký tuổi 17
     public function xoa_dktuoi17()
     {
         $input = Factory::getApplication()->input;

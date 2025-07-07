@@ -46,6 +46,7 @@ class DknvqsController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
+    // lấy danh sách đăng ký nghĩa vụ quân sự
     public function getListDknvqs()
     {
         $input = Factory::getApplication()->input;
@@ -73,6 +74,7 @@ class DknvqsController extends BaseController
         jexit();
     }
 
+    // lấy danh sách nhân khẩu
     public function timkiem_nhankhau()
     {
         $app = Factory::getApplication();
@@ -97,39 +99,35 @@ class DknvqsController extends BaseController
                 'error' => $e->getMessage()
             ];
         }
-
         header('Content-Type: application/json');
         echo json_encode($result);
         jexit();
     }
 
+    // kiểm tra nhân khẩu đó đã có trong danh sách đăng ký nghĩa vụ chưa 
     public function checkNhankhauInDSDknvqs()
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
-        // Validate input
         if (!$nhankhau_id) {
             $response = [
                 'success' => false,
                 'exists' => false,
-                'message' => 'Thiếu nhankhau_id hoặc xeom_id'
+                'message' => 'Thiếu nhankhau_id'
             ];
             echo json_encode($response);
             Factory::getApplication()->close();
             return;
         }
 
-        // Load the model
         $model = Core::model('QuanSu/Base');
 
         try {
-            // Check if nhankhau_id exists in xeom_id
             $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_dangkyquansu');
-
             $response = [
                 'success' => true,
                 'exists' => $exists,
-                'message' => $exists ? 'Nhân khẩu đã là thành viên của đoàn hội' : 'Nhân khẩu chưa là thành viên của đoàn hội'
+                'message' => $exists ? 'Nhân khẩu đã có trong danh sách đăng ký nghĩa vụ quân sư' : 'Nhân khẩu chưa có trong danh sách đăng ký nghĩa vụ quân sư'
             ];
         } catch (Exception $e) {
             $response = [
@@ -138,12 +136,11 @@ class DknvqsController extends BaseController
                 'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
             ];
         }
-
-        // Return JSON response
         echo json_encode($response);
         Factory::getApplication()->close();
     }
-    
+
+    // lấy thôn tổ theo phường xã
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
@@ -154,6 +151,7 @@ class DknvqsController extends BaseController
         jexit();
     }
 
+    // lấy thông tin của đăng kỹ nghĩa vụ quân sự
     public function getDetailDknvqs()
     {
         $idDknvqs = Factory::getApplication()->input->getVar('dknvqs_id', 0);
@@ -169,7 +167,7 @@ class DknvqsController extends BaseController
         jexit();
     }
 
-
+    // lấy thân nhân của dân quân 
     public function getThanNhan()
     {
         $model = Core::model('QuanSu/Dknvqs');
@@ -186,6 +184,7 @@ class DknvqsController extends BaseController
     }
 
 
+    // lưu dân quân 
     public function save_dknvqs()
     {
         Session::checkToken() or die('Token không hợp lệ');
@@ -200,6 +199,7 @@ class DknvqsController extends BaseController
         $formData['dantoc_id'] = $formData['select_dantoc_id'] ?? $formData['input_dantoc_id'];
         $formData['phuongxa_id'] = $formData['select_phuongxa_id'] ?? $formData['input_phuongxa_id'];
         $formData['thonto_id'] = $formData['select_thonto_id'] ?? $formData['input_thonto_id'];
+
         $namsinh = $formData['select_namsinh'] ?? $formData['input_namsinh'] ?? '';
         $formData['namsinh'] = !empty($namsinh) ? $this->formatDate($namsinh) : '';
         
@@ -216,7 +216,7 @@ class DknvqsController extends BaseController
         $max = max(count($quanheList), count($hotenList), count($namsinhList), count($nghenghiepList));
 
         for ($i = 0; $i < $max; $i++) {
-            // Bỏ qua nếu tất cả đều rỗng
+            // bỏ qua nếu tất cả đều rỗng
             if (
                 empty($hotenList[$i]) &&
                 empty($namsinhList[$i]) &&
@@ -253,15 +253,16 @@ class DknvqsController extends BaseController
         jexit();
     }
 
+    // hàm format ngày từ dd/mm/yyyy sang yyyy-mm-dd
     function formatDate($dateString){
         $date = DateTime::createFromFormat('d/m/Y', $dateString);
         if ($date === false || $date->format('d/m/Y') !== $dateString) {
-            throw new Exception('Invalid date format for namsinh');
+            throw new Exception('Định dạng ngày tháng không hợp lệ cho năm sinh');
         }
-        // Format to YYYY-MM-DD for database
         return $date->format('Y-m-d');
     }
 
+    // xóa dân quân
     public function xoa_Dknvqs()
     {
         $input = Factory::getApplication()->input;

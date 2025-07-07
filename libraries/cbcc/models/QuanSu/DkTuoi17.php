@@ -12,7 +12,6 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     return "Tie";
   }
 
-  //get list danh sách cơ sở dịch vụ nhạy cảm
   public function getListDktuoi17($filters)
   {
     $db = Factory::getDbo();
@@ -173,9 +172,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
   {
     $db = Factory::getDbo();
     $now = Factory::getDate()->toSql();
-    $id = $formdata['id'];
-    var_dump($formdata['thannhan']);
-    exit; 
+    $id = $formdata['id']; 
 
     $columns = [
       'nhankhau_id' => (int)$formdata['nhankhau_id'],
@@ -240,19 +237,19 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       }
 
       if ((int)$columns['is_ngoai'] === 1) {
-        // Nếu đang cập nhật bản ghi có sẵn
+        // nếu đang cập nhật bản ghi có sẵn
         if ((int)$id > 0) {
-          // Xóa thân nhân cũ liên kết với bản ghi này
+          // xóa thân nhân cũ liên kết với bản ghi này
             $queryDeleteTN = $db->getQuery(true)
             ->delete($db->quoteName('qs_thannhantuoi17'))
             ->where($db->quoteName('dangkytuoi17_id') . ' = ' . (int)$id);
             $db->setQuery($queryDeleteTN)->execute();
         }
 
-        // Chỉ lưu nếu có thân nhân mới
+        // chỉ lưu nếu có thân nhân mới
         if (!empty($formdata['thannhan']) && is_array($formdata['thannhan'])) {
           foreach ($formdata['thannhan'] as $tn) {
-            // Bỏ qua nếu không có thông tin gì
+            // bỏ qua nếu không có thông tin gì
             if (empty($tn['hoten']) && empty($tn['namsinh']) && empty($tn['quanhe_id']) && empty($tn['nghenghiep'])) {
               continue;
             }
@@ -361,7 +358,6 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     ];
   }
 
-
   public function getThanNhan($nhankhauId)
   {
     $db = Factory::getDbo();
@@ -390,8 +386,6 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     }
   }
 
-
-  //xóa cơ sở dịch vụ nhạy cảm
   public function deleteDktuoi17($idUser, $iddktuoi17)
   {
     $db = Factory::getDbo();

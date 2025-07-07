@@ -25,7 +25,7 @@ defined('_JEXEC') or die;
  *
  * @since  3.1
  */
-class QuanNhanDuBiController extends BaseController
+class DanQuanController extends BaseController
 {
     public function __construct($config = [])
     {
@@ -46,15 +46,15 @@ class QuanNhanDuBiController extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
-    // lấy danh sách quân nhân dự bị
-    public function getListQuanNhanDuBi()
+    // lấy danh sách dân quân
+    public function getListDanQuan()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $model = Core::model('QuanSu/QuanNhanDuBi');
+        $model = Core::model('QuanSu/DanQuan');
         $modelBase = Core::model('QuanSu/Base');
         $phanquyen = $modelBase->getPhanquyen();
         $phuongxa = array();
@@ -64,7 +64,7 @@ class QuanNhanDuBiController extends BaseController
         }
 
         try {
-            $result =  $model->getListQuanNhanDuBi($formData, $phuongxa);
+            $result =  $model->getListDanQuan($formData, $phuongxa);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }
@@ -74,7 +74,7 @@ class QuanNhanDuBiController extends BaseController
         jexit();
     }
 
-    // tìm kiếm nhân khẩu 
+    // lấy danh sách nhân khẩu
     public function timkiem_nhankhau()
     {
         $app = Factory::getApplication();
@@ -88,7 +88,7 @@ class QuanNhanDuBiController extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('QuanSu/QuanNhanDuBi');
+        $model = Core::model('QuanSu/DanQuan');
 
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
@@ -104,13 +104,12 @@ class QuanNhanDuBiController extends BaseController
         echo json_encode($result);
         jexit();
     }
-    
-    // kiểm tra xem nhân khẩu đã có trong danh sách quân nhân dự bị chưa 
-    public function checkNhankhauInQuanNhanDuBi()
+
+    // kiểm tra nhân khẩu đó đã có trong danh sách dân quân chưa 
+    public function checkNhankhauInDanQuan()
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
-        // Validate input
         if (!$nhankhau_id) {
             $response = [
                 'success' => false,
@@ -121,14 +120,16 @@ class QuanNhanDuBiController extends BaseController
             Factory::getApplication()->close();
             return;
         }
+
         $model = Core::model('QuanSu/Base');
+
         try {
-            $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_quannhandubi');
+            $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_danquan');
 
             $response = [
                 'success' => true,
                 'exists' => $exists,
-                'message' => $exists ? 'Nhân khẩu đã là thành viên của đoàn hội' : 'Nhân khẩu chưa là thành viên của đoàn hội'
+                'message' => $exists ? 'Nhân khẩu đã có trong danh sách dân quân' : 'Nhân khẩu chưa có trong danh sách dân quân'
             ];
         } catch (Exception $e) {
             $response = [
@@ -137,11 +138,12 @@ class QuanNhanDuBiController extends BaseController
                 'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
             ];
         }
+
         echo json_encode($response);
         Factory::getApplication()->close();
     }
     
-    // lấy danh sách thôn tổ theo phường xã
+    // lấy thôn tổ theo phường xã
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
@@ -152,12 +154,12 @@ class QuanNhanDuBiController extends BaseController
         jexit();
     }
 
-    // lấy thông tin của quân nhân dự bị 
-    public function getDetailQuanNhanDuBi()
+    // lấy thông tin của dân quân 
+    public function getDetailDanQuan()
     {
-        $idQuanNhanDuBi = Factory::getApplication()->input->getVar('quannhandubi_id', 0);
-        $model = Core::model('QuanSu/QuanNhanDuBi');
-        $result = $model->getDetailQuanNhanDuBi($idQuanNhanDuBi);
+        $idDanQuan = Factory::getApplication()->input->getVar('danquan_id', 0);
+        $model = Core::model('QuanSu/DanQuan');
+        $result = $model->getDetailDanQuan($idDanQuan);
         try {
             echo json_encode(
                 $result['data']
@@ -168,10 +170,10 @@ class QuanNhanDuBiController extends BaseController
         jexit();
     }
 
-    // lấy thông tin thân nhân
+    // lấy thân nhân của dân quân 
     public function getThanNhan()
     {
-        $model = Core::model('QuanSu/QuanNhanDuBi');
+        $model = Core::model('QuanSu/DanQuan');
         $nhankhau_id = Factory::getApplication()->input->getInt('nhankhau_id', 0);
         $result = $model->getThanNhan($nhankhau_id);
         try {
@@ -184,8 +186,8 @@ class QuanNhanDuBiController extends BaseController
         jexit();
     }
 
-    // lưu quân nhân dự bị 
-    public function save_quannhandubi()
+    // lưu dân quân 
+    public function save_danquan()
     {
         Session::checkToken() or die('Token không hợp lệ');
         $user = Factory::getUser();
@@ -201,14 +203,14 @@ class QuanNhanDuBiController extends BaseController
         $formData['thonto_id'] = $formData['select_thonto_id'] ?? $formData['input_thonto_id'];
         $namsinh = $formData['select_namsinh'] ?? $formData['input_namsinh'] ?? '';
         $formData['namsinh'] = !empty($namsinh) ? $this->formatDate($namsinh) : '';
-        $formData['ngaydangky'] = $formData['form_ngaydangky'] ?? '';
-        $formData['ngaydangky'] = !empty($formData['ngaydangky']) ? $this->formatDate($formData['ngaydangky']) : '';
-        $formData['ngaynhapngu'] = $formData['form_ngaynhapngu'] ?? '';
-        $formData['ngaynhapngu'] = !empty($formData['ngaynhapngu']) ? $this->formatDate($formData['ngaynhapngu']) : '';
-        $formData['ngayxuatngu'] = $formData['form_ngayxuatngu'] ?? '';
-        $formData['ngayxuatngu'] = !empty($formData['ngayxuatngu']) ? $this->formatDate($formData['ngayxuatngu']) : '';
-        $formData['ngaychungnhan'] = $formData['form_ngaychungnhan'] ?? '';
-        $formData['ngaychungnhan'] = !empty($formData['ngaychungnhan']) ? $this->formatDate($formData['ngaychungnhan']) : '';
+        $formData['ngayvao'] = $formData['form_ngayvao'] ?? '';
+        $formData['ngayvao'] = !empty($formData['ngayvao']) ? $this->formatDate($formData['ngayvao']) : '';
+        $formData['ngayquyetdinhvao'] = $formData['form_ngayquyetdinhvao'] ?? '';
+        $formData['ngayquyetdinhvao'] = !empty($formData['ngayquyetdinhvao']) ? $this->formatDate($formData['ngayquyetdinhvao']) : '';
+        $formData['ngayra'] = $formData['form_ngayra'] ?? '';
+        $formData['ngayra'] = !empty($formData['ngayra']) ? $this->formatDate($formData['ngayra']) : '';
+        $formData['ngayquyetdinhra'] = $formData['form_ngayquyetdinhra'] ?? '';
+        $formData['ngayquyetdinhra'] = !empty($formData['ngayquyetdinhra']) ? $this->formatDate($formData['ngayquyetdinhra']) : '';
 
         $thanNhanFormatted = [];
 
@@ -220,7 +222,7 @@ class QuanNhanDuBiController extends BaseController
         $max = max(count($quanheList), count($hotenList), count($namsinhList), count($nghenghiepList));
 
         for ($i = 0; $i < $max; $i++) {
-            // bỏ qua nếu tất cả đều rỗng
+            // Bỏ qua nếu tất cả đều rỗng
             if (
                 empty($hotenList[$i]) &&
                 empty($namsinhList[$i]) &&
@@ -240,9 +242,9 @@ class QuanNhanDuBiController extends BaseController
         $formData['thannhan'] = $thanNhanFormatted;
 
         try {
-            $model = Core::model('QuanSu/QuanNhanDuBi');
+            $model = Core::model('QuanSu/DanQuan');
 
-            $result = $model->saveQuanNhanDuBi($formData, $user->id);
+            $result = $model->saveDanQuan($formData, $user->id);
             if ((int)$result && $result > 0) {
                 $response = ['success' => true, 'result' => $result,  'message' => 'Đã lưu dữ liệu thành công'];
             } else {
@@ -266,16 +268,16 @@ class QuanNhanDuBiController extends BaseController
         return $date->format('Y-m-d');
     }
 
-    // xóa quân nhân dự bị
-    public function xoa_quannhandubi()
+    // xóa dân quân
+    public function xoa_danquan()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
         try {
-            $model = Core::model('QuanSu/QuanNhanDuBi');
-            $result = $model->deleteQuanNhanDuBi($formData['idUser'], $formData['idquannhandubi']);
+            $model = Core::model('QuanSu/DanQuan');
+            $result = $model->deleteDanQuan($formData['idUser'], $formData['iddanquan']);
             $response = [
                 'success' => $result,
                 'message' => 'Xóa thành công',

@@ -6,18 +6,18 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 
-$detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
+$detailDanQuan = $this->detailDanQuan;
 ?>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
 
-<form id="formQuanNhanDuBi" name="formQuanNhanDuBi" method="post" action="<?php echo Route::_('index.php?option=com_quansu&controller=quannhandubi&task=save_quannhandubi'); ?>">
+<form id="formDanQuan" name="formDanQuan" method="post" action="<?php echo Route::_('index.php?option=com_quansu&controller=danquan&task=save_danquan'); ?>">
   <div class="card-body">
     <div class="d-flex align-items-center justify-content-between border-bottom mb-3">
       <h2 class="text-primary mb-3">
-        <?php echo ((int)$detailQuanNhanDuBi->id > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> quân nhân dự bị
+        <?php echo ((int)$detailDanQuan->id > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> quân nhân dự bị
       </h2>
       <span>
         <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>
@@ -25,47 +25,46 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       </span>
     </div>
 
-    <input type="hidden" name="id" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->id); ?>">
-    <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->nhankhau_id); ?>">
-
+    <input type="hidden" name="id" value="<?php echo htmlspecialchars($detailDanQuan->id); ?>">
+    <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($detailDanQuan->nhankhau_id); ?>">
     <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
       <h5 style="margin: 0">Thông tin cá nhân</h5>
       <div class="d-flex align-items-center" style="gap:5px">
-        <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($detailQuanNhanDuBi->nhankhau_id) ? 'checked' : ''; ?>>
+        <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) ? 'checked' : ''; ?>>
         <small>Chọn người quân nhân từ danh sách nhân khẩu</small>
       </div>
     </div>
-    <div id="select-container" style="display: <?php echo htmlspecialchars($detailQuanNhanDuBi->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">
+    <div id="select-container" style="display: <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">
       <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
       <select id="select_top" name="select_top" class="form-control">
         <option value="">-- Chọn --</option>
         <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
-          <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($detailQuanNhanDuBi->nhankhau_id) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
+          <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
         <?php } ?>
       </select>
     </div>
     <div class="row g-3 mb-4">
       <div class="col-md-4 mb-2">
         <label for="hoten" class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
-        <input id="hoten" type="text" name="hoten" class="form-control" placeholder="Nhập họ và tên công dân" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_hoten); ?>">
+        <input id="hoten" type="text" name="hoten" class="form-control" placeholder="Nhập họ và tên công dân" value="<?php echo htmlspecialchars($detailDanQuan->n_hoten); ?>">
       </div>
       <div class="col-md-4 mb-2">
         <label for="select_gioitinh_id" class="form-label fw-bold">Giới tính</label>
-        <input type="hidden" id="input_gioitinh_id" name="input_gioitinh_id" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_gioitinh_id); ?>">
+        <input type="hidden" id="input_gioitinh_id" name="input_gioitinh_id" value="<?php echo htmlspecialchars($detailDanQuan->n_gioitinh_id); ?>">
         <select id="select_gioitinh_id" name="select_gioitinh_id" class="form-control" data-placeholder="Chọn giới tính">
           <option value=""></option>
           <?php foreach ($this->gioitinh as $gt) { ?>
-            <option value="<?php echo $gt['id']; ?>" <?php echo $detailQuanNhanDuBi->n_gioitinh_id == $gt['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($gt['tengioitinh']); ?></option>
+            <option value="<?php echo $gt['id']; ?>" <?php echo $detailDanQuan->n_gioitinh_id == $gt['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($gt['tengioitinh']); ?></option>
           <?php } ?>
         </select>
       </div>
       <div class="col-md-4 mb-2">
         <label for="cccd" class="form-label fw-bold">CCCD/CMND <span class="text-danger">*</span></label>
-        <input id="cccd" type="text" name="cccd" class="form-control" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_cccd); ?>" placeholder="Nhập CCCD/CMND">
+        <input id="cccd" type="text" name="cccd" class="form-control" value="<?php echo htmlspecialchars($detailDanQuan->n_cccd); ?>" placeholder="Nhập CCCD/CMND">
       </div>
       <div class="col-md-4 mb-2">
         <label for="namsinh" class="form-label fw-bold">Năm sinh <span class="text-danger">*</span></label>
-        <input type="hidden" id="input_namsinh" name="input_namsinh" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_namsinh); ?>">
+        <input type="hidden" id="input_namsinh" name="input_namsinh" value="<?php echo htmlspecialchars($detailDanQuan->n_namsinh); ?>">
         <div class="input-group">
           <input type="text" id="select_namsinh" name="select_namsinh" class="form-control namsinh" placeholder="dd/mm/yyyy" value="">
           <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
@@ -73,15 +72,15 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       </div>
       <div class="col-md-4 mb-2">
         <label for="dienthoai" class="form-label fw-bold">Điện thoại</label>
-        <input id="dienthoai" type="text" name="dienthoai" class="form-control" placeholder="Nhập số điện thoại" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_dienthoai); ?>">
+        <input id="dienthoai" type="text" name="dienthoai" class="form-control" placeholder="Nhập số điện thoại" value="<?php echo htmlspecialchars($detailDanQuan->n_dienthoai); ?>">
       </div>
       <div class="col-md-4 mb-2">
         <label for="select_dantoc_id" class="form-label fw-bold">Dân tộc</label>
-        <input type="hidden" id="input_dantoc_id" name="input_dantoc_id" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_dantoc_id); ?>">
+        <input type="hidden" id="input_dantoc_id" name="input_dantoc_id" value="<?php echo htmlspecialchars($detailDanQuan->n_dantoc_id); ?>">
         <select id="select_dantoc_id" name="select_dantoc_id" class="form-control" data-placeholder="Chọn dân tộc">
           <option value=""></option>
           <?php foreach ($this->dantoc as $dt) { ?>
-            <option value="<?php echo $dt['id']; ?>" <?php echo $detailQuanNhanDuBi->n_dantoc_id == $dt['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($dt['tendantoc']); ?></option>
+            <option value="<?php echo $dt['id']; ?>" <?php echo $detailDanQuan->n_dantoc_id == $dt['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($dt['tendantoc']); ?></option>
           <?php } ?>
         </select>
       </div>
@@ -91,13 +90,13 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <label for="select_phuongxa_id" class="form-label fw-bold">Phường xã <span class="text-danger">*</span></label>
-        <input type="hidden" id="input_phuongxa_id" name="input_phuongxa_id" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_phuongxa_id); ?>">
+        <input type="hidden" id="input_phuongxa_id" name="input_phuongxa_id" value="<?php echo htmlspecialchars($detailDanQuan->n_phuongxa_id); ?>">
         <div class="input-group">
           <select id="select_phuongxa_id" name="select_phuongxa_id" class="form-control" data-placeholder="Chọn phường/xã">
             <option value=""></option>
             <?php if (is_array($this->phuongxa)) { ?>
               <?php foreach ($this->phuongxa as $px) { ?>
-                <option value="<?php echo $px['id']; ?>" <?php echo $detailQuanNhanDuBi->n_phuongxa_id == $px['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($px['tenkhuvuc']); ?></option>
+                <option value="<?php echo $px['id']; ?>" <?php echo $detailDanQuan->n_phuongxa_id == $px['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($px['tenkhuvuc']); ?></option>
               <?php } ?>
             <?php } ?>
           </select>
@@ -105,14 +104,14 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       </div>
       <div class="col-md-4">
         <label for="select_thonto_id" class="form-label fw-bold">Thôn tổ</label>
-        <input type="hidden" id="input_thonto_id" name="input_thonto_id" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_thonto_id); ?>">
+        <input type="hidden" id="input_thonto_id" name="input_thonto_id" value="<?php echo htmlspecialchars($detailDanQuan->n_thonto_id); ?>">
         <select id="select_thonto_id" name="select_thonto_id" class="form-control" data-placeholder="Chọn thôn/tổ">
           <option value=""></option>
         </select>
       </div>
       <div class="col-md-4">
         <label for="diachi" class="form-label fw-bold">Địa chỉ</label>
-        <input id="diachi" type="text" name="diachi" class="form-control" placeholder="Nhập địa chỉ" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->n_diachi); ?>">
+        <input id="diachi" type="text" name="diachi" class="form-control" placeholder="Nhập địa chỉ" value="<?php echo htmlspecialchars($detailDanQuan->n_diachi); ?>">
       </div>
     </div>
 
@@ -124,14 +123,14 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
           <option value=""></option>
           <?php if (is_array($this->trinhdohocvan)) { ?>
             <?php foreach ($this->trinhdohocvan as $tdhv) { ?>
-              <option value="<?php echo $tdhv['id']; ?>" <?php echo $detailQuanNhanDuBi->trinhdohocvan_id == $tdhv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tdhv['tentrinhdohocvan']); ?></option>
+              <option value="<?php echo $tdhv['id']; ?>" <?php echo $detailDanQuan->trinhdohocvan_id == $tdhv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tdhv['tentrinhdohocvan']); ?></option>
             <?php } ?>
           <?php } ?>
         </select>
       </div>
       <div class="col-md-8">
         <label for="noilamviec" class="form-label fw-bold">Nơi làm việc (học tập, công tác)</label>
-        <input id="noilamviec" type="text" name="noilamviec" class="form-control" placeholder="Nhập địa chỉ" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->noilamviec); ?>">
+        <input id="noilamviec" type="text" name="noilamviec" class="form-control" placeholder="Nhập địa chỉ" value="<?php echo htmlspecialchars($detailDanQuan->noilamviec); ?>">
       </div>
     </div>
 
@@ -156,98 +155,147 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       </table>
     </div>
 
-    <h5 class="border-bottom pb-2 mb-4">Thông tin phục vụ tại ngũ</h5>
+    <h5 class="border-bottom pb-2 mb-4">Thông tin chức vụ và tình trạng</h5>
     <div class="row g-3 mb-4">
       <div class="col-md-4">
-        <label for="capbac_id" class="form-label fw-bold">Cấp bậc</label>
-        <select id="capbac_id" name="capbac_id" class="form-control" data-placeholder="Chọn cấp bậc">
+        <label for="loaidanquan" class="form-label fw-bold">Loại dân quân <span class="text-danger">*</span></label>
+        <select id="loaidanquan" name="loaidanquan" class="form-control" data-placeholder="Chọn loại dân quân">
           <option value=""></option>
-          <?php foreach ($this->capbac as $cb) { ?>
-            <option value="<?php echo $cb['id']; ?>" <?php echo $detailQuanNhanDuBi->capbac_id == $cb['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($cb['tencapbac']); ?></option>
+          <?php foreach ($this->loaidanquan as $ldq) { ?>
+            <option value="<?php echo $ldq['id']; ?>" <?php echo $detailDanQuan->loaidanquan_id == $ldq['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($ldq['tenloai']); ?></option>
           <?php } ?>
         </select>
       </div>
       <div class="col-md-4">
-        <label for="form_ngaynhapngu" class="form-label fw-bold">Ngày nhập ngũ</label>
-        <div class="input-group">
-          <input type="text" id="form_ngaynhapngu" name="form_ngaynhapngu" class="form-control" placeholder="dd/mm/yyyy">
-          <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <label for="form_ngayxuatngu" class="form-label fw-bold">Ngày xuất quân</label>
-        <div class="input-group">
-          <input type="text" id="form_ngayxuatngu" name="form_ngayxuatngu" class="form-control" placeholder="dd/mm/yyyy">
-          <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-        </div>
-      </div>
-    </div>
-    <div class="row g-3 mb-4">
-      <div class="col-md-4">
         <label for="chucvu" class="form-label fw-bold">Chức vụ</label>
-        <input id="chucvu" type="text" name="chucvu" class="form-control" value="<?php echo $detailQuanNhanDuBi->chucvu; ?>">
+        <input type="text" id="chucvu" name="chucvu" class="form-control" placeholder="Nhập chức vụ" value="<?php echo $detailDanQuan->chucvu; ?>">
       </div>
       <div class="col-md-4">
-        <label for="giaychungnhan" class="form-label fw-bold">Giấy chứng nhận</label>
-        <input id="giaychungnhan" type="text" name="giaychungnhan" class="form-control" placeholder="Nhập giấy chứng nhận NVQS" value="<?php echo $detailQuanNhanDuBi->cnnvqs; ?>">
-      </div>
-      <div class="col-md-4">
-        <label for="form_ngaychungnhan" class="form-label fw-bold">Ngày chứng nhận</label>
+        <label for="form_ngayvao" class="form-label fw-bold">Ngày vào dân quân</label>
         <div class="input-group">
-          <input type="text" id="form_ngaychungnhan" name="form_ngaychungnhan" class="form-control" placeholder="dd/mm/yyyy">
+          <input type="text" id="form_ngayvao" name="form_ngayvao" class="form-control" placeholder="dd/mm/yyyy">
           <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
         </div>
       </div>
     </div>
     <div class="row g-3 mb-4">
-      <div class="col-md-12">
-        <label for="donvixuatngu" class="form-label fw-bold">Đơn vị xuất ngũ</label>
-        <input id="donvixuatngu" type="text" name="donvixuatngu" class="form-control" placeholder="Nhập đơn vị xuất ngũ" value="<?php echo $detailQuanNhanDuBi->donvixuatngu ?>">
-      </div>
-    </div>
-
-    <h5 class="border-bottom pb-2 mb-4">Thông tin quân nhân</h5>
-    <div class="row g-3 mb-4">
       <div class="col-md-4">
-        <label for="ngachdubi" class="form-label fw-bold">Ngạch dự bị</label>
-        <input id="ngachdubi" type="text" name="ngachdubi" class="form-control" placeholder="Nhập ngạch dự bị" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->ngachdubi); ?>">
+        <label for="soquyetdinhvao" class="form-label fw-bold">Số quyết định</label>
+        <input id="soquyetdinhvao" type="text" name="soquyetdinhvao" class="form-control" placeholder="Nhập số quyết định" value="<?php echo $detailDanQuan->soquyetdinhvao; ?>">
       </div>
       <div class="col-md-4">
-        <label for="form_ngaydangky" class="form-label fw-bold">Ngày đăng ký </label>
+        <label for="form_ngayquyetdinhvao" class="form-label fw-bold">Ngày quyết định</label>
         <div class="input-group">
-          <input type="text" id="form_ngaydangky" name="form_ngaydangky" class="form-control" placeholder="dd/mm/yyyy">
+          <input type="text" id="form_ngayquyetdinhvao" name="form_ngayquyetdinhvao" class="form-control" placeholder="dd/mm/yyyy">
           <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
         </div>
       </div>
       <div class="col-md-4">
-        <label for="tinhtrang" class="form-label fw-bold">Kết luận <span class="text-danger">*</span></label>
-        <div class="input-group">
-          <select id="tinhtrang" name="tinhtrang" class="form-control" data-placeholder="">
-            <?php foreach ($this->trangthai as $tt) { ?>
-              <option value="<?php echo $tt['id']; ?>" <?php echo $detailQuanNhanDuBi->trangthaiquannhan_id == $tt['id'] ? 'selected' : ''; ?>><?php echo $tt['tentrangthai']; ?></option>
-            <?php } ?>
-          </select>
+        <label for="coquancapvao" class="form-label fw-bold">Cơ quan cấp</label>
+        <input id="coquancapvao" type="text" name="coquancapvao" class="form-control" placeholder="Nhập cơ quan cấp" value="<?php echo $detailDanQuan->coquancapvao; ?>">
+      </div>
+    </div>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <label for="tinhtrang_id" class="form-label fw-bold">Tình trạng <span class="text-danger">*</span></label>
+        <select id="tinhtrang_id" name="tinhtrang_id" class="custom-select" data-placeholder="Chọn tình trạng">
+          <option value=""></option>
+          <?php foreach ($this->trangthai as $tt) { ?>
+            <option value="<?php echo $tt['id']; ?>" <?php echo $detailDanQuan->trangthaiquansu_id == $tt['id'] ? 'selected' : ''; ?>><?php echo $tt['tentrangthai']; ?></option>
+          <?php } ?>
+        </select>
+      </div>
+      <div class="col-md-8">
+        <label for="vanbanvao" class="form-label fw-bold">Văn bản đính kèm</label>
+        <div class="d-flex" style="gap:50px">
+          <?php echo Core::inputAttachmentOneFile('vanbanvao', null, 1, date('Y'), -1); ?>
+          <?php if (!empty($detailDanQuan->vanbanvao)) : ?>
+            <small>Hiện tại:
+              <div class="d-flex flex-column">
+                <?php foreach ($detailDanQuan->vanbanvao as $vanban) : ?>
+                  <div class="vanban_<?= $vanban->id ?>">
+                    <?php if ($vanban->mime === 'application/pdf') { ?>
+                      <a href="<?php echo '/index.php?option=com_quansu&view=danquan&format=raw&task=viewpdf&file=' . $vanban->code . '&folder=' . $vanban->folder  ?>" class="mr-2">
+                        <?php echo $vanban->filename ?>
+                      </a>
+                    <?php } else { ?>
+                      <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam . '&code=' . $vanban->code ?>" class="mr-2">
+                        <?php echo $vanban->filename ?>
+                      </a>
+                    <?php } ?>
+                    <input type="hidden" name="vanbanvaohientai[]" value="<?php echo $vanban->id ?>">
+                    <button type="button" class="btn bnt-deleteVanBan" data-id="<?= $vanban->id ?>" title="Xóa">
+                      <i class="fa fa-trash-alt"></i>
+                    </button>
+                  </div>
+                <?php endforeach ?>
+              </div>
+            </small>
+          <?php endif; ?>
         </div>
       </div>
     </div>
 
-    <h5 class="border-bottom pb-2 mb-4">Thông tin bổ nhiệm và cỡ số quân trang</h5>
-    <div class="row g-3 mb-4">
-      <div class="col-md-12 mb-4">
-        <label for="bonhiemvao" class="form-label fw-bold">Bổ nhiệm vào đơn vị dự bị động việc</label>
-        <input id="bonhiemvao" type="text" name="bonhiemvao" class="form-control" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->bonhiem); ?>">
+    <div id="thongtinra" style="display: none;">
+      <h5 class="border-bottom pb-2 mb-4">Thông tin văn bản ra khỏi dân quân</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label for="form_ngayra" class="form-label fw-bold">Ngày ra dân quân</label>
+          <div class="input-group">
+            <input type="text" id="form_ngayra" name="form_ngayra" class="form-control" placeholder="dd/mm/yyyy">
+            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="soquyetdinhra" class="form-label fw-bold">Số quyết định </label>
+          <input type="text" id="soquyetdinhra" name="soquyetdinhra" class="form-control" placeholder="Nhập số quyết định" value="<?php echo $detailDanQuan->soquyetdinhra; ?>">
+        </div>
+        <div class="col-md-4">
+          <label for="form_ngayquyetdinhra" class="form-label fw-bold">Ngày quyết định</label>
+          <div class="input-group">
+            <input type="text" id="form_ngayquyetdinhra" name="form_ngayquyetdinhra" class="form-control" placeholder="dd/mm/yyyy">
+            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+          </div>
+        </div>
       </div>
-      <div class="col-md-4">
-        <label for="quanao" class="form-label fw-bold">Quần áo </label>
-        <input id="quanao" type="text" name="quanao" class="form-control" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->quanao); ?>">
-      </div>
-      <div class="col-md-4">
-        <label for="mu" class="form-label fw-bold">Mũ</label>
-        <input id="mu" type="text" name="mu" class="form-control" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->mu); ?>">
-      </div>
-      <div class="col-md-4">
-        <label for="giaydep" class="form-label fw-bold">Giày dép</label>
-        <input id="giaydep" type="text" name="giaydep" class="form-control" value="<?php echo htmlspecialchars($detailQuanNhanDuBi->giaydep); ?>">
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label for="coquancapra" class="form-label fw-bold">Cơ quan cấp </label>
+          <input id="coquancapra" type="text" name="coquancapra" class="form-control" placeholder="Nhập cơ quan cấp" value="<?php echo htmlspecialchars($detailDanQuan->coquancapra); ?>">
+        </div>
+        <div class="col-md-4">
+          <label for="vanbanra" class="form-label fw-bold">Văn bản đính kém</label>
+          <div class="d-flex" style="gap:50px">
+            <?php echo Core::inputAttachmentOneFile('vanbanra', null, 1, date('Y'), -1); ?>
+            <?php if (!empty($detailDanQuan->vanbanra)) : ?>
+              <small>Hiện tại:
+                <div class="d-flex flex-column">
+                  <?php foreach ($detailDanQuan->vanbanra as $vanban) : ?>
+                    <div class="vanban_<?= $vanban->id  ?>">
+                      <?php if ($vanban->mime === 'application/pdf') { ?>
+                        <a href="<?php echo '/index.php?option=com_thongbao&view=thongbao&format=raw&task=viewpdf&file=' . $vanban->code . '&folder=' . $vanban->folder  ?>" class="mr-2">
+                          <?php echo $vanban->filename  ?>
+                        </a>
+                      <?php } else { ?>
+                        <a href="<?php echo '/index.php?option=com_core&controller=attachment&format=raw&task=download&year=' . $vanban->nam  . '&code=' . $vanban->code ?>" class="mr-2">
+                          <?php echo $vanban->filename  ?>
+                        </a>
+                      <?php } ?>
+                      <input type="hidden" name="vanbanrahientai[]" value="<?php echo $vanban->id ?>">
+                      <button type="button" class="btn bnt-deleteVanBan" data-id="<?= $vanban->id ?>" title="Xóa">
+                        <i class="fa fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  <?php endforeach ?>
+                </div>
+              </small>
+            <?php endif; ?>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label for="lydo" class="form-label fw-bold">Lý do</label>
+          <input id="lydo" type="text" name="lydo" class="form-control" placeholder="Nhập lý do" value="<?php echo htmlspecialchars($detailDanQuan->lydo); ?>">
+        </div>
       </div>
     </div>
     <?php echo HTMLHelper::_('form.token'); ?>
@@ -256,26 +304,27 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
 
 <script>
   const phuongxa_id = <?php echo json_encode($this->phuongxa ?? []); ?>;
-  const detailQuanNhanDuBi = <?php echo json_encode($detailQuanNhanDuBi); ?>;
-  const detailphuongxa_id = <?= json_encode($detailQuanNhanDuBi->n_phuongxa_id ?? 0) ?>;
-  const detailthonto_id = <?= json_encode($detailQuanNhanDuBi->n_thonto_id ?? 0) ?>;
+  const detailDanQuan = <?php echo json_encode($detailDanQuan); ?>;
+  const detailphuongxa_id = <?= json_encode($detailDanQuan->n_phuongxa_id ?? 0) ?>;
+  const detailthonto_id = <?= json_encode($detailDanQuan->n_thonto_id ?? 0) ?>;
   const nghenghiep = <?= json_encode($this->nghenghiep ?? []) ?>;
+  const detailtinhtrang = <?php echo json_encode($detailDanQuan->trangthaiquansu_id); ?>;
   const quanhethannhan = <?= json_encode($this->quanhethannhan ?? []) ?>;
-  let isEditMode = <?php echo ((int)$detailQuanNhanDuBi->id > 0) ? 'true' : 'false'; ?>;
+  let isEditMode = <?php echo ((int)$detailDanQuan->id > 0) ? 'true' : 'false'; ?>;
   let isFetchingFromSelect = false;
 
+  console.log(detailDanQuan)
   $(document).ready(function() {
     $('#btn_quaylai').click(() => {
-      window.location.href = '<?php echo Route::_('/index.php/component/quansu/?view=quannhandubi&task=default'); ?>';
+      window.location.href = '<?php echo Route::_('/index.php/component/quansu/?view=danquan&task=default'); ?>';
     });
-
     // Khởi tạo datepicker cho các trường ngày tháng
     const datepickerFields = [
       '.namsinh',
-      '#form_ngaynhapngu',
-      '#form_ngayxuatngu',
-      '#form_ngaychungnhan',
-      '#form_ngaydangky'
+      '#form_ngayvao',
+      '#form_ngayquyetdinhvao',
+      '#form_ngayra',
+      '#form_ngayquyetdinhra'
     ];
     $(datepickerFields.join(',')).datepicker({
       autoclose: true,
@@ -292,28 +341,28 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
 
 
     // gán giá trị n_namsinh vào input
-    if (detailQuanNhanDuBi && detailQuanNhanDuBi.n_namsinh) {
-      const formattedDate = formatDate(detailQuanNhanDuBi.n_namsinh);
+    if (detailDanQuan && detailDanQuan.n_namsinh) {
+      const formattedDate = formatDate(detailDanQuan.n_namsinh);
       $('#select_namsinh').val(formattedDate);
       $('#input_namsinh').val(formattedDate);
     }
-    if (detailQuanNhanDuBi && detailQuanNhanDuBi.ngaynhapngu) {
-      const formattedDate = formatDate(detailQuanNhanDuBi.ngaynhapngu);
-      $('#form_ngaynhapngu').val(formattedDate);
+    if (detailDanQuan && detailDanQuan.ngayvao) {
+      const formattedDate = formatDate(detailDanQuan.ngayvao);
+      $('#form_ngayvao').val(formattedDate);
     }
-    if (detailQuanNhanDuBi && detailQuanNhanDuBi.ngayxuatngu) {
-      const formattedDate = formatDate(detailQuanNhanDuBi.ngayxuatngu);
-      $('#form_ngayxuatngu').val(formattedDate);
-    }
-
-    if (detailQuanNhanDuBi && detailQuanNhanDuBi.ngaychungnhan) {
-      const formattedDate = formatDate(detailQuanNhanDuBi.ngaychungnhan);
-      $('#form_ngaychungnhan').val(formattedDate);
+    if (detailDanQuan && detailDanQuan.ngayquyetdinhvao) {
+      const formattedDate = formatDate(detailDanQuan.ngayquyetdinhvao);
+      $('#form_ngayquyetdinhvao').val(formattedDate);
     }
 
-    if (detailQuanNhanDuBi && detailQuanNhanDuBi.ngaydangky) {
-      const formattedDate = formatDate(detailQuanNhanDuBi.ngaydangky);
-      $('#form_ngaydangky').val(formattedDate);
+    if (detailDanQuan && detailDanQuan.ngayra) {
+      const formattedDate = formatDate(detailDanQuan.ngayra);
+      $('#form_ngayra').val(formattedDate);
+    }
+
+    if (detailDanQuan && detailDanQuan.ngayquyetdinhra) {
+      const formattedDate = formatDate(detailDanQuan.ngayquyetdinhra);
+      $('#form_ngayquyetdinhra').val(formattedDate);
     }
 
     // khởi tạo select 2 
@@ -325,7 +374,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       });
     };
     ['#select_dantoc_id', '#select_gioitinh_id', '#select_phuongxa_id', '#capbac_id',
-      '#select_thonto_id', '#trinhdohocvan_id', '#tinhtrang'
+      '#select_thonto_id', '#trinhdohocvan_id', '#tinhtrang_id', '#loaidanquan'
     ].forEach(selector => {
       initSelect2(selector);
     });
@@ -336,7 +385,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
         allowClear: true,
         width: '100%',
         ajax: {
-          url: 'index.php?option=com_quansu&task=quannhandubi.timkiem_nhankhau&format=json',
+          url: 'index.php?option=com_quansu&task=danquan.timkiem_nhankhau&format=json',
           dataType: 'json',
           delay: 150,
           data: function(params) {
@@ -366,6 +415,25 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
         templateSelection: data => data.text || 'Chọn thành viên'
       });
     }
+
+    function toggleVanBanRa(value) {
+      const num = parseInt(value);
+      if (num === 8) {
+        $('#thongtinra').show();
+      } else {
+        $('#thongtinra').hide();
+      }
+    }
+    if (detailtinhtrang) {
+      toggleVanBanRa(detailtinhtrang);
+    } else {
+      toggleVanBanRa(detailtinhtrang);
+    }
+
+    $('#tinhtrang_id').on('change', function() {
+      toggleVanBanRa($(this).val());
+    });
+
 
     // hàm để đặt disabled cho các field 
     function toggleFormFields(isChecked) {
@@ -399,7 +467,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       try {
         const response = await $.post('index.php', {
           option: 'com_quansu',
-          controller: 'quannhandubi',
+          controller: 'danquan',
           task: 'getThonTobyPhuongxa',
           phuongxa_id: phuongxa_id
         }, null, 'json');
@@ -427,19 +495,18 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
     }
 
     // select nhân khẩu theo laodongdetail (nếu có)
-    async function fetchNhanKhauTheoLaoDongDetail() {
-      const detailQuanNhanDuBi = <?php echo json_encode($detailQuanNhanDuBi); ?>;
-      if (detailQuanNhanDuBi && detailQuanNhanDuBi.nhankhau_id) {
+    async function fetchNhanKhauTheoDetailDanQuan() {
+      if (detailDanQuan && detailDanQuan.nhankhau_id) {
         try {
           const nhankhauResponse = await $.post('index.php', {
             option: 'com_quansu',
-            task: 'quannhandubi.timkiem_nhankhau',
+            task: 'danquan.timkiem_nhankhau',
             format: 'json',
-            nhankhau_id: detailQuanNhanDuBi.nhankhau_id,
+            nhankhau_id: detailDanQuan.nhankhau_id,
           }, null, 'json');
 
           if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
-            const nhankhau = nhankhauResponse.items.find(item => item.id === detailQuanNhanDuBi.nhankhau_id) || nhankhauResponse.items[0];
+            const nhankhau = nhankhauResponse.items.find(item => item.id === detailDanQuan.nhankhau_id) || nhankhauResponse.items[0];
             if (nhankhau) {
               const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
               const newOption = new Option(optionText, nhankhau.id, true, true);
@@ -480,7 +547,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
     // Initialize form state
     toggleFormFields($('#checkbox_toggle').is(':checked'));
     initializePhuongXaAndThonTo();
-    fetchNhanKhauTheoLaoDongDetail();
+    fetchNhanKhauTheoDetailDanQuan();
     $('.btn-themnhanthan').click(function() {
       const stt = $('.dsThanNhan tr').length;
 
@@ -555,7 +622,6 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
         allowClear: true
       });
     });
-
     // Xóa dòng thân nhân khi click vào nút xóa
     $(document).on('click', '.btn-xoathannhan', function(e) {
       e.preventDefault();
@@ -565,12 +631,33 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
         $(this).find('td:first').text(index + 1);
       });
     });
+    $('.bnt-deleteVanBan').on('click', function() {
+      var id = $(this).data('id');
+      var selector = '.vanban_' + id;
 
-    if (detailQuanNhanDuBi && detailQuanNhanDuBi.thannhan) {
-      if (Array.isArray(detailQuanNhanDuBi.thannhan)) {
+      bootbox.confirm({
+        title: "Xác nhận xóa",
+        message: "Bạn có chắc chắn muốn xóa văn bản này không?",
+        buttons: {
+          cancel: {
+            label: '<i class="fa fa-times"></i> Hủy'
+          },
+          confirm: {
+            label: '<i class="fa fa-check"></i> Xóa'
+          }
+        },
+        callback: function(result) {
+          if (result) {
+            $(selector).remove(); // Xóa phần tử khỏi DOM
+          }
+        }
+      });
+    });
+    if (detailDanQuan && detailDanQuan.thannhan) {
+      if (Array.isArray(detailDanQuan.thannhan)) {
         $('.dsThanNhan').empty(); // Xóa dữ liệu cũ nếu có
 
-        detailQuanNhanDuBi.thannhan.forEach((item, index) => {
+        detailDanQuan.thannhan.forEach((item, index) => {
           const stt = index + 1;
           // Tạo options cho quan hệ
           let quanheOptions = '<option value="">Chọn quan hệ</option>';
@@ -669,8 +756,8 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
         try {
           const response = await $.post('index.php', {
             option: 'com_quansu',
-            controller: 'quannhandubi',
-            task: 'checkNhankhauInQuanNhanDuBi',
+            controller: 'danquan',
+            task: 'checkNhankhauInDanQuan',
             nhankhau_id: data.id,
           }, null, 'json');
 
@@ -729,7 +816,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       try {
         const response = await $.post('index.php', {
           option: 'com_quansu',
-          controller: 'quannhandubi',
+          controller: 'danquan',
           task: 'getThanNhan',
           nhankhau_id: data.id,
         }, 'json');
@@ -788,7 +875,8 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
     });
 
 
-    jQuery.validator.addMethod("checkTuoi18den27", function(value, element) {
+    // validate từ 18 - 45 tuổi 
+    jQuery.validator.addMethod("checktren18", function(value, element) {
       if (!value) return true; // Để rule "required" xử lý
 
       // Tách chuỗi "dd/mm/yyyy"
@@ -813,10 +901,10 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       }
 
       return age >= 18 && age <= 45;
-    }, "Người đăng ký phải trong độ tuổi từ 18 đến 45.");
+    }, "Người đăng ký phải từ 18 đến 45 tuổi.");
 
-    // validate forrm
-    $('#formQuanNhanDuBi').validate({
+    // validate form
+    $('#formDanQuan').validate({
       ignore: [],
       rules: {
         select_top: {
@@ -838,14 +926,17 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
           required: function() {
             return !$('#checkbox_toggle').is(':checked');
           },
-          checkTuoi18den27: true
+          checktren18: true
         },
         select_phuongxa_id: {
           required: function() {
             return !$('#checkbox_toggle').is(':checked');
           }
         },
-        tinhtrang: {
+        tinhtrang_id: {
+          required: true
+        },
+        loaidanquan: {
           required: true
         }
       },
@@ -855,10 +946,11 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
         cccd: 'Vui lòng nhập CCCD/CMND',
         select_namsinh: {
           required: 'Vui lòng chọn ngày, tháng, năm sinh',
-          checkTuoi18den27: 'Người đăng ký phải trong độ tuổi từ 18 đến 27'
+          checktren18: 'Người đăng ký phải trong độ tuổi từ 18 đến 27'
         },
         select_phuongxa_id: 'Vui lòng chọn phường/xã',
-        tinhtrang: 'Vui lòng chọn kết luận',
+        tinhtrang_id: 'Vui lòng chọn tình trạng',
+        loaidanquan: 'Vui lòng chọn loại dân quân',
       },
       errorPlacement: function(error, element) {
         if (element.hasClass('select2')) {
@@ -872,7 +964,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
     });
 
     // submit form chính
-    $('#formQuanNhanDuBi').on('submit', function(e) {
+    $('#formDanQuan').on('submit', function(e) {
       e.preventDefault();
       if (!$(this).valid()) {
         showToast('Vui lòng nhập đầy đủ thông tin', false);
@@ -889,7 +981,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
           const isSuccess = response.success ?? true;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
-            setTimeout(() => location.href = "/index.php/component/quansu/?view=quannhandubi&task=default", 500);
+            // setTimeout(() => location.href = "/index.php/component/quansu/?view=danquan&task=default", 500);
           }
         },
         error: function(xhr) {
