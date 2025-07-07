@@ -4,7 +4,7 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
-class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
+class QuanSu_Model_Dknvqs extends BaseDatabaseModel
 {
 
   public function getTitle()
@@ -12,7 +12,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     return "Tie";
   }
 
-  public function getListDktuoi17($filters)
+  public function getListDknvqs($filters)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
@@ -28,7 +28,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
         'tt.tenkhuvuc as thonto',
         'gt.tengioitinh'
       ])
-      ->from($db->quoteName('qs_dangkytuoi17', 'a'))
+      ->from($db->quoteName('qs_dangkyquansu', 'a'))
       ->leftJoin($db->quoteName('danhmuc_trangthaiquansu', 'ttqs') . ' ON a.trangthaiquansu_id = ttqs.id')
       ->leftJoin($db->quoteName('danhmuc_khuvuc', 'px') . ' ON a.n_phuongxa_id = px.id')
       ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON a.n_thonto_id = tt.id')
@@ -68,8 +68,8 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       $query->where('a.n_cccd COLLATE utf8mb4_unicode_ci LIKE ' . $db->quote('%' . $filters['cccd'] . '%'));
     }
 
-    if (!empty($filters['tinhtrang_id'])) {
-      $query->where('a.trangthaiquansu_id = ' . (int) $filters['tinhtrang_id']);
+    if (!empty($filters['doituong_id'])) {
+      $query->where('a.trangthaiquansu_id = ' . (int) $filters['doituong_id']);
     }
 
     if (!empty($filters['gioitinh_id'])) {
@@ -105,7 +105,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     ];
   }
 
-  public function getDetailDkTuoi17($idDkTuoi17)
+  public function getDetailDknvqs($idDknvqs)
   {
     $db = Factory::getDbo();
 
@@ -119,33 +119,29 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
         'a.n_cccd',
         'a.n_dienthoai',
         'a.n_dantoc_id',
-        'a.n_tongiao_id',
         'a.n_phuongxa_id',
         'a.n_thonto_id',
         'a.n_diachi',
-        'a.n_trinhdohocvan_id',
+        'a.trinhdohocvan_id',
         'a.n_namsinh',
         'a.ngaydangky',
         'a.trangthaiquansu_id',
-        'a.chieucao',
-        'a.cannang',
-        'a.tiensubenhtat',
+        'a.nghenghiep_id',
         'a.noilamviec',
-        'a.macbenh',
+        'a.ghichu',
         'a.is_ngoai'
       ])
-        ->from($db->quoteName('qs_dangkytuoi17', 'a'))
-        ->where('a.id = ' . (int)$idDkTuoi17)
+        ->from($db->quoteName('qs_dangkyquansu', 'a'))
+        ->where('a.id = ' . (int)$idDknvqs)
         ->where('a.daxoa = 0');
 
       $db->setQuery($query);
       $row = $db->loadObject();
 
-      // Nếu có bản ghi và tồn tại nhankhau_id
+      // nếu có bản ghi và tồn tại nhankhau_id
       if ($row && !empty($row->nhankhau_id)) {
         $row->thannhan = $this->getThanNhan($row->nhankhau_id);
       } else {
-        // Nếu không có nhankhau_id, lấy thân nhân từ bảng qs_thannhantuoi17
         $query = $db->getQuery(true);
         $query->select([
           'tn.id',
@@ -154,8 +150,8 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
           'tn.quanhenhanthan_id',
           'tn.nghenghiep_id',
         ])
-          ->from($db->quoteName('qs_thannhantuoi17', 'tn'))
-          ->where('tn.dangkytuoi17_id = ' . (int)$idDkTuoi17)
+          ->from($db->quoteName('qs_thannhanquansu', 'tn'))
+          ->where('tn.dangkyquansu_id = ' . (int)$idDknvqs)
           ->where('tn.daxoa = 0');
 
         $db->setQuery($query);
@@ -168,11 +164,11 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     }
   }
 
-  public function saveDktuoi17($formdata, $idUser)
+  public function saveDknvqs($formdata, $idUser)
   {
     $db = Factory::getDbo();
     $now = Factory::getDate()->toSql();
-    $id = $formdata['id']; 
+    $id = $formdata['id'];
 
     $columns = [
       'nhankhau_id' => (int)$formdata['nhankhau_id'],
@@ -184,17 +180,14 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       'n_phuongxa_id' => (int)$formdata['phuongxa_id'],
       'n_thonto_id' => (int)$formdata['thonto_id'],
       'n_diachi' => $formdata['diachi'],
-      'n_trinhdohocvan_id' => (int)$formdata['trinhdohocvan_id'],
-      'noilamviec' => $formdata['noilamviec'],
-      'chieucao' => $formdata['chieucao'],
-      'cannang' => $formdata['cannang'],
-      'tiensubenhtat' => $formdata['thongtinsuckhoegiadinh'],
-      'macbenh' => $formdata['thongtinsuckhoebanthan'],
+      'noilamviec' => (int)$formdata['noilamviec'],
+      'trinhdohocvan_id' => (int)$formdata['trinhdohocvan_id'],
+      'trangthaiquansu_id' => $formdata['doituong_id'],
+      'ghichu' => $formdata['ghichu'],
       'daxoa' => 0
     ];
-
-    if (!empty($formdata['tinhtrangdangky'])) {
-      $columns['trangthaiquansu_id'] = $formdata['tinhtrangdangky'];
+    if (!empty($formdata['nghenghiep_id'])) {
+      $columns['nghenghiep_id'] = $formdata['nghenghiep_id'];
     }
 
     if (!empty($formdata['namsinh'])) {
@@ -220,7 +213,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
         $columns['ngayhieuchinh'] = $now;
 
         $query = $db->getQuery(true)
-          ->update($db->quoteName('qs_dangkytuoi17'))
+          ->update($db->quoteName('qs_dangkyquansu'))
           ->set($this->buildQuerySet($db, $columns))
           ->where($db->quoteName('id') . ' = ' . (int)$id);
         $db->setQuery($query)->execute();
@@ -229,7 +222,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
         $columns['ngaytao'] = $now;
 
         $query = $db->getQuery(true)
-          ->insert($db->quoteName('qs_dangkytuoi17'))
+          ->insert($db->quoteName('qs_dangkyquansu'))
           ->columns(array_keys($columns))
           ->values(implode(',', array_map([$db, 'quote'], array_values($columns))));
         $db->setQuery($query)->execute();
@@ -241,8 +234,8 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
         if ((int)$id > 0) {
           // xóa thân nhân cũ liên kết với bản ghi này
             $queryDeleteTN = $db->getQuery(true)
-            ->delete($db->quoteName('qs_thannhantuoi17'))
-            ->where($db->quoteName('dangkytuoi17_id') . ' = ' . (int)$id);
+            ->delete($db->quoteName('qs_thannhanquansu'))
+            ->where($db->quoteName('dangkyquansu_id') . ' = ' . (int)$id);
             $db->setQuery($queryDeleteTN)->execute();
         }
 
@@ -255,10 +248,10 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
             }
 
             $columnsTN = [
-              'dangkytuoi17_id' => (int)$id,
-              'hoten' => $tn['hoten'] ?? null,
+              'dangkyquansu_id' => (int)$id,
               'namsinh' => !empty($tn['namsinh']) ? $tn['namsinh'] : null,
               'nghenghiep_id' => isset($tn['nghenghiep']) ? (int)$tn['nghenghiep'] : null,
+              'hoten' => $tn['hoten'] ?? null,
               'quanhenhanthan_id' => isset($tn['quanhe_id']) ? (int)$tn['quanhe_id'] : null,
               'nguoitao_id' => (int)$idUser,
               'ngaytao' => $now,
@@ -266,7 +259,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
             ];
 
             $queryTN = $db->getQuery(true)
-              ->insert($db->quoteName('qs_thannhantuoi17'))
+              ->insert($db->quoteName('qs_thannhanquansu'))
               ->columns(array_keys($columnsTN))
               ->values(implode(',', array_map([$db, 'quote'], array_values($columnsTN))));
             $db->setQuery($queryTN)->execute();
@@ -317,8 +310,8 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       ->where('nk.daxoa = 0')
       ->where('hk.daxoa = 0')
       ->where('nk.ngaysinh IS NOT NULL')
-      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 17 YEAR)')
-      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 18 YEAR)');
+      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR)')
+      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 28 YEAR)');
 
     if ($nhankhau_id > 0) {
       $query->where('nk.id = ' . (int)$nhankhau_id);
@@ -386,15 +379,15 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     }
   }
 
-  public function deleteDktuoi17($idUser, $iddktuoi17)
+  public function deleteDknvqs($idUser, $iddknvqs)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
-      ->update('qs_dangkytuoi17')
+      ->update('qs_dangkyquansu')
       ->set('daxoa = 1')
       ->set('nguoixoa_id = ' . $db->quote($idUser))
       ->set('ngayxoa = NOW()')
-      ->where('id =' . $db->quote($iddktuoi17));
+      ->where('id =' . $db->quote($iddknvqs));
 
     $db->setQuery($query);
     return $db->execute();

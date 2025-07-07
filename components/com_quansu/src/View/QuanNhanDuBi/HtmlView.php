@@ -8,7 +8,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\QuanSu\Site\View\DkTuoi17;
+namespace Joomla\Component\QuanSu\Site\View\QuanNhanDuBi;
 
 defined('_JEXEC') or die;
 
@@ -27,22 +27,22 @@ class HtmlView extends BaseHtmlView
         $task = $app->input->get('task', '', 'CMD');
 
         // Phân biệt edit vs add
-        if (strtolower($task) === 'edit_dktuoi17') {
-            $layout = $id > 0 ? 'EDIT_DKTUOI17' : 'ADD_DKTUOI17';
+        if (strtolower($task) === 'edit_quannhandubi') {
+            $layout = $id > 0 ? 'EDIT_QUANNHANDUBI' : 'ADD_QUANNHANDUBI';
         } else {
             $layout = $task ? strtoupper($task) : 'DEFAULT';
         }
 
         switch ($layout) {
             case 'DEFAULT':
-            case 'DS_DKTUOI17':
+            case 'DS_QUANNHANDUBI':
                 $this->setLayout('default');
                 $this->_initDefaultPage();
                 break;
-            case 'ADD_DKTUOI17':
-            case 'EDIT_DKTUOI17':
-                $this->setLayout('edit_dktuoi17');
-                $this->_editDkTuoi17();
+            case 'ADD_QUANNHANDUBI':
+            case 'EDIT_QUANNHANDUBI':
+                $this->setLayout('edit_quannhandubi');
+                $this->_editQuanNhanDuBi();
                 break;
         }
 
@@ -55,17 +55,17 @@ class HtmlView extends BaseHtmlView
         $this->import();
     }
 
-    public function _editDkTuoi17()
+    public function _editQuanNhanDuBi()
     {
         $this->import();
         $app = Factory::getApplication()->input;
-        $model = Core::model('QuanSu/DkTuoi17');
-        $detailDkTuoi17 = null;
+        $model = Core::model('QuanSu/QuanNhanDuBi');
+        $detailQuanNhanDuBi = null;
         $idNguoiDK = $app->getInt('id', null);
         if ($idNguoiDK) {
-            $detailDkTuoi17 = $model->getDetailDkTuoi17($idNguoiDK);
+            $detailQuanNhanDuBi = $model->getDetailQuanNhanDuBi($idNguoiDK);
         }
-        $this->detailDkTuoi17 = $detailDkTuoi17;
+        $this->detailQuanNhanDuBi = $detailQuanNhanDuBi;
     }
     
 
@@ -97,6 +97,7 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true) . '/media/cbcc/js/bootbox.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.gritter.min.js');
 
+        
         $model = Core::model('QuanSu/Base');
         $phanquyen = $model->getPhanQuyen();
         $phuongxa = array();
@@ -104,18 +105,20 @@ class HtmlView extends BaseHtmlView
             $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
         }
         $gioitinh = $model->getDanhMucGioiTinh();
-        $tinhtrang = $model->getDanhMucTrangThaiQuanSu(1);
         $dantoc = $model->getDanhMucDanToc();
         $trinhdohocvan = $model->getDanhMucTrinhDoHocVan();
         $quanhethannhan = $model->getDanhMucQuanHeThanNhan();
         $nghenghiep = $model->getDanhMucNgheNghiep();
-        
+        $capbac = $model->getDanhMucCapBac();
+        $trangthai = $model->getDanhMucTrangThaiQuanSu(3);
+
+        $this->trangthai = $trangthai;
         $this->nghenghiep = $nghenghiep;
         $this->quanhethannhan = $quanhethannhan;
         $this->trinhdohocvan = $trinhdohocvan;
         $this->dantoc = $dantoc;
         $this->phuongxa = $phuongxa;
-        $this->tinhtrang = $tinhtrang;
+        $this->capbac = $capbac;
         $this->gioitinh = $gioitinh;
         return $document;
     }

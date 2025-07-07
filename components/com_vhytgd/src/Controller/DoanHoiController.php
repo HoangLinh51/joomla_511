@@ -15,10 +15,7 @@ use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
+use DateTime;
 
 
 defined('_JEXEC') or die;
@@ -98,7 +95,7 @@ class DoanHoiController extends BaseController
         echo json_encode($result);
         jexit();
     }
-    
+
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
@@ -121,7 +118,7 @@ class DoanHoiController extends BaseController
                 $result['data']
             );
         } catch (Exception $e) {
-            echo json_encode( $e->getMessage());
+            echo json_encode($e->getMessage());
         }
         jexit();
     }
@@ -131,7 +128,7 @@ class DoanHoiController extends BaseController
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
         $doanhoi_id = $input->getInt('doanhoi_id', 0);
- 
+
         // Validate input
         if (!$nhankhau_id || !$doanhoi_id) {
             $response = [
@@ -184,6 +181,16 @@ class DoanHoiController extends BaseController
         $formData['phuongxa_id'] = $formData['modal_phuongxa_id'] ?? $formData['input_phuongxa_id'];
         $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
 
+
+        $formData['namsinh'] = $formData['modal_namsinh'] ?? '';
+        $formData['namsinh'] = !empty($formData['namsinh']) ? $this->formatDate($formData['namsinh']) : '';
+        $formData['thoidiem_batdau'] = $formData['form_thoidiem_batdau'] ?? '';
+        $formData['thoidiem_batdau'] = !empty($formData['thoidiem_batdau']) ? $this->formatDate($formData['thoidiem_batdau']) : '';
+        $formData['thoidiem_ketthuc'] = $formData['form_thoidiem_ketthuc'] ?? '';
+        $formData['thoidiem_ketthuc'] = !empty($formData['thoidiem_ketthuc']) ? $this->formatDate($formData['thoidiem_ketthuc']) : '';
+
+        // var_dump($formData);
+        // exit;
         try {
             $model = Core::model('Vhytgd/DoanHoi');
 
@@ -201,6 +208,17 @@ class DoanHoiController extends BaseController
         echo json_encode($response);
         jexit();
     }
+
+    function formatDate($dateString)
+    {
+        $date = DateTime::createFromFormat('d/m/Y', $dateString);
+        if ($date === false || $date->format('d/m/Y') !== $dateString) {
+            throw new Exception('Invalid date format for namsinh');
+        }
+        // Format to YYYY-MM-DD for database
+        return $date->format('Y-m-d');
+    }
+
 
     public function xoa_doanhoi()
     {

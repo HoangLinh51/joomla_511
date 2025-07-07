@@ -39,11 +39,9 @@ defined('_JEXEC') or die('Restricted access');
 
   function renderTextTrangThai(id, tentrangthai) {
     let stringchucvu = ""
-    if (id == 2) {
+    if (id == 9) {
       stringchucvu = `<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
-    } else if (id == 3) {
-      stringchucvu = `<span class="badge bg-warning" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
-    } else if (id == 1) {
+    } else if (id == 7) {
       stringchucvu = `<span class="badge bg-success" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
     }
     return stringchucvu
@@ -61,13 +59,13 @@ defined('_JEXEC') or die('Restricted access');
         <td style="vertical-align:middle;">${item.tengioitinh || ''}</td>
         <td style="vertical-align:middle;">${item.n_cccd || ''}</td>
         <td style="vertical-align:middle;">${item.n_dienthoai || ''}</td>
-        <td style="vertical-align:middle; text-align: center">${renderTextTrangThai(item.trangthaiquansu_id,item.tentrangthai)}</td>
+        <td style="vertical-align:middle; text-align: center">${renderTextTrangThai(item.trangthaiquannhan_id,item.tentrangthai)}</td>
         <td class="text-center" style="vertical-align: middle;min-width: 120px" >
-         <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:7px; cursor: pointer;" data-iddktuoi17="${item.id}" data-title="Hiệu chỉnh">
+         <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:7px; cursor: pointer;" data-idquannhandubi="${item.id}" data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>
           </span>
           <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:7px; cursor: pointer;" data-iddktuoi17="${item.id}" data-title="Xóa">
+          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:7px; cursor: pointer;" data-idquannhandubi="${item.id}" data-title="Xóa">
             <i class="fas fa-trash-alt"></i>
           </span>
         </td>
@@ -133,7 +131,7 @@ defined('_JEXEC') or die('Restricted access');
     try {
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
       const response = await $.ajax({
-        url: 'index.php?option=com_quansu&controller=dktuoi17&task=getListdktuoi17',
+        url: 'index.php?option=com_quansu&controller=quannhandubi&task=getListquannhandubi',
         method: 'POST',
         data: {
           page,
@@ -161,7 +159,7 @@ defined('_JEXEC') or die('Restricted access');
       $('#pagination').html(pagination);
       $('#pagination-info').text(info);
 
-      history.pushState({}, '', `?view=dktuoi17&task=default&page=${currentPage}`);
+      history.pushState({}, '', `?view=quannhandubi&task=default&page=${currentPage}`);
       return {
         page: currentPage,
         take,
@@ -193,7 +191,7 @@ defined('_JEXEC') or die('Restricted access');
 
     loadData(initialPage, getFilterParams());
     $('body').delegate('.btn_hieuchinh', 'click', function() {
-      window.location.href = '/index.php?option=com_quansu&view=dktuoi17&task=edit_dktuoi17&id=' + $(this).data('iddktuoi17');
+      window.location.href = '/index.php?option=com_quansu&view=quannhandubi&task=edit_quannhandubi&id=' + $(this).data('idquannhandubi');
     });
 
     // hành động search 
@@ -212,13 +210,13 @@ defined('_JEXEC') or die('Restricted access');
       loadData(page, getFilterParams());
     });
 
-    // hành động xóa
+    // hành động xóa    
     $('body').on('click', '.btn_xoa', function() {
-      const iddktuoi17 = $(this).data('iddktuoi17');
+      const idquannhandubi = $(this).data('idquannhandubi');
 
       bootbox.confirm({
         title: `<span class='text-danger' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
-        message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa người đăng ký tuổi 17 này?</span>`,
+        message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa quân nhân dự bị này?</span>`,
         buttons: {
           confirm: {
             label: '<i class="fas fa-check"></i> Đồng ý',
@@ -233,14 +231,14 @@ defined('_JEXEC') or die('Restricted access');
           if (!result) return;
 
           try {
-            const response = await fetch(`index.php?option=com_quansu&controller=dktuoi17&task=xoa_dktuoi17`, {
+            const response = await fetch(`index.php?option=com_quansu&controller=quannhandubi&task=xoa_quannhandubi`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
                 idUser,
-                iddktuoi17
+                idquannhandubi
               })
             });
 

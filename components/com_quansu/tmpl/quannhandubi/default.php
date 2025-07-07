@@ -13,10 +13,10 @@ defined('_JEXEC') or die('Restricted access');
   <div class="content-header">
     <div class="row mb-2">
       <div class="col-sm-8">
-        <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý đăng ký nghĩa vụ quân sự tuổi 17</h3>
+        <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý quân nhân dự bị </h3>
       </div>
       <div class="col-sm-4 text-right" style="padding:0;">
-        <a href="<?php echo Route::_('/index.php?option=com_quansu&view=dktuoi17&task=edit_dktuoi17') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
+        <a href="<?php echo Route::_('/index.php?option=com_quansu&view=quannhandubi&task=edit_quannhandubi') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
           <i class="fas fa-plus"></i> Thêm mới
         </a>
       </div>
@@ -54,11 +54,11 @@ defined('_JEXEC') or die('Restricted access');
             </select>
           </td>
           <td class="d-flex align-items-center w-50">
-            <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Tình trạng đăng ký</b>
+            <b class="text-primary" style="font-size:17px;line-height:2.5;text-wrap: nowrap; width: 33%">Tình trạng</b>
             <select id="tinhtrang_id" name="tinhtrang_id" class="custom-select" data-placeholder="Chọn tình trạng" style="width: 67%;">
               <option value=""></option>
-              <?php foreach ($this->tinhtrang as $dt) { ?>
-                <option value="<?php echo $dt['id']; ?>"><?php echo $dt['tentrangthai']; ?></option>
+              <?php foreach ($this->trangthai as $tt) { ?>
+                <option value="<?php echo $tt['id']; ?>"><?php echo $tt['tentrangthai']; ?></option>
               <?php } ?>
             </select>
           </td>
@@ -90,7 +90,7 @@ defined('_JEXEC') or die('Restricted access');
   </div>
 
   <div id="div_danhsach">
-    <?php require_once 'ds_dktuoi17.php'; ?>
+    <?php require_once 'ds_quannhandubi.php'; ?>
   </div>
 </div>
 
@@ -132,7 +132,7 @@ defined('_JEXEC') or die('Restricted access');
       } else {
         $.post('index.php', {
           option: 'com_quansu',
-          controller: 'dktuoi17',
+          controller: 'quannhandubi',
           task: 'getThonTobyPhuongxa',
           phuongxa_id: $('#phuongxa_id').val()
         }, function(data) {
