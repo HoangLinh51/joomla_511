@@ -91,12 +91,10 @@ class ProfileController extends BaseController
         $model  = $this->getModel('Profile', 'Site');
         $user   = $this->app->getIdentity();
         $userId = (int) $user->get('id');
-        $avatarId = $this->input->get('avatar_id', '', 'STRING');
-
         // Get the user data.
         $requestData = $app->getInput()->post->get('jform', [], 'array');
+
         // Force the ID to this user.
-        $requestData['avatar_id'] = $avatarId;
         $requestData['id'] = $userId;
 
         // Validate the posted data.

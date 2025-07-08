@@ -1,4 +1,5 @@
 <?php
+
 namespace Joomla\Component\VPTK\Site\Controller;
 
 use Core;
@@ -51,7 +52,7 @@ class VptkController extends BaseController
         jexit();
     }
 
-    public function delNhanKhau()
+    public function delHoKhau()
     {
         if (!Session::checkToken()) {
             $this->outputJsonError('Token không hợp lệ');
@@ -68,6 +69,31 @@ class VptkController extends BaseController
         if ($hokhau_id > 0) {
             $model = Core::model('Vptk/Vptk');
             if ($model->removeNhanhokhau($hokhau_id, $user->id)) {
+                $response = ['success' => true, 'message' => 'Đã xóa dữ liệu thành công'];
+            } else {
+                $response['message'] = 'Lỗi khi xóa bản ghi';
+            }
+        } else {
+            $response['message'] = 'ID không hợp lệ';
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        jexit();
+    }
+       public function delNhanKhau()
+    {
+        $user = Factory::getUser();
+        if (!$user->id) {
+            $this->outputJsonError('Bạn cần đăng nhập');
+        }
+
+        $nhankhau_id = $this->input->getInt('nhankhau_id', 0);
+        $response = ['success' => false, 'message' => 'Xóa thất bại'];
+
+        if ($nhankhau_id > 0) {
+            $model = Core::model('Vptk/Vptk');
+            if ($model->removeNhankhau($nhankhau_id, $user->id)) {
                 $response = ['success' => true, 'message' => 'Đã xóa dữ liệu thành công'];
             } else {
                 $response['message'] = 'Lỗi khi xóa bản ghi';
@@ -136,7 +162,7 @@ class VptkController extends BaseController
             require_once $autoloadPath;
 
             // Thiết lập cache để giảm bộ nhớ
-           
+
 
             // Tạo spreadsheet
             $spreadsheet = new Spreadsheet();
@@ -194,6 +220,29 @@ class VptkController extends BaseController
         } catch (Exception $e) {
             $this->outputJsonError('Lỗi khi xuất Excel: ' . $e->getMessage());
         }
+    }
+    function saveNhanhokhau()
+    {
+        Session::checkToken() or die('Invalid Token');
+        $user = Factory::getUser();
+
+
+
+        $model = Core::model('Vptk/Vptk');
+        $input = Factory::getApplication()->input;
+        $formData = $input->getArray($_POST);
+        try {
+            if (!$model->saveNhanhokhau($formData)) {
+                Factory::getApplication()->enqueueMessage('Lưu dữ liệu không thành công.', 'error');
+                return;
+            }
+        } catch (Exception $e) {
+            Factory::getApplication()->enqueueMessage($e->getMessage(), 'error');
+        }
+
+        $session = Factory::getSession();
+        $session->set('message_bootbox', 'Đã cập nhật dữ liệu thành công!');
+        $this->setRedirect("index.php/component/vptk/?view=nhk&task=default");
     }
 
     private function outputJsonError($message)

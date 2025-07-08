@@ -28,11 +28,11 @@ $doc = Factory::getDocument();
 	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/moment.min.js" type="text/javascript"></script>
 	<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap/tempusdominus-bootstrap-4.min.js" type="text/javascript"></script>
 	<script src="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.js" type="text/javascript"></script>
-	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/plugins/global/style.bundle.css" media="screen" rel="stylesheet" type="text/css" />
-	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.css" media="screen" rel="stylesheet" type="text/css" />
-	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />
-	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte/dist/css/_all-skins.min.css" media="screen" rel="stylesheet" type="text/css" />
-	<link href="<?php  echo Uri::root(true); ?>/templates/adminlte//plugins/fontawesome-free/css/all.min.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/style.bundle.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/plugins/global/plugins.bundle.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/_all-skins.min.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="<?php echo Uri::root(true); ?>/templates/adminlte//plugins/fontawesome-free/css/all.min.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -53,7 +53,7 @@ $doc = Factory::getDocument();
 						<div class="dropzone dropzone-multi" id="kt_dropzonejs_single">
 							<!--begin::Controls-->
 							<div class="dropzone-panel mb-lg-0 mb-2">
-								<a class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm quyết định</a>
+								<a class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm file</a>
 							</div>
 							<!--end::Controls-->
 
@@ -113,9 +113,9 @@ $doc = Factory::getDocument();
 		</div>
 	</div>
 </body>
+
 </html>
 <script>
-
 	Dropzone.autoDiscover = false; // Disable auto-discovery
 
 	// Function to initialize Dropzone if not already initialized
@@ -160,12 +160,12 @@ $doc = Factory::getDocument();
 					if (this.files[1] != null) {
 						this.removeFile(this.files[0]);
 					}
-					
+
 				});
 			}
 		});
 
-		singleFile.on("addedfile", function (file) {
+		singleFile.on("addedfile", function(file) {
 			// Hookup the start button
 			const dropzoneItems = dropzoneElement.querySelectorAll('.dropzone-item');
 			dropzoneItems.forEach(dropzoneItem => {
@@ -174,18 +174,18 @@ $doc = Factory::getDocument();
 		});
 
 		// Update the total progress bar
-		singleFile.on("totaluploadprogress", function (progress) {
+		singleFile.on("totaluploadprogress", function(progress) {
 			const progressBars = dropzoneElement.querySelectorAll('.progress-bar');
 			progressBars.forEach(progressBar => {
 				progressBar.style.width = progress + "%";
 			});
 		});
 		var formData = jQuery("#uploadFile").serializeArray();
-		singleFile.on("sending", function (file, xhr, formDataObject) {
+		singleFile.on("sending", function(file, xhr, formDataObject) {
 			// Show the total progress bar when upload starts
 			jQuery.each(formData, function(key, value) {
-            	formDataObject.append(value.name, value.value);
-        	});
+				formDataObject.append(value.name, value.value);
+			});
 			const progressBars = dropzoneElement.querySelectorAll('.progress-bar');
 			progressBars.forEach(progressBar => {
 				progressBar.style.opacity = "1";
@@ -193,27 +193,27 @@ $doc = Factory::getDocument();
 		});
 
 		// Hide the total progress bar when nothing"s uploading anymore
-		singleFile.on("complete", function (progress) {
+		singleFile.on("complete", function(progress) {
 			const progressBars = dropzoneElement.querySelectorAll('.dz-complete');
-			setTimeout(function () {
+			setTimeout(function() {
 				progressBars.forEach(progressBar => {
 					progressBar.querySelector('.progress-bar').style.opacity = "0";
 					progressBar.querySelector('.progress').style.opacity = "0";
 				});
 			}, 300);
-		});	
-		
+		});
+
 		singleFile.on("success", function(file, response) {
-			var data =  JSON.parse(response);
+			var data = JSON.parse(response);
 			var iddiv = "<?php echo $this->iddiv ?>";
 			var uploadLinks = document.getElementById("singleFile");
-			var inputFile = document.getElementById(iddiv+"_file");
+			var inputFile = document.getElementById(iddiv + "_file");
 			var linkElement = document.createElement("a");
 			linkElement.href = data.fileUrl; // Use the returned file URL
 			linkElement.textContent = data.file; // Use the returned file name
 			linkElement.target = "_blank"; // Open link in a new tab
 			linkElement.className = "filetaga";
-			uploadLinks.textContent  = '';
+			uploadLinks.textContent = '';
 			uploadLinks.appendChild(linkElement);
 
 			// var hiddenElement = document.createElement('input');
@@ -231,29 +231,29 @@ $doc = Factory::getDocument();
 	// Call the function to initialize Dropzone
 	initializeDropzone();
 
-	
-	// Dropzone.autoDiscover = false;
-    // // set the dropzone container id
-	// const dropzoneId = "#kt_dropzonejs_single";
-    // const dropzoneOne = document.querySelector(dropzoneId);
-	// console.log(dropzoneOne);
-    // // set the preview element template
-    // var previewNode = dropzoneOne.querySelector(".dropzone-item");
-    // previewNode.id = "";
-    // var previewTemplate = previewNode.parentNode.innerHTML;
-    // previewNode.parentNode.removeChild(previewNode);
 
-    // var singleFile = new Dropzone(id, { // Make the whole body a dropzone
+	// Dropzone.autoDiscover = false;
+	// // set the dropzone container id
+	// const dropzoneId = "#kt_dropzonejs_single";
+	// const dropzoneOne = document.querySelector(dropzoneId);
+	// console.log(dropzoneOne);
+	// // set the preview element template
+	// var previewNode = dropzoneOne.querySelector(".dropzone-item");
+	// previewNode.id = "";
+	// var previewTemplate = previewNode.parentNode.innerHTML;
+	// previewNode.parentNode.removeChild(previewNode);
+
+	// var singleFile = new Dropzone(id, { // Make the whole body a dropzone
 	// 	url: "/index.php", // Set the url
 	// 	// paramName: "file",
 	// 	autoProcessQueue: true, // Prevent automatic file upload
 	// 	uploadMultiple: false, // Upload files one by one
-    //     parallelUploads: 20,
+	//     parallelUploads: 20,
 	// 	maxFiles: 1, // Allow only one file
-    //     maxFilesize: 10, // Max filesize in MB
-    //     previewTemplate: previewTemplate,
-    //     previewsContainer: dropzoneId + " .dropzone-items", // Define the container to display the previews
-    //     clickable: dropzoneId + " .dropzone-select", // Define the element that should be used as click trigger to select files.
+	//     maxFilesize: 10, // Max filesize in MB
+	//     previewTemplate: previewTemplate,
+	//     previewsContainer: dropzoneId + " .dropzone-items", // Define the container to display the previews
+	//     clickable: dropzoneId + " .dropzone-select", // Define the element that should be used as click trigger to select files.
 	// 	// init: function() {
 	// 	// 	this.on("maxfilesexceeded", function(file) {
 	// 	// 		// Remove the previous file if a new file is added
@@ -274,27 +274,27 @@ $doc = Factory::getDocument();
 	// 	// 	// 			console.error("Error deleting file:", error);
 	// 	// 	// 		}
 	// 	// 	// 	});
-    //     // 	// });
-    // 	// }
-    // });
+	//     // 	// });
+	// 	// }
+	// });
 
-    // singleFile.on("addedfile", function (file) {
-    //     // Hookup the start button
-    //     const dropzoneItems = dropzone.querySelectorAll('.dropzone-item');
-    //     dropzoneItems.forEach(dropzoneItem => {
-    //         dropzoneItem.style.display = '';
-    //     });
-    // });
+	// singleFile.on("addedfile", function (file) {
+	//     // Hookup the start button
+	//     const dropzoneItems = dropzone.querySelectorAll('.dropzone-item');
+	//     dropzoneItems.forEach(dropzoneItem => {
+	//         dropzoneItem.style.display = '';
+	//     });
+	// });
 
-    // // Update the total progress bar
-    // singleFile.on("totaluploadprogress", function (progress) {
-    //     const progressBars = dropzone.querySelectorAll('.progress-bar');
-    //     progressBars.forEach(progressBar => {
-    //         progressBar.style.width = progress + "%";
-    //     });
-    // });
-    // singleFile.on("sending", function (file, xhr, formData) {
-    //     // Show the total progress bar when upload starts
+	// // Update the total progress bar
+	// singleFile.on("totaluploadprogress", function (progress) {
+	//     const progressBars = dropzone.querySelectorAll('.progress-bar');
+	//     progressBars.forEach(progressBar => {
+	//         progressBar.style.width = progress + "%";
+	//     });
+	// });
+	// singleFile.on("sending", function (file, xhr, formData) {
+	//     // Show the total progress bar when upload starts
 	// 	formData.append("is_new", document.getElementById("is_new").value);
 	// 	formData.append("idObject", document.getElementById("idObject").value);
 	// 	formData.append("isTemp", document.getElementById("isTemp").value);
@@ -305,24 +305,24 @@ $doc = Factory::getDocument();
 	// 	formData.append("pdf", document.getElementById("pdf").value);
 	// 	formData.append("is_nogetcontent", document.getElementById("is_nogetcontent").value);
 	// 	formData.append("id_user", document.getElementById("id_user").value);
-    //     const progressBars = dropzone.querySelectorAll('.progress-bar');
-    //     progressBars.forEach(progressBar => {
-    //         progressBar.style.opacity = "1";
-    //     });
-    // });
+	//     const progressBars = dropzone.querySelectorAll('.progress-bar');
+	//     progressBars.forEach(progressBar => {
+	//         progressBar.style.opacity = "1";
+	//     });
+	// });
 
-    // // Hide the total progress bar when nothing"s uploading anymore
-    // singleFile.on("complete", function (progress) {
-    //     const progressBars = dropzone.querySelectorAll('.dz-complete');
+	// // Hide the total progress bar when nothing"s uploading anymore
+	// singleFile.on("complete", function (progress) {
+	//     const progressBars = dropzone.querySelectorAll('.dz-complete');
 
-    //     setTimeout(function () {
-    //         progressBars.forEach(progressBar => {
-    //             progressBar.querySelector('.progress-bar').style.opacity = "0";
-    //             progressBar.querySelector('.progress').style.opacity = "0";
-    //         });
-    //     }, 300);
-    // });	
-	
+	//     setTimeout(function () {
+	//         progressBars.forEach(progressBar => {
+	//             progressBar.querySelector('.progress-bar').style.opacity = "0";
+	//             progressBar.querySelector('.progress').style.opacity = "0";
+	//         });
+	//     }, 300);
+	// });	
+
 	// singleFile.on("success", function(file, response, index) {
 	// 	var fileElement = file.previewElement;
 	// 	var data =  JSON.parse(response)
@@ -337,7 +337,7 @@ $doc = Factory::getDocument();
 	// 		if (filenameElement) {
 	// 			// Set the data-dz-name attribute to the file name
 	// 			var nameSpan = filenameElement.querySelector("span[data-dz-name]");
-				
+
 	// 			if (nameSpan) {
 	// 				nameSpan.setAttribute('data-dz-name', file.name);
 	// 				nameSpan.textContent  = '';
@@ -345,18 +345,20 @@ $doc = Factory::getDocument();
 	// 			}
 	// 		}
 	// 	}
-    // });
+	// });
 </script>
 <style>
-a.dz-clickable:hover{
-    border-top: 3px solid transparent !important;
-}
-.filetaga{
-	color: #7E8299;
+	a.dz-clickable:hover {
+		border-top: 3px solid transparent !important;
+	}
 
-}
-.filetaga:hover{
-	border-top: 3px solid transparent !important;
+	.filetaga {
+		color: #7E8299;
 
-}
+	}
+
+	.filetaga:hover {
+		border-top: 3px solid transparent !important;
+
+	}
 </style>

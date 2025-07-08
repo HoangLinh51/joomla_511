@@ -157,17 +157,7 @@ class AttachmentController extends BaseController
     function uploadSingleImage()
     {
         $formData = Factory::getApplication()->input->post->getArray();
-        if (is_array($_FILES['uploadfile']['name'])) {
-            $file = [
-                'name'     => $_FILES['uploadfile']['name'][0],
-                'type'     => $_FILES['uploadfile']['type'][0],
-                'tmp_name' => $_FILES['uploadfile']['tmp_name'][0],
-                'error'    => $_FILES['uploadfile']['error'][0],
-                'size'     => $_FILES['uploadfile']['size'][0]
-            ];
-        } else {
-            $file = $_FILES['uploadfile'];
-        }
+        $file = $_FILES['uploadfile'];
         $date = getdate();
 
         // Kiểm tra có đúng 1 file được upload không
@@ -184,7 +174,8 @@ class AttachmentController extends BaseController
         $dirPath = $mapper->getDir($date['year'], $date['mon']);
 
         // Tạo tên file mới
-        $new_name = md5($file['name'] . time());
+        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $new_name = md5($file['name'] . time()) . '.' . $ext;
         $uploadfile = $dirPath . '/' . $new_name;
 
         if (move_uploaded_file($file['tmp_name'], $uploadfile)) {
@@ -199,33 +190,177 @@ class AttachmentController extends BaseController
                 'created_by' => $user->id,
                 'created_at' => date('Y-m-d H:i:s')
             );
-            $mapper->create($data);
+            $avatarId = $mapper->create($data);
             // ✅ Tạo URL ảnh thông qua get_image.php
             $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $data['code'];
-            $avatarId = $data['object_id'];
-            var_dump($data);
 
             echo '<script>
-                    if (window.parent && window.parent.document) {
-                        window.parent.document.getElementById("avatar-preview").src = "' . htmlspecialchars($publicUrl, ENT_QUOTES, 'UTF-8') . '";
-                        var form = window.parent.document.getElementById("member-profile");
-                        var input = window.parent.document.getElementById("avatar_id_input");
-                        if (!input) {
-                            input = document.createElement("input");
-                            input.type = "hidden";
-                            input.name = "avatar_id";
-                            input.id = "avatar_id_input";
-                            form.appendChild(input);
-                            input.value = "' . $avatarId . '";
-                        }
+            if (window.parent && window.parent.document) {
+            var imagePreview = window.parent.document.getElementById("imagePreview");
+                if (imagePreview) {
+                    imagePreview.src = "' . htmlspecialchars($publicUrl, ENT_QUOTES, 'UTF-8') . '";
+                }
+                var form = window.parent.document.getElementById("imageUploadForm");
+                if (form) {
+                    var input = window.parent.document.getElementById("jform_avatar_id");
+                    if (!input) {
+                        input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "avatar_id";
+                        input.id = "avatar_id";
+                        form.appendChild(input);
                     }
-                </script>';
+                    input.value = "' . $avatarId . '";
+                }
+            }
+          </script>';
             exit;
         } else {
             http_response_code(500);
             echo json_encode(['error' => 'Lỗi khi upload file']);
             exit;
         }
+
+        exit;
+    }
+
+    function uploadMultiImages()
+    {
+        $app = Factory::getApplication();
+        $input = $app->input;
+        $formData = $input->post->getArray();
+        $uploadedFiles = $_FILES['uploadfiles'] ?? null;
+
+        if (empty($uploadedFiles) || empty(array_filter($uploadedFiles['name'] ?? []))) {
+            http_response_code(400);
+            echo '<script>alert("Không có file nào được chọn hoặc dữ liệu không hợp lệ.");</script>';
+            exit;
+        }
+
+        $type = $formData['type'] ?? -1;
+        $idObject = $formData['idObject'] ?? 0;
+        $user = Factory::getUser();
+        $mapper = Core::model('Core/Attachment');
+        $date = getdate();
+        $dirPath = $mapper->getDir($date['year'], $date['mon']);
+
+        if (!is_dir($dirPath) && !mkdir($dirPath, 0755, true)) {
+            http_response_code(500);
+            echo '<script>alert("Lỗi nghiêm trọng: Không thể tạo thư mục upload.");</script>';
+            exit;
+        }
+
+        $numFiles = count($uploadedFiles['name'] ?? []);
+        $successfulAttachments = [];
+
+        for ($i = 0; $i < $numFiles; $i++) {
+            $originalName = $uploadedFiles['name'][$i] ?? '';
+            $tmpName = $uploadedFiles['tmp_name'][$i] ?? '';
+            $fileError = $uploadedFiles['error'][$i] ?? UPLOAD_ERR_NO_FILE;
+            $fileType = $uploadedFiles['type'][$i] ?? '';
+
+            if ($fileError !== UPLOAD_ERR_OK || !is_uploaded_file($tmpName)) {
+                continue;
+            }
+
+            // Optional: Kiểm tra định dạng file ảnh
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!in_array($fileType, $allowedTypes)) {
+                continue;
+            }
+
+            $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+            $newName = md5($originalName . time() . uniqid()) . '.' . $ext;
+            $uploadPath = $dirPath . '/' . $newName;
+
+            if (!move_uploaded_file($tmpName, $uploadPath)) {
+                continue;
+            }
+
+            $data = [
+                'folder' => $dirPath,
+                'object_id' => $idObject,
+                'code' => $newName,
+                'mime' => $fileType,
+                'url' => $uploadPath,
+                'filename' => $originalName,
+                'type_id' => $type,
+                'created_by' => $user->id,
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+
+            $idImage = $mapper->create($data);
+            if ($idImage) {
+                $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $newName;
+                $successfulAttachments[] = [
+                    'url' => $publicUrl,
+                    'idImage' => $idImage, // hoặc có thể thay bằng `$data['id']` nếu `$mapper->create()` trả về ID mới
+                    'filename' => $originalName
+                ];
+            } else {
+                unlink($uploadPath); // rollback nếu lưu DB thất bại
+            }
+        }
+        echo '<script>';
+        echo 'if (window.parent && window.parent.document) {';
+        echo '  const form = window.parent.document.getElementById("imageUploadForm");';
+        echo '  const imagePreview = window.parent.document.getElementById("imagePreview");';
+
+        foreach ($successfulAttachments as $file) {
+            $url = htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8');
+            $filename = htmlspecialchars($file['filename'], ENT_QUOTES, 'UTF-8');
+            $idImage = htmlspecialchars($file['idImage'], ENT_QUOTES, 'UTF-8');
+            echo '  if (imagePreview) {';
+            echo '    const img = document.createElement("img");';
+            echo '    img.src = "' . htmlspecialchars($file['url'], ENT_QUOTES, 'UTF-8') . '";';
+            echo '    img.alt = "' . htmlspecialchars($file['filename'], ENT_QUOTES, 'UTF-8') . '";';
+            echo '    Object.assign(img.style, { maxWidth: "100px", maxHeight: "100px", border: "1px solid #ccc", padding: "2px" });';
+            echo '    const wrapper = document.createElement("div");';
+            echo '    wrapper.style.display = "inline-block";';
+            echo '    wrapper.style.position = "relative";';
+            echo '    wrapper.style.marginRight = "5px";';
+
+            echo '    img.id = "uploaded_img_' . $idImage . '";';
+            echo '    wrapper.appendChild(img);';
+
+            echo '    const closeBtn = document.createElement("span");';
+            echo '    closeBtn.innerHTML = "×";';
+            echo '    Object.assign(closeBtn.style, {';
+            echo '      position: "absolute",';
+            echo '      top: "0px",';
+            echo '      right: "0px",';
+            echo '      background: "rgba(0,0,0,0.6)",';
+            echo '      color: "white",';
+            echo '      padding: "0 5px",';
+            echo '      cursor: "pointer",';
+            echo '      fontWeight: "bold",';
+            echo '      borderRadius: "0px 0px 0px 5px",';
+            echo '      lineHeight: "1",';
+            echo '    });';
+
+            echo '    closeBtn.onclick = function() {';
+            echo '      wrapper.remove();';
+            echo '      const hiddenInput = form.querySelector("input#image_id_' . $idImage . '");';
+            echo '      if (hiddenInput) hiddenInput.remove();';
+            echo '    };';
+
+            echo '    wrapper.appendChild(closeBtn);';
+            echo '    imagePreview.appendChild(wrapper);';
+            echo '  }';
+
+            // Thêm hidden input
+            echo '  if (form) {';
+            echo '    const input = document.createElement("input");';
+            echo '    input.type = "hidden";';
+            echo '    input.name = "image_id";';
+            echo '    input.id = "image_id_' . $idImage . '";';
+            echo '    input.value = "' . htmlspecialchars($file['idImage'], ENT_QUOTES, 'UTF-8') . '";';
+            echo '    form.appendChild(input);';
+            echo '  }';
+        }
+
+        echo '}';
+        echo '</script>';
 
         exit;
     }
@@ -425,29 +560,23 @@ class AttachmentController extends BaseController
 
     public function delete()
     {
-        $date = getdate();
-        $year =  Factory::getApplication()->input->getInt('year', 0);
-        $iddiv =  Factory::getApplication()->input->getVar('iddiv');
         $is_new = 0;
-        //truongvc attachment for traodoi module
-        $from = Factory::getApplication()->input->getVar('from');
-        if (!$year)
-            $year = $date['year'];
-        $code = Factory::getApplication()->input->getVar('maso');
-        $idObject = Factory::getApplication()->input->getVar('idObject');
-        if (!$idObject)
-            $idObject = 0;
-        $isTemp = Factory::getApplication()->input->getVar('isTemp');
-        if (!$isTemp)
-            $isTemp = 0;
-        $type = Factory::getApplication()->input->getVar('type');
-        $arr_code = Factory::getApplication()->input->getVar('DELidfiledk' . $idObject);
+        $app = Factory::getApplication();
+        $input = $app->input;
+
+        $type = $input->get('type', '', 'STRING');
+        $year = $input->getInt('year', 0);
+        $iddiv = $input->get('iddiv', '', 'STRING');
+        $idObject = $input->getInt('idObject', 0);
+        $isTemp = $input->getBool('isTemp', false);
+        $from = $input->get('from', '', 'STRING');
+        $arr_code = $input->get('DELidfiledk' . $idObject, [], 'ARRAY');
         $pdf = Factory::getApplication()->input->getVar('pdf');
         $is_nogetcontent = Factory::getApplication()->input->getVar('is_nogetcontent');
         $mapper = Core::model('Core/Attachment');
-        //var_dump($arr_code);exit;
-        for ($i = 0; $i < count($arr_code); $i++) {
-            $mapper->deleteFileByMaso($arr_code[$i]);
+
+        foreach ($arr_code as $code) {
+            $mapper->deleteFileByMaso($code);
         }
         $url = Uri::root(true) . '/index.php?option=com_core&view=attachment&format=raw&task=input&iddiv=' . $iddiv . '&idObject=' . $idObject . '&is_new=' . $is_new . '&year=' . $year . '&type=' . $type . "&pdf=" . $pdf . "&is_nogetcontent=" . $is_nogetcontent;
         echo "<script>window.parent.loadDivFromUrl('" . $iddiv . "','$url" . "'); </script>";
@@ -498,6 +627,7 @@ class AttachmentController extends BaseController
         //var_dump($formData);
         //exit;
     }
+
     public function download()
     {
         $date = getdate();
@@ -514,6 +644,7 @@ class AttachmentController extends BaseController
         }
         exit;
     }
+
     public function fixedFileNotCopy()
     {
         $user_id = Factory::getApplication()->input->getUser()->id;
