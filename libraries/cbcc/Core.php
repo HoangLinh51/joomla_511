@@ -525,8 +525,11 @@ class Core
 	}
 
 	//check người dùng có thuộc nhóm người dùng được phân quyền không
-	public static function checkUserMenuPermission($id_user, $component, $controller = null, $task = 'default', $location = 'site')
+	public static function checkUserMenuPermission($id_user, $component, $controller = null, $task = 'default')
 	{
+		if($task == '' || empty($task) ){
+			$task = 'default';
+		}
 		$db = Factory::getDbo();
 		// lấy menu id
 		$query = $db->getQuery(true);
@@ -535,6 +538,8 @@ class Core
 			->where('component = ' . $db->quote($component))
 			->where('controller = ' . $db->quote($controller))
 			->where('task = ' . $db->quote($task));
+			echo $query;
+		echo '<br>';
 		$db->setQuery($query);
 		$menu_id = $db->loadAssoc();
 
@@ -547,6 +552,8 @@ class Core
 			->select('group_id')
 			->from('jos_user_usergroup_map')
 			->where('user_id = ' . (int) $id_user);
+		echo $query;
+		echo '<br>';
 		$db->setQuery($query);
 		$userGroupIds = $db->loadColumn();
 
@@ -560,6 +567,8 @@ class Core
 			->from('jos_core_menu_usergroup')
 			->where('menu_id = ' . (int) $menu_id['id'])
 			->where('usergroup_id IN (' . implode(',', $userGroupIds) . ')');
+		echo $query;
+		echo '<br>';
 		$db->setQuery($query);
 		$hasPermission = (int) $db->loadResult();
 

@@ -27,8 +27,14 @@ class HtmlView extends BaseHtmlView
         $component = 'com_vptk';
         $controller = $input->getCmd('view', 'bdh');
         $task = strtoupper($input->getCmd('task', 'default'));
+        if (!$user->id) {
+            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
+        }
+        if ($task === 'THONGKE' || $task === 'ADD_BDH' || $task === 'EDIT_BDH') {
+            $checkTask = 'default';
+        }
 
-        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $task)) {
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                     <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
                     <a href="/index.php" style="text-decoration: none;">

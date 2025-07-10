@@ -15,6 +15,7 @@ defined('_JEXEC') or die;
 use Core;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
 class HtmlView extends BaseHtmlView
@@ -25,9 +26,16 @@ class HtmlView extends BaseHtmlView
         $input = Factory::getApplication()->input;
         $component = 'com_quantrihethong';
         $controller = $input->getCmd('view', 'quantrihethong');
-        $task = strtoupper($input->getCmd('task', 'default'));
+        $task = strtoupper($input->getCmd('task', 'ds_taikhoan'));
 
-        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $task)) {
+        if (!$user->id) {
+            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
+        }
+        if ($task === 'ADD_USER' || $task === 'EDIT_USER') {
+            $checkTask = 'default';
+        }
+
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                     <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
                     <a href="/index.php" style="text-decoration: none;">
@@ -38,7 +46,7 @@ class HtmlView extends BaseHtmlView
                 </div>';
             exit;
         }
-        $layout = strtoupper($input->getCmd('task', 'default'));
+        $layout = strtoupper($input->getCmd('task', 'ds_taikhoan'));
 
         switch ($layout) {
             case 'DEFAULT':
