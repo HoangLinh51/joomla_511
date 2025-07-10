@@ -22,12 +22,26 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
-        $task = $app->input->get('task', '', 'CMD');
+        $user = Factory::getUser();
+        $input = Factory::getApplication()->input;
+        $id = $input->getInt('id');
+        $component = 'com_quansu';
+        $controller = $input->getCmd('view', '');
+        $task = strtolower($input->getCmd('task', 'default'));
 
-        // Phân biệt edit vs add
-        if (strtolower($task) === 'edit_dktuoi17') {
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $task)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
+
+        if ($task === 'edit_dktuoi17') {
             $layout = $id > 0 ? 'EDIT_DKTUOI17' : 'ADD_DKTUOI17';
         } else {
             $layout = $task ? strtoupper($task) : 'DEFAULT';

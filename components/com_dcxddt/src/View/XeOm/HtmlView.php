@@ -22,16 +22,27 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
-        $task = $app->input->get('task', '', 'CMD');
-        $layout = $task ? strtoupper($task) : 'DEFAULT';
+        $user = Factory::getUser();
+        $input = Factory::getApplication()->input;
+        $component = 'com_vhytgd';
+        $controller = $input->getCmd('view', 'xeom');
+        $task =  strtoupper($input->getCmd('task', 'default'));
 
-        switch ($layout) {
-            case 'DEFAULT':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $task)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
+
+        if ($task === 'DEFAULT') {
+            $this->setLayout('default');
+            $this->_initDefaultPage();
         }
 
         parent::display($tpl);

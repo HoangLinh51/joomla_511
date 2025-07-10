@@ -523,6 +523,49 @@ class Core
 			return $non_action;
 		}
 	}
+
+	//check người dùng có thuộc nhóm người dùng được phân quyền không
+	public static function checkUserMenuPermission($id_user, $component, $controller = null, $task = 'default', $location = 'site')
+	{
+		$db = Factory::getDbo();
+		// lấy menu id
+		$query = $db->getQuery(true);
+		$query->select('id')
+			->from($db->quoteName('core_menu'))
+			->where('component = ' . $db->quote($component))
+			->where('controller = ' . $db->quote($controller))
+			->where('task = ' . $db->quote($task));
+		$db->setQuery($query);
+		$menu_id = $db->loadAssoc();
+
+     if (!$menu_id) {
+         return false;
+     }
+
+		//lấy các nhóm (group_id) mà user thuộc về
+		$query = $db->getQuery(true)
+			->select('group_id')
+			->from('jos_user_usergroup_map')
+			->where('user_id = ' . (int) $id_user);
+		$db->setQuery($query);
+		$userGroupIds = $db->loadColumn();
+
+		if (empty($userGroupIds)) {
+			return false;
+		}
+
+		//kiểm tra nhóm đó có được gán với menu không
+		$query = $db->getQuery(true)
+			->select('COUNT(*)')
+			->from('jos_core_menu_usergroup')
+			->where('menu_id = ' . (int) $menu_id['id'])
+			->where('usergroup_id IN (' . implode(',', $userGroupIds) . ')');
+		$db->setQuery($query);
+		$hasPermission = (int) $db->loadResult();
+
+		return $hasPermission > 0;
+	}
+
 	/**
 	 * Kiem tra phan quyen
 	 * @param integer $id_user, $component (là thành phần bắt buộc), $controller, $option('task', 'location', 'iddonvi', 'status', 'non_action')

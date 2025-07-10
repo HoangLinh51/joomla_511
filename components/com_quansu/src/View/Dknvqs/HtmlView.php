@@ -22,12 +22,28 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
+        $user = Factory::getUser();
         $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
-        $task = $app->input->get('task', '', 'CMD');
+        $input = $app->input;
+        $id = $input->getInt('id');
+        $component = 'com_quansu';
+        $controller = $input->getCmd('view', '');
+        $task = strtolower($input->getCmd('task', 'default'));
+
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $task)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
 
         // Phân biệt edit vs add
-        if (strtolower($task) === 'edit_dknvqs') {
+        if ($task === 'edit_dknvqs') {
             $layout = $id > 0 ? 'EDIT_DKNVQS' : 'ADD_DKNVQS';
         } else {
             $layout = $task ? strtoupper($task) : 'DEFAULT';
