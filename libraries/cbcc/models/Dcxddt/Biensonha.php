@@ -3,7 +3,7 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 
-class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
+class Dcxddt_Model_Biensonha extends JModelLegacy
 {
 
     public function getTitle()
@@ -109,17 +109,16 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
 
         return $result;
     }
-    public function saveGiaDinhVH($formData)
+    public function saveBiensonha($formData)
     {
         $db = Factory::getDbo();
         $user_id = Factory::getUser()->id;
+        // var_dump($formData['tuyenduong']);
+        // exit;
 
-        // Ghi log dữ liệu form để debug
-        error_log('Form Data: ' . print_r($formData, true));
-        // Chuyển các trường thành mảng nếu là chuỗi
         $fields_to_array = [
             'nam',
-            'nhankhau_id',
+            'loaisohuu',
             'is_dat', // Sửa từ is_dangvien thành is_dat
             'giadinhvanhoa_tieubieu',
             'lydokhongdat',
@@ -143,21 +142,22 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         }
 
         // Tính số lượng bản ghi cần xử lý (dựa trên hoten thay vì nhankhau_id)
-        $n = count($formData['hoten']);
+        $n = count($formData['loaisohuu']);
         if ($n === 0) {
             error_log('No valid records to process.');
             return false;
         }
 
+        $phuongxa_id = isset($formData['phuongxa_id'][0]) ? strval($formData['phuongxa_id'][0]) : null;
+        $thonto_id = isset($formData['thonto_id'][0]) ? strval($formData['thonto_id'][0]) : null;
         // Lưu vào bảng vhxhytgd_giadinhvanhoa
         $data = array(
             'id' => $formData['giadinhvanhoa'] ?? 0,
-            'phuongxa_id' => $formData['phuongxa_id'] ?? null,
-            'nam' => isset($formData['nam']) ? implode(',', $formData['nam']) : null,
-            'thonto_id' => $formData['thonto_id'] ?? null,
+            'phuongxa_id' => $phuongxa_id ?? null,
+            'thonto_id' => $thonto_id ?? null,
+            'duong_id' => $formData['tuyenduong'] ?? null,
             'daxoa' => '0',
         );
-        // var_dump($data);exit;
         if ((int) $data['id'] == 0) {
             $data['nguoitao_id'] = $user_id;
             $data['ngaytao'] = 'NOW()';
@@ -189,11 +189,13 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
 
         $query = $db->getQuery(true);
         if ((int) $data['id'] == 0) {
-            $query->insert($db->quoteName('vhxhytgd_giadinhvanhoa'))
+            $query->insert($db->quoteName('dcxddtmt_thongtinsonha'))
                 ->columns($data_insert_key)
                 ->values(implode(',', $data_insert_val));
+            // echo $query;
+            // exit;
         } else {
-            $query->update($db->quoteName('vhxhytgd_giadinhvanhoa'))
+            $query->update($db->quoteName('dcxddtmt_thongtinsonha'))
                 ->set(implode(',', $data_update))
                 ->where(array($db->quoteName('id') . '=' . $db->quote($data['id'])));
         }
@@ -202,42 +204,66 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         $db->execute();
 
         if ((int) $data['id'] == 0) {
-            $giadinhvanhoa_id = $db->insertid();
+            $sonha_id = $db->insertid();
         } else {
-            $giadinhvanhoa_id = $data['id'];
+            $sonha_id = $data['id'];
         }
 
         // Lưu vào bảng vhxhytgd_giadinhvanhoa2danhhieu
         for ($dt = 0; $dt < $n; $dt++) {
             // Kiểm tra trường bắt buộc (hoten hoặc cccd_so)
-            if (empty($formData['hoten'][$dt]) && empty($formData['cccd_so'][$dt])) {
-                error_log("Skipping record $dt: Both hoten and cccd_so are empty.");
+            if (empty($formData['loaisohuu'][$dt])) {
                 continue;
             }
-
-
             $dbs = Factory::getDbo();
             $querys = $dbs->getQuery(true);
 
+            // Convert array fields to strings or select first element
+            $toado1 = is_array($formData['toado1']) ? ($formData['toado1'][$dt] ?? null) : $formData['toado1'];
+            $toado2 = is_array($formData['toado2']) ? ($formData['toado2'][$dt] ?? null) : $formData['toado2'];
+            $tentochuc = is_array($formData['tentochuc']) ? ($formData['tentochuc'][$dt] ?? null) : $formData['tentochuc'];
+            $hinhthuccap = is_array($formData['hinhthuccap']) ? ($formData['hinhthuccap'][$dt] ?? null) : $formData['hinhthuccap'];
+            $nhankhau_id = is_array($formData['nhankhau_id']) ? ($formData['nhankhau_id'][$dt] ?? null) : $formData['nhankhau_id'];
+            $phuongxa_id = is_array($formData['phuongxa_id']) ? ($formData['phuongxa_id'][$dt] ?? null) : $formData['phuongxa_id'];
+            $thonto_id = is_array($formData['thonto_id']) ? ($formData['thonto_id'][$dt] ?? null) : $formData['thonto_id'];
+            $dienthoai = is_array($formData['dienthoai']) ? ($formData['dienthoai'][$dt] ?? null) : $formData['dienthoai'];
+            $dienthoai_tochuc = is_array($formData['dienthoai_tochuc']) ? ($formData['dienthoai_tochuc'][$dt] ?? null) : $formData['dienthoai_tochuc'];
+            $diachi = is_array($formData['diachi']) ? ($formData['diachi'][$dt] ?? null) : $formData['diachi'];
+            $diachi_tochuc = is_array($formData['diachi_tochuc']) ? ($formData['diachi_tochuc'][$dt] ?? null) : $formData['diachi_tochuc'];
+            $final_diachi = !empty($diachi) ? $diachi : $diachi_tochuc;
+            $final_dienthoai = !empty($dienthoai) ? $dienthoai : $dienthoai_tochuc;
+
+
+
+
             $data_chuyennganh[$dt] = array(
-                'id' => $formData['id_giadinhvanhoa'][$dt] ?? 0,
-                'giadinhvanhoa_id' => $giadinhvanhoa_id,
-                'nhankhau_id' => $formData['nhankhau_id'][$dt] ?? null,
-                'is_dat' => $formData['is_dat'][$dt] ?? '2', // Sửa từ is_dangvien thành is_dat
-                'is_giadinhvanhoatieubieu' => $formData['gdvh_tieubieu'][$dt] ?? '0',
-                'lydokhongdat' => $formData['lydokhongdat'][$dt] ?? '',
+                'id' => $formData['id_sonha2'][$dt] ?? 0,
+                'sonha_id' => $sonha_id,
+                'sonha' => $formData['sonha'][$dt] ?? null,
+                'thuadatso' => $formData['thuadat'][$dt] ?? null,
+                'tobandoso' => $formData['tobando'][$dt] ?? null,
+                'lydothaydoi' => $formData['lydothaydoi'][$dt] ?? '',
                 'ghichu' => $formData['ghichu'][$dt] ?? '',
+                'toado1' => $toado1,
+                'toado2' => $toado2,
+                'tentochuc' => $tentochuc,
+                'hinhthuccap_id' => $hinhthuccap,
+                'nhankhau_id' => $nhankhau_id,
                 'daxoa' => '0',
                 'n_hoten' => $formData['hoten'][$dt] ?? null,
                 'n_gioitinh_id' => $formData['gioitinh_id'][$dt] ?? null,
                 'n_cccd' => $formData['cccd_so'][$dt] ?? null,
-                'n_dienthoai' => $formData['dienthoai'][$dt] ?? null,
-                'n_phuongxa_id' => $formData['phuongxa_id'] ?? null,
-                'n_thonto_id' => $formData['thonto_id'] ?? null,
-                'n_diachi' => $formData['diachi'][$dt] ?? null,
+                'n_dienthoai' => $final_dienthoai,
+                'n_diachi' => $final_diachi,
+
+                'n_phuongxa_id' => $phuongxa_id,
+                'n_thonto_id' => $thonto_id,
                 'n_namsinh' => $formData['ngaysinh'][$dt] ?? null,
+                'is_loai' => $formData['loaisohuu'][$dt] ?? null,
                 'is_ngoai' => $formData['is_search'][$dt] ?? '0',
             );
+            $data['is_ngoai'] = empty($data['nhankhau_id']) ? 1 : 0;
+
             if ((int) $data_chuyennganh[$dt]['id'] == 0) {
                 $data_chuyennganh[$dt]['nguoitao_id'] = $user_id;
                 $data_chuyennganh[$dt]['ngaytao'] = 'NOW()';
@@ -246,8 +272,7 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
                 $data_chuyennganh[$dt]['nguoihieuchinh_id'] = $user_id;
                 $data_chuyennganh[$dt]['ngayhieuchinh'] = 'NOW()';
             }
-            // var_dump($data_chuyennganh);
-            // exit;
+
             $data_chuyennganh_insert_key[$dt] = [];
             $data_chuyennganh_insert_val[$dt] = [];
             $data_chuyennganh_update[$dt] = [];
@@ -269,57 +294,49 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
             }
 
             if ((int) $data_chuyennganh[$dt]['id'] == 0) {
-                $querys->insert($dbs->quoteName('vhxhytgd_giadinhvanhoa2danhhieu'))
+                $querys->insert($dbs->quoteName('dcxddtmt_sonha2tenduong'))
                     ->columns($data_chuyennganh_insert_key[$dt])
                     ->values(implode(',', $data_chuyennganh_insert_val[$dt]));
+               
             } else {
-                $querys->update($dbs->quoteName('vhxhytgd_giadinhvanhoa2danhhieu'))
+                $querys->update($dbs->quoteName('dcxddtmt_sonha2tenduong'))
                     ->set(implode(',', $data_chuyennganh_update[$dt]))
                     ->where(array($dbs->quoteName('id') . '=' . $dbs->quote($data_chuyennganh[$dt]['id'])));
             }
-            // echo $querys;
+            // exit;
             $dbs->setQuery($querys);
             $dbs->execute();
         }
         // exit;
         return true;
     }
-    public function getDanhSachGiaDinhVanHoa($params = array(), $startFrom = 0, $perPage = 20)
+    public function getDanhSachBienSoNha($params = array(), $startFrom = 0, $perPage = 20)
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $phanquyen = $this->getPhanquyen();
 
-        $query->select('*,a.thonto_id, a.id as giadinhvanhoa_id, dh.nhankhau_id, c.diachi, COUNT(dh.id) AS so_nguoi, g.tenkhuvuc');
-        $query->from('vhxhytgd_giadinhvanhoa as a');
-        $query->innerJoin('vhxhytgd_giadinhvanhoa2danhhieu as dh on dh.giadinhvanhoa_id = a.id');
-        $query->leftJoin('vptk_hokhau2nhankhau as b on dh.nhankhau_id = b.id');
-        $query->leftJoin('vptk_hokhau AS c ON b.hokhau_id = c.id');
+        $query->select('a.thonto_id, a.id, dh.nhankhau_id, dh.n_diachi, COUNT(dh.id) AS so_nguoi, g.tenkhuvuc, td.tenduong, dh.id as sonha2_id');
+        $query->from('dcxddtmt_thongtinsonha as a');
+        $query->innerJoin('dcxddtmt_sonha2tenduong as dh on dh.sonha_id = a.id');
         $query->leftJoin('danhmuc_khuvuc AS g ON a.thonto_id = g.id');
-
+        $query->leftJoin('danhmuc_tenduong AS td ON a.duong_id = td.id');
         $query->where('a.daxoa = 0 and dh.daxoa = 0');
-        $query->group('g.tenkhuvuc,a.id');
+        $query->group('g.tenkhuvuc, a.id');
         $query->order('so_nguoi DESC');
-        if (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
+
+        // Kiểm tra phuongxa_id trong params trước khi sử dụng phanquyen
+        if (!empty($params['phuongxa_id'])) {
+            $query->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        } elseif (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
             $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
         }
 
-        if (!empty($params['nam'])) {
-            if (is_array($params['nam'])) {
-                // Nếu nam là mảng, sử dụng IN
-                $namList = array_map(array($db, 'quote'), $params['nam']);
-                $query->where('a.nam IN (' . implode(',', $namList) . ')');
-            } else {
-                // Nếu nam là chuỗi, sử dụng =
-                $query->where('a.nam = ' . $db->quote($params['nam']));
-            }
-        }
-
-        if (!empty($params['phuongxa_id'])) {
-            $query->where('c.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        if (!empty($params['tenduong'])) {
+            $query->where('a.duong_id = ' . $db->quote($params['tenduong']));
         }
         if (!empty($params['thonto_id'])) {
-            $query->where('c.thonto_id = ' . $db->quote($params['thonto_id']));
+            $query->where('a.thonto_id = ' . $db->quote($params['thonto_id']));
         }
 
         // Đảm bảo $perPage và $startFrom là số nguyên
@@ -328,172 +345,129 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         if ($perPage > 0) {
             $query->setLimit($perPage, $startFrom);
         }
+        // echo $query;
 
         // Ghi log truy vấn để debug
-        error_log('Query getDanhSachGiaDinhVanHoa: ' . (string)$query);
-        // echo $query;
+
         $db->setQuery($query);
         return $db->loadAssocList();
     }
 
-    public function CountDanhSachGiaDinhVanHoa($params = array())
+
+    public function CountDanhSachBienSoNha($params = array())
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $phanquyen = $this->getPhanquyen();
 
         $query->select('COUNT(DISTINCT a.id)');
-        $query->from('vhxhytgd_giadinhvanhoa as a');
-        $query->leftJoin('vhxhytgd_giadinhvanhoa2danhhieu as dh on dh.giadinhvanhoa_id = a.id');
-        $query->leftJoin('vptk_hokhau2nhankhau as b on dh.nhankhau_id = b.id');
-        $query->leftJoin('vptk_hokhau AS c ON b.hokhau_id = c.id');
-        $query->leftJoin('danhmuc_tinhthanh AS tt ON c.tinhthanh_id = tt.id');
-        $query->leftJoin('danhmuc_quanhuyen AS e ON c.quanhuyen_id = e.id');
-        $query->leftJoin('danhmuc_phuongxa AS f ON a.phuongxa_id = f.id');
+        $query->from('dcxddtmt_thongtinsonha as a');
+        $query->innerJoin('dcxddtmt_sonha2tenduong as dh on dh.sonha_id = a.id');
         $query->leftJoin('danhmuc_khuvuc AS g ON a.thonto_id = g.id');
-        $query->leftJoin('danhmuc_dantoc AS i ON b.dantoc_id = i.id');
-        $query->leftJoin('danhmuc_tongiao AS l ON b.tongiao_id = l.id');
         $query->where('a.daxoa = 0');
 
-        if (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
+        if (!empty($params['phuongxa_id'])) {
+            $query->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        } elseif (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
             $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
         }
-
-        if (!empty($params['keyWord'])) {
-            $query->where('b.hoten LIKE ' . $db->quote('%' . $params['keyWord'] . '%'));
-        }
-        if (!empty($params['hoten'])) {
-            $query->where('b.hoten LIKE ' . $db->quote('%' . $params['hoten'] . '%'));
-        }
-        if (!empty($params['cmnd'])) {
-            $query->where('b.cccd_so = ' . $db->quote($params['cmnd']));
-        }
-
-        if (!empty($params['nam'])) {
-            if (is_array($params['nam'])) {
-                // Nếu nam là mảng, sử dụng IN
-                $namList = array_map(array($db, 'quote'), $params['nam']);
-                $query->where('a.nam IN (' . implode(',', $namList) . ')');
-            } else {
-                // Nếu nam là chuỗi, sử dụng =
-                $query->where('a.nam = ' . $db->quote($params['nam']));
-            }
-        }
-
-        if (!empty($params['phuongxa_id'])) {
-            $query->where('c.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        if (!empty($params['tenduong'])) {
+            $query->where('a.duong_id = ' . $db->quote($params['tenduong']));
         }
         if (!empty($params['thonto_id'])) {
-            $query->where('c.thonto_id = ' . $db->quote($params['thonto_id']));
+            $query->where('a.thonto_id = ' . $db->quote($params['thonto_id']));
         }
 
-        // Ghi log truy vấn để debug
-        error_log('Query CountDanhSachGiaDinhVanHoa: ' . (string)$query);
 
         $db->setQuery($query);
         // echo $query;
         $result = $db->loadResult(); // Sử dụng loadResult thay vì loadAssocList cho COUNT
         return (int)$result; // Trả về số nguyên
     }
-    public function getDetailGDVH($thonto_id, $nam)
+    public function getDetailBSN($sonha_id)
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $phanquyen = $this->getPhanquyen();
 
-        $query->select('a.*, dh.*');
-        $query->from('vhxhytgd_giadinhvanhoa as a');
-        $query->leftJoin('vhxhytgd_giadinhvanhoa2danhhieu as dh on dh.giadinhvanhoa_id = a.id');
+        $query->select('a.*,ht.tenhinhthuc, dh.*');
+        $query->from('dcxddtmt_thongtinsonha as a');
+        $query->leftJoin('dcxddtmt_sonha2tenduong as dh on dh.sonha_id = a.id');
+        $query->leftJoin('danhmuc_hinhthuccapsonha AS ht ON dh.hinhthuccap_id = ht.id');
 
         $query->where('a.daxoa = 0 and dh.daxoa = 0');
-        $query->where('a.thonto_id = ' . $db->quote($thonto_id));
-        $query->where('a.nam = ' . $db->quote($nam));
-
+        $query->where('a.id = ' . $db->quote($sonha_id));
         // echo $query;exit;
 
         $db->setQuery($query);
         return $db->loadAssocList();
     }
-    public function getEditGiaDinhVanHoa($giadinhvanhoa_id)
+    public function getEditBienSonha($bsn_id)
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
-        $query->select('*,a.thonto_id, a.id as giadinhvanhoa_id, dh.id as gdvanhoa2, dh.nhankhau_id, c.diachi, g.tenkhuvuc, gt.tengioitinh');
-        $query->from('vhxhytgd_giadinhvanhoa as a');
-        $query->innerJoin('vhxhytgd_giadinhvanhoa2danhhieu as dh on dh.giadinhvanhoa_id = a.id');
-        $query->leftJoin('vptk_hokhau2nhankhau as b on dh.nhankhau_id = b.id');
-        $query->leftJoin('vptk_hokhau AS c ON b.hokhau_id = c.id');
+        $query->select('a.thonto_id,a.phuongxa_id,a.duong_id, a.id, dh.nhankhau_id,ht.tenhinhthuc,
+       dh.n_diachi,dh.*, dh.id as id_sonha2');
+        $query->from('dcxddtmt_thongtinsonha as a');
+        $query->innerJoin('dcxddtmt_sonha2tenduong as dh on dh.sonha_id = a.id');
         $query->leftJoin('danhmuc_khuvuc AS g ON a.thonto_id = g.id');
-        $query->leftJoin('danhmuc_gioitinh AS gt ON dh.n_gioitinh_id = gt.id');
+        $query->leftJoin('danhmuc_tenduong AS td ON a.duong_id = td.id');
+        $query->leftJoin('danhmuc_hinhthuccapsonha AS ht ON dh.hinhthuccap_id = ht.id');
 
         $query->where('a.daxoa = 0 and dh.daxoa = 0');
-        $query->where('dh.giadinhvanhoa_id = ' . $db->quote($giadinhvanhoa_id));
+        $query->where('a.id = ' . $db->quote($bsn_id));
         // echo $query;exit;
         $db->setQuery($query);
         return $db->loadAssocList();
     }
-    public function delGiaDinhVanHoa($giadinh_id)
+    public function delSonha($sonha_id)
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $user_id = Factory::getUser()->id;
 
-        $query->update('vhxhytgd_giadinhvanhoa2danhhieu');
+        $query->update('dcxddtmt_sonha2tenduong');
         $query->set('daxoa = 1');
         $query->set('nguoixoa_id = ' . $db->quote($user_id));
         $query->set('ngayxoa = NOW()');
-        $query->where('id =' . $db->quote($giadinh_id));
+        $query->where('id =' . $db->quote($sonha_id));
         // echo $query;exit;
         $db->setQuery($query);
         return $db->execute();
     }
-  
-    public function removeGiaDinhVanHoa($giadinh_id)
+
+    public function removeBienSoNha($sonha_id)
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
         $user_id = Factory::getUser()->id;
 
-        $query->update('vhxhytgd_giadinhvanhoa');
+        $query->update('dcxddtmt_thongtinsonha');
         $query->set('daxoa = 1');
         $query->set('nguoixoa_id = ' . $db->quote($user_id));
         $query->set('ngayxoa = NOW()');
-        $query->where('id =' . $db->quote($giadinh_id));
+        $query->where('id =' . $db->quote($sonha_id));
         // echo $query;exit;
         $db->setQuery($query);
         return $db->execute();
     }
-    public function getGiaDinhVH1nam($thonto_id, $nam)
+    public function checkBienSoNha($thonto_id, $tuyenduong)
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
-        $query->select(
-            $db->quoteName(array(
-                'a.id',
-                'dh.nhankhau_id',
-                'dh.n_hoten',
-                'dh.n_cccd',
-                'dh.n_dienthoai',
-                'dh.n_diachi',
-                'dh.n_namsinh',
-                'dh.n_gioitinh_id',
-                'g.tengioitinh',
-                'dh.is_dat',
-                'dh.is_giadinhvanhoatieubieu',
-                'dh.lydokhongdat',
-                'dh.ghichu',
-                'a.thonto_id',
-                'a.nam',
-                'dh.giadinhvanhoa_id'
-            ))
-        );
-        $query->from($db->quoteName('vhxhytgd_giadinhvanhoa', 'a'));
-        $query->innerJoin($db->quoteName('vhxhytgd_giadinhvanhoa2danhhieu', 'dh') . ' ON ' . $db->quoteName('dh.giadinhvanhoa_id') . ' = ' . $db->quoteName('a.id'));
-        $query->leftJoin($db->quoteName('danhmuc_gioitinh', 'g') . ' ON ' . $db->quoteName('dh.n_gioitinh_id') . ' = ' . $db->quoteName('g.id'));
+        $query->select('a.thonto_id,a.phuongxa_id,a.duong_id, a.id, dh.nhankhau_id,ht.tenhinhthuc,
+       dh.n_diachi, dh.id as id_sonha2');
+        $query->from('dcxddtmt_thongtinsonha as a');
+        $query->innerJoin('dcxddtmt_sonha2tenduong as dh on dh.sonha_id = a.id');
+        $query->leftJoin('danhmuc_khuvuc AS g ON a.thonto_id = g.id');
+        $query->leftJoin('danhmuc_tenduong AS td ON a.duong_id = td.id');
+        $query->leftJoin('danhmuc_hinhthuccapsonha AS ht ON dh.hinhthuccap_id = ht.id');
+
+        $query->where('a.daxoa = 0 and dh.daxoa = 0');
 
         // Thêm điều kiện where
         $query->where($db->quoteName('a.thonto_id') . ' = ' . $db->quote($thonto_id));
-        $query->where($db->quoteName('a.nam') . ' = ' . $db->quote($nam));
+        $query->where($db->quoteName('a.duong_id') . ' = ' . $db->quote($tuyenduong));
         $query->where('a.daxoa = 0 and dh.daxoa = 0');
 
         // Debugging - hiển thị câu truy vấn

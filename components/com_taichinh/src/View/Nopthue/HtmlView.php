@@ -2,13 +2,13 @@
 
 /**
  * @package     Joomla.Site
- * @subpackage  com_vptk
+ * @subpackage  com_doanhoi
  *
  * @copyright   (C) 2009 Open Source Matters, Inc. <https://www.joomla.org>
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Vhytgd\Site\View\Dongbaodantoc;
+namespace Joomla\Component\Taichinh\Site\View\Nopthue;
 
 defined('_JEXEC') or die;
 
@@ -16,6 +16,7 @@ use Core;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
+use stdClass;
 
 class HtmlView extends BaseHtmlView
 {
@@ -25,14 +26,18 @@ class HtmlView extends BaseHtmlView
         $layout = ($layout == null) ? 'default' : strtoupper($layout);
 
         switch ($layout) {
+            case 'DEFAULT':
+                $this->setLayout('default');
+                $this->_initDefaultPage();
+                break;
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();
                 break;
-            case 'ADD_DBDT':
-            case 'EDIT_DBDT':
-                $this->setLayout('edit_dbdt');
-                $this->_getEditDongbaodantoc();
+            case 'ADD_THUEDAT':
+            case 'EDIT_THUEDAT':
+                $this->setLayout('edit_thuedat');
+                $this->_getEditNopThueDat();
                 break;
             default:
                 $this->setLayout('default');
@@ -85,14 +90,11 @@ class HtmlView extends BaseHtmlView
         } else {
             $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0 AND id IN (' . $phanquyen['phuongxa_id'] . ')', 'tenkhuvuc ASC');
         }
-        $loaihinhthietche = Core::loadAssocList('danhmuc_loaihinhthietche', 'id,tenloaihinhthietche', 'trangthai = 1 AND daxoa = 0');
-        $nhiemky = Core::loadAssocList('danhmuc_nhiemky', 'id,tennhiemky', 'trangthai = 1 AND daxoa = 0');
-        $this->nhiemky = $nhiemky;
-
+        $tuyenduong = Core::loadAssocList('danhmuc_tenduong', 'id,tenduong', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
+        $this->tuyenduong = $tuyenduong;
         $this->phuongxa = $phuongxa;
-        $this->loaihinhthietche = $loaihinhthietche;
     }
-    public function _getEditDongbaodantoc()
+    public function _getEditNopThueDat()
     {
         $document = Factory::getDocument();
         $app = Factory::getApplication()->input;
@@ -127,7 +129,7 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/pace.min.js');
 
         $id = $app->getInt('thietche_id', null);
-        $model = Core::model('Vhytgd/Dongbaodantoc');
+        $model = Core::model('Taichinh/Nopthue');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
 
@@ -148,27 +150,18 @@ class HtmlView extends BaseHtmlView
             $phuongxa = $db->loadAssocList();
         }
 
+        $mucdich = Core::loadAssocList('danhmuc_mucdichsudung', 'id,tenmucdich', 'trangthai = 1 AND daxoa = 0');
         $gioitinh = Core::loadAssocList('danhmuc_gioitinh', 'id,tengioitinh', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $dantoc = Core::loadAssocList('danhmuc_dantoc', 'id,tendantoc', 'trangthai = 1 AND daxoa = 0 AND id != 1', 'sapxep ASC');
-        $nganhang = Core::loadAssocList('dmnganhang', 'id,ten,ma', 'trangthai = 1 AND daxoa = 0');
-        $chinhsach = Core::loadAssocList('dmchinhsach', 'id,ten,ma', 'trangthai = 1 AND daxoa = 0');
-        $loaidoituong = Core::loadAssocList('dmloaidoituong', 'id, ten, ma, macs, heso, sotien', 'trangthai = 1 AND daxoa = 0');
 
-        $dthuong = Core::loadAssocList('dmnguoicocong', '*', 'trangthai = 1 AND daxoa = 0');
-        $trinhdollct = Core::loadAssocList('danhmuc_lyluanchinhtri', 'id,tentrinhdo', 'trangthai = 1 AND daxoa = 0');
-        $phuongxa2 = Core::loadAssocList('danhmuc_phuongxa', 'id,tenphuongxa', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC, tenphuongxa ASC');
-        $chucdanhkiemnhiem = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 99');
-        $chucdanh = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 1');
-        $tinhtrang = Core::loadAssocList('dmlydo', 'id,ten', 'trangthai = 1 AND daxoa = 0 AND is_loai = 5');
-        $loaihotro = Core::loadAssocList('danhmuc_loaihotro', 'id,tenchinhsach', 'trangthai = 1 AND daxoa = 0');
-        $cshotro = Core::loadAssocList('danhmuc_chinhsachdongbao', 'id,tenchinhsach', 'trangthai = 1 AND daxoa = 0');
+        $tenduong = Core::loadAssocList('danhmuc_tenduong', 'id,tenduong', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
+
 
 
         $thonto_id = $app->getInt('thonto_id', null);
-        $dbdt_id = $app->getInt('dbdt_id', null);
+        $thuedat_id = $app->getInt('thuedat_id', null);
         $phuongxa_id = null;
-        if ((int)$dbdt_id > 0) {
-            $this->item = $model->getEditDBDT($dbdt_id);
+        if ((int)$thuedat_id > 0) {
+            $this->item = $model->getEditNopThue($thuedat_id);
         }
 
         if ((int)$phuongxa_id > 0) {
@@ -178,20 +171,10 @@ class HtmlView extends BaseHtmlView
         }
 
         // Gán các biến cho view
-        $this->loaihotro = $loaihotro;
-        $this->cshotro = $cshotro;
-        $this->dthuong = $dthuong;
-        $this->dantoc = $dantoc;
-        $this->loaidoituong = $loaidoituong;
-        $this->nganhang = $nganhang;
-        $this->chinhsach = $chinhsach;
-        $this->phuongxa2 = $phuongxa2;
+        $this->tenduong = $tenduong;
+        $this->gioitinh = $gioitinh;
+        $this->mucdich = $mucdich;
         $this->phuongxa = $phuongxa;
         $this->thonto = $thonto;
-        $this->gioitinh = $gioitinh;
-        $this->trinhdollct = $trinhdollct;
-        $this->chucdanh = $chucdanh;
-        $this->chucdanhkiemnhiem = $chucdanhkiemnhiem;
-        $this->tinhtrang = $tinhtrang;
     }
 }

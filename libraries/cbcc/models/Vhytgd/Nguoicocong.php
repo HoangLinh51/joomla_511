@@ -39,61 +39,63 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             return $result;
         }
     }
-    public function getDanhSachNhanKhau($phuongxa = [], $keyword = '', $limit = 10, $offset = 0, $nhankhau_id = 0)
-    {
-        $db = Factory::getDbo();
-        $query = $db->getQuery(true)
-            ->select([
-                'nk.id',
-                'nk.hoten',
-                'nk.cccd_so',
-                'DATE_FORMAT(nk.ngaysinh, "%d/%m/%Y") AS ngaysinh',
-                'nk.dienthoai',
-                'hk.diachi',
-                'nk.gioitinh_id',
-                'nk.dantoc_id',
-                'nk.tongiao_id',
-                'hk.phuongxa_id',
-                'hk.thonto_id',
-                'hk.diachi',
-            ])
-            ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
-            ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
-            ->where('nk.daxoa = 0')
-            ->where('hk.daxoa = 0');
+  public function getDanhSachNhanKhau($phuongxa = [], $keyword = '', $limit = 10, $offset = 0, $nhankhau_id = 0)
+{
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true)
+        ->select([
+            'nk.id',
+            'nk.hoten',
+            'nk.cccd_so',
+            'DATE_FORMAT(nk.ngaysinh, "%d/%m/%Y") AS ngaysinh',
+            'nk.dienthoai',
+            'hk.diachi',
+            'nk.gioitinh_id',
+            'nk.dantoc_id',
+            'nk.tongiao_id',
+            'hk.phuongxa_id',
+            'hk.thonto_id',
+            'hk.diachi',
+        ])
+        ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
+        ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
+        ->leftJoin($db->quoteName('vhxhytgd_nguoicocong', 'ncc') . ' ON nk.id = ncc.nhankhau_id')
+        ->where('nk.daxoa = 0')
+        ->where('hk.daxoa = 0')
+        ->where('ncc.nhankhau_id IS NULL'); // Chỉ lấy người KHÔNG có trong bảng nguoicocong
 
-        if ($nhankhau_id > 0) {
-            $query->where('nk.id = ' . (int)$nhankhau_id);
-        } else {
-            if (!empty($keyword)) {
-                $search = $db->quote('%' . $db->escape($keyword, true) . '%');
-                $query->where("nk.hoten LIKE $search OR nk.cccd_so LIKE $search");
-            }
-            if (!empty($phuongxa) && is_array($phuongxa)) {
-                $phuongxa = array_map('intval', $phuongxa);
-                // Chỉ lấy những bản ghi có phường xã nằm trong danh sách, loại bỏ các bản ghi phường xã null hoặc không thuộc danh sách
-                $query->where('hk.phuongxa_id IS NOT NULL AND hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
-            }
+    if ($nhankhau_id > 0) {
+        $query->where('nk.id = ' . (int)$nhankhau_id);
+    } else {
+        if (!empty($keyword)) {
+            $search = $db->quote('%' . $db->escape($keyword, true) . '%');
+            // Thêm điều kiện tìm kiếm vào một nhóm riêng để đảm bảo logic đúng
+            $query->where("(nk.hoten LIKE $search OR nk.cccd_so LIKE $search)");
         }
-        $query->order('nk.hokhau_id DESC');
-
-        // Clone query để đếm tổng số
-        $countQuery = clone $query;
-        $countQuery->clear('select')->select('COUNT(*)');
-
-        $db->setQuery($countQuery);
-        $total = (int) $db->loadResult();
-
-        // Lấy dữ liệu trang hiện tại
-        $query->setLimit($limit, $offset);
-        $db->setQuery($query);
-        $items = $db->loadObjectList();
-
-        return [
-            'items' => $items,
-            'has_more' => ($offset + count($items)) < $total
-        ];
+        if (!empty($phuongxa) && is_array($phuongxa)) {
+            $phuongxa = array_map('intval', $phuongxa);
+            $query->where('hk.phuongxa_id IS NOT NULL AND hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
+        }
     }
+    $query->order('nk.hokhau_id DESC');
+
+    // Clone query để đếm tổng số
+    $countQuery = clone $query;
+    $countQuery->clear('select')->select('COUNT(*)');
+
+    $db->setQuery($countQuery);
+    $total = (int) $db->loadResult();
+
+    // Lấy dữ liệu trang hiện tại
+    $query->setLimit($limit, $offset);
+    $db->setQuery($query);
+    $items = $db->loadObjectList();
+
+    return [
+        'items' => $items,
+        'has_more' => ($offset + count($items)) < $total
+    ];
+}
 
     public function saveNguoicocong($formData)
     {

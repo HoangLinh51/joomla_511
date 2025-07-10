@@ -9,7 +9,7 @@ $totalRecords = $this->total;
 $totalPages = $totalRecords > 0 ? ceil($totalRecords / $perPage) : 0;
 $currentPage = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('start', 0) / $perPage + 1) : 0;
 $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('start', 0) + 1) : 0;
-$trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa = 0 AND is_loai = 4');
+$trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa = 0 AND is_loai = 2');
 
 ?>
 
@@ -43,17 +43,18 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                         </td>
                         <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['phuongxathonto']); ?></td>
                         <td style="vertical-align:middle;text-align: center;">
-                            <span><?php echo htmlspecialchars($item['total_loaidoituong']); ?></span>
+                            <span><?php echo htmlspecialchars($item['total_chinhsach']); ?></span>
                             <i class="fas fa-eye btn_eye" style="cursor: pointer; margin-left: 10px; color: #007bff;" data-id="<?php echo $item['id']; ?>" title="Xem chi tiết"></i>
                         </td>
+                          </td>
                           <td style="vertical-align:middle;">
                             <?php
                             $color = '';
 
                             // Kiểm tra trangthai_id
-                            if ($item['trangthai_id'] == 17 ) {
+                            if ($item['trangthai_id'] == 22 ) {
                                 $color = 'class="badge bg-success" style="padding: 0.4em; font-size: 80%;"'; // Màu xanh lá
-                            } elseif ($item['trangthai_id'] == 16|| $item['trangthai_id'] == 18) {
+                            } elseif ($item['trangthai_id'] == 21|| $item['trangthai_id'] == 23) {
                                 $color = 'class="badge" style="background-color: gray; padding: 0.4em; font-size: 80%;"'; // Màu xám
                             }
 
@@ -67,13 +68,9 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                             }
                             ?>
                         </td>
-                       
                         <td style="vertical-align:middle;text-align: center;">
                             <div class="btn-group" role="group">
-                                <span class="btn btn-sm btn_cathuong" data-id="<?php echo $item['id']; ?>" data-title="Cắt hưởng" style="cursor: pointer;">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                </span>
-                                <span style="padding: 0 5px;font-size:20px;color:#ccc">|</span>
+                              
                                 <span class="btn btn-sm btn_hieuchinh" data-id="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh" style="cursor: pointer;">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
@@ -214,9 +211,9 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
             $("#overlay").fadeIn(300);
             var params = {
                 option: 'com_vhytgd',
-                view: 'nguoicocong',
+                view: 'dongbaodantoc',
                 format: 'raw',
-                task: 'DETAIL_NCC',
+                task: 'DETAIL_DBDT',
                 doituong_id: chinhsachID
             };
             console.log('Detail Params:', params);
@@ -296,9 +293,9 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
             $("#overlay").fadeIn(300);
             var params = {
                 option: 'com_vhytgd',
-                view: 'nguoicocong',
+                view: 'dongbaodantoc',
                 format: 'raw',
-                task: 'DS_NCC',
+                task: 'DS_DBDT',
                 phuongxa_id: $('#phuongxa_id').val(),
                 thonto_id: $('#thonto_id').val(),
                 cccd: $('#cccd').val(),
@@ -360,51 +357,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         });
 
         // Xử lý click nút cắt hưởng
-        $('body').on('click', '.btn_cathuong', function() {
-            const doituong_id = $(this).data('id');
-
-            // Reset form và validate
-            $('#frmCutThongtinhuongcs').validate().resetForm();
-            $('#frmCutThongtinhuongcs').find('.is-invalid').removeClass('is-invalid');
-            $('#frmCutThongtinhuongcs').find('.is-valid').removeClass('is-valid');
-
-            $.ajax({
-                url: 'index.php?option=com_vhytgd&task=nguoicocong.checkCatHuong',
-                type: 'GET',
-                data: {
-                    doituong_id: doituong_id
-                },
-                dataType: 'json',
-                success: function(response) {
-                    console.log('CheckCatHuong Response:', response); // Debug response
-
-                    // Reset form
-                    $('#cut_trocap_id').val(doituong_id);
-                    $('#cut_trangthaich_id').val('').trigger('change.select2');
-                    $('#cut_ngaycat').val('');
-                    $('#cut_lydo').val('');
-                    $('#cut_is_update').val('0');
-                    $('#cutModal .modal-title').text('Cắt hưởng trợ cấp');
-
-                    if (response.hasData && response.data.length > 0) {
-                        const cathuongData = response.data[0]; // Lấy phần tử đầu tiên
-                        $('#cut_trangthaich_id').val(cathuongData.trangthaich_id || '').trigger('change.select2');
-                        $('#cut_ngaycat').val(formatDateToDMY(cathuongData.ngaycat) || '');
-                        $('#cut_lydo').val(cathuongData.lydo || '');
-                        $('#cut_is_update').val('1');
-                        $('#cutModal .modal-title').text('Cập nhật cắt hưởng trợ cấp');
-                    }
-
-
-                    // Hiển thị modal
-                    $('#cutModal').modal('show');
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error checking cathuong data:', xhr.status, error, xhr.responseText);
-                    showToast('Lỗi khi tải dữ liệu cắt hưởng', false);
-                }
-            });
-        });
+    
         $('body').on('click', '.btn_xoa', function() {
             const chinhsach_id = $(this).data('id');
 
@@ -446,7 +399,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
                     // Gửi yêu cầu AJAX
                     $.ajax({
-                        url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vhytgd&controller=nguoicocong&task=removeNguoiCoCong',
+                        url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vhytgd&controller=dongbaodantoc&task=removeDongbaodantoc',
                         type: 'POST',
                         data: {
                             chinhsach_id: chinhsach_id,

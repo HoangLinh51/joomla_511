@@ -53,13 +53,13 @@ class RawView extends BaseHtmlView
         $this->setLayout(strtolower($layout));
         switch ($layout) {
 
-            case 'DS_NCC':
-                $this->_pageNCC();
+            case 'DS_DBDT':
+                $this->_pageDongBaoDanToc();
                 break;
             case 'DS_THONGKE':
                 $this->_pageThongke();
                 break;
-            case 'DETAIL_NCC':
+            case 'DETAIL_DBDT':
                 $this->_pageDetailNCC();
                 break;
         }
@@ -67,9 +67,9 @@ class RawView extends BaseHtmlView
 
 
 
-    private function _pageNCC()
+    private function _pageDongBaoDanToc()
     {
-        $model = Core::model('Vhytgd/Nguoicocong');
+        $model = Core::model('Vhytgd/Dongbaodantoc');
         $app = Factory::getApplication()->input;
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', 0),
@@ -81,8 +81,8 @@ class RawView extends BaseHtmlView
 
         $perPage = 20;
         $startFrom = $app->getInt('start', 0);
-        $this->items = $model->getDanhSachNguoiCoCong($params, $startFrom, $perPage);
-        $this->total = $model->CountDanhSachNCC($params);
+        $this->items = $model->getDanhSachDongbaodantoc($params, $startFrom, $perPage);
+        $this->total = $model->CountDBDT($params);
         parent::display();
     }
     private function _pageThongke()
@@ -111,9 +111,9 @@ class RawView extends BaseHtmlView
     {
         $app = Factory::getApplication()->input;
         $doituong_id = $app->getInt('doituong_id', 0);
-        $model = Core::model('Vhytgd/Nguoicocong');
+        $model = Core::model('Vhytgd/Dongbaodantoc');
 
-        $details = $model->getDetailDOITUONGCS($doituong_id);
+        $details = $model->getDetailDBDT($doituong_id);
 
         if (!is_array($details) || empty($details)) {
             echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
@@ -134,41 +134,29 @@ class RawView extends BaseHtmlView
 
         echo '<thead>';
         echo '<tr>';
-        echo '<th>Hình thức hưởng</th>';
-        echo '<th>Loại đối tượng</th>';
-        echo '<th>Thực nhận</th>';
-        echo '<th>Ngày hưởng</th>';
-        echo '<th>Loại ưu đãi</th>';
-        echo '<th>Trạng thái</th>';
-
+        echo '<th>Chính sách hỗ trợ</th>';
+        echo '<th>Loại hỗ trợ</th>';
+        echo '<th>Ngày hỗ trợ</th>';
+        echo '<th>Nội dung</th>';
+        echo '<th>Tình trạng</th>';
+        echo '<th>Ghi chú</th>';
         echo '</tr>';
         echo '</thead>';
         echo '<tbody>';
 
         foreach ($details as $detail) {
-            // Tính toán số tiền
-            $sotien = $detail['muctieuchuan'] * $detail['heso'];
 
             // Xử lý hình thức
-            $hinhThuc = htmlspecialchars($detail['is_hinhthuc']);
-            $hinhThucText = '';
-            if ($hinhThuc == 1) {
-                $hinhThucText = 'Hàng tháng';
-            } elseif ($hinhThuc == 2) {
-                $hinhThucText = 'Một lần';
-            } else {
-                $hinhThucText = 'Không xác định';
-            }
+           
 
             echo '<tr>';
-            echo '<td style="width:100px" >' . $hinhThucText . '</td>';  // Hiển thị hình thức
-            echo '<td style="width:280px">' . htmlspecialchars($detail['tenncc']) . '</td>';
-            echo '<td style="width:120px">' . 'Trợ cấp: ' . htmlspecialchars($detail['trocap']) . '<br>Phụ cấp: ' . htmlspecialchars($detail['phucap']) . '</td>'; // Hiển thị quyết định
-            echo '<td style="width:110px">' . htmlspecialchars($detail['ngayhuong2']) . '</td>';
-            echo '<td>' . 'Tên ưu đãi: ' . htmlspecialchars($detail['tenuudai']) . '<br>Nội dung ưu đãi: ' . htmlspecialchars($detail['noidunguudai']) . '<br>Trộ cấp ưu đãi: ' . htmlspecialchars($detail['trocapuudai']) . '<br> Ngày ưu đãi: ' . htmlspecialchars($detail['ngayuudai2']) . '</td>'; // Hiển thị quyết định
+            echo '<td >' . htmlspecialchars($detail['csdongbao']) . '</td>';
+            echo '<td >' . htmlspecialchars($detail['loaihotro']) . '</td>';
+            echo '<td >' . htmlspecialchars($detail['ngayhotro2']) . '</td>';
+            echo '<td >' . htmlspecialchars($detail['noidung']) . '</td>';
 
-
-            echo '<td>' . htmlspecialchars($detail['trangthai']) . '</td>';
+            echo '<td >' . htmlspecialchars($detail['tentrangthai']) . '</td>';
+            echo '<td>' . htmlspecialchars($detail['ghichu']) . '</td>';
             echo '</tr>';
         }
 

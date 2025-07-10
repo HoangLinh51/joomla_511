@@ -10,12 +10,12 @@ $idUser = JFactory::getUser()->id;
 		<div class="content-header">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h3 class="m-0 text-primary"><i class="fas fa-users"></i>Quản lý thông tin đồng bào dân tộc</h3>
+					<h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý thông tin nộp thuế sử dụng đất</h3>
 				</div>
 				<div class="col-sm-6 text-right" style="padding:0;">
 					<?php if ($is_quyen == 0) { ?>
 						
-						<a href="index.php?option=com_vhytgd&view=dongbaodantoc&task=add_dbdt" class="btn btn-primary" style="font-size:16px;width:136px">
+						<a href="index.php?option=com_taichinh&view=nopthue&task=add_thuedat" class="btn btn-primary" style="font-size:16px;width:136px">
 							<i class="fas fa-plus"></i> Thêm mới
 						</a>
 					<?php } ?>
@@ -137,10 +137,10 @@ $idUser = JFactory::getUser()->id;
 		function loadDanhSach(start = 0) {
 			$("#overlay").fadeIn(300);
 			$('#div_danhsach').load('index.php', {
-				option: 'com_vhytgd',
-				view: 'dongbaodantoc',
+				option: 'com_taichinh',
+				view: 'nopthue',
 				format: 'raw',
-				task: 'DS_DBDT',
+				task: 'DS_THUEDAT',
 				phuongxa_id: $('#phuongxa_id').val(),
 				thonto_id: $('#thonto_id').val(),
 				cccd: $('#cccd').val(),
@@ -164,7 +164,7 @@ $idUser = JFactory::getUser()->id;
 			loadDanhSach();
 		});
 		$('body').delegate('.btn_hieuchinh', 'click', function() {
-			window.location.href = 'index.php?option=com_vhytgd&view=dongbaodantoc&task=edit_dbdt&dbdt_id=' + $(this).data('id');
+			window.location.href = 'index.php?option=com_taichinh&view=nopthue&task=edit_thuedat&thuedat_id=' + $(this).data('id');
 		});
 		$('#btn_xuatexcel').on('click', function() {
 			let params = {

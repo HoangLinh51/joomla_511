@@ -165,7 +165,7 @@ class RawView extends BaseHtmlView
             echo '<td style="width:280px">' . htmlspecialchars($detail['tenncc']) . '</td>';
             echo '<td style="width:120px">' . 'Trợ cấp: ' . htmlspecialchars($detail['trocap']) . '<br>Phụ cấp: ' . htmlspecialchars($detail['phucap']) . '</td>'; // Hiển thị quyết định
             echo '<td style="width:110px">' . htmlspecialchars($detail['ngayhuong2']) . '</td>';
-            echo '<td>' . 'Tên ưu đãi: ' . htmlspecialchars($detail['tenuudai']) . '<br>Nội dung ưu đãi: ' . htmlspecialchars($detail['noidunguudai']) . '<br>Trộ cấp ưu đãi: ' . htmlspecialchars($detail['trocapuudai']) . '<br> Ngày ưu đãi: ' . htmlspecialchars($detail['ngayuudai2']) . '</td>'; // Hiển thị quyết định
+            echo '<td>' . 'Tên ưu đãi: ' . htmlspecialchars($detail['tenuudai']) . '<br>Nội dung ưu đãi: ' . htmlspecialchars($detail['noidunguudai']) . '<br>Trợ cấp ưu đãi: ' . htmlspecialchars($detail['trocapuudai']) . '<br> Ngày ưu đãi: ' . htmlspecialchars($detail['ngayuudai2']) . '</td>'; // Hiển thị quyết định
 
 
             echo '<td>' . htmlspecialchars($detail['trangthai']) . '</td>';
