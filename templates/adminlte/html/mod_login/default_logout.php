@@ -107,10 +107,10 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 			</div>
 
 			<div class="pull-right" style="float: right;">
-				<a href="#" onclick="document.getElementById('login-form').submit();">
+				<button type="button" href="#" onclick="document.getElementById('login-form').submit();">
 					<i class="icon-off"></i>
 					<?php echo Text::_('JLOGOUT'); ?>
-				</a>
+				</button>
 			</div>
 		</li>
 	</ul>

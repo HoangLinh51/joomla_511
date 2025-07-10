@@ -159,6 +159,8 @@ class AttachmentController extends BaseController
         $formData = Factory::getApplication()->input->post->getArray();
         $file = $_FILES['uploadfile'];
         $date = getdate();
+        var_dump($_FILES);
+        exit ;
 
         // Kiểm tra có đúng 1 file được upload không
         if (!isset($file) || !is_uploaded_file($file['tmp_name'])) {

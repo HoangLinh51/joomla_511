@@ -15,19 +15,42 @@ defined('_JEXEC') or die;
 use Core;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-use Exception;
 
 class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
+        $user = Factory::getUser();
         $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
-        $task = $app->input->get('task', '', 'CMD');
+        $input = $app->input;
+        $id = $input->getInt('id');
+        $component = 'com_quansu';
+        $controller = $input->getCmd('view', 'danquan');
+        $task = strtoupper($input->getCmd('task', 'default'));
 
-        // Phân biệt edit vs add
-        if (strtolower($task) === 'edit_danquan') {
+        if (!$user->id) {
+            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
+        }
+        if ($task === 'DS_DANQUAN' || $task === 'ADD_DANQUAN' || $task === 'EDIT_DANQUAN') {
+            $checkTask = 'default';
+        }
+        // Kiểm tra quyền truy cập
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+            <a href="/index.php" style="text-decoration: none;">
+            <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                Trang chủ
+            </button>
+            </a>
+              </div>';
+            exit;
+        }
+
+        // Xác định layout
+        if ($task === 'edit_danquan') {
             $layout = $id > 0 ? 'EDIT_DANQUAN' : 'ADD_DANQUAN';
         } else {
             $layout = $task ? strtoupper($task) : 'DEFAULT';
@@ -67,7 +90,7 @@ class HtmlView extends BaseHtmlView
         }
         $this->detailDanQuan = $detailDanQuan;
     }
-    
+
 
     private function import()
     {
@@ -79,15 +102,15 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2-bootstrap.css');
-        
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js'); 
-        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js'); 
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js'); 
+
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js'); 
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');
