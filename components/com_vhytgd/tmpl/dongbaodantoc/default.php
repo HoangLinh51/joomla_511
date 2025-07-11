@@ -10,12 +10,12 @@ $idUser = JFactory::getUser()->id;
 		<div class="content-header">
 			<div class="row mb-2">
 				<div class="col-sm-6">
-					<h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý đối tượng hưởng chính sách</h3>
+					<h3 class="m-0 text-primary"><i class="fas fa-users"></i>Quản lý thông tin đồng bào dân tộc</h3>
 				</div>
 				<div class="col-sm-6 text-right" style="padding:0;">
 					<?php if ($is_quyen == 0) { ?>
-
-						<a href="index.php?option=com_vhytgd&view=doituonghuongcs&task=add_dtcs" class="btn btn-primary" style="font-size:16px;width:136px">
+						
+						<a href="index.php?option=com_vhytgd&view=dongbaodantoc&task=add_dbdt" class="btn btn-primary" style="font-size:16px;width:136px">
 							<i class="fas fa-plus"></i> Thêm mới
 						</a>
 					<?php } ?>
@@ -44,7 +44,7 @@ $idUser = JFactory::getUser()->id;
 								<input type="text" name="cccd" id="cccd" class="form-control" style="font-size:16px;" placeholder="Nhập CCCD/CMND" />
 							</td>
 						</tr>
-
+						
 						<tr>
 							<td style="padding:10px;" nowrap><b class="text-primary" style="font-size:17px;line-height:2.5">Xã/Phường</b></td>
 							<td>
@@ -62,7 +62,7 @@ $idUser = JFactory::getUser()->id;
 								</select>
 							</td>
 						</tr>
-
+					
 						<tr>
 							<td colspan="4" class="text-center" style="padding-top:10px;">
 								<button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
@@ -76,14 +76,14 @@ $idUser = JFactory::getUser()->id;
 				<div class="table-responsive">
 					<table class="table table-striped table-bordered table-hover" id="tblDanhsach">
 						<thead>
-							<tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin đối tượng hưởng</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin hưởng</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Trạng thái</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
-							</tr>
+							  <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin đối tượng hưởng</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin hưởng</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Trạng thái</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            </tr>
 						</thead>
 						<tbody id="tbody_danhsach"></tbody>
 					</table>
@@ -138,9 +138,9 @@ $idUser = JFactory::getUser()->id;
 			$("#overlay").fadeIn(300);
 			$('#div_danhsach').load('index.php', {
 				option: 'com_vhytgd',
-				view: 'doituonghuongcs',
+				view: 'dongbaodantoc',
 				format: 'raw',
-				task: 'DS_DOITUONGHUONGCS',
+				task: 'DS_DBDT',
 				phuongxa_id: $('#phuongxa_id').val(),
 				thonto_id: $('#thonto_id').val(),
 				cccd: $('#cccd').val(),
@@ -164,7 +164,7 @@ $idUser = JFactory::getUser()->id;
 			loadDanhSach();
 		});
 		$('body').delegate('.btn_hieuchinh', 'click', function() {
-			window.location.href = 'index.php?option=com_vhytgd&view=doituonghuongcs&task=edit_dtcs&doituong_id=' + $(this).data('id');
+			window.location.href = 'index.php?option=com_vhytgd&view=dongbaodantoc&task=edit_dbdt&dbdt_id=' + $(this).data('id');
 		});
 		$('#btn_xuatexcel').on('click', function() {
 			let params = {
@@ -207,15 +207,13 @@ $idUser = JFactory::getUser()->id;
 		transform: rotate(180deg);
 	}
 
-	.btn_hieuchinh,
-	.btn_cathuong,
+	.btn_hieuchinh,.btn_cathuong,
 	.btn_xoa {
 		position: relative;
 		transition: color 0.3s;
 	}
 
-	.btn_hieuchinh,
-	.btn_cathuong,
+	.btn_hieuchinh,.btn_cathuong,
 	.btn_xoa {
 		cursor: pointer;
 		pointer-events: auto;
@@ -223,14 +221,12 @@ $idUser = JFactory::getUser()->id;
 		padding: 10px;
 	}
 
-	.btn_hieuchinh:hover i,
-	.btn_cathuong:hover i,
+	.btn_hieuchinh:hover i,.btn_cathuong:hover i,
 	.btn_xoa:hover i {
 		color: #0066ff;
 	}
 
-	.btn_hieuchinh::after,
-	.btn_cathuong::after,
+	.btn_hieuchinh::after,.btn_cathuong::after,
 	.btn_xoa::after {
 		content: attr(data-title);
 		position: absolute;
@@ -251,8 +247,7 @@ $idUser = JFactory::getUser()->id;
 	}
 
 
-	.btn_hieuchinh:hover::after,
-	.btn_cathuong:hover::after,
+	.btn_hieuchinh:hover::after,.btn_cathuong:hover::after,
 	.btn_xoa:hover::after {
 		opacity: 1;
 		visibility: visible;

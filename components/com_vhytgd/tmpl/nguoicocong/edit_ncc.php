@@ -13,18 +13,18 @@ $item = $this->item;
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
 
-<form id="formDoiTuongCS" name="formDoiTuongCS" method="post" action="<?php echo Route::_('index.php?option=com_vhytgd&controller=doituonghuongcs&task=saveDoituongCS'); ?>">
+<form id="formNguoiCoCong" name="formNguoiCoCong" method="post" action="<?php echo Route::_('index.php?option=com_vhytgd&controller=nguoicocong&task=saveNguoicocong'); ?>">
     <div class="card-body">
         <div class="d-flex align-items-center justify-content-between border-bottom mb-3" style="margin-bottom: 1rem !important;">
             <h2 class="text-primary mb-3" style="padding: 10px 10px 10px 0px;">
-                <?php echo ((int)$item[0]['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> đối tượng hưởng chính sách
+                <?php echo ((int)$item[0]['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> người có công
             </h2>
             <span>
                 <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>
                 <button type="submit" id="btn_luu" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
             </span>
         </div>
-        <input type="hidden" name="id_doituonghuongcs" value="<?php echo htmlspecialchars($item[0]['doituonghuong']); ?>">
+        <input type="hidden" name="id_nguoicocong" value="<?php echo htmlspecialchars($item[0]['doituonghuong']); ?>">
 
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($item[0]['id']); ?>">
         <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($item[0][0]['nhankhau_id']); ?>">
@@ -119,9 +119,9 @@ $item = $this->item;
         <div class="row g-3 mb-4">
 
             <div class="col-md-4 mb-2">
-                <label for="namsinh" class="form-label fw-bold">Mã đối tượng<span class="text-danger">*</span></label>
+                <label for="namsinh" class="form-label fw-bold">Họ tên người nhận</label>
                 <div class="input-group">
-                    <input type="text" id="madoituong" name="madoituong" class="form-control" placeholder="Nhập mã đối tượng" value="<?php echo htmlspecialchars($item[0]['madoituong']); ?>">
+                    <input type="text" id="nguoinhangiup" name="nguoinhangiup" class="form-control" placeholder="Nhập họ tên người nhận" value="<?php echo htmlspecialchars($item[0]['tennguoinhan']); ?>">
                 </div>
             </div>
             <div class="col-md-4 mb-2">
@@ -152,17 +152,12 @@ $item = $this->item;
                 <thead class="table-primary">
                     <tr>
                         <th>STT</th>
-                        <th>Mã hỗ trợ</th>
-                        <th>Biến động</th>
-                        <th>Chính sách</th>
+                        <th>Hình thức hưởng</th>
                         <th>Loại đối tượng</th>
-                        <th>Hệ số</th>
-                        <th>Mức tiền chuẩn</th>
-                        <th>Thực nhận</th>
-                        <th>Quyết định</th>
-                        <th>Hưởng từ ngày</th>
+                        <th>Thực nhận</th> <!--trợ cấp và phụ cấp -->
+                        <th>Ngày hưởng</th>
                         <th>Trạng thái</th>
-                        <th>Ghi chú</th>
+                        <th>Loại ưu đãi</th>
                         <th>Chức năng</th>
 
                     </tr>
@@ -174,46 +169,62 @@ $item = $this->item;
                             <tr>
                                 <td class="align-middle text-center stt"><?php echo $index + 1; ?></td>
                                 <td class="align-middle">
-
-                                    <?php echo htmlspecialchars($nk['maht'] ?? ''); ?>
-
+                                    <?php
+                                    // Kiểm tra giá trị của is_hinhthuc và hiển thị văn bản tương ứng
+                                    switch ($nk['is_hinhthuc']) {
+                                        case 1:
+                                            echo 'Hàng tháng';
+                                            break;
+                                        case 2:
+                                            echo 'Một lần';
+                                            break;
+                                        default:
+                                            echo 'Không xác định'; // Giá trị khác không được xác định
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+                                <td class="align-middle"><?php echo ($nk['tenncc']); ?></td>
+                                <td class="align-middle"><strong>Trợ cấp:</strong><?php echo htmlspecialchars($nk['trocap'] ?? ''); ?><br>
+                                    <strong>Phụ cấp:</strong> <?php echo $nk['phucap']; ?>
 
                                 </td>
-                                <td class="align-middle"><?php echo $nk['tenbiendong']; ?></td>
-                                <td class="align-middle"><?php echo ($nk['tenchinhsach']); ?></td>
-                                <td class="align-middle"><?php echo htmlspecialchars($nk['tenloaidoituong'] ?? ''); ?></td>
-                                <td class="align-middle"><?php echo htmlspecialchars($nk['heso'] ?? ''); ?></td>
-                                <td class="align-middle"><?php echo htmlspecialchars($nk['muctienchuan'] ?? ''); ?></td>
-                                <td class="align-middle"><?php echo htmlspecialchars($nk['sotien'] ?? ''); ?></td>
-                                <td class="align-middle"><strong>Số quyết định:</strong><?php echo htmlspecialchars($nk['soqdhuong'] ?? ''); ?><br>
-                                    <strong>Ngày quyết định:</strong> <?php echo $nk['ngayquyetdinh']; ?>
+                                <td class="align-middle"><?php echo htmlspecialchars($nk['ngayhuong2'] ?? ''); ?></td>
+                                <td class="align-middle"><?php echo htmlspecialchars($nk['trangthai'] ?? ''); ?></td>
+
+                                <td class="align-middle">
+                                    <?php
+                                    // Kiểm tra xem có tendungcu hay không
+                                    if (!empty($nk['tendungcu'])) {
+                                        // Nếu có, hiển thị tendungcu
+                                        echo htmlspecialchars($nk['tendungcu']);
+                                    } else {
+                                        // Nếu không có, hiển thị tenuudai
+                                        echo htmlspecialchars($nk['tenuudai'] ?? '');
+                                    }
+                                    ?>
                                 </td>
-                                <td class="align-middle"><?php echo htmlspecialchars($nk['tungay'] ?? ''); ?></td>
-                                <td class="align-middle"><?php echo htmlspecialchars($nk['tentrangthai'] ?? ''); ?></td>
-
-
-                                <td class="align-middle"><?php echo htmlspecialchars($nk['ghichu'] ?? ''); ?></td>
-
                                 <td class="align-middle text-center" style="min-width:100px">
                                     <input type="hidden" name="trocap_id[]" value="<?php echo htmlspecialchars($nk['id_trocap'] ?? ''); ?>" />
                                     <input type="hidden" name="ma_hotro[]" value="<?php echo htmlspecialchars($nk['maht'] ?? ''); ?>" />
-                                    <input type="hidden" name="bien_dong[]" value="<?php echo htmlspecialchars($nk['biendong_id'] ?? ''); ?>" />
-                                    <input type="hidden" name="chinh_sach[]" value="<?php echo htmlspecialchars($nk['chinhsach_id'] ?? ''); ?>" />
-                                    <input type="hidden" name="loai_doi_tuong[]" value="<?php echo htmlspecialchars($nk['loaidoituong_id'] ?? ''); ?>" />
-                                    <input type="hidden" name="he_so[]" value="<?php echo htmlspecialchars($nk['heso'] ?? ''); ?>" />
-                                    <input type="hidden" name="muc_tien_chuan[]" value="<?php echo htmlspecialchars($nk['muctienchuan'] ?? ''); ?>" />
-                                    <input type="hidden" name="thuc_nhan[]" value="<?php echo htmlspecialchars($nk['sotien'] ?? ''); ?>" />
-                                    <input type="hidden" name="so_quyet_dinh[]" value="<?php echo htmlspecialchars($nk['soqdhuong'] ?? ''); ?>" />
-                                    <input type="hidden" name="ngay_quyet_dinh[]" value="<?php echo !empty($nk['ngayquyetdinh']) ? date('d/m/Y', strtotime($nk['ngayquyetdinh'])) : ''; ?>" />
-                                    <input type="hidden" name="huong_tu_ngay[]" value="<?php echo !empty($nk['huongtungay']) ? date('d/m/Y', strtotime($nk['huongtungay'])) : ''; ?>" />
-                                    <input type="hidden" name="trang_thai[]" value="<?php echo htmlspecialchars($nk['trangthai_id'] ?? ''); ?>" />
-                                    <input type="hidden" name="ghi_chu[]" value="<?php echo htmlspecialchars($nk['ghichu'] ?? ''); ?>" />
-                                    <input type="hidden" name="id_giadinhvanhoa[]" value="<?php echo htmlspecialchars($nk['id_trocap'] ?? ''); ?>" />
+                                    <input type="hidden" name="is_hinhthuc[]" value="<?php echo htmlspecialchars($nk['is_hinhthuc'] ?? ''); ?>" />
+                                    <input type="hidden" name="dmnguoicocong_id[]" value="<?php echo htmlspecialchars($nk['dmnguoicocong_id'] ?? ''); ?>" />
+                                    <input type="hidden" name="trocap[]" value="<?php echo htmlspecialchars($nk['trocap'] ?? ''); ?>" />
+                                    <input type="hidden" name="phucap[]" value="<?php echo htmlspecialchars($nk['phucap'] ?? ''); ?>" />
+                                    <input type="hidden" name="dmtyle_id[]" value="<?php echo htmlspecialchars($nk['dmtyle_id'] ?? ''); ?>" />
+                                    <input type="hidden" name="ngayhuong[]" value="<?php echo htmlspecialchars($nk['ngayhuong2'] ?? ''); ?>" />
+                                    <input type="hidden" name="uudai_id[]" value="<?php echo htmlspecialchars($nk['uudai_id'] ?? ''); ?>" />
+                                    <input type="hidden" name="noidunguudai[]" value="<?php echo htmlspecialchars($nk['noidunguudai'] ?? ''); ?>" />
+                                    <input type="hidden" name="loaidungcu_id[]" value="<?php echo htmlspecialchars($nk['loaidungcu_id'] ?? ''); ?>" />
+                                    <input type="hidden" name="ngayuudai[]" value="<?php echo htmlspecialchars($nk['ngayuudai'] ?? ''); ?>" />
+                                    <input type="hidden" name="id_uudai[]" value="<?php echo htmlspecialchars($nk['id_uudai'] ?? ''); ?>" />
+                                    <input type="hidden" name="id_huongncc[]" value="<?php echo htmlspecialchars($nk['id_huongncc'] ?? ''); ?>" />
+                                    <input type="hidden" name="trangthai_id[]" value="<?php echo htmlspecialchars($nk['trangthai_id'] ?? ''); ?>" />
 
                                     <span class="btn btn-sm btn-warning btn_edit_trocap" title="Sửa chính sách này">
                                         <i class="fas fa-edit"></i>
                                     </span>
-                                    <span class="btn btn-sm btn-danger btn_xoa_trocap" title="Xóa chính sách này" data-trocap-id="<?php echo htmlspecialchars($nk['id_trocap'] ?? ''); ?>">
+                                    <span class="btn btn-sm btn-danger btn_xoa_trocap" title="Xóa chính sách này" data-trocap-id="<?php echo htmlspecialchars($nk['id_huongncc'] ?? ''); ?>">
                                         <i class="fas fa-trash-alt"></i>
                                     </span>
                                 </td>
@@ -247,110 +258,58 @@ $item = $this->item;
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Mã hỗ trợ <span class="text-danger">*</span></label>
-                                    <input type="text" id="modal_ma_hotro" name="modal_ma_hotro" class="form-control" placeholder="Nhập mã hỗ trợ">
+                                    <label class="form-label">Hình thức hưởng <span class="text-danger">*</span></label>
+                                    <select id="modal_hinhthuchuong" name="modal_hinhthuchuong" class="custom-select" data-placeholder="Chọn hình thức hưởng" required>
+                                        <option value=""></option>
+                                        <option value="1">Hàng tháng</option>
+                                        <option value="2">Một lần</option>
+                                    </select>
                                     <label class="error_modal" for="modal_ma_hotro"></label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Biến động <span class="text-danger">*</span></label>
-                                    <select id="modal_bien_dong" name="modal_bien_dong" class="custom-select" data-placeholder="Chọn biến động">
-                                        <option value=""></option>
-                                        <?php if (is_array($this->biendong) && count($this->biendong) > 0) { ?>
-                                            <?php foreach ($this->biendong as $ldt) { ?>
-                                                <option value="<?php echo $ldt['id']; ?>" data-text="<?php echo htmlspecialchars($ldt['ten']); ?>">
-                                                    <?php echo htmlspecialchars($ldt['ten']); ?>
-                                                </option>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <option value="">Không có dữ liệu biến động</option>
-                                        <?php } ?>
+                                    <label class="form-label">Đối tượng hưởng <span class="text-danger">*</span></label>
+                                    <select id="modal_doituonghuong" name="modal_doituonghuong" class="custom-select" data-placeholder="Chọn đối tượng hưởng" required>
+                                        <option value="">Chọn đối tượng hưởng</option>
                                     </select>
-                                    <label class="error_modal" for="modal_bien_dong"></label>
+                                    <label class="error_modal" for="modal_doituonghuong"></label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="container_tyle">
                                 <div class="mb-3">
-                                    <label class="form-label">Chính sách <span class="text-danger">*</span></label>
-                                    <select id="modal_chinh_sach" name="modal_chinh_sach" class="custom-select" data-placeholder="Chọn chính sách">
+                                    <label class="form-label">Tỷ lệ <span class="text-danger">*</span></label>
+                                    <select id="modal_tyle" name="modal_tyle" class="custom-select" data-placeholder="Chọn tỷ lệ">
                                         <option value=""></option>
-                                        <?php if (is_array($this->chinhsach) && count($this->chinhsach) > 0) { ?>
-                                            <?php foreach ($this->chinhsach as $cs) { ?>
-                                                <option value="<?php echo $cs['id']; ?>" data-text="<?php echo htmlspecialchars($cs['ten']); ?>">
-                                                    <?php echo htmlspecialchars($cs['ten']); ?>
-                                                </option>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <option value="">Không có dữ liệu chính sách</option>
-                                        <?php } ?>
                                     </select>
-                                    <label class="error_modal" for="modal_chinh_sach"></label>
+                                    <label class="error_modal" for="modal_tyle"></label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Loại đối tượng <span class="text-danger">*</span></label>
-                                    <select id="modal_loai_doi_tuong" name="modal_loai_doi_tuong" class="custom-select" data-placeholder="Chọn loại đối tượng">
-                                        <option value=""></option>
-                                        <?php if (is_array($this->loaidoituong) && count($this->loaidoituong) > 0) { ?>
-                                            <?php foreach ($this->loaidoituong as $ldt) { ?>
-                                                <option value="<?php echo $ldt['id']; ?>" data-text="<?php echo htmlspecialchars($ldt['ten']); ?>" data-sotien="<?php echo htmlspecialchars($ldt['sotien']); ?>">
-                                                    <?php echo htmlspecialchars($ldt['ten']); ?>
-                                                </option>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <option value="">Không có dữ liệu loại đối tượng</option>
-                                        <?php } ?>
-                                    </select>
-                                    <label class="error_modal" for="modal_loai_doi_tuong"></label>
+                                    <label class="form-label">Trợ cấp <span class="text-danger">*</span></label>
+                                    <input type="text" id="modal_trocap" name="modal_trocap" class="form-control" placeholder="Nhập trợ cấp">
+
+                                    <label class="error_modal" for="modal_trocap"></label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Hệ số <span class="text-danger">*</span></label>
-                                    <input type="number" id="modal_he_so" name="modal_he_so" class="form-control" placeholder="Nhập hệ số" min="0" step="0.1">
-                                    <label class="error_modal" for="modal_he_so"></label>
+                                    <label class="form-label">Phụ cấp <span class="text-danger">*</span></label>
+                                    <input type="text" id="modal_phucap" name="modal_phucap" class="form-control" placeholder="Phụ cấp">
+                                    <label class="error_modal" for="modal_phucap"></label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Mức tiền chuẩn <span class="text-danger">*</span></label>
-                                    <input type="number" id="modal_muc_tien_chuan" name="modal_muc_tien_chuan" class="form-control" placeholder="Nhập mức tiền chuẩn" min="0" readonly>
-                                    <label class="error_modal" for="modal_muc_tien_chuan"></label>
+                                    <label class="form-label">Ngày hưởng </label>
+                                    <input type="text" id="modal_ngayhuong" name="modal_ngayhuong" class="form-control date-picker" placeholder="Nhập ngày hưởng">
+                                    <label class="error_modal" for="modal_ngayhuong"></label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="mb-3">
-                                    <label class="form-label">Thực nhận <span class="text-danger">*</span></label>
-                                    <input type="number" id="modal_thuc_nhan" name="modal_thuc_nhan" class="form-control" placeholder="Số tiền thực nhận" min="0" readonly>
-                                    <label class="error_modal" for="modal_thuc_nhan"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Số quyết định hưởng </label>
-                                    <input type="text" id="modal_so_quyet_dinh" name="modal_so_quyet_dinh" class="form-control" placeholder="Nhập số quyết định hưởng">
-                                    <label class="error_modal" for="modal_so_quyet_dinh"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Ngày quyết định </label>
-                                    <input type="text" id="modal_ngay_quyet_dinh" name="modal_ngay_quyet_dinh" class="form-control date-picker" placeholder="Nhập ngày quyết định">
-                                    <label class="error_modal" for="modal_ngay_quyet_dinh"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Hưởng từ ngày <span class="text-danger">*</span></label>
-                                    <input type="text" id="modal_huong_tu_ngay" name="modal_huong_tu_ngay" class="form-control date-picker" placeholder="Nhập ngày bắt đầu hưởng">
-                                    <label class="error_modal" for="modal_huong_tu_ngay"></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Trạng thái <span class="text-danger">*</span></label>
+                                    <label class="form-label">Trạng thái hưởng <span class="text-danger">*</span></label>
                                     <select id="modal_trang_thai" name="modal_trang_thai" class="custom-select" data-placeholder="Chọn trạng thái">
                                         <option value=""></option>
                                         <?php if (is_array($this->tinhtrang) && count($this->tinhtrang) > 0) { ?>
@@ -366,22 +325,95 @@ $item = $this->item;
                                     <label class="error_modal" for="modal_trang_thai"></label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Ghi chú</label>
-                                    <input type="text" id="modal_ghi_chu" name="modal_ghi_chu" class="form-control" placeholder="Nhập ghi chú">
-                                    <label class="error_modal" for="modal_ghi_chu"></label>
+                            <h5 class="border-bottom pb-2 mb-4">Thông tin ưu đãi</h5>
+                            <div class="row g-3 mb-4">
+
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">Loại ưu đãi</label>
+                                        <select id="modal_loaiuudai" name="modal_loaiuudai" class="custom-select" data-placeholder="Chọn loại ưu dãi">
+                                            <option value=""></option>
+                                            <?php if (is_array($this->uudai) && count($this->uudai) > 0) { ?>
+                                                <?php foreach ($this->uudai as $ud) { ?>
+                                                    <option value="<?php echo $ud['id']; ?>" data-text="<?php echo htmlspecialchars($ud['ten']); ?>">
+                                                        <?php echo htmlspecialchars($ud['ten']); ?>
+                                                    </option>
+                                                <?php } ?>
+                                            <?php } else { ?>
+                                                <option value="">Không có dữ liệu trạng thái</option>
+                                            <?php } ?>
+                                        </select>
+                                        <label class="error_modal" for="modal_loaiuudai"></label>
+                                    </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nội dung ưu đãi </label>
+                                        <input type="text" id="modal_noidunguudai" name="modal_noidunguudai" class="form-control" placeholder="Nhập nội dung ưu đãi">
+                                        <label class="error_modal" for="modal_noidunguudai"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Trợ cấp</label>
+                                        <input type="text" id="modal_trocapuudai" name="modal_trocapuudai" class="form-control" placeholder="Nhập trợ cấp">
+                                        <label class="error_modal" for="modal_trocapuudai"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày ưu đãi </label>
+                                        <input type="text" id="modal_ngayuudai" name="modal_ngayuudai" class="form-control date-picker" placeholder="Nhập ngày ưu đãi">
+                                        <label class="error_modal" for="modal_ngayuudai"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên dụng cụ</label>
+                                        <select id="modal_dungcu" name="modal_dungcu" class="custom-select" data-placeholder="Chọn dụng cụ">
+                                            <option value=""></option>
+                                            <?php if (is_array($this->dungcu) && count($this->dungcu) > 0) { ?>
+                                                <?php foreach ($this->dungcu as $dc) { ?>
+                                                    <option value="<?php echo $dc['id']; ?>" data-text="<?php echo htmlspecialchars($dc['tendungcu']); ?>">
+                                                        <?php echo htmlspecialchars($dc['ten']); ?>
+                                                    </option>
+                                                <?php } ?>
+                                            <?php } else { ?>
+                                                <option value="">Không có dữ liệu trạng thái</option>
+                                            <?php } ?>
+                                        </select>
+                                        <label class="error_modal" for="modal_dungcu"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Niên hạn</label>
+                                        <input type="text" id="modal_nienhan" name="modal_nienhan" class="form-control date-picker" placeholder="Nhập niên hạn">
+                                        <label class="error_modal" for="modal_nienhan"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Trợ cấp </label>
+                                        <input type="text" id="modal_trocapdungcu" name="modal_trocapdungcu" class="form-control" placeholder="Nhập">
+                                        <label class="error_modal" for="modal_trocapdungcu"></label>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
                     <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
+                    <input type="hidden" id="modal_id_uudai" name="modal_id_uudai" value="">
+
                     <input type="hidden" id="modal_edit_index" name="modal_edit_index" value="">
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
+                <input type="hidden" id="modal_id_uudai" name="modal_id_uudai" value="">
+
                 <button type="button" class="btn btn-primary" id="btn_luu_trocap"><i class="fas fa-save"></i> Lưu</button>
             </div>
         </div>
@@ -390,7 +422,22 @@ $item = $this->item;
 
 <script>
     jQuery(document).ready(function($) {
-        // Hàm hiển thị thông báo
+        const $hinhThucHuong = $('#modal_hinhthuchuong');
+        const $doiTuongHuong = $('#modal_doituonghuong');
+        const $selectTyle = $('#modal_tyle');
+        const $inputTroCap = $('#modal_trocap');
+        const $inputPhuCap = $('#modal_phucap');
+        const $allControls = $selectTyle.add($inputTroCap).add($inputPhuCap);
+        const $loaiUuDai = $('#modal_loaiuudai');
+        const $noiDungUuDai = $('#modal_noidunguudai');
+        const $ngayUuDai = $('#modal_ngayuudai');
+        const $trocapUuDai = $('#modal_trocapuudai');
+        const $dungCu = $('#modal_dungcu');
+        const $nienHan = $('#modal_nienhan');
+        const $trocapDungCu = $('#modal_trocapdungcu');
+        const $uudaiFields = $noiDungUuDai.add($trocapUuDai);
+        const $dungcuFields = $dungCu.add($nienHan).add($trocapDungCu);
+
         function showToast(message, isSuccess = true) {
             const toast = $('<div></div>').text(message).css({
                 position: 'fixed',
@@ -407,7 +454,189 @@ $item = $this->item;
             setTimeout(() => toast.fadeOut(500, () => toast.remove()), 2000);
         }
 
-        // Hàm khởi tạo Select2
+        function formatCurrency(value) {
+            if (!value) return '';
+            if (typeof value === 'string' && value.match(/[\.,]/)) {
+                return value;
+            }
+            const num = parseFloat(value.toString().replace(/[^\d]/g, ''));
+            return isNaN(num) ? '' : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function resetInputFields() {
+            $inputTroCap.val('');
+            $inputPhuCap.val('');
+            $selectTyle.html('<option value=""></option>').val(null).trigger('change');
+            $allControls.prop('disabled', true);
+            $uudaiFields.val('').prop('disabled', false);
+            $uudaiFields.closest('.col-md-6').show();
+            $dungcuFields.val('').prop('disabled', true);
+            $dungCu.html('<option value="">Chọn dụng cụ</option>').val(null).trigger('change');
+            $dungcuFields.closest('.col-md-6').hide();
+            $nienHan.prop('readonly', false);
+            $trocapDungCu.prop('readonly', false);
+        }
+
+        let doiTuongDataStore = {};
+
+        function cleanNumberString(str) {
+            if (typeof str === 'string') {
+                return str.replace(/,/g, '');
+            }
+            return str;
+        }
+
+        $hinhThucHuong.change(function() {
+            const hinhThucHuong = $(this).val();
+            doiTuongDataStore = {};
+            $doiTuongHuong.html('<option value="">Chọn đối tượng hưởng</option>').trigger('change');
+
+            if (!hinhThucHuong) {
+                return;
+            }
+
+            $.ajax({
+                url: 'index.php?option=com_vhytgd&controller=nguoicocong&task=loadDoiTuongHuong',
+                type: 'GET',
+                data: {
+                    hinh_thuc: hinhThucHuong
+                },
+                dataType: 'json',
+                success: function(response) {
+                    let options = '<option value="">Chọn đối tượng hưởng</option>';
+                    if (Array.isArray(response) && response.length > 0) {
+                        $.each(response, function(index, item) {
+                            const formattedItem = {
+                                ...item,
+                                trocap: formatCurrency(item.trocap),
+                                phucap: formatCurrency(item.phucap),
+                                trocap2: formatCurrency(item.trocap2)
+                            };
+                            options += `<option value="${item.id}">${item.ten}</option>`;
+                            doiTuongDataStore[item.id] = formattedItem;
+                        });
+                    } else {
+                        options += '<option value="">Không có dữ liệu</option>';
+                    }
+                    $doiTuongHuong.html(options);
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error:', status, error);
+                }
+            });
+        });
+
+        $doiTuongHuong.change(function() {
+            resetInputFields();
+            const selectedId = $(this).val();
+            if (!selectedId) return;
+
+            const data = doiTuongDataStore[selectedId];
+            if (!data) return;
+
+            const hinhThucHuong = $hinhThucHuong.val();
+
+            if (hinhThucHuong === '1') {
+                if (data.is_check == 0) {
+                    $inputTroCap.prop('disabled', true).val(formatCurrency(data.trocap));
+                    $inputPhuCap.prop('disabled', true).val(formatCurrency(data.phucap));
+                } else {
+                    $selectTyle.prop('disabled', false);
+                    $.ajax({
+                        url: 'index.php?option=com_vhytgd&controller=nguoicocong&task=loadDMTyle',
+                        type: 'GET',
+                        data: {
+                            tyle_id: selectedId
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (Array.isArray(response) && response.length > 0) {
+                                let options = '<option value=""></option>';
+                                $.each(response, function(index, item) {
+                                    options += `<option value="${item.tyle}" data-trocap2="${item.trocap2}">${item.tyle}% (${item.trocap2})</option>`;
+                                });
+                                $selectTyle.html(options).trigger('change');
+
+                                if (response.length === 1) {
+                                    $selectTyle.val(response[0].tyle).trigger('change');
+                                    $inputTroCap.val(response[0].trocap2);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX error:', status, error);
+                        }
+                    });
+                }
+            } else if (hinhThucHuong === '2') {
+                $inputTroCap.prop('disabled', true).val(formatCurrency(data.trocap));
+            }
+        });
+
+        $selectTyle.change(function() {
+            const selectedOption = $(this).find('option:selected');
+            if (selectedOption.val()) {
+                const trocap2 = selectedOption.data('trocap2');
+                $inputTroCap.val(trocap2);
+            } else {
+                // $inputTroCap.val('');
+            }
+        });
+
+        $loaiUuDai.change(function() {
+            const loaiUuDaiId = $(this).val();
+            $uudaiFields.val('').prop('disabled', false);
+            $dungcuFields.val('').prop('disabled', true);
+            $dungCu.html('<option value="">Chọn dụng cụ</option>').val(null).trigger('change');
+
+            if (loaiUuDaiId === '3') {
+                $uudaiFields.closest('.col-md-6').hide();
+                $dungcuFields.closest('.col-md-6').show();
+                $dungCu.prop('disabled', false);
+                $.ajax({
+                    url: 'index.php?option=com_vhytgd&controller=nguoicocong&task=loadDMdungcu',
+                    type: 'GET',
+                    data: {
+                        uudai_id: loaiUuDaiId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        let options = '<option value="">Chọn dụng cụ</option>';
+                        if (Array.isArray(response) && response.length > 0) {
+                            $.each(response, function(index, item) {
+                                options += `<option value="${item.id}" data-nienhan="${item.nienhan}" data-muccap="${item.muccap}">${item.tendungcu}</option>`;
+                            });
+                        } else {
+                            options += '<option value="">Không có dữ liệu</option>';
+                        }
+                        $dungCu.html(options).trigger('change');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                        showToast('Lỗi khi tải danh mục dụng cụ', false);
+                    }
+                });
+            } else {
+                $uudaiFields.closest('.col-md-6').show();
+                $dungcuFields.closest('.col-md-6').hide();
+            }
+        });
+
+        $dungCu.change(function() {
+            const selectedOption = $(this).find('option:selected');
+            if (selectedOption.val()) {
+                const nienhan = selectedOption.data('nienhan');
+                const muccap = selectedOption.data('muccap');
+                $nienHan.val(nienhan).prop('readonly', true);
+                $trocapDungCu.val(formatCurrency(muccap)).prop('readonly', true);
+            } else {
+                $nienHan.val('').prop('readonly', false);
+                $trocapDungCu.val('').prop('readonly', false);
+            }
+        });
+
+        resetInputFields();
+
         function initSelect2($element, options) {
             if ($element.length && $.fn.select2) {
                 if ($element.data('select2')) {
@@ -428,7 +657,6 @@ $item = $this->item;
             }
         }
 
-        // Khởi tạo Select2 cho các trường trong modalTroCap
         function initializeModalSelect2() {
             $('#modalTroCap select.custom-select').not('#modal_nhankhau_search').each(function() {
                 initSelect2($(this), {
@@ -440,22 +668,12 @@ $item = $this->item;
             });
         }
 
-        // Khởi tạo Datepicker
         $('#modalTroCap .date-picker').datepicker({
             autoclose: true,
             language: 'vi',
             format: 'dd/mm/yyyy'
         });
 
-        // Hàm làm sạch chuỗi số
-        function cleanNumberString(str) {
-            if (typeof str === 'string') {
-                return str.replace(/,/g, '');
-            }
-            return str;
-        }
-
-        // Khởi tạo validate cho form modalTroCap
         if ($.fn.validate) {
             $('#frmModalTroCap').validate({
                 ignore: [],
@@ -495,7 +713,6 @@ $item = $this->item;
                         number: true,
                         min: 0
                     },
-
                     modal_huong_tu_ngay: {
                         required: true
                     },
@@ -523,7 +740,6 @@ $item = $this->item;
                         number: 'Số tiền thực nhận phải là số',
                         min: 'Số tiền thực nhận phải lớn hơn hoặc bằng 0'
                     },
-
                     modal_huong_tu_ngay: 'Vui lòng nhập ngày bắt đầu hưởng',
                     modal_trang_thai: 'Vui lòng chọn trạng thái'
                 }
@@ -532,26 +748,16 @@ $item = $this->item;
 
         $('#modalTroCap').on('change.select2', '#modal_loai_doi_tuong', function(e) {
             const $form = $('#frmModalTroCap');
-
-            // --- BẮT ĐẦU THAY ĐỔI ---
-            // Sử dụng API của Select2 để lấy dữ liệu của option đã chọn một cách đáng tin cậy
             const selectedData = $(this).select2('data');
-
             let sotien = '';
 
-            // select2('data') trả về một mảng, ngay cả với select đơn.
-            // Chúng ta cần lấy phần tử đầu tiên và truy cập vào 'element' gốc của nó.
             if (selectedData && selectedData.length > 0 && selectedData[0].element) {
                 const originalOption = selectedData[0].element;
                 sotien = $(originalOption).data('sotien');
             }
-            // --- KẾT THÚC THAY ĐỔI ---
 
             console.log('Loại đối tượng selected. Lấy "sotien" từ data attribute:', sotien);
-
-            // Làm sạch sotien
             sotien = cleanNumberString(sotien);
-            console.log('sotien (cleaned):', sotien);
 
             if (sotien !== undefined && sotien !== '' && !isNaN(parseFloat(sotien))) {
                 const sotienValue = parseFloat(sotien);
@@ -568,7 +774,6 @@ $item = $this->item;
                 $form.validate().element('#modal_muc_tien_chuan');
             }
 
-            // Tính lại thực nhận nếu có hệ số
             const he_so = parseFloat($('#modal_he_so').val());
             if (sotien && !isNaN(sotien) && !isNaN(he_so)) {
                 const thuc_nhan = he_so * parseFloat(sotien);
@@ -592,7 +797,6 @@ $item = $this->item;
             }).addClass('hasDatepicker');
         }
 
-        // Xử lý sự kiện input/change cho modal_he_so
         $('#modal_he_so').on('input change', function() {
             const $form = $('#frmModalTroCap');
             const he_so = parseFloat($(this).val());
@@ -613,7 +817,6 @@ $item = $this->item;
             }
         });
 
-        // Xử lý sự kiện change.select2 cho các dropdown khác
         $('#modal_bien_dong, #modal_chinh_sach, #modal_trang_thai').on('change.select2', function() {
             const $form = $('#frmModalTroCap');
             if ($form.validate) {
@@ -621,7 +824,6 @@ $item = $this->item;
             }
         });
 
-        // Xử lý sự kiện input/change cho các trường khác
         $('#modal_ma_hotro, #modal_so_quyet_dinh, #modal_ngay_quyet_dinh, #modal_huong_tu_ngay').on('change input', function() {
             const $form = $('#frmModalTroCap');
             if ($form.validate) {
@@ -629,60 +831,150 @@ $item = $this->item;
             }
         });
 
-        // Hàm cập nhật số thứ tự trong bảng
         function updateTroCapSTT() {
             $('.dsThongtintrocap tr').each(function(index) {
                 $(this).find('.stt').text(index + 1);
             });
         }
-
-        // Xử lý nút Edit
         $('.dsThongtintrocap').on('click', '.btn_edit_trocap', function() {
             const $row = $(this).closest('tr');
 
             const data = {
-                trocap_id: $row.find('input[name="trocap_id[]"]').val(),
-                ma_hotro: $row.find('input[name="ma_hotro[]"]').val(),
-                bien_dong: $row.find('input[name="bien_dong[]"]').val(),
-                chinh_sach: $row.find('input[name="chinh_sach[]"]').val(),
-                loai_doi_tuong: $row.find('input[name="loai_doi_tuong[]"]').val(),
-                he_so: $row.find('input[name="he_so[]"]').val(),
-                muc_tien_chuan: $row.find('input[name="muc_tien_chuan[]"]').val(),
-                thuc_nhan: $row.find('input[name="thuc_nhan[]"]').val(),
-                so_quyet_dinh: $row.find('input[name="so_quyet_dinh[]"]').val(),
-                ngay_quyet_dinh: $row.find('input[name="ngay_quyet_dinh[]"]').val(),
-                huong_tu_ngay: $row.find('input[name="huong_tu_ngay[]"]').val(),
-                trang_thai: $row.find('input[name="trang_thai[]"]').val(),
-                ghi_chu: $row.find('input[name="ghi_chu[]"]').val()
+                id_huongncc: $row.find('[name="id_huongncc[]"]').val() || '',
+                id_uudai: $row.find('[name="id_uudai[]"]').val() || '',
+                is_hinhthuc: $row.find('[name="is_hinhthuc[]"]').val() || '',
+                dmnguoicocong_id: $row.find('[name="dmnguoicocong_id[]"]').val() || '',
+                trangthai_id: $row.find('[name="trangthai_id[]"]').val() || '',
+                trocap: $row.find('[name="trocap[]"]').val() || '',
+                phucap: $row.find('[name="phucap[]"]').val() || '',
+                dmtyle_id: $row.find('[name="dmtyle_id[]"]').val() || '',
+                loai_uudai: $row.find('[name="uudai_id[]"]').val() || '',
+                noidung_uudai: $row.find('[name="noidunguudai[]"]').val() || '',
+                trocap_uudai: $row.find('[name="trocapuudai[]"]').val() || '',
+                loaidungcu_id: $row.find('[name="loaidungcu_id[]"]').val() || '',
+                nienhan: $row.find('[name="nienhan[]"]').val() || '',
+                trocap_dungcu: $row.find('[name="trocapdungcu[]"]').val() || '',
+                ngay_uudai: $row.find('[name="ngayuudai[]"]').val() || '',
+                ngay_huong: $row.find('[name="ngayhuong[]"]').val() || ''
             };
 
-            $('#modalTroCapLabel').text('Chỉnh sửa thông tin trợ cấp');
-            $('#modal_edit_index').val($row.index());
+            console.log('Dữ liệu từ row:', data); // Debug dữ liệu từ row
 
-            // **QUAN TRỌNG: KHỞI TẠO PLUGIN TRƯỚC KHI ĐIỀN DỮ LIỆU**
+            $('#modalTroCapLabel').text('Chỉnh sửa thông tin trợ cấp');
+            $('#frmModalTroCap')[0].reset();
+            resetInputFields();
             initializeModalPlugins();
 
-            // Điền các trường input text và number
-            $('#modal_trocap_id').val(data.trocap_id || '');
-            $('#modal_ma_hotro').val(data.ma_hotro || '');
-            $('#modal_he_so').val(data.he_so || '');
-            $('#modal_muc_tien_chuan').val(data.muc_tien_chuan || '');
-            $('#modal_thuc_nhan').val(data.thuc_nhan || '');
-            $('#modal_so_quyet_dinh').val(data.so_quyet_dinh || '');
-            $('#modal_ngay_quyet_dinh').val(data.ngay_quyet_dinh || '');
-            $('#modal_huong_tu_ngay').val(data.huong_tu_ngay || '');
-            $('#modal_ghi_chu').val(data.ghi_chu || '');
+            // Điền dữ liệu cơ bản
+            $('#modal_trocap_id').val(data.id_huongncc);
+            $('#modal_id_uudai').val(data.id_uudai);
+            $('#modal_edit_index').val($row.index());
+            $('#modal_trocap').val(formatCurrency(data.trocap));
+            $('#modal_phucap').val(formatCurrency(data.phucap));
+            $('#modal_ngayhuong').val(data.ngay_huong);
+            $('#modal_ngayuudai').val(data.ngay_uudai);
+            $('#modal_noidunguudai').val(data.noidung_uudai);
+            $('#modal_trocapuudai').val(formatCurrency(data.trocap_uudai));
+            $('#modal_nienhan').val(data.nienhan);
+            $('#modal_trocapdungcu').val(formatCurrency(data.trocap_dungcu));
+            $('#modal_trang_thai').val(data.trangthai_id).trigger('change.select2');
+            setTimeout(() => {
 
-            // Điền các trường Select2 và trigger 'change.select2'
-            $('#modal_bien_dong').val(data.bien_dong || null).trigger('change.select2');
-            $('#modal_chinh_sach').val(data.chinh_sach || null).trigger('change.select2');
-            $('#modal_loai_doi_tuong').val(data.loai_doi_tuong || null).trigger('change.select2');
-            $('#modal_trang_thai').val(data.trang_thai || null).trigger('change.select2');
+                if (data.loai_uudai) {
+                    $('#modal_loaiuudai').val(data.loai_uudai).trigger('change');
+                    setTimeout(() => {
+                        if (data.loai_uudai === '3' && data.loaidungcu_id) {
+                            $('#modal_dungcu').val(data.loaidungcu_id).trigger('change');
+                        }
+                    }, 300);
+                }
+            }, 300);
+            // Sử dụng Promise để đồng bộ hóa AJAX
+            $.when(
+                $.ajax({
+                    url: 'index.php?option=com_vhytgd&controller=nguoicocong&task=loadDoiTuongHuong',
+                    type: 'GET',
+                    data: {
+                        hinh_thuc: data.is_hinhthuc
+                    },
+                    dataType: 'json'
+                })
+            ).then(response => {
+                let options = '<option value="">Chọn đối tượng hưởng</option>';
+                if (Array.isArray(response) && response.length > 0) {
+                    $.each(response, function(index, item) {
+                        const formattedItem = {
+                            ...item,
+                            trocap: formatCurrency(item.trocap),
+                            phucap: formatCurrency(item.phucap),
+                            trocap2: formatCurrency(item.trocap2)
+                        };
+                        options += `<option value="${item.id}">${item.ten}</option>`;
+                        doiTuongDataStore[item.id] = formattedItem;
+                    });
+                } else {
+                    options += '<option value="">Không có dữ liệu</option>';
+                }
+                $doiTuongHuong.html(options).val(data.dmnguoicocong_id).trigger('change.select2');
+                console.log('Giá trị modal_doituonghuong sau khi gán:', $doiTuongHuong.val());
 
-            // Mở modal
-            $('#modalTroCap').modal('show');
+                // Đợi loadDMTyle
+                if (data.is_hinhthuc === '1' && doiTuongDataStore[data.dmnguoicocong_id]?.is_check == 1) {
+                    return $.ajax({
+                        url: 'index.php?option=com_vhytgd&controller=nguoicocong&task=loadDMTyle',
+                        type: 'GET',
+                        data: {
+                            tyle_id: data.dmnguoicocong_id
+                        },
+                        dataType: 'json'
+                    });
+                }
+                return $.Deferred().resolve([]); // Trả về Promise rỗng nếu không cần loadDMTyle
+            }).then(response => {
+                if (response.length > 0) {
+                    let options = '<option value=""></option>';
+                    $.each(response, function(index, item) {
+                        options += `<option value="${item.tyle}" data-trocap2="${item.trocap2}">${item.tyle}% (${item.trocap2})</option>`;
+                    });
+                    $selectTyle.html(options).val(data.dmtyle_id).trigger('change.select2');
+                    console.log('Giá trị modal_tyle sau khi gán:', $selectTyle.val());
+                    if (!$selectTyle.val()) {
+                        console.warn('Không gán được giá trị cho modal_tyle:', data.dmtyle_id);
+                        showToast('Cảnh báo: Tỷ lệ không hợp lệ, vui lòng kiểm tra.', false);
+                    }
+                }
+
+                // Điền các trường ưu đãi
+                if (data.loai_uudai) {
+                    $('#modal_loaiuudai').val(data.loai_uudai).trigger('change.select2');
+                    if (data.loai_uudai === '3' && data.loaidungcu_id && data.loaidungcu_id !== 'undefined') {
+                        return $.ajax({
+                            url: 'index.php?option=com_vhytgd&controller=nguoicocong&task=loadDMdungcu',
+                            type: 'GET',
+                            data: {
+                                uudai_id: data.loai_uudai
+                            },
+                            dataType: 'json'
+                        }).then(response => {
+                            let options = '<option value="">Chọn dụng cụ</option>';
+                            if (Array.isArray(response) && response.length > 0) {
+                                $.each(response, function(index, item) {
+                                    options += `<option value="${item.id}" data-nienhan="${item.nienhan}" data-muccap="${item.muccap}">${item.tendungcu}</option>`;
+                                });
+                            } else {
+                                options += '<option value="">Không có dữ liệu</option>';
+                            }
+                            $dungCu.html(options).val(data.loaidungcu_id).trigger('change.select2');
+                            console.log('Giá trị modal_dungcu sau khi gán:', $dungCu.val());
+                        });
+                    }
+                }
+            }).always(() => {
+                $('#modal_hinhthuchuong').val(data.is_hinhthuc).trigger('change.select2');
+                $('#modalTroCap').modal('show');
+            });
         });
-        // Xử lý nút Lưu
+
         $('#btn_luu_trocap').on('click', function() {
             const $form = $('#frmModalTroCap');
             if ($form.valid()) {
@@ -691,52 +983,68 @@ $item = $this->item;
                 formData.forEach(item => {
                     data[item.name] = item.value;
                 });
+                const trocap = $('#modal_trocap').val();
+                const phucap = $('#modal_phucap').val();
+                // Explicitly include readonly fields
+                data.modal_trocap = $('#modal_trocap').val() || '';
+                data.modal_phucap = $('#modal_phucap').val() || '';
+                data.modal_dungcu = $('#modal_dungcu').val() || '';
 
-                // Lấy giá trị modal_thuc_nhan trực tiếp từ input
-                const thuc_nhan = $('#modal_thuc_nhan').val();
-                data.modal_thuc_nhan = thuc_nhan || '';
 
-                // Debug giá trị editIndex và dữ liệu
+                data.modal_nienhan = $('#modal_nienhan').val() || '';
+                data.modal_trocapdungcu = $('#modal_trocapdungcu').val() || '';
+                data.modal_trocapdungcu = $('#modal_trocapdungcu').val() || '';
+
+                const thuc_nhan = `${trocap || ''} ${phucap || ''}`.trim(); // Sử dụng trim() để loại bỏ khoảng trắng thừa
+                data.modal_thuc_nhan = thuc_nhan;
                 const editIndex = parseInt($('#modal_edit_index').val());
                 console.log('editIndex:', editIndex);
                 console.log('Dữ liệu trợ cấp:', data);
 
-                // Lấy text từ các dropdown
-                const bien_dong_text = $('#modal_bien_dong option:selected').data('text') || $('#modal_bien_dong option:selected').text() || '';
-                const chinh_sach_text = $('#modal_chinh_sach option:selected').data('text') || $('#modal_chinh_sach option:selected').text() || '';
-                const loai_doi_tuong_text = $('#modal_loai_doi_tuong option:selected').data('text') || $('#modal_loai_doi_tuong option:selected').text() || '';
+                const hinh_thuc_huong_text = $('#modal_hinhthuchuong option:selected').data('text') || $('#modal_hinhthuchuong option:selected').text() || '';
+                const doi_tuong_huong_text = $('#modal_doituonghuong option:selected').data('text') || $('#modal_doituonghuong option:selected').text() || '';
                 const trang_thai_text = $('#modal_trang_thai option:selected').data('text') || $('#modal_trang_thai option:selected').text() || '';
+                const loai_uudai_text = $('#modal_loaiuudai option:selected').data('text') || $('#modal_loaiuudai option:selected').text() || '';
+                const dungcu_text = $('#modal_dungcu option:selected').data('text') || $('#modal_dungcu option:selected').text() || '';
 
-                // Tạo HTML cho dòng trong bảng
+                let uu_dai_info = '';
+                if (data.modal_loaiuudai === '3') {
+                    uu_dai_info = `Tên dụng cụ: ${dungcu_text}<br>Niên hạn: ${data.modal_nienhan || ''}<br>Trợ cấp dụng cụ: ${data.modal_trocapdungcu || ''}`;
+                } else {
+                    uu_dai_info = `Nội dung ưu đãi: ${data.modal_noidunguudai || ''}<br>Trợ cấp ưu đãi: ${data.modal_trocapuudai || ''}`;
+                }
+
                 const html = `
                 <tr>
                     <td class="align-middle text-center stt"></td>
-                    <td class="align-middle">${data.modal_ma_hotro || ''}</td>
-                    <td class="align-middle">${bien_dong_text}</td>
-                    <td class="align-middle">${chinh_sach_text}</td>
-                    <td class="align-middle">${loai_doi_tuong_text}</td>
-                    <td class="align-middle">${data.modal_he_so || ''}</td>
-                    <td class="align-middle">${data.modal_muc_tien_chuan || ''}</td>
-                    <td class="align-middle">${data.modal_thuc_nhan || ''}</td>
-                    <td class="align-middle"><strong>Số quyết định:</strong> ${data.modal_so_quyet_dinh || ''}<br>
-                        <strong>Ngày quyết định:</strong> ${data.modal_ngay_quyet_dinh || ''}</td>
-                    <td class="align-middle">${data.modal_huong_tu_ngay || ''}</td>
+                    <td class="align-middle">${hinh_thuc_huong_text}</td>
+                    <td class="align-middle">${doi_tuong_huong_text}</td>
+                     <td class="align-middle"><strong>Trợ cấp:</strong>${trocap}<br>
+                    <strong>Phụ cấp:</strong> ${phucap}
+
+                    </td>
+                    <td class="align-middle">${data.modal_ngayhuong || ''}</td>
                     <td class="align-middle">${trang_thai_text}</td>
-                    <td class="align-middle">${data.modal_ghi_chu || ''}</td>
+                    <td class="align-middle">${loai_uudai_text}<br>${uu_dai_info}</td>
                     <td class="align-middle text-center" style="min-width:100px">
-                        <input type="hidden" name="trocap_id[]" value="${data.modal_trocap_id || ''}" />
-                        <input type="hidden" name="ma_hotro[]" value="${data.modal_ma_hotro || ''}" />
-                        <input type="hidden" name="bien_dong[]" value="${data.modal_bien_dong || ''}" />
-                        <input type="hidden" name="chinh_sach[]" value="${data.modal_chinh_sach || ''}" />
-                        <input type="hidden" name="loai_doi_tuong[]" value="${data.modal_loai_doi_tuong || ''}" />
-                        <input type="hidden" name="he_so[]" value="${data.modal_he_so || ''}" />
-                        <input type="hidden" name="muc_tien_chuan[]" value="${data.modal_muc_tien_chuan || ''}" />
-                        <input type="hidden" name="thuc_nhan[]" value="${data.modal_thuc_nhan || ''}" />
-                        <input type="hidden" name="so_quyet_dinh[]" value="${data.modal_so_quyet_dinh || ''}" />
-                        <input type="hidden" name="ngay_quyet_dinh[]" value="${data.modal_ngay_quyet_dinh || ''}" />
-                        <input type="hidden" name="huong_tu_ngay[]" value="${data.modal_huong_tu_ngay || ''}" />
-                        <input type="hidden" name="trang_thai[]" value="${data.modal_trang_thai || ''}" />
-                        <input type="hidden" name="ghi_chu[]" value="${data.modal_ghi_chu || ''}" />
+                        <input type="hidden" name="id_huongncc[]" value="${data.modal_trocap_id || ''}" />
+                        <input type="hidden" name="id_uudai[]" value="${data.modal_id_uudai || ''}" />
+
+                        <input type="hidden" name="is_hinhthuc[]" value="${data.modal_hinhthuchuong || ''}" />
+                        <input type="hidden" name="dmnguoicocong_id[]" value="${data.modal_doituonghuong || ''}" />
+                        <input type="hidden" name="trangthai_id[]" value="${data.modal_trang_thai || ''}" />
+                        <input type="hidden" name="ngayhuong[]" value="${data.modal_ngayhuong || ''}" />
+
+                        <input type="hidden" name="trocap[]" value="${data.modal_trocap || ''}" />
+                        <input type="hidden" name="trocapdungcu[]" value="${data.modal_trocapdungcu || ''}" />
+
+                        <input type="hidden" name="phucap[]" value="${data.modal_phucap || ''}" />
+                        <input type="hidden" name="dmtyle_id[]" value="${data.modal_tyle || ''}" />
+                        <input type="hidden" name="uudai_id[]" value="${data.modal_loaiuudai || ''}" />
+                        <input type="hidden" name="noidunguudai[]" value="${data.modal_noidunguudai || ''}" />
+                        <input type="hidden" name="trocap_uudai[]" value="${data.modal_trocapuudai || ''}" />
+                        <input type="hidden" name="loaidungcu_id[]" value="${data.modal_dungcu || ''}" />
+                        <input type="hidden" name="ngayuudai[]" value="${data.modal_ngayuudai || ''}" />
                         <span class="btn btn-sm btn-warning btn_edit_trocap" data-trocap-id="${data.modal_trocap_id || ''}"><i class="fas fa-edit"></i></span>
                         <span class="btn btn-sm btn-danger btn_xoa_trocap" data-trocap-id="${data.modal_trocap_id || ''}"><i class="fas fa-trash-alt"></i></span>
                     </td>
@@ -744,18 +1052,14 @@ $item = $this->item;
                 if ($('.dsThongtintrocap .no-data').length) {
                     $('.dsThongtintrocap .no-data').remove();
                 }
-                // Kiểm tra xem có đang chỉnh sửa hay không
                 if (!isNaN(editIndex) && editIndex >= 0 && $('.dsThongtintrocap tr').eq(editIndex).length) {
-                    // Cập nhật hàng hiện tại
                     $('.dsThongtintrocap tr').eq(editIndex).replaceWith(html);
                     showToast('Cập nhật thông tin trợ cấp thành công', true);
                 } else {
-                    // Thêm dòng mới
                     $('.dsThongtintrocap').append(html);
                     showToast('Thêm thông tin trợ cấp thành công', true);
                 }
 
-                // Reset modal_edit_index sau khi lưu
                 $('#modal_edit_index').val('');
                 updateTroCapSTT();
                 $('#modalTroCap').modal('hide');
@@ -769,7 +1073,6 @@ $item = $this->item;
             const trocap_id = $(this).data('trocap-id');
             console.log('Xóa thông tin trợ cấp:', trocap_id);
 
-            // Xác nhận trước khi xóa
             if (!confirm('Bạn có chắc chắn muốn xóa thông tin trợ cấp này?')) {
                 return;
             }
@@ -777,7 +1080,7 @@ $item = $this->item;
             try {
                 const response = await $.post('index.php', {
                     option: 'com_vhytgd',
-                    controller: 'doituonghuongcs',
+                    controller: 'nguoicocong',
                     task: 'delThongtinhuongcs',
                     trocap_id: trocap_id
                 }, null, 'json');
@@ -787,7 +1090,7 @@ $item = $this->item;
                     updateTroCapSTT();
                     showToast('Xóa thông tin trợ cấp thành công', true);
                     if ($('.dsThongtintrocap tr').length === 0) {
-                        $('.dsThongtintrocap').html('<tr class="no-data"><td colspan="14" class="text-center">Không có dữ liệu</td></tr>');
+                        $('.dsThongtintrocap').html('<tr class="no-data"><td colspan="8" class="text-center">Không có dữ liệu</td></tr>');
                     }
                 } else {
                     showToast('Xóa thông tin trợ cấp thất bại: ' + (response.message || 'Lỗi không xác định'), false);
@@ -798,7 +1101,6 @@ $item = $this->item;
             }
         });
 
-        // Xử lý nút mở modal
         $('#btn_themchinhsach').on('click', function(e) {
             e.preventDefault();
             $('#modalTroCapLabel').text('Thêm thông tin trợ cấp');
@@ -807,6 +1109,7 @@ $item = $this->item;
             $('#modal_edit_index').val('');
             $('#modal_muc_tien_chuan').val('').prop('readonly', true);
             $('#modal_thuc_nhan').val('').prop('readonly', true);
+            resetInputFields();
             initializeModalSelect2();
             $('#modalTroCap').modal('show');
         });
@@ -823,7 +1126,7 @@ $item = $this->item;
 
     $(document).ready(function() {
         $('#btn_quaylai').click(() => {
-            window.location.href = '<?php echo Route::_('/index.php/component/vhytgd/?view=doituonghuongcs&task=default'); ?>';
+            window.location.href = '<?php echo Route::_('/index.php/component/vhytgd/?view=nguoicocong&task=default'); ?>';
         });
 
         $('.namsinh').datepicker({
@@ -876,7 +1179,7 @@ $item = $this->item;
                 allowClear: true,
                 width: '100%',
                 ajax: {
-                    url: 'index.php?option=com_vhytgd&task=doituonghuongcs.timkiem_nhankhau&format=json',
+                    url: 'index.php?option=com_vhytgd&task=nguoicocong.timkiem_nhankhau&format=json',
                     dataType: 'json',
                     delay: 150,
                     data: function(params) {
@@ -941,7 +1244,7 @@ $item = $this->item;
             try {
                 const response = await $.post('index.php', {
                     option: 'com_vhytgd',
-                    controller: 'doituonghuongcs',
+                    controller: 'nguoicocong',
                     task: 'getThonTobyPhuongxa',
                     phuongxa_id: phuongxa_id
                 }, null, 'json');
@@ -976,7 +1279,7 @@ $item = $this->item;
                 try {
                     const nhankhauResponse = await $.post('index.php', {
                         option: 'com_vhytgd',
-                        task: 'doituonghuongcs.timkiem_nhankhau',
+                        task: 'nguoicocong.timkiem_nhankhau',
                         format: 'json',
                         nhankhau_id: item[0].nhankhau_id,
                     }, null, 'json');
@@ -1081,7 +1384,7 @@ $item = $this->item;
         });
 
         // Sửa ID form cho khớp
-        $('#formDoiTuongCS').validate({
+        $('#formNguoiCoCong').validate({
             ignore: [],
             rules: {
                 select_top: {
@@ -1113,13 +1416,8 @@ $item = $this->item;
                     required: function() {
                         return !$('#checkbox_toggle').is(':checked');
                     }
-                },
-                madoituong: {
-                    required: true
-                },
-                tinhtrangdangky: {
-                    required: true
                 }
+
             },
             messages: {
                 select_top: 'Vui lòng chọn nhân khẩu',
@@ -1128,8 +1426,6 @@ $item = $this->item;
                 select_namsinh: 'Vui lòng chọn năm sinh',
                 select_phuongxa_id: 'Vui lòng chọn phường/xã',
                 select_gioitinh_id: 'Vui lòng chọn giới tính',
-                madoituong: 'Vui lòng nhập mã đối tượng',
-                tinhtrangdangky: 'Vui lòng chọn tình trạng đăng ký',
             },
             errorPlacement: function(error, element) {
                 if (element.hasClass('custom-select')) {
@@ -1143,34 +1439,34 @@ $item = $this->item;
         });
 
         // submit form chính
-        $('#formDoiTuongCS').on('submit', function(e) {
-            e.preventDefault();
-            if (!$(this).valid()) {
-                showToast('Vui lòng nhập đầy đủ thông tin', false);
-                return;
-            }
+        // $('#formNguoiCoCong').on('submit', function(e) {
+        //     e.preventDefault();
+        //     if (!$(this).valid()) {
+        //         showToast('Vui lòng nhập đầy đủ thông tin', false);
+        //         return;
+        //     }
 
-            const formData = new FormData(this);
+        //     const formData = new FormData(this);
 
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    const isSuccess = response.success ?? true;
-                    showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
-                    if (isSuccess) {
-                        setTimeout(() => location.href = "/index.php/component/vhytgd/?view=doituonghuongcs&task=default", 500);
-                    }
-                },
-                error: function(xhr) {
-                    console.error('Submit error:', xhr.responseText);
-                    showToast('Đã xảy ra lỗi khi gửi dữ liệu', false);
-                }
-            });
-        });
+        //     $.ajax({
+        //         url: $(this).attr('action'),
+        //         type: 'POST',
+        //         data: formData,
+        //         contentType: false,
+        //         processData: false,
+        //         success: function(response) {
+        //             const isSuccess = response.success ?? true;
+        //             showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
+        //             if (isSuccess) {
+        //                 setTimeout(() => location.href = "/index.php/component/vhytgd/?view=nguoicocong&task=default", 500);
+        //             }
+        //         },
+        //         error: function(xhr) {
+        //             console.error('Submit error:', xhr.responseText);
+        //             showToast('Đã xảy ra lỗi khi gửi dữ liệu', false);
+        //         }
+        //     });
+        // });
 
         const showToast = (message, isSuccess = true) => {
             const toast = $('<div></div>')

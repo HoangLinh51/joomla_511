@@ -8,7 +8,7 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-namespace Joomla\Component\Vhytgd\Site\View\Doituonghuongcs;
+namespace Joomla\Component\Vhytgd\Site\View\Nguoicocong;
 
 defined('_JEXEC') or die;
 
@@ -21,29 +21,10 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $user = Factory::getUser();
-        $app = Factory::getApplication();
-        $input = $app->input;
-        $component = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
-        $task = strtolower($input->getCmd('task', 'default'));
-        if (!$user->id) {
-            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
-        }
-        if ($task === 'THONGKE' || $task === 'ADD_DTCS' || $task === 'EDIT_DTCS') {
-            $checkTask = 'default';
-        }
-        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
-            echo '<div style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-                    <a href="/index.php" style="text-decoration: none;">
-                        <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">Trang chủ</button>
-                    </a>
-                </div>';
-            exit;
-        }
+        $layout = Factory::getApplication()->input->get('task');
+        $layout = ($layout == null) ? 'default' : strtoupper($layout);
 
-        switch ($task) {
+        switch ($layout) {
             case 'DEFAULT':
                 $this->setLayout('default');
                 $this->_initDefaultPage();
@@ -52,10 +33,10 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();
                 break;
-            case 'ADD_DTCS':
-            case 'EDIT_DTCS':
-                $this->setLayout('edit_dtcs');
-                $this->_getEditDoituongcs();
+            case 'ADD_NCC':
+            case 'EDIT_NCC':
+                $this->setLayout('edit_ncc');
+                $this->_getEditNCC();
                 break;
             default:
                 $this->setLayout('default');
@@ -115,7 +96,7 @@ class HtmlView extends BaseHtmlView
         $this->phuongxa = $phuongxa;
         $this->loaihinhthietche = $loaihinhthietche;
     }
-    public function _getEditDoituongcs()
+    public function _getEditNCC()
     {
         $document = Factory::getDocument();
         $app = Factory::getApplication()->input;
@@ -150,7 +131,7 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/pace.min.js');
 
         $id = $app->getInt('thietche_id', null);
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
 
@@ -177,22 +158,24 @@ class HtmlView extends BaseHtmlView
         $chinhsach = Core::loadAssocList('dmchinhsach', 'id,ten,ma', 'trangthai = 1 AND daxoa = 0');
         $loaidoituong = Core::loadAssocList('dmloaidoituong', 'id, ten, ma, macs, heso, sotien', 'trangthai = 1 AND daxoa = 0');
 
-
-
-        $loaihinhthietche = Core::loadAssocList('danhmuc_loaihinhthietche', '*', 'trangthai = 1 AND daxoa = 0');
+         $dthuong = Core::loadAssocList('dmnguoicocong', '*', 'trangthai = 1 AND daxoa = 0');
         $trinhdollct = Core::loadAssocList('danhmuc_lyluanchinhtri', 'id,tentrinhdo', 'trangthai = 1 AND daxoa = 0');
         $phuongxa2 = Core::loadAssocList('danhmuc_phuongxa', 'id,tenphuongxa', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC, tenphuongxa ASC');
         $chucdanhkiemnhiem = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 99');
         $chucdanh = Core::loadAssocList('danhmuc_chucdanh', 'id,tenchucdanh', 'trangthai = 1 AND daxoa = 0 AND module_id = 1');
-        $tinhtrang = Core::loadAssocList('dmlydo', 'id,ten', 'trangthai = 1 AND daxoa = 0 AND is_loai = 1');
+        $tinhtrang = Core::loadAssocList('dmlydo', 'id,ten', 'trangthai = 1 AND daxoa = 0 AND is_loai = 3');
         $biendong = Core::loadAssocList('dmloaibiendong', 'id,ten', 'trangthai = 1 AND daxoa = 0');
+        $uudai = Core::loadAssocList('dmuudai', 'id,ten', 'trangthai = 1 AND daxoa = 0');
+        $dungcu = Core::loadAssocList('dmdungcu', 'id,tendungcu, nienhan, muccap', 'trangthai = 1 AND daxoa = 0');
+
+
 
 
         $thonto_id = $app->getInt('thonto_id', null);
-        $doituong_id = $app->getInt('doituong_id', null);
+        $ncc_id = $app->getInt('ncc_id', null);
         $phuongxa_id = null;
-        if ((int)$doituong_id > 0) {
-            $this->item = $model->getEditDoiTuongCS($doituong_id);
+        if ((int)$ncc_id > 0) {
+            $this->item = $model->getEditNCC($ncc_id);
         }
 
         if ((int)$phuongxa_id > 0) {
@@ -202,7 +185,9 @@ class HtmlView extends BaseHtmlView
         }
 
         // Gán các biến cho view
-        $this->loaihinhthietche = $loaihinhthietche;
+        $this->uudai = $uudai;
+        $this->dungcu = $dungcu;
+        $this->dthuong = $dthuong;
         $this->dantoc = $dantoc;
         $this->loaidoituong = $loaidoituong;
         $this->nganhang = $nganhang;

@@ -24,7 +24,7 @@ defined('_JEXEC') or die;
  *
  * @since  3.1
  */
-class DoituonghuongcsController extends BaseController
+class DongbaodantocController extends BaseController
 {
     public function __construct($config = [])
     {
@@ -68,7 +68,7 @@ class DoituonghuongcsController extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Dongbaodantoc');
 
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
@@ -84,18 +84,19 @@ class DoituonghuongcsController extends BaseController
         echo json_encode($result);
         jexit();
     }
-    function saveDoituongCS()
+   
+    function saveDongbaodantoc()
     {
         Session::checkToken() or die('Invalid Token');
         $user = Factory::getUser();
 
 
 
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Dongbaodantoc');
         $input = Factory::getApplication()->input;
         $formData = $input->getArray($_POST);
         try {
-            if (!$model->saveDoituongCS($formData)) {
+            if (!$model->saveDongbaodantoc($formData)) {
                 Factory::getApplication()->enqueueMessage('Lưu dữ liệu không thành công.', 'error');
                 return;
             }
@@ -105,12 +106,12 @@ class DoituonghuongcsController extends BaseController
 
         $session = Factory::getSession();
         $session->set('message_bootbox', 'Đã cập nhật dữ liệu thành công!');
-        $this->setRedirect("index.php/component/vhytgd/?view=doituonghuongcs&task=default");
+        $this->setRedirect("index.php/component/vhytgd/?view=dongbaodantoc&task=default");
     }
     public function delThongtinhuongcs()
     {
         // $user = Factory::getUser();
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Dongbaodantoc');
         $app = Factory::getApplication();
         $trocap_id = $app->input->getInt('trocap_id', 0);
 
@@ -135,10 +136,10 @@ class DoituonghuongcsController extends BaseController
         exit;
     }
 
-    public function removeDoiTuongChinhSach()
+    public function removeDongbaodantoc()
     {
         // $user = Factory::getUser();
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Dongbaodantoc');
         $app = Factory::getApplication();
         $id = $app->input->getInt('chinhsach_id', 0);
 
@@ -148,7 +149,7 @@ class DoituonghuongcsController extends BaseController
         ];
 
         if ((int)$id > 0) {
-            if ($model->removeDoiTuongChinhSach($id)) {
+            if ($model->removeDongbaodantoc($id)) {
                 $response['success'] = true;
                 $response['message'] = 'Xóa hoạt động thành công';
             } else {
@@ -162,51 +163,41 @@ class DoituonghuongcsController extends BaseController
         echo json_encode($response);
         exit;
     }
-    public function cutThongtinhuongcs()
+   
+  
+     public function checkNhankhauInDanQuan()
     {
-        Session::checkToken() or die('Invalid Token');
-        $model = Core::model('Vhytgd/Doituonghuongcs');
         $input = Factory::getApplication()->input;
-        $formData = $input->getArray($_POST);
+        $nhankhau_id = $input->getInt('nhankhau_id', 0);
+        if (!$nhankhau_id) {
+            $response = [
+                'success' => false,
+                'exists' => false,
+                'message' => 'Thiếu nhankhau_id'
+            ];
+            echo json_encode($response);
+            Factory::getApplication()->close();
+            return;
+        }
+
+        $model = Core::model('Vhytgd/Dongbaodantoc');
+
         try {
-            if (!$model->saveCatHuongCS($formData)) {
-                echo json_encode(['success' => false, 'message' => 'Lưu dữ liệu không thành công.']);
-                return;
-            }
-            echo json_encode(['success' => true, 'message' => 'Đã cập nhật trạng thái cắt hưởng thành công!']);
+            $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_danquan');
+            $response = [
+                'success' => true,
+                'exists' => $exists,
+                'message' => $exists ? 'Nhân khẩu đã có trong danh sách dân quân' : 'Nhân khẩu chưa có trong danh sách dân quân'
+            ];
         } catch (Exception $e) {
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-        }
-        exit; // Đảm bảo không có thêm nội dung nào được gửi về
-    }
-    public function checkCatHuong()
-    {
-        $doituong_id = $this->input->getInt('doituong_id');
-        $model = Core::model('Vhytgd/Doituonghuongcs');
-
-        $data = $model->getDetailCatCS($doituong_id);
-
-        if (!empty($data)) {
-            // Format lại dữ liệu nếu cần
-            foreach ($data as &$item) {
-                // Đảm bảo các trường quan trọng tồn tại
-                $item['trangthaich_id'] = $item['trangthaich_id'] ?? null;
-                $item['lydo'] = $item['lydo'] ?? '';
-
-                // Format ngày nếu cần (đã được format trong SQL)
-            }
-
-            echo json_encode([
-                'hasData' => true,
-                'data' => $data
-            ]);
-        } else {
-            echo json_encode([
-                'hasData' => false,
-                'data' => []
-            ]);
+            $response = [
+                'success' => false,
+                'exists' => false,
+                'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
+            ];
         }
 
+        echo json_encode($response);
         Factory::getApplication()->close();
     }
 }

@@ -9,7 +9,7 @@
  * @CopyRight             : Dnict                                            *
  ****************************************************************************/
 
-namespace Joomla\Component\Vhytgd\Site\View\Doituonghuongcs;
+namespace Joomla\Component\Vhytgd\Site\View\Dongbaodantoc;
 
 use Core;
 use Joomla\CMS\Factory;
@@ -53,23 +53,23 @@ class RawView extends BaseHtmlView
         $this->setLayout(strtolower($layout));
         switch ($layout) {
 
-            case 'DS_DOITUONGHUONGCS':
-                $this->_pageDOITUONGHUONGCS();
+            case 'DS_DBDT':
+                $this->_pageDongBaoDanToc();
                 break;
             case 'DS_THONGKE':
                 $this->_pageThongke();
                 break;
-            case 'DETAIL_DOITUONGCS':
-                $this->_pageDetailDOITUONGCS();
+            case 'DETAIL_DBDT':
+                $this->_pageDetailNCC();
                 break;
         }
     }
 
 
 
-    private function _pageDOITUONGHUONGCS()
+    private function _pageDongBaoDanToc()
     {
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Dongbaodantoc');
         $app = Factory::getApplication()->input;
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', 0),
@@ -81,8 +81,8 @@ class RawView extends BaseHtmlView
 
         $perPage = 20;
         $startFrom = $app->getInt('start', 0);
-        $this->items = $model->getDanhSachDoiTuongCS($params, $startFrom, $perPage);
-        $this->total = $model->CountDanhSachDoituongCS($params);
+        $this->items = $model->getDanhSachDongbaodantoc($params, $startFrom, $perPage);
+        $this->total = $model->CountDBDT($params);
         parent::display();
     }
     private function _pageThongke()
@@ -107,66 +107,64 @@ class RawView extends BaseHtmlView
         $this->items = $items;
         parent::display();
     }
-    private function _pageDetailDOITUONGCS()
-{
-    $app = Factory::getApplication()->input;
-    $doituong_id = $app->getInt('doituong_id', 0);
-    $model = Core::model('Vhytgd/Doituonghuongcs');
+    private function _pageDetailNCC()
+    {
+        $app = Factory::getApplication()->input;
+        $doituong_id = $app->getInt('doituong_id', 0);
+        $model = Core::model('Vhytgd/Dongbaodantoc');
 
-    $details = $model->getDetailDOITUONGCS($doituong_id);
+        $details = $model->getDetailDBDT($doituong_id);
 
-    if (!is_array($details) || empty($details)) {
-        echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
-        Factory::getApplication()->close();
-        return;
-    }
+        if (!is_array($details) || empty($details)) {
+            echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
+            Factory::getApplication()->close();
+            return;
+        }
 
-    echo '<div class="detail-container" style="font-size:15px">';
+        echo '<div class="detail-container" style="font-size:15px" >';
 
-    // Hiển thị tên và mã đối tượng
-    echo '<div style="width: 100%; padding-left: 10px;">';
-    echo '<strong>Tên: </strong>' . htmlspecialchars($details[0]['n_hoten']) . '<br>';
-    echo '<strong>Mã đối tượng: </strong>' . htmlspecialchars($details[0]['madoituong']);
-    echo '</div>';
+        // Hiển thị tên và mã đối tượng
+        echo '<div style="width: 100%; padding-left: 10px;">';
+        echo '<strong>Họ và tên: </strong>' . htmlspecialchars($details[0]['n_hoten']) . '<br>';
+        echo '</div>';
 
-    // Thông tin chi tiết bên phải (bảng)
-    echo '<div class="detail-content" style="width: 100%; padding-left: 10px;">';
-    echo '<table class="table table-bordered">';
+        // Thông tin chi tiết bên phải (bảng)
+        echo '<div class="detail-content" style="width: 100%; padding-left: 10px;">';
+        echo '<table class="table table-bordered">';
 
-    echo '<thead>';
-    echo '<tr>';
-    echo '<th>Mã hỗ trợ</th>';
-    echo '<th>Biến động</th>';
-    echo '<th>Loại đối tượng</th>';
-    echo '<th>Mức được hưởng</th>'; // Cột Mức được hưởng
-    echo '<th>Quyết định</th>';
-    echo '<th>Hưởng từ ngày</th>';
-    echo '<th>Trạng thái</th>';
-    echo '</tr>';
-    echo '</thead>';
-    echo '<tbody>';
-
-    foreach ($details as $detail) {
-        // Tính toán số tiền
-        $sotien = $detail['muctieuchuan'] * $detail['heso'];
-
+        echo '<thead>';
         echo '<tr>';
-        echo '<td>' . htmlspecialchars($detail['maht']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['tenbiendong']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['tenloaidoituong']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['muctieuchuan']) . ' * ' . htmlspecialchars($detail['heso']) . ' = ' . htmlspecialchars($sotien) . '</td>'; // Hiển thị rõ ràng
-        echo '<td>' . 'Số quyết định: ' . htmlspecialchars($detail['soqdhuong']) . '<br>Hưởng từ ngày: ' . htmlspecialchars($detail['tungay']) . '</td>'; // Hiển thị quyết định
-        echo '<td>' . htmlspecialchars($detail['tungay']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['tentrangthai']) . '</td>';
+        echo '<th>Chính sách hỗ trợ</th>';
+        echo '<th>Loại hỗ trợ</th>';
+        echo '<th>Ngày hỗ trợ</th>';
+        echo '<th>Nội dung</th>';
+        echo '<th>Tình trạng</th>';
+        echo '<th>Ghi chú</th>';
         echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+
+        foreach ($details as $detail) {
+
+            // Xử lý hình thức
+           
+
+            echo '<tr>';
+            echo '<td >' . htmlspecialchars($detail['csdongbao']) . '</td>';
+            echo '<td >' . htmlspecialchars($detail['loaihotro']) . '</td>';
+            echo '<td >' . htmlspecialchars($detail['ngayhotro2']) . '</td>';
+            echo '<td >' . htmlspecialchars($detail['noidung']) . '</td>';
+
+            echo '<td >' . htmlspecialchars($detail['tentrangthai']) . '</td>';
+            echo '<td>' . htmlspecialchars($detail['ghichu']) . '</td>';
+            echo '</tr>';
+        }
+
+        echo '</tbody>';
+        echo '</table>';
+        echo '</div>'; // Kết thúc detail-content
+        echo '</div>'; // Kết thúc detail-container
+
+        Factory::getApplication()->close();
     }
-
-    echo '</tbody>';
-    echo '</table>';
-    echo '</div>'; // Kết thúc detail-content
-    echo '</div>'; // Kết thúc detail-container
-
-    Factory::getApplication()->close();
-}
-
 }

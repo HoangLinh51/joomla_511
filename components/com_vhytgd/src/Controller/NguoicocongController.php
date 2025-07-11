@@ -24,7 +24,7 @@ defined('_JEXEC') or die;
  *
  * @since  3.1
  */
-class DoituonghuongcsController extends BaseController
+class NguoicocongController extends BaseController
 {
     public function __construct($config = [])
     {
@@ -49,7 +49,7 @@ class DoituonghuongcsController extends BaseController
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
         $result = $model->getThonTobyPhuongxaId($phuongxa_id);
         header('Content-type: application/json');
         echo json_encode($result);
@@ -68,7 +68,7 @@ class DoituonghuongcsController extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
 
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
@@ -84,18 +84,82 @@ class DoituonghuongcsController extends BaseController
         echo json_encode($result);
         jexit();
     }
-    function saveDoituongCS()
+    public function loadDoiTuongHuong()
+    {
+        $app = Factory::getApplication();
+        $input = $app->input;
+        $hinh_thuc = $input->getInt('hinh_thuc', 0);
+        $model = Core::model('Vhytgd/Nguoicocong');
+
+        try {
+            $result = $model->loadDoiTuongHuong($hinh_thuc);
+        } catch (Exception $e) {
+            $result = [
+                'items' => [],
+                'has_more' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        jexit();
+    }
+     public function loadDMTyle()
+    {
+        $app = Factory::getApplication();
+        $input = $app->input;
+        $tyle_id = $input->getInt('tyle_id', 0);
+        $model = Core::model('Vhytgd/Nguoicocong');
+
+        try {
+            $result = $model->loadDMtyle($tyle_id);
+        } catch (Exception $e) {
+            $result = [
+                'items' => [],
+                'has_more' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        jexit();
+    }
+       public function loadDMdungcu()
+    {
+        $app = Factory::getApplication();
+        $input = $app->input;
+        $uudai_id = $input->getInt('uudai_id', 0);
+        $model = Core::model('Vhytgd/Nguoicocong');
+
+        try {
+            $result = $model->loadDMdungcu($uudai_id);
+        } catch (Exception $e) {
+            $result = [
+                'items' => [],
+                'has_more' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($result);
+        jexit();
+    }
+    function saveNguoicocong()
     {
         Session::checkToken() or die('Invalid Token');
         $user = Factory::getUser();
 
 
 
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
         $input = Factory::getApplication()->input;
         $formData = $input->getArray($_POST);
+        // var_dump($formData);exit;
         try {
-            if (!$model->saveDoituongCS($formData)) {
+            if (!$model->saveNguoicocong($formData)) {
                 Factory::getApplication()->enqueueMessage('Lưu dữ liệu không thành công.', 'error');
                 return;
             }
@@ -105,12 +169,12 @@ class DoituonghuongcsController extends BaseController
 
         $session = Factory::getSession();
         $session->set('message_bootbox', 'Đã cập nhật dữ liệu thành công!');
-        $this->setRedirect("index.php/component/vhytgd/?view=doituonghuongcs&task=default");
+        $this->setRedirect("index.php/component/vhytgd/?view=nguoicocong&task=default");
     }
     public function delThongtinhuongcs()
     {
         // $user = Factory::getUser();
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
         $app = Factory::getApplication();
         $trocap_id = $app->input->getInt('trocap_id', 0);
 
@@ -135,10 +199,10 @@ class DoituonghuongcsController extends BaseController
         exit;
     }
 
-    public function removeDoiTuongChinhSach()
+    public function removeNguoiCoCong()
     {
         // $user = Factory::getUser();
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
         $app = Factory::getApplication();
         $id = $app->input->getInt('chinhsach_id', 0);
 
@@ -148,9 +212,9 @@ class DoituonghuongcsController extends BaseController
         ];
 
         if ((int)$id > 0) {
-            if ($model->removeDoiTuongChinhSach($id)) {
+            if ($model->removeNguoiCoCong($id)) {
                 $response['success'] = true;
-                $response['message'] = 'Xóa hoạt động thành công';
+                $response['message'] = 'Xóa dữ liệu thành công';
             } else {
                 $response['message'] = 'Xóa hoạt động thất bại';
             }
@@ -165,7 +229,7 @@ class DoituonghuongcsController extends BaseController
     public function cutThongtinhuongcs()
     {
         Session::checkToken() or die('Invalid Token');
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
         $input = Factory::getApplication()->input;
         $formData = $input->getArray($_POST);
         try {
@@ -182,7 +246,7 @@ class DoituonghuongcsController extends BaseController
     public function checkCatHuong()
     {
         $doituong_id = $this->input->getInt('doituong_id');
-        $model = Core::model('Vhytgd/Doituonghuongcs');
+        $model = Core::model('Vhytgd/Nguoicocong');
 
         $data = $model->getDetailCatCS($doituong_id);
 
