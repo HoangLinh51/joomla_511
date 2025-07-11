@@ -24,7 +24,7 @@ class HtmlView extends BaseHtmlView
     {
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
-        $component = 'com_vhytgd';
+        $component = 'com_dcxddt';
         $controller = $input->getCmd('view', 'xeom');
         $task =  strtoupper($input->getCmd('task', 'default'));
         if (!$user->id) {

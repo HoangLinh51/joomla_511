@@ -22,18 +22,32 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $app = Factory::getApplication();
-        $id = $app->input->getInt('id');
-        $task = $app->input->get('task', '', 'CMD');
 
-        // Phân biệt edit vs add
-        if (strtolower($task) === 'edit_baocaoloi') {
-            $layout = $id > 0 ? 'EDIT_BAOCAOLOI' : 'ADD_BAOCAOLOI';
-        } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
+        $user = Factory::getUser();
+        $input = Factory::getApplication()->input;
+        $id = $input->getInt('id');
+        $component = 'com_baocaoloi';
+        $controller = $input->getCmd('view', '');
+        $task =  strtoupper($input->getCmd('task', 'default'));
+        if (!$user->id) {
+            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
+        }
+        if ($task === 'DS_BAOCAOLOI' || $task === 'DETAIL_BAOCAOLOI' || $task === 'ADD_BAOCAOLOI') {
+            $checkTask = 'default';
+        }
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
         }
 
-        switch ($layout) {
+        switch ($task) {
             case 'DEFAULT':
             case 'DS_BAOCAOLOI':
                 $this->setLayout('ds_baocaoloi');

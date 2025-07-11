@@ -132,7 +132,7 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
         'a.id',
         'a.error_id',
         'a.enter_error',
-      'a.content',
+        'a.content',
         'a.status',
         'a.processing_content',
         'a.process_by',
@@ -168,7 +168,7 @@ class BaoCaoLoi_Model_BaoCaoLoi extends BaseDatabaseModel
 
       // Truy vấn lấy danh sách ảnh từ bảng trung gian error_attachment
       $attachmentQuery = $db->getQuery(true)
-        ->select(['a.id', 'a.code', 'a.filename', 'YEAR(a.created_at) AS year'])
+        ->select(['a.id', 'a.code', 'a.filename', 'a.folder',  'YEAR(a.created_at) AS year'])
         ->from($db->quoteName('core_attachment', 'a'))
         ->innerJoin($db->quoteName('error_attachment', 'ea') . ' ON ea.attachment_id = a.id')
         ->where('ea.error_id = ' . (int) $baocaoloiId);

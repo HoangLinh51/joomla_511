@@ -41,13 +41,13 @@ $item = $this->item;
 				<strong class="label">Nội dung lỗi:</strong>
 				<?= nl2br(htmlspecialchars($item->content)) ?>
 			</p>
-
+<?php var_dump($item) ?>
 			<!-- Hình ảnh -->
 			<?php if ($item->images): ?>
 				<p><strong class="label">Hình ảnh:</strong></p>
 				<div id="imagePreview">
 					<?php foreach ($item->images as $image): ?>
-						<img src="<?= Uri::root(true) . "/uploader/get_image.php?code=" . $image->code  ?>" alt="<?= $image->filename ?>" class="img-fluid">
+						<img src="<?= Uri::root(true) . "/uploader/get_image.php"."/?code=" . $image->code  ?>" alt="<?= $image->filename ?>" class="img-fluid">
 					<?php endforeach; ?>
 				</div>
 				<div id="lightboxOverlay">

@@ -46,9 +46,7 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        $layout = strtoupper($input->getCmd('task', 'default'));
-
-        switch ($layout) {
+        switch ($task) {
             case 'DEFAULT':
                 $this->setLayout('default');
                 $this->_initDefaultPage();

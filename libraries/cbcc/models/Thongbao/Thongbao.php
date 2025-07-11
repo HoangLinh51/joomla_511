@@ -19,7 +19,7 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
       ->select([
         'a.id',
         'a.tieude',
-      'a.noidung',
+        'a.noidung',
         'DATE_FORMAT(a.created_at, "%d/%m/%Y") AS ngay_tao',
         'a.created_by'
     ])
@@ -48,6 +48,8 @@ class Thongbao_Model_Thongbao extends BaseDatabaseModel
     $skip = ($page - 1) * $take;
     $query->order('a.created_at DESC');
     $query->setLimit($take, $skip);
+    // echo $query;
+    // exit;
 
     $db->setQuery($query);
     $rows = $db->loadObjectList();

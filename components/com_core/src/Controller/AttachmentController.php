@@ -159,8 +159,8 @@ class AttachmentController extends BaseController
         $formData = Factory::getApplication()->input->post->getArray();
         $file = $_FILES['uploadfile'];
         $date = getdate();
-        var_dump($_FILES);
-        exit ;
+        // var_dump($_FILES);
+        // exit ;
 
         // Kiểm tra có đúng 1 file được upload không
         if (!isset($file) || !is_uploaded_file($file['tmp_name'])) {
@@ -194,7 +194,8 @@ class AttachmentController extends BaseController
             );
             $avatarId = $mapper->create($data);
             // ✅ Tạo URL ảnh thông qua get_image.php
-            $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $data['code'];
+            $publicUrl = Uri::root(true) . "/uploader/get_image.php/". $data['folder'] ."?code=" . $data['code'];
+
 
             echo '<script>
             if (window.parent && window.parent.document) {
@@ -293,7 +294,7 @@ class AttachmentController extends BaseController
 
             $idImage = $mapper->create($data);
             if ($idImage) {
-                $publicUrl = Uri::root(true) . "/uploader/get_image.php?code=" . $newName;
+                $publicUrl = Uri::root(true) . "/uploader/get_image.php/" . $data['folder'] . "?code=" . $newName;
                 $successfulAttachments[] = [
                     'url' => $publicUrl,
                     'idImage' => $idImage, // hoặc có thể thay bằng `$data['id']` nếu `$mapper->create()` trả về ID mới
