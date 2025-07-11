@@ -137,16 +137,16 @@ class TrinhdonHelper
                 $result .= (in_array($node['id'], $actives)) ? ' class="nav-item menu-is-opening menu-open active"' : 'class="nav-item"';
                 $icon = ($node['icon'] == null) ? '' : '<i class="' . $node['icon'] . '"></i>';
                 if ($child == true) {
-                    $result .= '><a class="nav-link ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '"><i class="fas fa-caret-right"></i><p class="menu-text"> ' . $node_name . '</p></a>';
+                    $result .= '><a class="nav-link" style = "background-color: #fff0" ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '"><i class="fas fa-caret-right"></i><p class="menu-text"> ' . $node_name . '</p></a>';
                 } else {
                     if ($hasChild == true) {
-                        $result .= '><a class="nav-link hasChildtrue ' . ((in_array($node['id'], $actives)) ? 'active' : '') . '" href="' . $node['link'] . '">' . $icon . '<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
+                        $result .= '><a class="nav-link" style = "background-color: #fff0" ' . ((in_array($node['id'], $actives)) ? 'active' : '') . '" href="' . $node['link'] . '">' . $icon . '<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
                     } else {
                         $iconHtml = '';
                         if ($node_depth >= 2) {
                             $iconHtml = '<i class="fas fa-caret-right"></i>';
                         }
-                        $result .= '><a class="nav-link  hasChildtrue' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '">' . $iconHtml . $icon . (($node['id'] == $active) ? '<i class="icon-double-angle-right"></i>' : '') . '<p class="menu-text"> ' . $node_name . '</p></a>';
+                        $result .= '><a class="nav-link" style = "background-color: #fff0" ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '">' . $iconHtml . $icon . (($node['id'] == $active) ? '<i class="icon-double-angle-right"></i>' : '') . '<p class="menu-text"> ' . $node_name . '</p></a>';
                     }
                 }
                 $is_visibled = 1;

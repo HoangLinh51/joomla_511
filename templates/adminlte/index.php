@@ -138,9 +138,6 @@ if ($coreTemplate->isLogin() == true) {
 					<img src="/images/banners/logo-DN.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 ml-3 mr-2">
 					<span class="brand-text font-weight-light ">CSDL Xã/Phường</span>
 				</a>
-				<!-- <a href="index.php" class="d-flex align-items-center justify-content-center logo-brand">
-					<img src="/images/banners/logo-DN.png" alt="Đà Năng" class="brand-image img-circle elevation-3 m-0">
-				</a> -->
 				<div class="line"></div>
 
 				<!-- Sidebar Content -->
