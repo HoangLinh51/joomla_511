@@ -5,7 +5,8 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 ?>
 
-<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
 
@@ -123,7 +124,10 @@ use Joomla\CMS\HTML\HTMLHelper;
               </div>
               <div class="col-md-4 mb-2">
                 <label for="modal_namsinh" class="form-label fw-bold">Năm sinh <span class="text-danger">*</span></label>
-                <input id="modal_namsinh" type="date" name="modal_namsinh" class="form-control">
+                <div class="input-group">
+                  <input type="text" id="modal_namsinh" name="modal_namsinh" class="form-control" placeholder="dd/mm/yyyy">
+                  <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                </div>
               </div>
               <div class="col-md-4 mb-2">
                 <label for="modal_dienthoai" class="form-label fw-bold">Điện thoại</label>
@@ -204,9 +208,15 @@ use Joomla\CMS\HTML\HTMLHelper;
               </div>
               <div class="col-md-4">
                 <label class="form-label fw-bold">Thời gian tham gia </label>
-                <div class="d-flex" style="gap: 8px;">
-                  <input type="date" name="thoidiem_batdau" class="form-control" placeholder="Ngày bắt đầu" style="width: 145px;">
-                  <input type="date" name="thoidiem_ketthuc" class="form-control" placeholder="Ngày kết thúc" style="width: 145px;">
+                <div class="d-flex" style="gap: 5px;">
+                  <div class="input-group">
+                    <input type="text" id="thoidiem_batdau" name="form_thoidiem_batdau" class="form-control" placeholder="dd/mm/yyyy">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                  </div>
+                  <div class="input-group">
+                    <input type="text" id="thoidiem_ketthuc" name="form_thoidiem_ketthuc" class="form-control" placeholder="dd/mm/yyyy">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -285,7 +295,38 @@ use Joomla\CMS\HTML\HTMLHelper;
     $('.error').remove();
   }
 
+  function formatDate(dateString) {
+    if (!dateString || !/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      return '';
+    }
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return '';
+    }
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
   $(document).ready(function() {
+
+    $('.modal_namsinh').datepicker({
+      autoclose: true,
+      language: 'vi',
+      format: 'dd/mm/yyyy',
+    });
+    $('#thoidiem_batdau').datepicker({
+      autoclose: true,
+      language: 'vi',
+      format: 'dd/mm/yyyy',
+    });
+    $('#thoidiem_ketthuc').datepicker({
+      autoclose: true,
+      language: 'vi',
+      format: 'dd/mm/yyyy',
+    });
+
     // Initialize Select2 for modal and filter dropdowns
     const initSelect2 = (selector, width = '100%') => {
       $(selector).select2({
@@ -373,7 +414,7 @@ use Joomla\CMS\HTML\HTMLHelper;
               return {
                 results: data.items.map(item => ({
                   id: item.id,
-                  text: `${item.hoten} - CCCD: ${item.cccd_so || ''} - Ngày sinh: ${item.ngaysinh || ''} - Địa chỉ: ${item.diachi || ''}`,
+                  text: `${item.hoten} - CCCD: ${item.cccd_so || ''} - Ngày sinh: ${formatDate(item.ngaysinh)} - Địa chỉ: ${item.diachi || ''}`,
                   ...item
                 })),
                 pagination: {
@@ -432,12 +473,11 @@ use Joomla\CMS\HTML\HTMLHelper;
           return;
         }
       }
-
       $('#nhankhau_id').val(data.id || '');
       $('#modal_gioitinh_id').val(data.gioitinh_id || '');
       $('#modal_hoten').val(data.hoten || '');
       $('#modal_cccd').val(data.cccd_so || '');
-      $('#modal_namsinh').val(data.ngaysinh || '');
+      $('#modal_namsinh').val(data.ngaysinh);
       $('#modal_dienthoai').val(data.dienthoai || '');
       $('#input_dantoc_id').val(data.dantoc_id || '');
       $('#modal_dantoc_id').val(data.dantoc_id || '').trigger('change');
@@ -480,8 +520,8 @@ use Joomla\CMS\HTML\HTMLHelper;
         if (response && response.id) {
           $('input[name="id"]').val(response.id || '');
           $('#modal_chucdanh_id').val(response.chucvu_id || '').trigger('change');
-          $('input[name="thoidiem_batdau"]').val(response.thoidiem_batdau || '');
-          $('input[name="thoidiem_ketthuc"]').val(response.thoidiem_ketthuc || '');
+          $('input[name="form_thoidiem_batdau"]').val(formatDate(response.thoidiem_batdau));
+          $('input[name="form_thoidiem_ketthuc"]').val(formatDate(response.thoidiem_ketthuc));
           $('#lydo_biendong').val(response.lydobiendong || '');
           $('#ghichu').val(response.ghichu || '');
 
@@ -502,7 +542,7 @@ use Joomla\CMS\HTML\HTMLHelper;
               const nhankhau = nhankhauResponse.items.find(item => item.id === response.nhankhau_id) || nhankhauResponse.items[0];
               if (nhankhau) {
                 // Add the fetched nhankhau as a selected option
-                const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
+                const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${formatDate(nhankhau.ngaysinh)} - Địa chỉ: ${nhankhau.diachi || ''}`;
                 const newOption = new Option(optionText, nhankhau.id, true, true);
                 $('#select_top').append(newOption).trigger('change');
 
@@ -514,7 +554,7 @@ use Joomla\CMS\HTML\HTMLHelper;
                       id: nhankhau.id,
                       hoten: nhankhau.hoten,
                       cccd_so: nhankhau.cccd_so,
-                      ngaysinh: nhankhau.ngaysinh,
+                      ngaysinh: formatDate(nhankhau.ngaysinh),
                       dienthoai: nhankhau.dienthoai,
                       dantoc_id: nhankhau.dantoc_id,
                       gioitinh_id: nhankhau.gioitinh_id,
@@ -538,7 +578,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             $('#modal_gioitinh_id').val(response.n_gioitinh_id || '');
             $('#modal_hoten').val(response.n_hoten || '');
             $('#modal_cccd').val(response.n_cccd || '');
-            $('#modal_namsinh').val(response.n_namsinh || '');
+            $('#modal_namsinh').val(formatDate(response.n_namsinh) || '');
             $('#modal_dienthoai').val(response.n_dienthoai || '');
             $('#input_dantoc_id').val(response.n_dantoc_id || '');
             $('#modal_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
@@ -639,7 +679,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
             $('.modal').modal('hide');
-            setTimeout(() => location.reload(), 500);
+            // setTimeout(() => location.reload(), 500);
           }
         },
         error: function(xhr) {

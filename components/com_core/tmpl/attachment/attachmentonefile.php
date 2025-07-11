@@ -58,16 +58,14 @@ if ($this->isCapnhat == 12) {
     '><i class="icon-trash"></i></span>
 <?php } ?>
 <?php if ($this->isCapnhat == 1) { ?>
-	<form name=frmUploadOne enctype="multipart/form-data" action="<?php echo Uri::root(true); ?>/index.php?option=com_core&controller=attachment&task=doattachmentone" method="post" target="tftemp<?php echo $this->idObject ?>">
+	<form enctype="multipart/form-data" action="<?php echo Uri::root(true); ?>/index.php?option=com_core&controller=attachment&task=doattachmentone" method="post" target="tftemp<?php echo $this->idObject ?>">
 		<div class="dropzone-panel mb-lg-0 mb-2">
-			<label for="uploadfileone" class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm file</label>
-			<input type="file" id="uploadfileone" name="uploadfile[]" onchange="document.frmUploadOne.submit();" style="display:none;" />
+			<label for="uploadfileone_<?php echo $this->iddiv ?>" class="dropzone-select btn btn-sm btn-primary me-2">Đính kèm file</label>
+			<input type="file" id="uploadfileone_<?php echo $this->iddiv ?>" name="uploadfile[]" onchange="this.form.submit();" style="display:none;" />
 		</div>
-
 		<div class="progress" style="display:none; margin-top: 10px;">
 			<div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 		</div>
-
 		<input type="hidden" name="idObject" value="<?php echo $this->idObject ?>" />
 		<input type="hidden" name="isTemp" value="<?php echo $this->isTemp ?>" />
 		<input type="hidden" name="year" value="<?php echo $this->year ?>" />
@@ -101,8 +99,8 @@ if (count($this->data) > $maxFiles) {
 		$stt++;
 ?>
 		<?php if ($this->isCapnhat == 1) { ?>
-			<input type="hidden" name="fileupload_id[]" value="<?php echo $item['id']; ?>">
-			<input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>>
+			<input type="hidden" name="idFile-<?php echo $this->iddiv; ?>[]" value="<?php echo $item['id']; ?>">
+			<!-- <input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>> -->
 			<!-- <input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> -->
 		<?php } else
 			echo $stt . ".";

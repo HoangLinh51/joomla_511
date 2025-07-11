@@ -41,7 +41,7 @@ use stdClass;
 class RawView extends BaseHtmlView
 {
 
-/**
+    /**
      * Display the view
      *
      * @param   string|null  $tpl  The name of the template file to parse; automatically searches through the template paths.
@@ -49,37 +49,38 @@ class RawView extends BaseHtmlView
      * @throws  GenericDataException
      *
      * @return  void
-     */ 
+     */
     public function display($tpl = null)
     {
         $task = Factory::getApplication()->input->get('task');
-    	$task = ($task == null)?'default':strtoupper($task);      
-        $this->setLayout(strtolower($task));      
-        switch($task){
-        	case 'EDIT':
-        		$this->_pageEdit();
-        		break;
+        $task = ($task == null) ? 'default' : strtoupper($task);
+        $this->setLayout(strtolower($task));
+        switch ($task) {
+            case 'EDIT':
+                $this->_pageEdit();
+                break;
         }
         parent::display($tpl);
     }
 
-    private function _pageEdit(){    
-         /** @var \Joomla\Component\Core\Administrator\Model\MenuModel $model */
+    private function _pageEdit()
+    {
+        /** @var \Joomla\Component\Core\Administrator\Model\MenuModel $model */
         $id      = Factory::getApplication()->input->getInt('id');
-    	$parent_id = Factory::getApplication()->input->getInt('parent_id');
+        $parent_id = Factory::getApplication()->input->getInt('parent_id');
         $this->item  = $this->get('Item');
-       
-    	if ((int)$id > 0 ) {
+
+        if ((int)$id > 0) {
             $model = $this->getModel('Menu');
             $model->setState('filter.id', $id);
             $row = $model->getMenuById();
-           
-    	}else{
-    		$row = new stdClass();
+            $row->selectedGroup = $model->getGroupbyMenuId();
+        } else {
+            $row = new stdClass();
             $row->id = $id;
-            $row->menu_type = array('value'=>1,'text'=>'Menu chính');
-    		$row->published = 1;
-    		$row->parent_id = $parent_id;
+            $row->menu_type = array('value' => 1, 'text' => 'Menu chính');
+            $row->published = 1;
+            $row->parent_id = $parent_id;
             $row->level = null;
             $row->lft = null;
             $row->rgt = null;
@@ -91,11 +92,7 @@ class RawView extends BaseHtmlView
             $row->component = null;
             $row->controller = null;
             $row->tasks = null;
-    	}
+        }
         $this->rows =  $row;
-        
     }
-   
-    
-
 }

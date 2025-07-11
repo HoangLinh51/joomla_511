@@ -133,22 +133,22 @@ if ($coreTemplate->isLogin() == true) {
 					<jdoc:include type="modules" name="sidebar-right" />
 				</ul>
 			</nav>
-			<aside class="main-sidebar sidebar-light-primary elevation-4">
+			<aside class="main-sidebar sidebar-dark-primary elevation-4">
 				<a href="index.php" class="d-flex align-items-center gap-3 logo-brand">
-					<img src="/images/banners/logoDnict.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 m-0">
-					<h3 class="m-0 brand-text pl-1" style="color: #3e3e3e">DNICT</h3>
+					<img src="/images/banners/logo-DN.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 ml-3 mr-2">
+					<span class="brand-text font-weight-light ">CSDL Xã/Phường</span>
 				</a>
 				<div class="line"></div>
 
 				<!-- Sidebar Content -->
 				<div class="sidebar">
 					<!-- Search -->
-					<div class="input-group" data-widget="sidebar-search">
+					<!-- <div class="input-group" data-widget="sidebar-search">
 						<input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
 						<div class="input-group-append">
 							<button class="btn btn-sidebar"><i class="fas fa-search fa-fw"></i></button>
 						</div>
-					</div>
+					</div> -->
 
 					<!-- Results -->
 					<div class="sidebar-search-results">
@@ -236,13 +236,22 @@ if ($coreTemplate->isLogin() == true) {
 
 		.logo-brand {
 			height: 56px;
-			padding: 10px;
+			padding: 10px 12px;
 			color: #fff;
 			font-weight: 500;
 		}
 
+		a.logo-brand:hover {
+			color: #fff
+		}
+
 		.logo-brand .brand-image {
 			height: 90%;
+		}
+
+		.logo-brand span {
+			font-size: 20px;
+			color: #ffffffcc
 		}
 
 		.sidebar-hidden .main-sidebar {

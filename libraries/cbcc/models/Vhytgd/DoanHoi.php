@@ -376,8 +376,8 @@ class Vhytgd_Model_DoanHoi extends BaseDatabaseModel
       'daxoa' => 0
     ];
 
-    if (!empty($formdata['modal_namsinh'])) {
-      $columns['n_namsinh'] = (new \DateTime($formdata['modal_namsinh']))->format('Y-m-d');
+    if (!empty($formdata['namsinh'])) {
+      $columns['n_namsinh'] = (new \DateTime($formdata['namsinh']))->format('Y-m-d');
     }
     // Xác định là người ngoài hay có nhân khẩu
     if (empty($formdata['nhankhau_id']) || $formdata['nhankhau_id'] == '0') {
@@ -454,10 +454,10 @@ class Vhytgd_Model_DoanHoi extends BaseDatabaseModel
     ];
 
     if (!empty($formdata['thoidiem_batdau'])) {
-      $columns['thoidiem_batdau'] = (new \DateTime($formdata['thoidiem_batdau']))->format('Y-m-d');
+      $columns['thoidiem_batdau'] = $formdata['thoidiem_batdau'];
     }
     if (!empty($formdata['thoidiem_ketthuc'])) {
-      $columns['thoidiem_ketthuc'] = (new \DateTime($formdata['thoidiem_ketthuc']))->format('Y-m-d');
+      $columns['thoidiem_ketthuc'] = $formdata['thoidiem_ketthuc'];
     }
 
     if ($thamgiaId > 0) {

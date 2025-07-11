@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     Joomla.Site
  * @subpackage  mod_trinhdon
@@ -30,7 +31,7 @@ class TrinhdonHelper
      * @since   1.5
      */
     public static function getMenu($params)
-    {  
+    {
         $user = Factory::getUser();
         if ($user->id == null) {
             return '';
@@ -38,12 +39,12 @@ class TrinhdonHelper
 
         $jinput = Factory::getApplication()->input;
         $option = $jinput->getCmd('option', 'default');
-		$controller = $jinput->getCmd('controller', '');
+        $controller = $jinput->getCmd('controller', '');
         $view = $jinput->getCmd('view', 'default');
         $task = $jinput->getCmd('task', 'default');
-		if($controller == ''){
-			$controller = $view;
-		}
+        if ($controller == '') {
+            $controller = $view;
+        }
         $db = Factory::getDbo();
         $trinhdon = $params->get('trinhdon');
         $menu_ids = (array) $trinhdon;
@@ -54,9 +55,9 @@ class TrinhdonHelper
         $db->setQuery($query);
         $parent_nodes = $db->loadAssocList();
 
-		if($controller == ''){
-			$controller = $view;
-		}
+        if ($controller == '') {
+            $controller = $view;
+        }
         $conditions = [];
         foreach ($parent_nodes as $parent_node) {
             $conditions[] = '(a.lft BETWEEN ' . $db->quote($parent_node['lft']) . ' AND ' . $db->quote($parent_node['rgt']) . ' AND a.published = 1 AND b.published = 1)';
@@ -75,7 +76,7 @@ class TrinhdonHelper
             ->select('parent.id')
             ->from('core_menu AS node, core_menu AS parent')
             ->where('node.lft BETWEEN parent.lft AND parent.rgt')
-			->where('node.id = (SELECT id FROM core_menu WHERE (component = '.$db->q($option).') AND (controller = '.$db->q($controller).') AND (task = '.$db->q($task).') LIMIT 1)')
+            ->where('node.id = (SELECT id FROM core_menu WHERE (component = ' . $db->q($option) . ') AND (controller = ' . $db->q($controller) . ') AND (task = ' . $db->q($task) . ') LIMIT 1)')
             ->where('parent.id != 1')
             ->order('parent.lft');
         $db->setQuery($query);
@@ -92,11 +93,11 @@ class TrinhdonHelper
         $counter = 0;
         $is_visibled = 0;
         $index = 0;
-		$app = Factory::getApplication();
-		$uri = Uri::getInstance();
-		$path = $uri->getPath();
-		$pathParts = explode('/', trim($path, '/'));
-		$component = isset($pathParts[1]) ? $pathParts[1] : '';
+        $app = Factory::getApplication();
+        $uri = Uri::getInstance();
+        $path = $uri->getPath();
+        $pathParts = explode('/', trim($path, '/'));
+        $component = isset($pathParts[1]) ? $pathParts[1] : '';
         foreach ($rows as $node) {
             $index++;
             $flag = false;
@@ -130,32 +131,26 @@ class TrinhdonHelper
                 $current_depth--;
             }
 
-			$liKlass = '';
-			if ($flag == false) {	
-				$result .= '<li id="c' . $node_id . '"';
-				$result .= (in_array($node['id'], $actives))? ' class="nav-item menu-is-opening menu-open active"' : 'class="nav-item"';
-				$icon = ($node['icon']==null)?'':'<i class="'.$node['icon'].'"></i>';	
-				if ($child == true) {
-					$result .= '><a class="nav-link '.(($node['id'] == $active)? 'active' : '').'" href="'.$node['link'].'"><i class="far fa-circle"></i><p class="menu-text"> '.$node_name . '</p></a>';
-				}else{
-					if ($hasChild == true) {	
-						
-						$result .= '><a class="nav-link '.((in_array($node['id'], $actives))? 'active' : '').'" href="'.$node['link'].'" class="">'.$icon.'<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
-					}else{	
-						
-						$result .= '><a class="nav-link '.(($node['id'] == $active)? 'active' : '').'" href="'.$node['link'].'">'.$icon.(($node['id'] == $active)? '<i class="icon-double-angle-right"></i>' : '').'<p class="menu-text"> ' . $node_name . '</p></a>';
-
-						
-					}
-				}
-	            $is_visibled = 1;
-			}
-
-            // $icon = empty($node['icon']) ? '' : '<i class="' . $node['icon'] . '"></i>';
-            // $result .= '<li id="c' . $node_id . '" class=" ">';
-            // $result .= $child ? '<a class="nav-link '.(($node['id'] == $active)? 'active' : '').'  '.(((int)$node['is_system'] == 0)? 'menu-open' : '').'" href="' . $node['link'] . '">' : '<a href="' . $node['link'] . '" class="nav-link '.(($node['id'] == $active)? 'active' : '').''.(((int)$node['is_system'] == 0)? 'menu-open' : '').'">' . $icon . '<p class="menu-text"> ' . $node_name . '</p></a>';
-
-            // $is_visibled = 1;
+            $liKlass = '';
+            if ($flag == false) {
+                $result .= '<li id="c' . $node_id . '"';
+                $result .= (in_array($node['id'], $actives)) ? ' class="nav-item menu-is-opening menu-open active"' : 'class="nav-item"';
+                $icon = ($node['icon'] == null) ? '' : '<i class="' . $node['icon'] . '"></i>';
+                if ($child == true) {
+                    $result .= '><a class="nav-link" style = "background-color: #fff0" ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '"><i class="fas fa-caret-right"></i><p class="menu-text"> ' . $node_name . '</p></a>';
+                } else {
+                    if ($hasChild == true) {
+                        $result .= '><a class="nav-link" style = "background-color: #fff0" ' . ((in_array($node['id'], $actives)) ? 'active' : '') . '" href="' . $node['link'] . '">' . $icon . '<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
+                    } else {
+                        $iconHtml = '';
+                        if ($node_depth >= 2) {
+                            $iconHtml = '<i class="fas fa-caret-right"></i>';
+                        }
+                        $result .= '><a class="nav-link" style = "background-color: #fff0" ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '">' . $iconHtml . $icon . (($node['id'] == $active) ? '<i class="icon-double-angle-right"></i>' : '') . '<p class="menu-text"> ' . $node_name . '</p></a>';
+                    }
+                }
+                $is_visibled = 1;
+            }
             $counter++;
         }
 
@@ -165,9 +160,46 @@ class TrinhdonHelper
         return $is_visibled ? $result : '';
     }
 
-    private static function checkPermission($userId, $component, $controller, $task)
+    /**
+     * Dummy permission check (replace with actual logic)
+     */
+    private static function checkPermission(int $userId, string $component, string $controller, string $task): bool
     {
-        // Implement your permission check logic here
-        return true;
+        $user = Factory::getApplication()->getIdentity();
+        $userGroupIds = $user->getAuthorisedGroups();
+
+        if (empty($userGroupIds)) {
+            return false;
+        }
+
+        $db = Factory::getDbo();
+
+        // Lấy ID của menu ứng với component/controller/task
+        $query = $db->getQuery(true)
+            ->select('id')
+            ->from($db->quoteName('core_menu'))
+            ->where([
+                $db->quoteName('component') . ' = ' . $db->quote($component),
+                $db->quoteName('controller') . ' = ' . $db->quote($controller),
+                $db->quoteName('task') . ' = ' . $db->quote($task)
+            ])
+            ->setLimit(1);
+
+        $db->setQuery($query);
+        $menuId = (int) $db->loadResult();
+
+        if (!$menuId) {
+            return false;
+        }
+
+        // Kiểm tra bảng phân quyền menu theo nhóm
+        $query = $db->getQuery(true)
+            ->select('COUNT(*)')
+            ->from($db->quoteName('jos_core_menu_usergroup'))
+            ->where($db->quoteName('menu_id') . ' = ' . $db->quote($menuId))
+            ->where($db->quoteName('usergroup_id') . ' IN (' . implode(',', array_map('intval', $userGroupIds)) . ')');
+
+        $db->setQuery($query);
+        return (int) $db->loadResult() > 0;
     }
 }

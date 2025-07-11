@@ -25,7 +25,7 @@ defined('_JEXEC') or die;
  *
  * @since  3.1
  */
-class DkTuoi17Controller extends BaseController
+class DanQuanController extends BaseController
 {
     public function __construct($config = [])
     {
@@ -46,15 +46,15 @@ class DkTuoi17Controller extends BaseController
         return parent::display($cachable, $urlparams);
     }
 
-    // lấy danh sách đăng ký tuổi 17
-    public function getListDktuoi17()
+    // lấy danh sách dân quân
+    public function getListDanQuan()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
 
-        $model = Core::model('QuanSu/Dktuoi17');
+        $model = Core::model('QuanSu/DanQuan');
         $modelBase = Core::model('QuanSu/Base');
         $phanquyen = $modelBase->getPhanquyen();
         $phuongxa = array();
@@ -64,7 +64,7 @@ class DkTuoi17Controller extends BaseController
         }
 
         try {
-            $result =  $model->getListDktuoi17($formData, $phuongxa);
+            $result =  $model->getListDanQuan($formData, $phuongxa);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }
@@ -74,7 +74,7 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-    // tìm kiếm nhân khẩu
+    // lấy danh sách nhân khẩu
     public function timkiem_nhankhau()
     {
         $app = Factory::getApplication();
@@ -88,7 +88,7 @@ class DkTuoi17Controller extends BaseController
 
         $phuongxa_ids = $input->get('phuongxa_id', [], 'array');
 
-        $model = Core::model('QuanSu/DkTuoi17');
+        $model = Core::model('QuanSu/DanQuan');
 
         try {
             $result = $model->getDanhSachNhanKhau($phuongxa_ids, $keyword, $limit, $offset, $nhankhau_id);
@@ -105,8 +105,8 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-    // kiểm tra xem nhân khẩu đã có trong danh sách đăng ký tuổi 17 chưa 
-    public function checkNhankhauInDSDkTuoi17()
+    // kiểm tra nhân khẩu đó đã có trong danh sách dân quân chưa 
+    public function checkNhankhauInDanQuan()
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
@@ -120,15 +120,15 @@ class DkTuoi17Controller extends BaseController
             Factory::getApplication()->close();
             return;
         }
+
         $model = Core::model('QuanSu/Base');
 
         try {
-            $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_dangkytuoi17');
-
+            $exists = $model->checkNhankhauInDanhSachQuanSu($nhankhau_id, 'qs_danquan');
             $response = [
                 'success' => true,
                 'exists' => $exists,
-                'message' => $exists ? 'Nhân khẩu đã có trong danh sách đăng ký tuổi 17' : 'Nhân khẩu chưa có trong danh sách đăng ký tuổi 17'
+                'message' => $exists ? 'Nhân khẩu đã có trong danh sách dân quân' : 'Nhân khẩu chưa có trong danh sách dân quân'
             ];
         } catch (Exception $e) {
             $response = [
@@ -137,11 +137,12 @@ class DkTuoi17Controller extends BaseController
                 'message' => 'Lỗi khi kiểm tra nhân khẩu: ' . $e->getMessage()
             ];
         }
+
         echo json_encode($response);
         Factory::getApplication()->close();
     }
     
-    // lấy danh sách thôn tổ theo phường xã 
+    // lấy thôn tổ theo phường xã
     public function getThonTobyPhuongxa()
     {
         $phuongxa_id = Factory::getApplication()->input->getVar('phuongxa_id', 0);
@@ -152,12 +153,12 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-    // lấy thông tin của người đăng ký tuổi 17
-    public function getDetailDktuoi17()
+    // lấy thông tin của dân quân 
+    public function getDetailDanQuan()
     {
-        $idDktuoi17 = Factory::getApplication()->input->getVar('dktuoi17_id', 0);
-        $model = Core::model('QuanSu/Dktuoi17');
-        $result = $model->getDetailDktuoi17($idDktuoi17);
+        $idDanQuan = Factory::getApplication()->input->getVar('danquan_id', 0);
+        $model = Core::model('QuanSu/DanQuan');
+        $result = $model->getDetailDanQuan($idDanQuan);
         try {
             echo json_encode(
                 $result['data']
@@ -168,10 +169,10 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-    // lấy thông tin của thân nhân 
+    // lấy thân nhân của dân quân 
     public function getThanNhan()
     {
-        $model = Core::model('QuanSu/Dktuoi17');
+        $model = Core::model('QuanSu/DanQuan');
         $nhankhau_id = Factory::getApplication()->input->getInt('nhankhau_id', 0);
         $result = $model->getThanNhan($nhankhau_id);
         try {
@@ -184,8 +185,8 @@ class DkTuoi17Controller extends BaseController
         jexit();
     }
 
-    // lưu người đăng ký 
-    public function save_dktuoi17()
+    // lưu dân quân 
+    public function save_danquan()
     {
         Session::checkToken() or die('Token không hợp lệ');
         $user = Factory::getUser();
@@ -201,9 +202,14 @@ class DkTuoi17Controller extends BaseController
         $formData['thonto_id'] = $formData['select_thonto_id'] ?? $formData['input_thonto_id'];
         $namsinh = $formData['select_namsinh'] ?? $formData['input_namsinh'] ?? '';
         $formData['namsinh'] = !empty($namsinh) ? $this->formatDate($namsinh) : '';
-        
-        $formData['ngaydangky'] = $formData['form_ngaydangky'] ?? '';
-        $formData['ngaydangky'] = !empty($formData['ngaydangky']) ? $this->formatDate($formData['ngaydangky']) : '';
+        $formData['ngayvao'] = $formData['form_ngayvao'] ?? '';
+        $formData['ngayvao'] = !empty($formData['ngayvao']) ? $this->formatDate($formData['ngayvao']) : '';
+        $formData['ngayquyetdinhvao'] = $formData['form_ngayquyetdinhvao'] ?? '';
+        $formData['ngayquyetdinhvao'] = !empty($formData['ngayquyetdinhvao']) ? $this->formatDate($formData['ngayquyetdinhvao']) : '';
+        $formData['ngayra'] = $formData['form_ngayra'] ?? '';
+        $formData['ngayra'] = !empty($formData['ngayra']) ? $this->formatDate($formData['ngayra']) : '';
+        $formData['ngayquyetdinhra'] = $formData['form_ngayquyetdinhra'] ?? '';
+        $formData['ngayquyetdinhra'] = !empty($formData['ngayquyetdinhra']) ? $this->formatDate($formData['ngayquyetdinhra']) : '';
 
         $thanNhanFormatted = [];
 
@@ -215,7 +221,7 @@ class DkTuoi17Controller extends BaseController
         $max = max(count($quanheList), count($hotenList), count($namsinhList), count($nghenghiepList));
 
         for ($i = 0; $i < $max; $i++) {
-            // bỏ qua nếu tất cả đều rỗng
+            // Bỏ qua nếu tất cả đều rỗng
             if (
                 empty($hotenList[$i]) &&
                 empty($namsinhList[$i]) &&
@@ -235,9 +241,9 @@ class DkTuoi17Controller extends BaseController
         $formData['thannhan'] = $thanNhanFormatted;
 
         try {
-            $model = Core::model('QuanSu/Dktuoi17');
+            $model = Core::model('QuanSu/DanQuan');
 
-            $result = $model->saveDktuoi17($formData, $user->id);
+            $result = $model->saveDanQuan($formData, $user->id);
             if ((int)$result && $result > 0) {
                 $response = ['success' => true, 'result' => $result,  'message' => 'Đã lưu dữ liệu thành công'];
             } else {
@@ -261,16 +267,16 @@ class DkTuoi17Controller extends BaseController
         return $date->format('Y-m-d');
     }
 
-    // xóa đăng ký tuổi 17
-    public function xoa_dktuoi17()
+    // xóa dân quân
+    public function xoa_danquan()
     {
         $input = Factory::getApplication()->input;
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
         try {
-            $model = Core::model('QuanSu/Dktuoi17');
-            $result = $model->deleteDktuoi17($formData['idUser'], $formData['iddktuoi17']);
+            $model = Core::model('QuanSu/DanQuan');
+            $result = $model->deleteDanQuan($formData['idUser'], $formData['iddanquan']);
             $response = [
                 'success' => $result,
                 'message' => 'Xóa thành công',

@@ -15,15 +15,38 @@ defined('_JEXEC') or die;
 use Core;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
 class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
+        $user = Factory::getUser();
+        $input = Factory::getApplication()->input;
+        $component = 'com_quantrihethong';
+        $controller = $input->getCmd('view', 'quantrihethong');
+        $task = strtoupper($input->getCmd('task', 'ds_taikhoan'));
 
-        $layout = Factory::getApplication()->input->get('task');
-        $layout = ($layout == null) ? 'default' : strtoupper($layout);
+        if (!$user->id) {
+            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
+        }
+        if ($task === 'ADD_USER' || $task === 'EDIT_USER') {
+            $checkTask = 'default';
+        }
+
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                    <a href="/index.php" style="text-decoration: none;">
+                        <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                            Trang chủ
+                        </button>
+                    </a>
+                </div>';
+            exit;
+        }
+        $layout = strtoupper($input->getCmd('task', 'ds_taikhoan'));
 
         switch ($layout) {
             case 'DEFAULT':
