@@ -88,49 +88,34 @@ class TrinhdonHelper
         usort($menus, function ($a, $b) {
             return $a['lft'] - $b['lft'];
         });
+
         // Truy vấn menu đang active như cũ
         $jinput = Factory::getApplication()->input;
         $option = $jinput->getCmd('option', 'default');
-        $controller = $jinput->getCmd('controller', '');
-        $view = $jinput->getCmd('view', 'default');
-        $task = $jinput->getCmd('task', 'default');
-        var_dump($option);
-        echo'<br>';
-        var_dump($controller);
-        echo '<br>';
-        var_dump($view);
-        echo '<br>';
-        var_dump($task);
-        echo '<br>';
+        $controller = $jinput->getCmd('controller');
+        $view = $jinput->getCmd('view');
+        $task = $jinput->getCmd('task');
 
-        if ($controller === '') {
-            $controller = $view;
-        }
-
+        $controller = $controller ?: $view ?: '';
+        $task = $task ?: '';
         $query = $db->getQuery(true)
             ->select('parent.id')
             ->from('core_menu AS node, core_menu AS parent')
             ->where('node.lft BETWEEN parent.lft AND parent.rgt')
             ->where('node.id = (
-                    SELECT id FROM core_menu
-                    WHERE component = ' . $db->q($option) . '
-                    AND controller = ' . $db->q($controller) . '
-                    AND task = ' . $db->q($task) . '
-                    LIMIT 1
-                )'
-            )
+                        SELECT id FROM core_menu
+                        WHERE component = ' . $db->q($option) . '
+                        AND controller = ' . $db->q($controller) . '
+                        AND task = ' . $db->q($task) . '
+                        ORDER BY level DESC, lft DESC
+                        LIMIT 1
+                    )')
             ->where('parent.id != 1')
             ->order('parent.lft');
 
         $db->setQuery($query);
         $actives = $db->loadColumn();
         $active = count($actives) > 0 ? end($actives) : 0;
-
-        var_dump($active);
-        echo '<br>';
-        var_dump($actives);
-        echo '<br>';
-
         return self::buildMenuHtml($menus, $active, $actives, $user);
     }
 
@@ -179,10 +164,10 @@ class TrinhdonHelper
                 $result .= (in_array($node['id'], $actives)) ? ' class="nav-item menu-is-opening menu-open active"' : 'class="nav-item"';
                 $icon = ($node['icon'] == null) ? '' : '<i class="' . $node['icon'] . '"></i>';
                 if ($child == true) {
-                    $result .= '><a class="nav-link  childtrue ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '"><i class="fas fa-caret-right"></i><p class="menu-text"> ' . $node_name . '</p></a>';
+                    $result .= '><a class="nav-link ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '"><i class="fas fa-caret-right"></i><p class="menu-text"> ' . $node_name . '</p></a>';
                 } else {
                     if ($hasChild == true) {
-                        $result .= '><a class="nav-link hasChildtrue ' . ((in_array($node['id'], $actives)) ? 'active' : '') . '" href="' . $node['link'] . '">' . $icon . '<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
+                        $result .= '><a class="nav-link ' . ((in_array($node['id'], $actives)) ? 'active' : '') . '" href="' . $node['link'] . '">' . $icon . '<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
                     } else {
                         $iconHtml = '';
                         if ($node_depth >= 2) {
