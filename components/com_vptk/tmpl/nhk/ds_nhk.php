@@ -14,15 +14,15 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số hộ khẩu</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên chủ hộ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Giới tính</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Năm sinh</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Chỗ ở hiện nay</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số điện thoại</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center" style="width:131px;">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Số hộ khẩu</th>
+                <th style="vertical-align:middle;" class="text-center">Tên chủ hộ</th>
+                <th style="vertical-align:middle;" class="text-center">Giới tính</th>
+                <th style="vertical-align:middle;" class="text-center">Năm sinh</th>
+                <th style="vertical-align:middle;" class="text-center">Chỗ ở hiện nay</th>
+                <th style="vertical-align:middle;" class="text-center">Số điện thoại</th>
+                <th style="vertical-align:middle;" class="text-center" style="width:131px;">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -93,7 +93,8 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                     </li>
                     <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
                         <a class="page-link" href="#" data-page="<?php echo max(1, $currentPage - 1); ?>">
-                            <</a>
+                            < 
+                        </a>
                     </li>
                     <?php
                     $range = 2;
@@ -258,7 +259,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
             });
         }
         $('<style>.small-alert .bootbox.modal { width: 300px !important; margin: 0 auto; } .small-alert .modal-dialog { width: 300px !important; } .small-alert .modal-footer { display:none } .small-alert .modal-header { height:44px; padding: 7px 20px } .small-alert .modal-body { padding:14px } .success-icon { margin-right: 8px; vertical-align: middle; } </style>').appendTo('head');
-       
+
 
         $('body').delegate('.btn_xoa', 'click', function() {
             var hokhau_id = $(this).data('hokhau');
@@ -384,7 +385,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {

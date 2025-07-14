@@ -47,12 +47,12 @@ defined('_JEXEC') or die('Restricted access');
   <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
       <thead>
-        <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tiêu đề</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Nội dung</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Văn bản đính kèm</th>
-          <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+        <tr class="bg-primary text-white">
+          <th style="vertical-align:middle;" class="text-center">STT</th>
+          <th style="vertical-align:middle;" class="text-center">Tiêu đề</th>
+          <th style="vertical-align:middle;" class="text-center">Nội dung</th>
+          <th style="vertical-align:middle;" class="text-center">Văn bản đính kèm</th>
+          <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
@@ -405,7 +405,7 @@ defined('_JEXEC') or die('Restricted access');
 
   .btn_hieuchinh:hover i,
   .btn_xoa:hover i {
-    color: #0066ff;
+    color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,

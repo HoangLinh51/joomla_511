@@ -14,12 +14,12 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tổ dân phố/Thôn</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tuyến đường</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tổng số nhà được cấp</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Tổ dân phố/Thôn</th>
+                <th style="vertical-align:middle;" class="text-center">Tuyến đường</th>
+                <th style="vertical-align:middle;" class="text-center">Tổng số nhà được cấp</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -399,7 +399,7 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {

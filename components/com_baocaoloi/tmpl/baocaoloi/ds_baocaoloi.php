@@ -46,12 +46,12 @@ defined('_JEXEC') or die('Restricted access');
   <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
       <thead>
-        <tr style="background-color: #FBFBFB !important;" class="bg-primary">
-          <th style="vertical-align: middle" class="text-center text-dark">STT</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Tên lỗi</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Tên module</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Nội dung lỗi</th>
-          <th style="width:131px; vertical-align: middle" class="text-center text-dark">Trạng thái</th>
+        <tr class="bg-primary">
+          <th style="vertical-align: middle" class="text-center">STT</th>
+          <th style="vertical-align: middle" class="text-center">Tên lỗi</th>
+          <th style="vertical-align: middle" class="text-center">Tên module</th>
+          <th style="vertical-align: middle" class="text-center">Nội dung lỗi</th>
+          <th style="width:131px; vertical-align: middle" class="text-center">Trạng thái</th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">

@@ -17,15 +17,14 @@ $actualDisplayedRows = 0;
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <!-- <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th> -->
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thôn/ Tổ dân phố</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Nhiệm kỳ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên thành viên</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Chức danh</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số điện thoại</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tình trạng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center" style="width:131px;">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">Thôn/ Tổ dân phố</th>
+                <th style="vertical-align:middle;" class="text-center">Nhiệm kỳ</th>
+                <th style="vertical-align:middle;" class="text-center">Họ tên thành viên</th>
+                <th style="vertical-align:middle;" class="text-center">Chức danh</th>
+                <th style="vertical-align:middle;" class="text-center">Số điện thoại</th>
+                <th style="vertical-align:middle;" class="text-center">Tình trạng</th>
+                <th style="vertical-align:middle;" class="text-center" style="width:131px;">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -413,13 +412,13 @@ $actualDisplayedRows = 0;
     }
 
     .btn-group .btn i {
-        font-size: 16px;
+        font-size: 15px;
         vertical-align: middle;
     }
 
     .text-success i,
     .text-danger i {
-        font-size: 16px;
+        font-size: 15px;
         vertical-align: middle;
     }
 </style>

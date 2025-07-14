@@ -92,15 +92,15 @@ defined('_JEXEC') or die('Restricted access');
   <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
       <thead>
-        <tr style="background-color: #FBFBFB !important;" class="bg-primary">
-          <th style="vertical-align: middle" class="text-center text-dark">STT</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Họ và tên</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Đối tượng</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Thôn tổ</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Giới tính</th>
-          <th style="vertical-align: middle" class="text-center text-dark">CCCD/CMND</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Số điện thoại</th>
-          <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center text-dark">Chức năng </th>
+        <tr class="bg-primary">
+          <th style="vertical-align: middle" class="text-center">STT</th>
+          <th style="vertical-align: middle" class="text-center">Họ và tên</th>
+          <th style="vertical-align: middle" class="text-center">Đối tượng</th>
+          <th style="vertical-align: middle" class="text-center">Thôn tổ</th>
+          <th style="vertical-align: middle" class="text-center">Giới tính</th>
+          <th style="vertical-align: middle" class="text-center">CCCD/CMND</th>
+          <th style="vertical-align: middle" class="text-center">Số điện thoại</th>
+          <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center">Chức năng </th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
@@ -280,7 +280,7 @@ defined('_JEXEC') or die('Restricted access');
     };
   }
 
-  $(document).ready(function() {
+    $(document).ready(function() {
     // Initialize from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const initialPage = parseInt(urlParams.get('page')) || 1;
@@ -389,10 +389,6 @@ defined('_JEXEC') or die('Restricted access');
     height: 38px;
   }
 
-  .text-primary {
-    color: #478fca !important;
-  }
-
   span.btn_hieuchinh,
   span.btn_xoa {
     font-size: 18px;
@@ -412,7 +408,7 @@ defined('_JEXEC') or die('Restricted access');
 
   .btn_hieuchinh:hover i,
   .btn_xoa:hover i {
-    color: #0066ff;
+    color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,

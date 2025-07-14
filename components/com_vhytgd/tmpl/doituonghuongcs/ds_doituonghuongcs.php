@@ -21,13 +21,13 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin đối tượng hưởng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin hưởng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Trạng thái</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Thông tin đối tượng hưởng</th>
+                <th style="vertical-align:middle;" class="text-center">Địa chỉ</th>
+                <th style="vertical-align:middle;" class="text-center">Thông tin hưởng</th>
+                <th style="vertical-align:middle;" class="text-center">Trạng thái</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -590,7 +590,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {

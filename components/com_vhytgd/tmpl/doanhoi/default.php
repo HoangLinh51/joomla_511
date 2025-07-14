@@ -774,10 +774,6 @@ use Joomla\CMS\HTML\HTMLHelper;
     border-color: #a8a8a8;
   }
 
-  .text-primary {
-    color: #478fca !important;
-  }
-
   .select2-container .select2-selection--single {
     height: 38px;
   }

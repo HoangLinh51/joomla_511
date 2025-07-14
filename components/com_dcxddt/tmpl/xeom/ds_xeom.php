@@ -7,15 +7,15 @@ defined('_JEXEC') or die('Restricted access');
 
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
   <thead>
-    <tr style="background-color: #FBFBFB !important;" class="bg-primary">
-      <th style="vertical-align: middle" class="text-center text-dark">STT</th>
-      <th style="vertical-align: middle" class="text-center text-dark">Họ và tên</th>
-      <th style="vertical-align: middle" class="text-center text-dark">Địa chỉ</th>
-      <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center text-dark">Giới tính</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">CCCD/CMND</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Số điện thoại</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Tình trạng thẻ</th>
-      <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center text-dark">Chức năng</th>
+    <tr class="bg-primary">
+      <th style="vertical-align: middle" class="text-center">STT</th>
+      <th style="vertical-align: middle" class="text-center">Họ và tên</th>
+      <th style="vertical-align: middle" class="text-center">Địa chỉ</th>
+      <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center">Giới tính</th>
+      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">CCCD/CMND</th>
+      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Số điện thoại</th>
+      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Tình trạng thẻ</th>
+      <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center">Chức năng</th>
     </tr>
   </thead>
   <tbody id="tbody_danhsach">
@@ -271,7 +271,7 @@ defined('_JEXEC') or die('Restricted access');
 
   .btn_hieuchinh:hover i,
   .btn_xoa:hover i {
-    color: #0066ff;
+    color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,

@@ -16,14 +16,14 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên thiết chế</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Loại hình</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Vị trí</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Diện tích (m²)</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tình trạng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Tên thiết chế</th>
+                <th style="vertical-align:middle;" class="text-center">Loại hình</th>
+                <th style="vertical-align:middle;" class="text-center">Vị trí</th>
+                <th style="vertical-align:middle;" class="text-center">Diện tích (m²)</th>
+                <th style="vertical-align:middle;" class="text-center">Tình trạng</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -67,8 +67,8 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
             <?php endif; ?>
         </tbody>
     </table>
-     <div class="pagination-container d-flex align-items-right mt-3">
-           <div id="pagination" class="mx-auto" style="margin-left:0 !important">
+    <div class="pagination-container d-flex align-items-right mt-3">
+        <div id="pagination" class="mx-auto" style="margin-left:0 !important">
         </div>
         <div id="pagination" class="mx-auto">
             <?php if ($totalPages > 0): ?>
@@ -333,17 +333,17 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         vertical-align: unset;
     }
 
-.status-building {
-    color: black;
-}
+    .status-building {
+        color: black;
+    }
 
-.status-repairing {
-    color: red;
-}
+    .status-repairing {
+        color: red;
+    }
 
-.status-using {
-    color: green;
-}
+    .status-using {
+        color: green;
+    }
 
 
     .pagination-container {
@@ -395,13 +395,13 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
     }
 
     .btn-group .btn i {
-        font-size: 16px;
+        font-size: 15px;
         vertical-align: middle;
     }
 
     .text-success i,
     .text-danger i {
-        font-size: 16px;
+        font-size: 15px;
         vertical-align: middle;
     }
 </style>

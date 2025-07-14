@@ -21,13 +21,13 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Mã số thuế</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Điện thoại</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Lịch sử nộp thuế</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Mã số thuế</th>
+                <th style="vertical-align:middle;" class="text-center">Họ tên</th>
+                <th style="vertical-align:middle;" class="text-center">Điện thoại</th>
+                <th style="vertical-align:middle;" class="text-center">Lịch sử nộp thuế</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -44,10 +44,10 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                             <span><?php echo htmlspecialchars($item['so_nguoi']); ?></span>
                             <i class="fas fa-eye btn_eye" style="cursor: pointer; margin-left: 10px; color: #007bff;" data-id="<?php echo $item['id']; ?>" title="Xem chi tiết"></i>
                         </td>
-                      
+
                         <td style="vertical-align:middle;text-align: center;">
                             <div class="btn-group" role="group">
-                              
+
                                 <span class="btn btn-sm btn_hieuchinh" data-id="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh" style="cursor: pointer;">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
@@ -511,7 +511,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {

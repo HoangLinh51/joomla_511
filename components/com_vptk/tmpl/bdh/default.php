@@ -74,7 +74,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         <tr>
                             <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Họ tên</b></td>
                             <td style="width: 40%; padding: 10px;">
-                                <input type="text" name="hoten" id="hoten" class="form-control" style="font-size: 16px;" placeholder="Nhập họ tên" />
+                                <input type="text" name="hoten" id="hoten" class="form-control" style="font-size: 15px;" placeholder="Nhập họ tên" />
                             </td>
                             <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Chức danh</b></td>
                             <td style="width: 40%; padding: 10px;">
@@ -127,14 +127,14 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
                         <thead>
-                            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thôn/ Tổ dân phố</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Nhiệm kỳ</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên thành viên</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Chức danh</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số điện thoại</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tình trạng</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center" style="width:131px;">Chức năng</th>
+                            <tr class="bg-primary text-white">
+                                <th style="vertical-align:middle;" class="text-center">Thôn/ Tổ dân phố</th>
+                                <th style="vertical-align:middle;" class="text-center">Nhiệm kỳ</th>
+                                <th style="vertical-align:middle;" class="text-center">Họ tên thành viên</th>
+                                <th style="vertical-align:middle;" class="text-center">Chức danh</th>
+                                <th style="vertical-align:middle;" class="text-center">Số điện thoại</th>
+                                <th style="vertical-align:middle;" class="text-center">Tình trạng</th>
+                                <th style="vertical-align:middle;" class="text-center" style="width:131px;">Chức năng</th>
                             </tr>
                         </thead>
                         <tbody id="tbody_danhsach"></tbody>
@@ -224,7 +224,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 thonto_id: $('#thonto_id').val(),
                 chucvukn_id: $('#chucvukn_id').val(),
             }, function(response, status, xhr) {
-                
+
                 $("#overlay").fadeOut(300);
                 if (status === "error") {
                     console.error('Error loading danh sach: ', xhr.status, xhr.statusText);
@@ -297,7 +297,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .btn_hieuchinh:hover i,
     .btn_xoa:hover i {
-        color: #0066ff;
+        color: #007b8bb8;
     }
 
     .btn_hieuchinh::after,
@@ -336,7 +336,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .form-control {
         height: 38px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .select2-container .select2-selection--single {

@@ -102,14 +102,14 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		</li>
 		<li class="user-footer">
 			<div class="pull-left" style="float: left;">
-				<a href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
+				<button class="btn-editprofile" href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
 					<i class="icon-key"></i>
 					<?php echo Route::_('Thay đổi mật khẩu'); ?>
-				</a>
+				</button>
 			</div>
 
 			<div class="pull-right" style="float: right;">
-				<button class="btn-logout" type="button" href="#" onclick="document.getElementById('login-form').submit();">
+				<button class="btn-logout" type="button" onclick="document.getElementById('login-form').submit();">
 					<i class="icon-off"></i>
 					<?php echo Text::_('JLOGOUT'); ?>
 				</button>
@@ -127,7 +127,6 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 <script>
 	function markAsRead(thongbao_id, user_id) {
 		// Gửi yêu cầu cập nhật trạng thái đến server
-		console.log(thongbao_id, user_id)
 		fetch('', {
 			method: 'POST',
 			headers: {
@@ -140,7 +139,6 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 
 		// Cập nhật giao diện ngay lập tức
 		const link = document.querySelector(`a[data-id="${thongbao_id}"]`);
-		console.log(link);
 		if (link) {
 			link.classList.remove('fw-bold');
 			link.classList.add('text-muted');
@@ -154,6 +152,11 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 			}
 		}
 	}
+	$(document).ready(function() {
+		$('body').delegate('.btn-editprofile', 'click', function() {
+			window.location.href = '/index.php?option=com_users&view=profile&layout=edit';
+		});
+	})
 </script>
 
 <style>
@@ -185,9 +188,17 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		text-overflow: ellipsis;
 	}
 
+	.btn-editprofile,
 	.btn-logout {
 		border: none;
 		background-color: #fff;
-		color: #007bff
+		color: #0c9984
+	}
+
+	.btn-editprofile:hover,
+	.btn-logout:hover {
+		border: none;
+		background-color: #fff;
+		color: #0ec4a8ff
 	}
 </style>

@@ -94,6 +94,15 @@ class TrinhdonHelper
         $controller = $jinput->getCmd('controller', '');
         $view = $jinput->getCmd('view', 'default');
         $task = $jinput->getCmd('task', 'default');
+        var_dump($option);
+        echo'<br>';
+        var_dump($controller);
+        echo '<br>';
+        var_dump($view);
+        echo '<br>';
+        var_dump($task);
+        echo '<br>';
+
         if ($controller === '') {
             $controller = $view;
         }
@@ -117,63 +126,13 @@ class TrinhdonHelper
         $actives = $db->loadColumn();
         $active = count($actives) > 0 ? end($actives) : 0;
 
+        var_dump($active);
+        echo '<br>';
+        var_dump($actives);
+        echo '<br>';
+
         return self::buildMenuHtml($menus, $active, $actives, $user);
     }
-
-    // public static function getMenu($params)
-    // {
-    //     $user = Factory::getUser();
-    //     if ($user->id == null) {
-    //         return '';
-    //     }
-
-    //     $jinput = Factory::getApplication()->input;
-    //     $option = $jinput->getCmd('option', 'default');
-    //     $controller = $jinput->getCmd('controller', '');
-    //     $view = $jinput->getCmd('view', 'default');
-    //     $task = $jinput->getCmd('task', 'default');
-    //     if ($controller == '') {
-    //         $controller = $view;
-    //     }
-    //     $db = Factory::getDbo();
-    //     $trinhdon = $params->get('trinhdon');
-    //     $menu_ids = (array) $trinhdon;
-    //     $query = $db->getQuery(true)
-    //         ->select('a.lft, a.rgt')
-    //         ->from($db->quoteName('core_menu', 'a'))
-    //         ->where('a.id IN (' . implode(',', $menu_ids) . ')');
-    //     $db->setQuery($query);
-    //     $parent_nodes = $db->loadAssocList();
-
-    //     if ($controller == '') {
-    //         $controller = $view;
-    //     }
-    //     $conditions = [];
-    //     foreach ($parent_nodes as $parent_node) {
-    //         $conditions[] = '(a.lft BETWEEN ' . $db->quote($parent_node['lft']) . ' AND ' . $db->quote($parent_node['rgt']) . ' AND a.published = 1 AND b.published = 1)';
-    //     }
-    //     $query = $db->getQuery(true)
-    //         ->select('a.icon, a.id, a.link, a.is_system, a.name AS name, a.params, a.lft, a.rgt, a.published, a.component, a.controller, a.task, a.level')
-    //         ->from($db->quoteName('core_menu', 'a'))
-    //         ->join('LEFT', 'core_menu AS b ON a.parent_id = b.id')
-    //         ->where('(a.published = 1 AND a.id <> 1 AND b.published = 1)')
-    //         ->where(implode(' OR ', $conditions))
-    //         ->order('a.lft');
-
-    //     $db->setQuery($query);
-    //     $rows = $db->loadAssocList();
-    //     $query = $db->getQuery(true)
-    //         ->select('parent.id')
-    //         ->from('core_menu AS node, core_menu AS parent')
-    //         ->where('node.lft BETWEEN parent.lft AND parent.rgt')
-    //         ->where('node.id = (SELECT id FROM core_menu WHERE (component = ' . $db->q($option) . ') AND (controller = ' . $db->q($controller) . ') AND (task = ' . $db->q($task) . ') LIMIT 1)')
-    //         ->where('parent.id != 1')
-    //         ->order('parent.lft');
-    //     $db->setQuery($query);
-    //     $actives = $db->loadColumn();
-    //     $active = count($actives) > 0 ? end($actives) : 0;
-    //     return self::buildMenuHtml($rows, $active, $actives, $user);
-    // }
 
     private static function buildMenuHtml($rows, $active, $actives, $user)
     {
@@ -220,10 +179,10 @@ class TrinhdonHelper
                 $result .= (in_array($node['id'], $actives)) ? ' class="nav-item menu-is-opening menu-open active"' : 'class="nav-item"';
                 $icon = ($node['icon'] == null) ? '' : '<i class="' . $node['icon'] . '"></i>';
                 if ($child == true) {
-                    $result .= '><a class="nav-link ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '"><i class="fas fa-caret-right"></i><p class="menu-text"> ' . $node_name . '</p></a>';
+                    $result .= '><a class="nav-link  childtrue ' . (($node['id'] == $active) ? 'active' : '') . '" href="' . $node['link'] . '"><i class="fas fa-caret-right"></i><p class="menu-text"> ' . $node_name . '</p></a>';
                 } else {
                     if ($hasChild == true) {
-                        $result .= '><a class="nav-link ' . ((in_array($node['id'], $actives)) ? 'active' : '') . '" href="' . $node['link'] . '">' . $icon . '<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
+                        $result .= '><a class="nav-link hasChildtrue ' . ((in_array($node['id'], $actives)) ? 'active' : '') . '" href="' . $node['link'] . '">' . $icon . '<p class="menu-text"> ' . $node_name . '<i class="right fa fa-angle-left"></i></p></a>';
                     } else {
                         $iconHtml = '';
                         if ($node_depth >= 2) {
@@ -241,48 +200,5 @@ class TrinhdonHelper
         $result .= '</ul>';
 
         return $is_visibled ? $result : '';
-    }
-
-    /**
-     * Dummy permission check (replace with actual logic)
-     */
-    private static function checkPermission(int $userId, string $component, string $controller, string $task): bool
-    {
-        $user = Factory::getApplication()->getIdentity();
-        $userGroupIds = $user->getAuthorisedGroups();
-
-        if (empty($userGroupIds)) {
-            return false;
-        }
-
-        $db = Factory::getDbo();
-
-        // Lấy ID của menu ứng với component/controller/task
-        $query = $db->getQuery(true)
-            ->select('id')
-            ->from($db->quoteName('core_menu'))
-            ->where([
-                $db->quoteName('component') . ' = ' . $db->quote($component),
-                $db->quoteName('controller') . ' = ' . $db->quote($controller),
-                $db->quoteName('task') . ' = ' . $db->quote($task)
-            ])
-            ->setLimit(1);
-
-        $db->setQuery($query);
-        $menuId = (int) $db->loadResult();
-
-        if (!$menuId) {
-            return false;
-        }
-
-        // Kiểm tra bảng phân quyền menu theo nhóm
-        $query = $db->getQuery(true)
-            ->select('COUNT(*)')
-            ->from($db->quoteName('jos_core_menu_usergroup'))
-            ->where($db->quoteName('menu_id') . ' = ' . $db->quote($menuId))
-            ->where($db->quoteName('usergroup_id') . ' IN (' . implode(',', array_map('intval', $userGroupIds)) . ')');
-
-        $db->setQuery($query);
-        return (int) $db->loadResult() > 0;
     }
 }

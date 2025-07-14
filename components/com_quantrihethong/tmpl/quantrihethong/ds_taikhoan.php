@@ -395,7 +395,7 @@ defined('_JEXEC') or die('Restricted access');
   }
 
   input:checked+.slider {
-    background-color: #007bff;
+    background-color: #007b8bb8;
   }
 
   input:checked+.slider:before {

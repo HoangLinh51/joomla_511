@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 $idUser = JFactory::getUser()->id;
+
 use Joomla\CMS\Uri\Uri;
 
 // Lấy giá trị is_quyen từ bảng jos_users
@@ -99,12 +100,12 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         </tr>
 
                         <tr>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 16px; line-height: 2.5;">Năm</b></td>
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 15px; line-height: 2.5;">Năm</b></td>
                             <td style="width: 40%; padding: 10px;">
-                                <input type="text" class="form-control yearpicker" id="nam" name="nam"  style="font-size: 16px;" placeholder="Nhập năm" />
+                                <input type="text" class="form-control yearpicker" id="nam" name="nam" style="font-size: 15px;" placeholder="Nhập năm" />
 
                             </td>
-                           
+
 
                         </tr>
                         <tr>
@@ -119,14 +120,14 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
                         <thead>
-                            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên thiết chế</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Loại hình</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Vị trí</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Diện tích (m²)</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tình trạng</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+                            <tr class="bg-primary text-white">
+                                <th style="vertical-align:middle;" class="text-center">STT</th>
+                                <th style="vertical-align:middle;" class="text-center">Tên thiết chế</th>
+                                <th style="vertical-align:middle;" class="text-center">Loại hình</th>
+                                <th style="vertical-align:middle;" class="text-center">Vị trí</th>
+                                <th style="vertical-align:middle;" class="text-center">Diện tích (m²)</th>
+                                <th style="vertical-align:middle;" class="text-center">Tình trạng</th>
+                                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
                             </tr>
                         </thead>
                         <tbody id="tbody_danhsach"></tbody>
@@ -275,7 +276,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .btn_hieuchinh:hover i,
     .btn_xoa:hover i {
-        color: #0066ff;
+        color: #007b8bb8;
     }
 
     .btn_hieuchinh::after,
@@ -314,7 +315,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .form-control {
         height: 38px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .select2-container .select2-selection--single {

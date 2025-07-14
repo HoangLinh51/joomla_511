@@ -170,8 +170,4 @@ defined('_JEXEC') or die('Restricted access');
   .select2-container .select2-selection--single {
     height: 38px;
   }
-
-  .text-primary {
-    color: #478fca !important;
-  }
 </style>

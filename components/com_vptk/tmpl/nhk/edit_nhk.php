@@ -727,7 +727,7 @@ $nhankhau = $item['nhankhau'];
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {

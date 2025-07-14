@@ -35,32 +35,12 @@ $_SESSION['valid_captcha'] = $img_val;
 
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
-
-// Add Stylesheet
-// $doc->addStyleSheet($this->baseurl. '/templates/aadminlte/dist/css/adminlte.min.css');
-// $doc->addStyleSheet($this->baseurl. '/templates/aadminlte/plugins/fontawesome-free/css/all.min.css');
-// $doc->addStyleSheet($this->baseurl. '/templates/aadminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css');
-// $doc->addStyleSheet($this->baseurl. '/templates/aadminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
-// $doc->addStyleSheet($this->baseurl. '/templates/aadminlte/plugins/jqvmap/jqvmap.min.css');
-// $doc->addStyleSheet($this->baseurl. '/templates/aadminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/jquery/jquery.min.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/bootstrap/js/bootstrap.bundle.min.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/jquery-mousewheel/jquery.mousewheel.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/dist/js/adminlte.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/raphael/raphael.min.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/jquery-mapael/jquery.mapael.min.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/jquery-mapael/maps/usa_states.min.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/plugins/chart.js/Chart.min.js');
-// $doc->addScript($this->baseurl. '/templates/aadminlte/dist/js/demo.js');
-
 ?>
 
 <div class="login-box-body <?php echo $this->pageclass_sfx ?>">
-
 	<?php foreach (Factory::getApplication()->getMessageQueue() as $message) : ?>
 		<?php if ($message['type'] == 'error') : ?>
-			<div class="alert alert-<?php echo $message['type']; ?>">
+			<div id="alert" class="alert alert-<?php echo $message['type']; ?>" style="position: absolute;top: 2%;right: 2%;padding: 15px;background-color: #dc3545;color: #fff;font-weight: 600;font-size: 14px;">
 				<?php echo $message['message']; ?>
 			</div>
 		<?php endif; ?>
@@ -83,10 +63,10 @@ $doc = Factory::getDocument();
 		</div>
 	<?php endif; ?>
 
-	<form action="<?php echo Route::_('index.php?option=com_users&task=user.login'); ?>" method="post" class="form-horizontal">
+	<form id="form-login" action="<?php echo Route::_('index.php?option=com_users&task=user.login'); ?>" method="post" class="form-horizontal" style="display:none">
 		<fieldset>
 
-			<div class="form-floating">
+			<div class="form-floating" style="margin: 0 ">
 				<input type="text" id="username" name="username" class="form-control validate-username required" required placeholder=" ">
 				<label for="username">Tài khoản</label>
 			</div>
@@ -120,8 +100,6 @@ $doc = Factory::getDocument();
 
 		</fieldset>
 	</form>
-
-	<button class="tax-button">Đăng Nhập Bằng EGOV</button>
 </div>
 <style>
 	.alert {
@@ -148,15 +126,6 @@ $doc = Factory::getDocument();
 		margin-top: 20px;
 	}
 
-	.form-floating input {
-		width: 100%;
-		padding: 14px 10px 10px;
-		font-size: 16px;
-		border: 1px solid #ccc;
-		border-radius: 6px;
-		background: none;
-		outline: none;
-	}
 
 	.form-floating label {
 		position: absolute;
@@ -172,10 +141,15 @@ $doc = Factory::getDocument();
 	}
 
 	.form-floating input:focus+label,
-	.form-floating input:not(:placeholder-shown)+label {
+	.form-floating input:not(:placeholder-shown)+label,
+	.form-control:focus {
 		top: 0;
+		color: #0c9984;
+		border-color: #0c9984;
+	}
+
+	.form-floating input:focus+label {
 		font-size: 13px;
-		color: #269bff;
 	}
 
 	.captcha-floating {
@@ -192,11 +166,10 @@ $doc = Factory::getDocument();
 		border-radius: 6px;
 	}
 
-	button,
 	.btn-info {
 		width: 100%;
-		padding: 7px;
-		background-color: #269bff;
+		padding: 12px 20px;
+		background-color: #0c9984;
 		color: white;
 		border: none;
 		border-radius: 6px;

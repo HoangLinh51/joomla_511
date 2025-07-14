@@ -80,7 +80,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
     .form-select {
         height: 38px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .select2-container .select2-choice {

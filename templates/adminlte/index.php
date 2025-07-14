@@ -122,6 +122,14 @@ if ($coreTemplate->isLogin() == true) {
 	</head>
 
 	<body class="sidebar-mini layout-fixed">
+		<?php foreach (Factory::getApplication()->getMessageQueue() as $message) : ?>
+			<?php var_dump($message) ?> 
+			<?php if ($message['type'] == 'error') : ?>
+				<div class="alert alert-<?php echo $message['type']; ?>">
+					<?php echo $message['message']; ?>
+				</div>
+			<?php endif; ?>
+		<?php endforeach; ?>
 		<div class="wrapper">
 			<nav class="main-header navbar navbar-expand navbar-white navbar-light">
 				<ul class="navbar-nav">
@@ -135,7 +143,7 @@ if ($coreTemplate->isLogin() == true) {
 			</nav>
 			<aside class="main-sidebar sidebar-dark-primary elevation-4">
 				<a href="index.php" class="d-flex align-items-center gap-3 logo-brand">
-					<img src="/images/banners/logo-DN.png" alt="DNICT Logo" class="brand-image img-circle elevation-3 ml-3 mr-2">
+					<img src="/images/banners/logo-DN.png" alt="DNICT Logo" class="brand-image img-circle">
 					<span class="brand-text font-weight-light ">CSDL Xã/Phường</span>
 				</a>
 				<div class="line"></div>
@@ -236,9 +244,10 @@ if ($coreTemplate->isLogin() == true) {
 
 		.logo-brand {
 			height: 56px;
-			padding: 10px 12px;
+			padding: .5rem 1rem;
 			color: #fff;
 			font-weight: 500;
+			border-bottom: 1px solid #4b545c;
 		}
 
 		a.logo-brand:hover {
@@ -260,6 +269,31 @@ if ($coreTemplate->isLogin() == true) {
 
 		.sidebar-hidden .content-wrapper {
 			margin-left: 0 !important;
+		}
+
+		body.sidebar-mini.sidebar-collapse .main-sidebar:hover {
+			width: 4.6rem !important;
+		}
+
+		body.sidebar-mini.sidebar-collapse .main-sidebar {
+			transition: none !important;
+		}
+
+		body.sidebar-collapse .logo-brand {
+			padding: .5rem 1rem;
+		}
+
+		/* Ẩn chữ tên brand khi sidebar thu gọn */
+		body.sidebar-collapse .brand-text {
+			display: none !important;
+		}
+
+		body.sidebar-collapse .nav-sidebar .nav-link p.menu-text {
+			display: none !important;
+		}
+
+		.nav-treeview .nav-item .nav-link {
+			padding: 8px 25px;
 		}
 	</style>
 

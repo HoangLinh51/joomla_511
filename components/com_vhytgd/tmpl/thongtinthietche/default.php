@@ -72,11 +72,11 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 <div class="card-body">
                     <table class="table table-borderless">
                         <tr>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 16px; line-height: 2.5;">Tên thiết chế</b></td>
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 15px; line-height: 2.5;">Tên thiết chế</b></td>
                             <td style="width: 40%; padding: 10px;">
-                                <input type="text" name="tenthietche" id="tenthietche" class="form-control" style="font-size: 16px;" placeholder="Nhập tên thiết chế văn hóa" />
+                                <input type="text" name="tenthietche" id="tenthietche" class="form-control" style="font-size: 15px;" placeholder="Nhập tên thiết chế văn hóa" />
                             </td>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 16px; line-height: 2.5;">Phường/Xã</b></td>
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 15px; line-height: 2.5;">Phường/Xã</b></td>
                             <td style="width: 40%; padding: 10px;">
                                 <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn xã/phường">
                                     <option value=""></option>
@@ -88,7 +88,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         </tr>
 
                         <tr>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 16px; line-height: 2.5;">Tình trạng</b></td>
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 15px; line-height: 2.5;">Tình trạng</b></td>
                             <td style="width: 40%; padding: 10px;">
                                 <select id="tinhtrang_id" name="tinhtrang_id" class="custom-select" data-placeholder="Chọn tình trạng">
                                     <option value="">-- Chọn tình trạng --</option>
@@ -97,7 +97,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                                     <option value="3">Đang sử dụng</option>
                                 </select>
                             </td>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 16px; line-height: 2.5;">Loại hình</b></td>
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 15px; line-height: 2.5;">Loại hình</b></td>
                             <td style="width: 40%; padding: 10px;">
                                 <select id="loaihinhthietche_id" name="loaihinhthietche_id" class="custom-select" data-placeholder="Chọn loại hình thiết chế">
                                     <option value=""></option>
@@ -120,14 +120,14 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
                         <thead>
-                            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên thiết chế</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Loại hình</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Vị trí</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Diện tích (m²)</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tình trạng</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+                            <tr class="bg-primary text-white">
+                                <th style="vertical-align:middle;" class="text-center">STT</th>
+                                <th style="vertical-align:middle;" class="text-center">Tên thiết chế</th>
+                                <th style="vertical-align:middle;" class="text-center">Loại hình</th>
+                                <th style="vertical-align:middle;" class="text-center">Vị trí</th>
+                                <th style="vertical-align:middle;" class="text-center">Diện tích (m²)</th>
+                                <th style="vertical-align:middle;" class="text-center">Tình trạng</th>
+                                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
                             </tr>
                         </thead>
                         <tbody id="tbody_danhsach"></tbody>
@@ -238,7 +238,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
         });
 
         // Xử lý nút Xuất Excel
-      
+
     });
 </script>
 
@@ -271,7 +271,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .btn_hieuchinh:hover i,
     .btn_xoa:hover i {
-        color: #0066ff;
+        color: #007b8bb8;
     }
 
     .btn_hieuchinh::after,
@@ -310,7 +310,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .form-control {
         height: 38px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .select2-container .select2-selection--single {
