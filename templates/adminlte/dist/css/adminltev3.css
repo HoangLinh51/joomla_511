@@ -173,13 +173,13 @@ sup {
 }
 
 a {
-    color: #007b8b;
+    color: #007bff;
     text-decoration: none;
     background-color: transparent
 }
 
 a:hover {
-    color: #029cb0;
+    color: #16569b;
     text-decoration: none
 }
 
@@ -37669,7 +37669,7 @@ body.iframe-mode-fullscreen .content-wrapper.iframe-mode {
 
 .select2-container--default .select2-results__option--highlighted[aria-selected],
 .select2-container--default .select2-results__option--highlighted[aria-selected]:hover {
-    background-color: #0074f0;
+    background-color: #007b8b;
     color: #fff
 }
 

@@ -92,6 +92,11 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         padding: 5px 0 0 5px !important;
     }
 
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
+
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         background-color: #69d7e9;
         border: 1px solid #080808;

@@ -558,9 +558,7 @@ $item = $this->item;
                                     const redirectUrl = `index.php?option=com_dcxddt&view=biensonha&task=edit_bsn&bsn_id=${bsn_id}`;
                                     window.location.assign(redirectUrl);
                                 }, 2000);
-                            } else {
-                                showToast('Có thể thêm tuyến đường nhà mới', true);
-                            }
+                            } 
                         },
                         error: function(xhr, status, error) {
                             console.error('AJAX error:', status, error);
@@ -615,7 +613,7 @@ $item = $this->item;
             const selectedNam = $('#tuyenduong').val();
 
             if (!selectedThontoId || !selectedNam) {
-                showToast('Vui lòng chọn Thôn/Tổ và Năm trước khi thêm danh hiệu', false);
+                showToast('Vui lòng chọn Phường/Xã, Thôn/Tổ và tuyến đường', false);
                 return false;
             }
 
@@ -647,16 +645,8 @@ $item = $this->item;
             console.log('modal_search_toggle changed:', isChecked);
             const loaisohuu = $('#modal_loaisohuu').val();
 
-            // if (loaisohuu !== '1') {
-            //     showToast('Vui lòng chọn Loại sở hữu là Cá nhân trước khi tìm kiếm', false);
-            //     $(this).prop('checked', false);
-            //     $('#search_fields').hide();
-            //     return;
-            // }
-
             $('#search_fields').toggle(isChecked);
             $('#modal_hoten, #modal_cccd_so, #modal_dienthoai, #modal_diachi, #modal_gioitinh_id, #modal_ngaysinh').prop('disabled', isChecked);
-            // $('#modal_hoten, #modal_cccd_so, #modal_gioitinh_id, #modal_ngaysinh, #modal_diachi').prop('required', !isChecked);
             $('#modal_nhankhau_search').prop('required', isChecked);
 
             if (isChecked) {
@@ -1375,6 +1365,11 @@ $item = $this->item;
         height: 38px;
     }
 
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
+
     .table#tblThongtin td.align-middle {
         width: 33.33%;
         padding: .75rem 0rem .75rem .75rem;
@@ -1436,7 +1431,7 @@ $item = $this->item;
         overflow-x: hidden;
     }
 
-  
+
 
     #modalThongTinSoNha .form-control,
     #modalThongTinSoNha .custom-select,

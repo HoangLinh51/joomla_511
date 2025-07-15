@@ -280,7 +280,7 @@ defined('_JEXEC') or die('Restricted access');
     };
   }
 
-    $(document).ready(function() {
+  $(document).ready(function() {
     // Initialize from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const initialPage = parseInt(urlParams.get('page')) || 1;
@@ -383,6 +383,11 @@ defined('_JEXEC') or die('Restricted access');
   .select2-container .select2-choice .select2-chosen {
     height: 34px !important;
     padding: 5px 0 0 5px !important;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
 
   .select2-container .select2-selection--single {

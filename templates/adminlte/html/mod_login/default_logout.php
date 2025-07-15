@@ -21,7 +21,7 @@ $user = Factory::getUser();
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
 $coreTemplate = new CoreTemplate();
-$modelThongbao = Core::model('Thongbao/Thongbao');
+$modelThongbao = Core::model('DungChung/Thongbao');
 $listThongBao = $modelThongbao->getListThongBao('today', '', 1, 10);
 $countThongBao =  $modelThongbao->countThongBao($user->id, 'unread');
 $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
@@ -29,7 +29,11 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 ?>
 
 <div class="dropdown mr-2">
-	<a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+	<a class="mr-2 ml-2" href="/index.php/component/dungchung/?view=hdsd&task=default">
+		<i class="fas fa-download"></i>
+	</a>
+
+	<!-- <a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<i class="far fa-bell" style="font-size: 20px"></i>
 		<?php if ($countThongBao > 0): ?>
 			<span class="badge bg-danger navbar-badge" id="unread-badge"></span>
@@ -60,7 +64,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		<?php } else { ?>
 			<span class="dropdown-item text-muted">Không có thông báo mới.</span>
 		<?php } ?>
-	</ul>
+	</ul> -->
 </div>
 
 

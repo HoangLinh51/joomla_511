@@ -769,6 +769,11 @@ use Joomla\CMS\HTML\HTMLHelper;
     padding: 5px 0 0 5px !important;
   }
 
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
+  }
+
   .select2-container.select2-container-disabled .select2-choice {
     background-color: #ddd;
     border-color: #a8a8a8;

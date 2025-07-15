@@ -106,7 +106,7 @@ $item = $this->item;
                             <tr>
                                 <td class="align-middle text-center stt"><?php echo $index + 1; ?></td>
                                 <td class="align-middle hoten" style="cursor: pointer;">
-                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>" style="color: blue;">
+                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>">
                                         <strong>Họ tên:</strong> <?php echo htmlspecialchars($nk['n_hoten'] ?? ''); ?>
                                     </a><br>
                                     <strong>CCCD:</strong> <?php echo htmlspecialchars($nk['n_cccd'] ?? ''); ?><br>
@@ -827,7 +827,7 @@ $item = $this->item;
             <tr>
                 <td class="align-middle text-center stt">${stt}</td>
                 <td class="align-middle hoten">
-                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $('#tblDanhsach tbody tr').length}" style="color: blue;">
+                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $('#tblDanhsach tbody tr').length}">
                         <strong>Họ tên:</strong> ${hoten}
                     </a><br>
                     <strong>CCCD:</strong> ${cccd_so}<br>
@@ -1381,6 +1381,11 @@ $item = $this->item;
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .table#tblThongtin td.align-middle {

@@ -482,16 +482,9 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {

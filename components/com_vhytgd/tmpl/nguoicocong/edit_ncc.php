@@ -149,7 +149,7 @@ $item = $this->item;
         </div>
         <div class="row g-3 mb-4">
             <table class="table table-striped table-bordered" style="height: 150px; overflow-y: auto;">
-                <thead class="table-primary">
+                <thead class="table-primary text-white">
                     <tr>
                         <th>STT</th>
                         <th>Hình thức hưởng</th>
@@ -1316,8 +1316,8 @@ $item = $this->item;
                             $('#checkbox_toggle').prop('checked', false).trigger('change');
                         }
                     } else {
-                        console.warn('Không có dữ liệu nhân khẩu từ API');
-                        showToast('Không tìm thấy thông tin nhân khẩu', false);
+                        // console.warn('Không có dữ liệu nhân khẩu từ API');
+                        // showToast('Không tìm thấy thông tin nhân khẩu', false);
                         $('#checkbox_toggle').prop('checked', false).trigger('change');
                     }
                 } catch (error) {
@@ -1521,6 +1521,12 @@ $item = $this->item;
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
     }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
+
 
     .table#tblThongtin td.align-middle {
         width: 33.33%;

@@ -304,10 +304,6 @@ $messages = JFactory::getApplication()->getMessageQueue();
         padding: 20px .5rem 15px .5rem;
     }
 
-    .text-primary {
-        color: #478fca !important;
-    }
-
     .form-control {
         height: 38px;
         font-size: 15px;

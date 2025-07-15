@@ -57,7 +57,7 @@ class TrinhdonHelper
 
         // Step 2: Lấy các menu cấp 1 (cha_id = 1) mà user có quyền truy cập
         $query = $db->getQuery(true)
-            ->select(['id','level','lft','rgt','published','params','name','link','is_system','icon','component','controller','task'])
+            ->select(['id', 'level', 'lft', 'rgt', 'published', 'params', 'name', 'link', 'is_system', 'icon', 'component', 'controller', 'task'])
             ->from($db->quoteName('core_menu'))
             ->where('parent_id = 1')
             ->where('published = 1')
@@ -74,7 +74,7 @@ class TrinhdonHelper
 
         // Step 3: Lấy menu con của các menu cấp 1 (nếu menu con cũng được phân quyền)
         $query = $db->getQuery(true)
-            ->select(['id','level','lft','rgt','published','params','name','link','is_system','icon','component','controller','task'])
+            ->select(['id', 'level', 'lft', 'rgt', 'published', 'params', 'name', 'link', 'is_system', 'icon', 'component', 'controller', 'task'])
             ->from($db->quoteName('core_menu'))
             ->where('parent_id IN (' . implode(',', $levelOneIds) . ')')
             ->where('published = 1')
@@ -98,18 +98,32 @@ class TrinhdonHelper
 
         $controller = $controller ?: $view ?: '';
         $task = $task ?: '';
+
+        // Subquery chọn menu phù hợp
+        $subQuery = $db->getQuery(true)
+            ->select('id')
+            ->from($db->quoteName('core_menu'))
+            ->where('component = ' . $db->quote($option))
+            ->where('controller = ' . $db->quote($controller));
+
+        // Nếu task = 'default' → dùng task để tìm
+        if ($task === 'default' || $task === 'thongke') {
+            $subQuery->where('task = ' . $db->quote($task));
+        } else {
+            // Nếu task khác default hoặc rỗng → bỏ task, chỉ chọn menu cấp 1
+            $subQuery->where('parent_id = 1');
+        }
+
+        // Ưu tiên menu sâu hơn nếu trùng
+        $subQuery->order('level DESC, lft DESC')
+            ->setLimit(1);
+
+        // Truy vấn chính lấy các ID cha
         $query = $db->getQuery(true)
             ->select('parent.id')
             ->from('core_menu AS node, core_menu AS parent')
             ->where('node.lft BETWEEN parent.lft AND parent.rgt')
-            ->where('node.id = (
-                        SELECT id FROM core_menu
-                        WHERE component = ' . $db->q($option) . '
-                        AND controller = ' . $db->q($controller) . '
-                        AND task = ' . $db->q($task) . '
-                        ORDER BY level DESC, lft DESC
-                        LIMIT 1
-                    )')
+            ->where('node.id = (' . $subQuery . ')')
             ->where('parent.id != 1')
             ->order('parent.lft');
 

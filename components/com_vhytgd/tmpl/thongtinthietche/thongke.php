@@ -111,10 +111,12 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         height: 34px !important;
         padding: 5px 0 0 5px !important;
     }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #69d7e9;
-        border: 1px solid #080808;
         border-radius: 4px;
         cursor: default;
         float: left;
@@ -124,8 +126,6 @@ $idUser = Factory::getApplication()->getIdentity()->id;
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #007bff;
-        border-color: #006fe6;
         color: #181616;
         padding: 0 10px;
         margin-top: .31rem;
@@ -135,8 +135,6 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         height: 38px;
     }
 </style>
-
-
 
 <script>
     jQuery(document).ready(function($) {

@@ -10,17 +10,17 @@ $current_phuongxa_id = null;
 
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
     <thead>
-        <tr style="background: #027be3;">
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">STT</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">Tên khu vực</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="2">Số lượng Tổ trường/Trưởng thôn</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="2">Số lượng Tổ phó/Phó trưởng thôn</th>
+        <tr class="bg-primary">
+            <th class="text-center align-middle" rowspan="2">STT</th>
+            <th class="text-center align-middle" rowspan="2">Tên khu vực</th>
+            <th class="text-center align-middle" colspan="2">Số lượng Tổ trường/Trưởng thôn</th>
+            <th class="text-center align-middle" colspan="2">Số lượng Tổ phó/Phó trưởng thôn</th>
         </tr>
-        <tr style="background: #027be3;">
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nam</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nữ</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nam</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nữ</th>
+        <tr class="bg-primary">
+            <th class="text-center align-middle">Nam</th>
+            <th class="text-center align-middle">Nữ</th>
+            <th class="text-center align-middle">Nam</th>
+            <th class="text-center align-middle">Nữ</th>
         </tr>
     </thead>
     <tbody id="tbody_danhsach">

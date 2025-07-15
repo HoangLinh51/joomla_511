@@ -11,7 +11,7 @@ $detaiCoSo = $this->detailCoSo;
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 
 <form id="formCoSoNhayCam" name="formCoSoNhayCam" method="post" action="index.php?option=com_vhytgd&controller=dichvunhaycam&task=save_dichvunhaycam">
-  <div class="container-fluid px-3">
+  <div class="container-fluid p-4">
     <h2 class="mb-3 text-primary" style="margin-bottom: 0 !important;line-height:2">
       <?php echo ((int)$item['id'] > 0) ? "Hiệu chỉnh" : "Thêm mới"; ?> thông tin cơ sở dịch vụ nhạy cảm
       <span class="float-right">
@@ -243,7 +243,7 @@ $detaiCoSo = $this->detailCoSo;
     });
 
     $('#btn_quaylai').click(() =>
-      window.location.href = '<?php echo Route::_('/index.php/component/dichvunhaycam/?view=dichvunhaycam&task=default'); ?>'
+      window.location.href = '<?php echo Route::_('/index.php/component/vhytgd/?view=dichvunhaycam&task=default'); ?>'
     );
 
     $('#btn_themnhanvien').click(() => {
@@ -457,7 +457,7 @@ $detaiCoSo = $this->detailCoSo;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
             setTimeout(() => {
-              window.location.href = '/index.php/component/dichvunhaycam/?view=dichvunhaycam&task=default';
+              window.location.href = '/index.php/component/vhytgd/?view=dichvunhaycam&task=default';
             }, 500);
           }
         },
@@ -469,6 +469,7 @@ $detaiCoSo = $this->detailCoSo;
     });
   });
 
+  //Gán người dùng đã chọn vào trong input
   function applyLockState($row, isLocked) {
     $row.find('input[type="text"], textarea').prop('readonly', isLocked);
 
@@ -700,6 +701,11 @@ $detaiCoSo = $this->detailCoSo;
   .select2-container .select2-choice .select2-chosen {
     height: 34px !important;
     padding: 5px 0 0 5px !important;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
 
   .select2-container .select2-selection--single {

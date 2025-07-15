@@ -149,19 +149,19 @@ defined('_JEXEC') or die('Restricted access');
     }
     return items.map((item, index) => `
       <tr>
-        <td class="text-center" style="vertical-align: middle">${start + index}</td>
-        <td style="vertical-align: middle">
+        <td class="text-center align-middle" >${start + index}</td>
+        <td class="align-middle">
           ${item.coso_ten || ''}
         </td>
-        <td style="vertical-align:middle;">${item.coso_diachi || ''}</td>
-        <td style="vertical-align:middle;"><strong>${item.chucoso_ten || ''}</strong> <br>CCCD: ${item.chucoso_cccd || ''} <br>SDT: ${item.chucoso_dienthoai || ''}</td>
-        <td style="vertical-align:middle;">${renderStatus(item.tentrangthaihoatdong)}</td>
-        <td class="text-center" style="vertical-align: middle">
-         <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-idcoso="${item.id}" data-title="Hiệu chỉnh">
+        <td class="align-middle;">${item.coso_diachi || ''}</td>
+        <td class="align-middle;"><strong>${item.chucoso_ten || ''}</strong> <br>CCCD: ${item.chucoso_cccd || ''} <br>SDT: ${item.chucoso_dienthoai || ''}</td>
+        <td class="align-middle;">${renderStatus(item.tentrangthaihoatdong)}</td>
+        <td class="text-center align-middle">
+         <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px;" data-idcoso="${item.id}" data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>
           </span>
           <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;" data-idcoso="${item.id}" data-title="Xóa">
+          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px;" data-idcoso="${item.id}" data-title="Xóa">
             <i class="fas fa-trash-alt"></i>
           </span>
         </td>
@@ -439,6 +439,11 @@ defined('_JEXEC') or die('Restricted access');
   .select2-container .select2-choice .select2-chosen {
     height: 34px !important;
     padding: 5px 0 0 5px !important;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
 
   .select2-container .select2-selection--single {

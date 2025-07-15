@@ -15,7 +15,7 @@ $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugin
 $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/jqvmap/jqvmap.min.css');
 $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/_all-skins.min.css');
 
-// var_dump($this->template);exit;
+$userId = Factory::getUser()->id
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,24 +44,24 @@ $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/c
 
 			<div class="confirm w-100">
 				<!-- Khối chứa 2 nút -->
-				<div id="button-group" class="button-group">
-					<button class="btn-system" id="button-system">
-						Đăng nhập tài khoản hệ thống
-					</button>
-					<button class="btn-egov" href="https://dangnhap.danang.gov.vn/cas/login?service=http://10.49.45.84">
-						Đăng nhập bằng eGov
-					</button>
-				</div>
-
-				<div id="login-system" class="login-box">
-					<div class="right-panel text-center">
-						<jdoc:include type="component" />
+				<?php if (empty($userId)) { ?>
+					<div id="button-group" class="button-group">
+						<button class="btn-system" id="button-system">
+							Đăng nhập tài khoản hệ thống
+						</button>
+						<button class="btn-egov" href="https://dangnhap.danang.gov.vn/cas/login?service=http://10.49.45.84">
+							Đăng nhập bằng eGov
+						</button>
 					</div>
+				<?php } ?>
+
+				<div id="login-system" class="text-center">
+					<jdoc:include type="component" />
 				</div>
 			</div>
 
 			<div class="banner">
-				<button id="openSupportModal" class="openSupportModal" >
+				<button id="openSupportModal" class="openSupportModal">
 					Hỗ trợ kỹ thuật
 				</button>
 			</div>
@@ -101,6 +101,8 @@ $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/c
 		const loginForm = document.getElementById("form-login");
 		const alertBox = document.getElementById("alert");
 		const supportBox = document.getElementById("openSupportModal");
+		const logout = document.getElementById("form_logout");
+
 
 		// Hiển thị form đăng nhập
 		if (btnSystem) {
@@ -109,6 +111,7 @@ $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/c
 				loginForm.style.display = "block";
 				btnBack.style.display = "block";
 				supportBox.style.display = "none";
+				logout.style.display = "none";
 			});
 		}
 
@@ -119,6 +122,7 @@ $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/c
 				btnGroup.style.display = "flex";
 				loginForm.style.display = "none";
 				supportBox.style.display = "block";
+				logout.style.display = "block";
 			});
 		}
 

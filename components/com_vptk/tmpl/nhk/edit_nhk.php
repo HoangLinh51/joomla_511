@@ -133,7 +133,7 @@ $nhankhau = $item['nhankhau'];
                                 <td class="align-middle text-center stt"><?php echo $index + 1; ?></td>
                                 <td class="align-middle quanhe"><?php echo htmlspecialchars($nk['quanhe'] ?? ''); ?></td>
                                 <td class="align-middle hoten" style="cursor: pointer;">
-                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>" style=" color: blue;">
+                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>">
                                         <strong>Họ tên:</strong> <?php echo htmlspecialchars($nk['hoten'] ?? ''); ?>
                                     </a><br>
                                     <strong>Ngày sinh:</strong> <?php echo htmlspecialchars($nk['ngaysinh'] ?? ''); ?><br>
@@ -572,6 +572,11 @@ $nhankhau = $item['nhankhau'];
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     table.tableFixHead {
@@ -1075,7 +1080,7 @@ $nhankhau = $item['nhankhau'];
                 <td class="align-middle text-center stt">${stt}</td>
                 <td class="align-middle quanhe">${quanhe_text}</td>
                 <td class="align-middle hoten">
-                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : stt - 1}" style="color: blue;">
+                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : stt - 1}">
                        <strong> Họ tên </strong>: ${hoten}
                     </a><br>
                     <strong> Ngày sinh: </strong> ${ngaysinh}<br>

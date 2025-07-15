@@ -857,6 +857,11 @@ $detailDknvqs = $this->detailDknvqs;
     height: 38px;
   }
 
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
+  }
+
   .error {
     color: #dc3545;
     font-size: 12px;

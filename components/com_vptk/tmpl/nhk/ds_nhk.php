@@ -14,7 +14,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr class="bg-primary text-white">
+            <tr class="bg-primary">
                 <th style="vertical-align:middle;" class="text-center">STT</th>
                 <th style="vertical-align:middle;" class="text-center">Số hộ khẩu</th>
                 <th style="vertical-align:middle;" class="text-center">Tên chủ hộ</th>
@@ -93,8 +93,8 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                     </li>
                     <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
                         <a class="page-link" href="#" data-page="<?php echo max(1, $currentPage - 1); ?>">
-                            < 
-                        </a>
+                            <
+                                </a>
                     </li>
                     <?php
                     $range = 2;
@@ -434,14 +434,9 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
         min-height: 300px;
     }
 
-    .hoten-link {
-        color: #007bff;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
+    .hoten-link,
     .hoten-link:hover {
-        text-decoration: underline;
+        cursor: pointer;
     }
 
     .pagination-container {

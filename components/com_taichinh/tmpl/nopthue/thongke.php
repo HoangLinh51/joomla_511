@@ -87,9 +87,19 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         height: 34px !important;
     }
 
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
+
     .select2-container .select2-choice .select2-chosen {
         height: 34px !important;
         padding: 5px 0 0 5px !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {

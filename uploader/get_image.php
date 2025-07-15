@@ -3,12 +3,16 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $code = $_GET['code'] ?? null;
-$uri = $_SERVER['REQUEST_URI'];
-$path = parse_url($uri, PHP_URL_PATH); // /uploader/get_image.php/upload/2025/7
+$folder = $_GET['folder'] ?? null;
+
+if(empty($folder) || $folder === null){
+    $uri = $_SERVER['REQUEST_URI'];
+    $part = parse_url($uri, PHP_URL_PATH); // /uploader/get_image.php/upload/2025/7
+    $parts = explode('/uploader/get_image.php/', $part);
+    $folder = isset($parts[1]) ? $parts[1] : null;
+}
 
 // Loại bỏ phần đầu để chỉ còn "upload/2025/7"
-$parts = explode('/uploader/get_image.php/', $path);
-$folder = isset($parts[1]) ? $parts[1] : null;
 
 if (!$code) {
     die("❌ Không có mã code ảnh!");
