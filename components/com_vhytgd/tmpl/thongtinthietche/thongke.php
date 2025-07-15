@@ -13,7 +13,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê ban điều hành tổ dân phố</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê thông tin thiết chế</h3>
                 </div>
             </div>
         </div>
@@ -30,9 +30,30 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 </div>
                 <div class="card-body">
                     <table class="w-100">
+                        
                         <tr>
-                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Phường xã</b></td>
-                            <td style="width:40%;padding:10px">
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Thiết chế</b></td>
+                            <td style="padding:10px">
+                                <select id="thietche_id" name="thietche_id" class="custom-select" data-placeholder="Chọn loại hình thiết chế">
+                                    <option value=""></option>
+                                    <?php foreach ($this->loaihinhthietche as $nk) { ?>
+                                        <option value="<?php echo $nk['id']; ?>"><?php echo $nk['tenloaihinhthietche']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Trạng thái</b></td>
+                            <td style="padding:10px">
+                                <select id="trangthai_id" name="trangthai_id" class="custom-select" data-placeholder="Chọn trạng thái">
+                                    <option value=""></option>
+                                    <option value="1">Đang xây dựng</option>
+                                    <option value="2">Đang sửa chữa</option>
+                                    <option value="3">Đang sử dụng</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:10%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Phường xã</b></td>
+                            <td  style="width:40%;padding:10px">
                                 <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn phường xã">
                                     <option value=""></option>
                                     <?php foreach ($this->phuongxa as $px) { ?>
@@ -40,32 +61,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                                     <?php } ?>
                                 </select>
                             </td>
-                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Thôn tổ</b></td>
-                            <td style="width:45%;">
-                                <select id="thonto_id" name="thonto_id" class="custom-select" data-placeholder="Chọn thôn/tổ" multiple>
-                                    <option value=""></option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Nhiệm kỳ</b></td>
-                            <td style="padding:10px">
-                                <select id="nhiemky_id" name="nhiemky_id" class="custom-select" data-placeholder="Chọn nhiệm kỳ">
-                                    <option value=""></option>
-                                    <?php foreach ($this->nhiemky as $nk) { ?>
-                                        <option value="<?php echo $nk['id']; ?>"><?php echo $nk['tennhiemky']; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </td>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Chức danh</b></td>
-                            <td style="">
-                                <select id="chucdanh_id" name="chucdanh_id" class="custom-select" data-placeholder="Chọn chức danh">
-                                    <option value=""></option>
-                                    <?php foreach ($this->chucdanh as $cdkn) { ?>
-                                        <option value="<?php echo $cdkn['id']; ?>"><?php echo $cdkn['tenchucdanh']; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </td>
+                            
                         </tr>
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
@@ -148,7 +144,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         });
 
         // Khởi tạo Select2
-        $('#phuongxa_id, #thonto_id, #nhiemky_id, #chucdanh_id').select2({
+        $('#phuongxa_id, #thonto_id, #trangthai_id, #thietche_id').select2({
             width: '100%',
             allowClear: true,
             placeholder: function() {
@@ -180,10 +176,8 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
         function loadDanhSach(start = 0) {
             const phuongxaId = $('#phuongxa_id').val();
-            const nhiemkyID = $('#nhiemky_id').val();
-            const chucdanhID = $('#chucdanh_id').val();
-            const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
-            const thontoValue = Array.isArray(thontoIds) ? thontoIds.join(',') : '';
+           
+          
 
             // Kiểm tra xem phường xã đã được chọn hay chưa
             if (!phuongxaId) {
@@ -193,13 +187,14 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_vptk',
-                view: 'bdh',
+                option: 'com_vhytgd',
+                view: 'thongtinthietche',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
-                thonto_id: thontoValue,
-                nhiemky_id: nhiemkyID,
+                thietche_id: $('#thietche_id').val(),
+                trangthai_id: $('#trangthai_id').val(),
+
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);

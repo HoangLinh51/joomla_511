@@ -3,17 +3,26 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 
 
 $idUser = Factory::getApplication()->getIdentity()->id;
 ?>
-
+<meta>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/jquery/jquery.toast.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+</meta>
 <form action="index.php" method="post" id="frmThongKeNHK" name="frmThongKeNHK" class="form-horizontal" style="font-size:16px;">
     <div class="container-fluid" style="padding-left:20px; padding-right:20px;">
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê ban điều hành tổ dân phố</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê gia đình văn hóa</h3>
                 </div>
             </div>
         </div>
@@ -48,28 +57,15 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                             </td>
                         </tr>
                         <tr>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Nhiệm kỳ</b></td>
-                            <td style="padding:10px">
-                                <select id="nhiemky_id" name="nhiemky_id" class="custom-select" data-placeholder="Chọn nhiệm kỳ">
-                                    <option value=""></option>
-                                    <?php foreach ($this->nhiemky as $nk) { ?>
-                                        <option value="<?php echo $nk['id']; ?>"><?php echo $nk['tennhiemky']; ?></option>
-                                    <?php } ?>
-                                </select>
+                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:17px;line-height:2.5">Năm</b></td>
+                            <td colspan="4" style="width:95%;">
+                                <input type="text" name="nam" id="nam" class="form-control yearpicker" style="font-size:16px;margin-left:10px;width:99.5%" placeholder="Chọn năm" />
                             </td>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Chức danh</b></td>
-                            <td style="">
-                                <select id="chucdanh_id" name="chucdanh_id" class="custom-select" data-placeholder="Chọn chức danh">
-                                    <option value=""></option>
-                                    <?php foreach ($this->chucdanh as $cdkn) { ?>
-                                        <option value="<?php echo $cdkn['id']; ?>"><?php echo $cdkn['tenchucdanh']; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </td>
+
                         </tr>
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
-                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Thống kê</button>
                             </td>
                         </tr>
                     </table>
@@ -146,7 +142,13 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 $(this).find('[data-card-widget="collapse"]').trigger('click');
             }
         });
-
+        $('.yearpicker').datepicker({
+            format: 'yyyy',
+            viewMode: 'years',
+            minViewMode: 'years',
+            language: 'vi',
+            autoclose: true
+        });
         // Khởi tạo Select2
         $('#phuongxa_id, #thonto_id, #nhiemky_id, #chucdanh_id').select2({
             width: '100%',
@@ -180,8 +182,8 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
         function loadDanhSach(start = 0) {
             const phuongxaId = $('#phuongxa_id').val();
-            const nhiemkyID = $('#nhiemky_id').val();
-            const chucdanhID = $('#chucdanh_id').val();
+            var namFrom = $('#nam').val() ? parseInt($('#nam').val()) : null;
+
             const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
             const thontoValue = Array.isArray(thontoIds) ? thontoIds.join(',') : '';
 
@@ -193,13 +195,13 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_vptk',
-                view: 'bdh',
+                option: 'com_vhytgd',
+                view: 'giadinhvanhoa',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
                 thonto_id: thontoValue,
-                nhiemky_id: nhiemkyID,
+                nam: namFrom,
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);

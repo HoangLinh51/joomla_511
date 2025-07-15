@@ -383,7 +383,7 @@ class Taichinh_Model_Nopthue extends JModelLegacy
         $query = $db->getQuery(true);
         $phanquyen = $this->getPhanquyen();
 
-       $query->select('a.thonto_id,dh.tenduong_id,dh.mucdichsudung_id, a.id, dh.dientich_gcn,dh.tinhtrang, dh.ghichu, dh.sotienmiengiam,dh.tongtiennop, dh.dientich_ccn,md.tenmucdich, dh.dientich_sd, dh.sogcn,dh.tobando, dh.thuadat, DATE_FORMAT(dh.ngaycn, "%d/%m/%Y") AS ngaycn, a.nhanhokhau_id,a.masothue,dh.maphinongnghiep, dh.diachi, a.n_diachi,  td.tenduong, dh.id as chitiet_id');
+        $query->select('a.thonto_id,dh.tenduong_id,dh.mucdichsudung_id, a.id, dh.dientich_gcn,dh.tinhtrang, dh.ghichu, dh.sotienmiengiam,dh.tongtiennop, dh.dientich_ccn,md.tenmucdich, dh.dientich_sd, dh.sogcn,dh.tobando, dh.thuadat, DATE_FORMAT(dh.ngaycn, "%d/%m/%Y") AS ngaycn, a.nhanhokhau_id,a.masothue,dh.maphinongnghiep, dh.diachi, a.n_diachi,  td.tenduong, dh.id as chitiet_id');
         $query->from('tckt_nopthuedat as a');
         $query->leftJoin('tckt_chitietnopthue as dh on dh.nopthuedat_id = a.id');
         $query->leftJoin('danhmuc_mucdichsudung AS md ON dh.mucdichsudung_id = md.id');
@@ -400,7 +400,7 @@ class Taichinh_Model_Nopthue extends JModelLegacy
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
-       $query->select('a.thonto_id,dh.tenduong_id,dh.mucdichsudung_id, a.id, dh.dientich_gcn,dh.tinhtrang, dh.ghichu, dh.sotienmiengiam,dh.tongtiennop, dh.dientich_ccn,md.tenmucdich, dh.dientich_sd, dh.sogcn,dh.tobando, dh.thuadat, DATE_FORMAT(dh.ngaycn, "%d/%m/%Y") AS ngaycn, a.nhanhokhau_id,a.masothue,dh.maphinongnghiep, dh.diachi, a.n_diachi,  td.tenduong, dh.id as chitiet_id');
+        $query->select('a.thonto_id,dh.tenduong_id,dh.mucdichsudung_id, a.id, dh.dientich_gcn,dh.tinhtrang, dh.ghichu, dh.sotienmiengiam,dh.tongtiennop, dh.dientich_ccn,md.tenmucdich, dh.dientich_sd, dh.sogcn,dh.tobando, dh.thuadat, DATE_FORMAT(dh.ngaycn, "%d/%m/%Y") AS ngaycn, a.nhanhokhau_id,a.masothue,dh.maphinongnghiep, dh.diachi, a.n_diachi,  td.tenduong, dh.id as chitiet_id');
         $query->from('tckt_nopthuedat as a');
         $query->innerJoin('tckt_chitietnopthue as dh on dh.nopthuedat_id = a.id');
         $query->leftJoin('danhmuc_khuvuc AS g ON a.thonto_id = g.id');
@@ -444,7 +444,7 @@ class Taichinh_Model_Nopthue extends JModelLegacy
         $db->setQuery($query);
         return $db->execute();
     }
-   public function checkNopThue($nhankhau_id, $table)
+    public function checkNopThue($nhankhau_id, $table)
     {
         // Get database object
         $db = Factory::getDbo();
@@ -465,5 +465,83 @@ class Taichinh_Model_Nopthue extends JModelLegacy
         } catch (Exception $e) {
             throw new Exception('Lỗi truy vấn cơ sở dữ liệu: ' . $e->getMessage());
         }
+    }
+    public function getThongKeNopThue($params = array())
+    {
+        $db = Factory::getDbo();
+
+        // Subquery
+        $query_left = $db->getQuery(true);
+        $query_left->select([
+            'h.phuongxa_id',
+            'px.tenkhuvuc AS phuongxa',
+            'h.thonto_id',
+            'f.tenkhuvuc AS thonto',
+            'COUNT(b.id) AS tong',
+            'SUM(b.tongtiennop) AS tongtiennop' // Thêm tổng số tiền nộp
+        ]);
+        $query_left->from('tckt_nopthuedat AS a')
+            ->innerJoin('tckt_chitietnopthue AS b ON a.id = b.nopthuedat_id')
+            ->innerJoin('vptk_hokhau2nhankhau AS d ON a.nhanhokhau_id = d.id')
+            ->innerJoin('vptk_hokhau AS h ON d.hokhau_id = h.id')
+            ->innerJoin('danhmuc_khuvuc AS f ON h.thonto_id = f.id')
+            ->innerJoin('danhmuc_khuvuc AS px ON h.phuongxa_id = px.id')
+            ->where('a.daxoa = 0 AND b.daxoa = 0');
+
+        // Điều kiện WHERE cho subquery
+        if (!empty($params['phuongxa_id'])) {
+            $query_left->where($db->quoteName('a.phuongxa_id') . ' = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query_left->where($db->quoteName('a.thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+        if (!empty($params['duong_id'])) {
+            $query_left->where('b.duong_id = ' . $db->quote($params['duong_id']));
+        }
+
+        if (!empty($params['nam'])) {
+            $query_left->where('b.nam = ' . $db->quote($params['nam']));
+        }
+
+        // Phân quyền
+        
+
+        $query_left->group(['h.phuongxa_id', 'h.thonto_id']);
+
+        // Query chính
+        $query = $db->getQuery(true);
+        $query->select([
+            'a.id',
+            'a.cha_id',
+            'a.tenkhuvuc',
+            'a.level',
+            'IFNULL(SUM(ab.tong), 0) AS tong',
+            'IFNULL(SUM(ab.tongtiennop), 0) AS tongtiennop', // Thêm tổng số tiền nộp
+            'CONCAT(FORMAT(IFNULL(SUM(ab.tongtiennop), 0), 0)) AS tongtiennop_formatted' // Định dạng số tiền
+        ])
+            ->from('danhmuc_khuvuc AS a')
+            ->leftJoin('(' . $query_left . ') AS ab ON (a.id = ab.thonto_id OR a.id = ab.phuongxa_id)');
+
+        // Điều kiện cho query chính
+        if (!empty($params['phuongxa_id'])) {
+            $query->where($db->quoteName('a.id') . ' = ' . $db->quote($params['phuongxa_id']) . ' OR ' . $db->quoteName('a.cha_id') . ' = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query->where($db->quoteName('a.id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+        $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level']);
+        $query->order('a.level, a.id ASC');
+        // echo $query;
+        $db->setQuery($query);
+        $results = $db->loadAssocList();
+
+        // Format lại số tiền nếu muốn xử lý thêm trong PHP
+        foreach ($results as &$result) {
+            $result['tongtiennop_formatted_php'] = number_format($result['tongtiennop'], 0, ',', '.') . ' VNĐ';
+        }
+
+        return $results;
     }
 }

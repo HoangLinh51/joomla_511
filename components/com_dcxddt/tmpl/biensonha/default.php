@@ -100,7 +100,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         </tr>
 
                         <tr>
-                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Tuyến đường</b></td>
+                            <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Đường</b></td>
 
                             <td style="width: 40%; padding: 10px;">
                                 <select id="tenduong" name="tenduong" class="custom-select" data-placeholder="Chọn tuyến đường">

@@ -10,7 +10,6 @@ $totalPages = $totalRecords > 0 ? ceil($totalRecords / $perPage) : 0;
 $currentPage = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('start', 0) / $perPage + 1) : 0;
 $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('start', 0) + 1) : 0;
 $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa = 0 AND is_loai = 2');
-
 ?>
 
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>

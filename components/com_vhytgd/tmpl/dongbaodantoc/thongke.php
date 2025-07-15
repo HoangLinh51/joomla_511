@@ -13,7 +13,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê nhân hộ khẩu</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê đồng bào dân tộc</h3>
                 </div>
             </div>
         </div>
@@ -48,8 +48,20 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                             </td>
                         </tr>
                         <tr>
+                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Chính sách</b></td>
+                            <td colspan="4" style="width:95%;">
+                                <select id="chinhsach_id" name="chinhsach_id" class="custom-select" data-placeholder="Chọn chính sách">
+                                    <option value=""></option>
+                                    <?php foreach ($this->chinhsach as $cs) { ?>
+                                        <option value="<?php echo $cs['id']; ?>"><?php echo $cs['tenchinhsach']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                          
+                        </tr>
+                        <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
-                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Thống kê</button>
                             </td>
                         </tr>
                     </table>
@@ -128,7 +140,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         });
 
         // Khởi tạo Select2
-        $('#phuongxa_id, #thonto_id').select2({
+        $('#phuongxa_id, #thonto_id, #chinhsach_id').select2({
             width: '100%',
             allowClear: true,
             placeholder: function() {
@@ -160,6 +172,8 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
         function loadDanhSach(start = 0) {
             const phuongxaId = $('#phuongxa_id').val();
+            const chinhsachId = $('#chinhsach_id').val();
+
             const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
             const thontoValue = Array.isArray(thontoIds) ? thontoIds.join(',') : '';
             if (!phuongxaId) {
@@ -169,11 +183,12 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_vptk',
-                view: 'nhk',
+                option: 'com_vhytgd',
+                view: 'dongbaodantoc',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
+                chinhsach_id: chinhsachId,
                 thonto_id: thontoValue,
                 start: start
             }, function(response, status, xhr) {

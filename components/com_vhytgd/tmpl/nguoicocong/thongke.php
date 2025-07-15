@@ -13,7 +13,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê nhân hộ khẩu</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê người có công</h3>
                 </div>
             </div>
         </div>
@@ -44,6 +44,25 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                             <td style="width:45%;">
                                 <select id="thonto_id" name="thonto_id" class="custom-select" data-placeholder="Chọn thôn/tổ" multiple>
                                     <option value=""></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Đối tượng</b></td>
+                            <td style="width:45%;">
+                                <select id="doituong_id" name="doituong_id" class="custom-select" data-placeholder="Chọn đối tượng">
+                                    <option value=""></option>
+                                    <?php foreach ($this->doituong as $dt) { ?>
+                                        <option value="<?php echo $dt['id']; ?>"><?php echo $dt['ten']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Hình thức</b></td>
+                            <td style="width:45%;">
+                                <select id="hinhthuc_id" name="hinhthuc_id" class="custom-select" data-placeholder="Chọn hình thức">
+                                    <option value=""></option>
+                                    <option value="1">Hàng tháng</option>
+                                    <option value="2">Một lần</option>
                                 </select>
                             </td>
                         </tr>
@@ -81,6 +100,23 @@ $idUser = Factory::getApplication()->getIdentity()->id;
     .form-select {
         height: 38px;
         font-size: 16px;
+    }
+
+    .select2-container {
+        min-width: 200px !important;
+        /* Điều chỉnh giá trị theo nhu cầu */
+        /* max-width: 100% !important; */
+    }
+
+    /* Giới hạn chiều rộng cho dropdown */
+    .select2-dropdown {
+        min-width: 200px !important;
+        /* Có thể điều chỉnh khác với container */
+    }
+
+    /* Đảm bảo các select trong bảng không vượt quá kích thước ô */
+    table.w-100 select.custom-select {
+        width: 100% !important;
     }
 
     .select2-container .select2-choice {
@@ -128,13 +164,26 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         });
 
         // Khởi tạo Select2
-        $('#phuongxa_id, #thonto_id').select2({
+        $('#phuongxa_id, #thonto_id, #doituong_id, #hinhthuc_id').select2({
             width: '100%',
             allowClear: true,
             placeholder: function() {
                 return $(this).data('placeholder');
             }
         });
+        $('.custom-select').select2({
+            width: '100%', // Sử dụng 100% chiều rộng của container
+            dropdownAutoWidth: true, // Tự động điều chỉnh chiều rộng dropdown
+            minimumResultsForSearch: 10 // Chỉ hiển thị ô tìm kiếm khi có nhiều kết quả
+        });
+
+        // Tùy chỉnh riêng cho select multiple (thôn tổ)
+        // $('#thonto_id').select2({
+        //     width: '100%',
+        //     dropdownAutoWidth: true,
+        //     placeholder: "Chọn thôn/tổ",
+        //     allowClear: true
+        // });
 
         // Xử lý sự kiện change cho phuongxa_id
         $('#phuongxa_id').on('change', function() {
@@ -169,12 +218,14 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_vptk',
-                view: 'nhk',
+                option: 'com_vhytgd',
+                view: 'nguoicocong',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
                 thonto_id: thontoValue,
+                doituong_id: $('#doituong_id').val() || '',
+                hinhthuc_id: $('#hinhthuc_id').val() || '',
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);

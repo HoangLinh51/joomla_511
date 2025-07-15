@@ -87,13 +87,17 @@ class RawView extends BaseHtmlView
     }
     private function _pageThongke()
     {
-        $model = Core::model('Vptk/Bdh');
+        $model = Core::model('Vhytgd/Doituonghuongcs');
         $app = Factory::getApplication()->input;
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', 0),
-            'thonto_id' => $app->getInt('thonto_id', ''),
-            'hoten' => $app->getString('hoten', 0),
-            'cccd' => $app->getString('cccd', 0),
+            'thonto_id' => $app->getString('thonto_id', ''),
+            'nam_from' => $app->getString('nam_from', 0),
+            'nam_to' => $app->getString('nam_to', 0),
+            'thang_from' => $app->getString('thang_from', 0),
+            'thang_to' => $app->getString('thang_to', 0),
+            'loaidoituong_id' => $app->getInt('loaidoituong_id', ''),
+
 
         ];
         if (!empty($params['thonto_id'])) {
@@ -101,72 +105,71 @@ class RawView extends BaseHtmlView
         } else {
             $params['thonto_id'] = [];
         }
-        $items = $model->getThongKeBanDieuHanh($params);
+        $items = $model->getThongKeDoituonghuongcs($params);
         // var_dump($items);exit;
 
         $this->items = $items;
         parent::display();
     }
     private function _pageDetailDOITUONGCS()
-{
-    $app = Factory::getApplication()->input;
-    $doituong_id = $app->getInt('doituong_id', 0);
-    $model = Core::model('Vhytgd/Doituonghuongcs');
+    {
+        $app = Factory::getApplication()->input;
+        $doituong_id = $app->getInt('doituong_id', 0);
+        $model = Core::model('Vhytgd/Doituonghuongcs');
 
-    $details = $model->getDetailDOITUONGCS($doituong_id);
+        $details = $model->getDetailDOITUONGCS($doituong_id);
 
-    if (!is_array($details) || empty($details)) {
-        echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
-        Factory::getApplication()->close();
-        return;
-    }
+        if (!is_array($details) || empty($details)) {
+            echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
+            Factory::getApplication()->close();
+            return;
+        }
 
-    echo '<div class="detail-container" style="font-size:15px">';
+        echo '<div class="detail-container" style="font-size:15px">';
 
-    // Hiển thị tên và mã đối tượng
-    echo '<div style="width: 100%; padding-left: 10px;">';
-    echo '<strong>Tên: </strong>' . htmlspecialchars($details[0]['n_hoten']) . '<br>';
-    echo '<strong>Mã đối tượng: </strong>' . htmlspecialchars($details[0]['madoituong']);
-    echo '</div>';
+        // Hiển thị tên và mã đối tượng
+        echo '<div style="width: 100%; padding-left: 10px;">';
+        echo '<strong>Tên: </strong>' . htmlspecialchars($details[0]['n_hoten']) . '<br>';
+        echo '<strong>Mã đối tượng: </strong>' . htmlspecialchars($details[0]['madoituong']);
+        echo '</div>';
 
-    // Thông tin chi tiết bên phải (bảng)
-    echo '<div class="detail-content" style="width: 100%; padding-left: 10px;">';
-    echo '<table class="table table-bordered">';
+        // Thông tin chi tiết bên phải (bảng)
+        echo '<div class="detail-content" style="width: 100%; padding-left: 10px;">';
+        echo '<table class="table table-bordered">';
 
-    echo '<thead>';
-    echo '<tr>';
-    echo '<th>Mã hỗ trợ</th>';
-    echo '<th>Biến động</th>';
-    echo '<th>Loại đối tượng</th>';
-    echo '<th>Mức được hưởng</th>'; // Cột Mức được hưởng
-    echo '<th>Quyết định</th>';
-    echo '<th>Hưởng từ ngày</th>';
-    echo '<th>Trạng thái</th>';
-    echo '</tr>';
-    echo '</thead>';
-    echo '<tbody>';
-
-    foreach ($details as $detail) {
-        // Tính toán số tiền
-        $sotien = $detail['muctieuchuan'] * $detail['heso'];
-
+        echo '<thead>';
         echo '<tr>';
-        echo '<td>' . htmlspecialchars($detail['maht']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['tenbiendong']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['tenloaidoituong']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['muctieuchuan']) . ' * ' . htmlspecialchars($detail['heso']) . ' = ' . htmlspecialchars($sotien) . '</td>'; // Hiển thị rõ ràng
-        echo '<td>' . 'Số quyết định: ' . htmlspecialchars($detail['soqdhuong']) . '<br>Hưởng từ ngày: ' . htmlspecialchars($detail['tungay']) . '</td>'; // Hiển thị quyết định
-        echo '<td>' . htmlspecialchars($detail['tungay']) . '</td>';
-        echo '<td>' . htmlspecialchars($detail['tentrangthai']) . '</td>';
+        echo '<th>Mã hỗ trợ</th>';
+        echo '<th>Biến động</th>';
+        echo '<th>Loại đối tượng</th>';
+        echo '<th>Mức được hưởng</th>'; // Cột Mức được hưởng
+        echo '<th>Quyết định</th>';
+        echo '<th>Hưởng từ ngày</th>';
+        echo '<th>Trạng thái</th>';
         echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+
+        foreach ($details as $detail) {
+            // Tính toán số tiền
+            $sotien = $detail['muctieuchuan'] * $detail['heso'];
+
+            echo '<tr>';
+            echo '<td>' . htmlspecialchars($detail['maht']) . '</td>';
+            echo '<td>' . htmlspecialchars($detail['tenbiendong']) . '</td>';
+            echo '<td>' . htmlspecialchars($detail['tenloaidoituong']) . '</td>';
+            echo '<td>' . htmlspecialchars($detail['muctieuchuan']) . ' * ' . htmlspecialchars($detail['heso']) . ' = ' . htmlspecialchars($sotien) . '</td>'; // Hiển thị rõ ràng
+            echo '<td>' . 'Số quyết định: ' . htmlspecialchars($detail['soqdhuong']) . '<br>Hưởng từ ngày: ' . htmlspecialchars($detail['tungay']) . '</td>'; // Hiển thị quyết định
+            echo '<td>' . htmlspecialchars($detail['tungay']) . '</td>';
+            echo '<td>' . htmlspecialchars($detail['tentrangthai']) . '</td>';
+            echo '</tr>';
+        }
+
+        echo '</tbody>';
+        echo '</table>';
+        echo '</div>'; // Kết thúc detail-content
+        echo '</div>'; // Kết thúc detail-container
+
+        Factory::getApplication()->close();
     }
-
-    echo '</tbody>';
-    echo '</table>';
-    echo '</div>'; // Kết thúc detail-content
-    echo '</div>'; // Kết thúc detail-container
-
-    Factory::getApplication()->close();
-}
-
 }

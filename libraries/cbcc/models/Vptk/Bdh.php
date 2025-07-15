@@ -575,6 +575,8 @@ class Vptk_Model_Bdh extends JModelLegacy
         $query_left->innerJoin($db->quoteName('danhmuc_khuvuc', 'c') . ' ON a.thonto_id = c.id');
         $query_left->innerJoin($db->quoteName('danhmuc_khuvuc', 'd') . ' ON a.phuongxa_id = d.id');
         $query_left->group($db->quoteName('a.thonto_id'));
+        $query_left->where('a.daxoa = 0 AND b.daxoa = 0');
+
         // Điều kiện lọc
         if (!empty($params['phuongxa_id'])) {
             $query_left->where($db->quoteName('a.phuongxa_id') . ' = ' . $db->quote($params['phuongxa_id']));

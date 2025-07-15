@@ -39,63 +39,63 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             return $result;
         }
     }
-  public function getDanhSachNhanKhau($phuongxa = [], $keyword = '', $limit = 10, $offset = 0, $nhankhau_id = 0)
-{
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-        ->select([
-            'nk.id',
-            'nk.hoten',
-            'nk.cccd_so',
-            'DATE_FORMAT(nk.ngaysinh, "%d/%m/%Y") AS ngaysinh',
-            'nk.dienthoai',
-            'hk.diachi',
-            'nk.gioitinh_id',
-            'nk.dantoc_id',
-            'nk.tongiao_id',
-            'hk.phuongxa_id',
-            'hk.thonto_id',
-            'hk.diachi',
-        ])
-        ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
-        ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
-        ->leftJoin($db->quoteName('vhxhytgd_nguoicocong', 'ncc') . ' ON nk.id = ncc.nhankhau_id')
-        ->where('nk.daxoa = 0')
-        ->where('hk.daxoa = 0')
-        ->where('ncc.nhankhau_id IS NULL'); // Chỉ lấy người KHÔNG có trong bảng nguoicocong
+    public function getDanhSachNhanKhau($phuongxa = [], $keyword = '', $limit = 10, $offset = 0, $nhankhau_id = 0)
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true)
+            ->select([
+                'nk.id',
+                'nk.hoten',
+                'nk.cccd_so',
+                'DATE_FORMAT(nk.ngaysinh, "%d/%m/%Y") AS ngaysinh',
+                'nk.dienthoai',
+                'hk.diachi',
+                'nk.gioitinh_id',
+                'nk.dantoc_id',
+                'nk.tongiao_id',
+                'hk.phuongxa_id',
+                'hk.thonto_id',
+                'hk.diachi',
+            ])
+            ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
+            ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
+            ->leftJoin($db->quoteName('vhxhytgd_nguoicocong', 'ncc') . ' ON nk.id = ncc.nhankhau_id')
+            ->where('nk.daxoa = 0')
+            ->where('hk.daxoa = 0')
+            ->where('ncc.nhankhau_id IS NULL'); // Chỉ lấy người KHÔNG có trong bảng nguoicocong
 
-    if ($nhankhau_id > 0) {
-        $query->where('nk.id = ' . (int)$nhankhau_id);
-    } else {
-        if (!empty($keyword)) {
-            $search = $db->quote('%' . $db->escape($keyword, true) . '%');
-            // Thêm điều kiện tìm kiếm vào một nhóm riêng để đảm bảo logic đúng
-            $query->where("(nk.hoten LIKE $search OR nk.cccd_so LIKE $search)");
+        if ($nhankhau_id > 0) {
+            $query->where('nk.id = ' . (int)$nhankhau_id);
+        } else {
+            if (!empty($keyword)) {
+                $search = $db->quote('%' . $db->escape($keyword, true) . '%');
+                // Thêm điều kiện tìm kiếm vào một nhóm riêng để đảm bảo logic đúng
+                $query->where("(nk.hoten LIKE $search OR nk.cccd_so LIKE $search)");
+            }
+            if (!empty($phuongxa) && is_array($phuongxa)) {
+                $phuongxa = array_map('intval', $phuongxa);
+                $query->where('hk.phuongxa_id IS NOT NULL AND hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
+            }
         }
-        if (!empty($phuongxa) && is_array($phuongxa)) {
-            $phuongxa = array_map('intval', $phuongxa);
-            $query->where('hk.phuongxa_id IS NOT NULL AND hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
-        }
+        $query->order('nk.hokhau_id DESC');
+
+        // Clone query để đếm tổng số
+        $countQuery = clone $query;
+        $countQuery->clear('select')->select('COUNT(*)');
+
+        $db->setQuery($countQuery);
+        $total = (int) $db->loadResult();
+
+        // Lấy dữ liệu trang hiện tại
+        $query->setLimit($limit, $offset);
+        $db->setQuery($query);
+        $items = $db->loadObjectList();
+
+        return [
+            'items' => $items,
+            'has_more' => ($offset + count($items)) < $total
+        ];
     }
-    $query->order('nk.hokhau_id DESC');
-
-    // Clone query để đếm tổng số
-    $countQuery = clone $query;
-    $countQuery->clear('select')->select('COUNT(*)');
-
-    $db->setQuery($countQuery);
-    $total = (int) $db->loadResult();
-
-    // Lấy dữ liệu trang hiện tại
-    $query->setLimit($limit, $offset);
-    $db->setQuery($query);
-    $items = $db->loadObjectList();
-
-    return [
-        'items' => $items,
-        'has_more' => ($offset + count($items)) < $total
-    ];
-}
 
     public function saveNguoicocong($formData)
     {
@@ -718,5 +718,58 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
         }
 
         return $result;
+    }
+    public function getThongKeNguoicocong($params = array())
+    {
+        $db = Factory::getDbo();
+
+        // Subquery
+        $query_left = $db->getQuery(true);
+        $query_left->select('a.phuongxa_id, d.tenkhuvuc AS phuongxa, a.thonto_id, c.tenkhuvuc AS thonto, 
+                         COUNT(DISTINCT a.nhankhau_id) AS tong_nhankhau,COUNT(  a.trangthaich_id) as catgiam, b.trocap');
+        $query_left->from('vhxhytgd_nguoicocong AS a');
+        $query_left->leftJoin('vhxhytgd_huongncc2doituong AS b ON a.id = b.nguoicocong_id');
+        $query_left->leftJoin('vhxhytgd_uudai2nguoicocong AS e ON b.id = e.huongncc_id');
+        $query_left->innerJoin('danhmuc_khuvuc AS c ON a.thonto_id = c.id');
+        $query_left->innerJoin('danhmuc_khuvuc AS d ON a.phuongxa_id = d.id');
+        $query_left->where('a.daxoa = 0 AND b.daxoa = 0');
+        // Điều kiện WHERE cho subquery
+        if (!empty($params['phuongxa_id'])) {
+            $query_left->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        }
+
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query_left->where($db->quoteName('a.thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+        if (!empty($params['hinhthuc_id'])) {
+            $query_left->where('b.is_hinhthuc = ' . $db->quote($params['hinhthuc_id']));
+        }
+
+        if (!empty($params['doituong_id'])) {
+            $query_left->where('b.dmnguoicocong_id = ' . $db->quote($params['doituong_id']));
+        }
+        // Query chính
+        $query = $db->getQuery(true);
+        $query->select(['a.id,a.cha_id,a.tenkhuvuc,a.level, SUM(ab.tong_nhankhau) as tong_nhankhau,SUM( ab.catgiam ) AS catgiam, ab.trocap'])
+            ->from('danhmuc_khuvuc AS a')
+            ->leftJoin('(' . $query_left . ') AS ab ON (a.id = ab.thonto_id OR a.id = ab.phuongxa_id)');
+
+        // Điều kiện cho query chính
+        if (!empty($params['phuongxa_id'])) {
+            $query->where($db->quoteName('a.id') . ' = ' . $db->quote($params['phuongxa_id']) . ' OR ' . $db->quoteName('a.cha_id') . ' = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query->where($db->quoteName('a.id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+        $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level']);
+        $query->order('a.level, a.id ASC');
+        // echo $query;
+        $db->setQuery($query);
+        $results = $db->loadAssocList();
+
+
+
+        return $results;
     }
 }

@@ -147,106 +147,106 @@ class Vhytgd_Model_Thietche extends JModelLegacy
         }
 
         // Lưu thông tin hoạt động
-     // Lưu thông tin hoạt động
-if (!empty($formData['noidung_hoatdong']) && is_array($formData['noidung_hoatdong'])) {
-    foreach ($formData['noidung_hoatdong'] as $groupKey => $hoatDongsTrongNhom) {
-        // Kiểm tra năm
-        if (!isset($formData['nam_hoatdong'][$groupKey]) || empty($formData['nam_hoatdong'][$groupKey])) {
-            throw new Exception("Năm hoạt động cho nhóm $groupKey không được cung cấp hoặc không hợp lệ.");
-        }
-
-        foreach ($hoatDongsTrongNhom as $subIndex => $noidung) {
-            $tungay = $formData['tungay_hoatdong'][$groupKey][$subIndex] ?? null;
-            $denngay = $formData['denngay_hoatdong'][$groupKey][$subIndex] ?? null;
-
-            $tungay_sql = null;
-            if ($tungay) {
-                $dateObj = DateTime::createFromFormat('d/m/Y', $tungay);
-                if ($dateObj) {
-                    $tungay_sql = $dateObj->format('Y-m-d');
-                } else {
-                    throw new Exception("Định dạng ngày từ không hợp lệ: $tungay");
+        // Lưu thông tin hoạt động
+        if (!empty($formData['noidung_hoatdong']) && is_array($formData['noidung_hoatdong'])) {
+            foreach ($formData['noidung_hoatdong'] as $groupKey => $hoatDongsTrongNhom) {
+                // Kiểm tra năm
+                if (!isset($formData['nam_hoatdong'][$groupKey]) || empty($formData['nam_hoatdong'][$groupKey])) {
+                    throw new Exception("Năm hoạt động cho nhóm $groupKey không được cung cấp hoặc không hợp lệ.");
                 }
-            }
 
-            $denngay_sql = null;
-            if ($denngay) {
-                $dateObj = DateTime::createFromFormat('d/m/Y', $denngay);
-                if ($dateObj) {
-                    $denngay_sql = $dateObj->format('Y-m-d');
-                } else {
-                    throw new Exception("Định dạng ngày đến không hợp lệ: $denngay");
-                }
-            }
+                foreach ($hoatDongsTrongNhom as $subIndex => $noidung) {
+                    $tungay = $formData['tungay_hoatdong'][$groupKey][$subIndex] ?? null;
+                    $denngay = $formData['denngay_hoatdong'][$groupKey][$subIndex] ?? null;
 
-            $data_hoatdong = [
-                'id' => $formData['hoatdong_id'][$groupKey][$subIndex] ?? 0,
-                'thietche_id' => $thietche_id,
-                'nam' => $formData['nam_hoatdong'][$groupKey] ?? null,
-                'noidunghoatdong' => htmlentities($noidung, ENT_COMPAT, 'utf-8'),
-                'thoigianhoatdong_tungay' => $tungay_sql,
-                'thoigianhoatdong_denngay' => $denngay_sql,
-                'nguonkinhphi_id' => $formData['nguonkinhphi'][$groupKey][$subIndex] ?? 0,
-                'kinhphi' => $formData['kinhphi'][$groupKey][$subIndex] ?? null,
-                'ghichu' => htmlentities($formData['ghichu_hoatdong'][$groupKey][$subIndex] ?? '', ENT_COMPAT, 'utf-8'),
-                'is_cha' => $formData['is_cha'][$groupKey][$subIndex] ?? 0,
-                'daxoa' => '0',
-            ];
-
-            // Debug dữ liệu
-            echo "<pre>Dữ liệu hoạt động (groupKey=$groupKey, subIndex=$subIndex): ";
-            var_dump($data_hoatdong);
-            echo "</pre>";
-
-            if ((int)$data_hoatdong['id'] == 0) {
-                $data_hoatdong['nguoitao_id'] = $user_id;
-                $data_hoatdong['ngaytao'] = 'NOW()';
-            } else {
-                $data_hoatdong['nguoihieuchinh_id'] = $user_id;
-                $data_hoatdong['ngayhieuchinh'] = 'NOW()';
-            }
-
-            $data_hoatdong_insert_key = [];
-            $data_hoatdong_insert_val = [];
-            $data_hoatdong_update = [];
-
-            foreach ($data_hoatdong as $key => $value) {
-                if ($value === null) {
-                    $data_hoatdong_update[] = $db->quoteName($key) . " = NULL";
-                } else {
-                    $data_hoatdong_insert_key[] = $db->quoteName($key);
-                    if ($value == 'NOW()') {
-                        $data_hoatdong_insert_val[] = $value;
-                        $data_hoatdong_update[] = $db->quoteName($key) . " = " . $value;
-                    } else {
-                        $data_hoatdong_insert_val[] = $db->quote($value);
-                        $data_hoatdong_update[] = $db->quoteName($key) . " = " . $db->quote($value);
+                    $tungay_sql = null;
+                    if ($tungay) {
+                        $dateObj = DateTime::createFromFormat('d/m/Y', $tungay);
+                        if ($dateObj) {
+                            $tungay_sql = $dateObj->format('Y-m-d');
+                        } else {
+                            throw new Exception("Định dạng ngày từ không hợp lệ: $tungay");
+                        }
                     }
+
+                    $denngay_sql = null;
+                    if ($denngay) {
+                        $dateObj = DateTime::createFromFormat('d/m/Y', $denngay);
+                        if ($dateObj) {
+                            $denngay_sql = $dateObj->format('Y-m-d');
+                        } else {
+                            throw new Exception("Định dạng ngày đến không hợp lệ: $denngay");
+                        }
+                    }
+
+                    $data_hoatdong = [
+                        'id' => $formData['hoatdong_id'][$groupKey][$subIndex] ?? 0,
+                        'thietche_id' => $thietche_id,
+                        'nam' => $formData['nam_hoatdong'][$groupKey] ?? null,
+                        'noidunghoatdong' => htmlentities($noidung, ENT_COMPAT, 'utf-8'),
+                        'thoigianhoatdong_tungay' => $tungay_sql,
+                        'thoigianhoatdong_denngay' => $denngay_sql,
+                        'nguonkinhphi_id' => $formData['nguonkinhphi'][$groupKey][$subIndex] ?? 0,
+                        'kinhphi' => $formData['kinhphi'][$groupKey][$subIndex] ?? null,
+                        'ghichu' => htmlentities($formData['ghichu_hoatdong'][$groupKey][$subIndex] ?? '', ENT_COMPAT, 'utf-8'),
+                        'is_cha' => $formData['is_cha'][$groupKey][$subIndex] ?? 0,
+                        'daxoa' => '0',
+                    ];
+
+                    // Debug dữ liệu
+                    echo "<pre>Dữ liệu hoạt động (groupKey=$groupKey, subIndex=$subIndex): ";
+                    var_dump($data_hoatdong);
+                    echo "</pre>";
+
+                    if ((int)$data_hoatdong['id'] == 0) {
+                        $data_hoatdong['nguoitao_id'] = $user_id;
+                        $data_hoatdong['ngaytao'] = 'NOW()';
+                    } else {
+                        $data_hoatdong['nguoihieuchinh_id'] = $user_id;
+                        $data_hoatdong['ngayhieuchinh'] = 'NOW()';
+                    }
+
+                    $data_hoatdong_insert_key = [];
+                    $data_hoatdong_insert_val = [];
+                    $data_hoatdong_update = [];
+
+                    foreach ($data_hoatdong as $key => $value) {
+                        if ($value === null) {
+                            $data_hoatdong_update[] = $db->quoteName($key) . " = NULL";
+                        } else {
+                            $data_hoatdong_insert_key[] = $db->quoteName($key);
+                            if ($value == 'NOW()') {
+                                $data_hoatdong_insert_val[] = $value;
+                                $data_hoatdong_update[] = $db->quoteName($key) . " = " . $value;
+                            } else {
+                                $data_hoatdong_insert_val[] = $db->quote($value);
+                                $data_hoatdong_update[] = $db->quoteName($key) . " = " . $db->quote($value);
+                            }
+                        }
+                    }
+
+                    $queryhd = $db->getQuery(true);
+                    if ((int)($data_hoatdong['id'] ?? 0) == 0) {
+                        if (!empty($data_hoatdong_insert_key)) {
+                            $queryhd->insert($db->quoteName('vhxhytgd_thietche2hoatdong'))
+                                ->columns($data_hoatdong_insert_key)
+                                ->values(implode(',', $data_hoatdong_insert_val));
+                            echo $queryhd . "<br>";
+                        }
+                    } else {
+                        if (!empty($data_hoatdong_update)) {
+                            $queryhd->update($db->quoteName('vhxhytgd_thietche2hoatdong'))
+                                ->set($data_hoatdong_update)
+                                ->where($db->quoteName('id') . '=' . $db->quote($data_hoatdong['id']));
+                            echo $queryhd . "<br>";
+                        }
+                    }
+
+                    $db->setQuery($queryhd);
+                    $db->execute();
                 }
             }
-
-            $queryhd = $db->getQuery(true);
-            if ((int)($data_hoatdong['id'] ?? 0) == 0) {
-                if (!empty($data_hoatdong_insert_key)) {
-                    $queryhd->insert($db->quoteName('vhxhytgd_thietche2hoatdong'))
-                        ->columns($data_hoatdong_insert_key)
-                        ->values(implode(',', $data_hoatdong_insert_val));
-                    echo $queryhd . "<br>";
-                }
-            } else {
-                if (!empty($data_hoatdong_update)) {
-                    $queryhd->update($db->quoteName('vhxhytgd_thietche2hoatdong'))
-                        ->set($data_hoatdong_update)
-                        ->where($db->quoteName('id') . '=' . $db->quote($data_hoatdong['id']));
-                    echo $queryhd . "<br>";
-                }
-            }
-
-            $db->setQuery($queryhd);
-            $db->execute();
         }
-    }
-}
 
         return true;
     }
@@ -438,7 +438,7 @@ if (!empty($formData['noidung_hoatdong']) && is_array($formData['noidung_hoatdon
         $db->setQuery($query);
         return $db->execute();
     }
-     public function removeThongTinThietChe($id_thietche)
+    public function removeThongTinThietChe($id_thietche)
     {
         $db = Factory::getDbo();
         $user_id = Factory::getUser()->id;
@@ -452,5 +452,34 @@ if (!empty($formData['noidung_hoatdong']) && is_array($formData['noidung_hoatdon
         //echo $query;
         $db->setQuery($query);
         return $db->execute();
+    }
+    public function getThongKeThietche($params = array())
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select(" px.tenkhuvuc AS tenkhuvuc,
+    COUNT(DISTINCT a.id) AS soluongthietche,
+    FORMAT(SUM(CASE WHEN b.kinhphi IS NOT NULL THEN b.kinhphi ELSE 0 END), 'vi_VN') AS tongkinhphi");
+        $query->from('vhxhytgd_thietche as a');
+        $query->leftJoin('vhxhytgd_thietche2hoatdong AS b ON a.id = b.thietche_id and b.daxoa = 0');
+        $query->innerJoin('danhmuc_khuvuc as px ON a.phuongxa_id = px.id');
+        $query->where('a.daxoa =0 ');
+
+
+        if ($params['phuongxa_id'] != '') {
+            $query->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        }
+
+        if (!empty($params['thietche_id'])) {
+            $query->where('a.loaihinhthietche_id = ' . $db->quote($params['thietche_id']));
+        }
+        if (!empty($params['trangthai_id'])) {
+            $query->where('a.trangthaihoatdong_id = ' . $db->quote($params['trangthai_id']));
+        }
+        $query->group('a.phuongxa_id');
+        // echo $query;
+
+        $db->setQuery($query);
+        return  $db->loadAssocList();
     }
 }
