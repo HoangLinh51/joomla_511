@@ -53,8 +53,8 @@ class RawView extends BaseHtmlView
         $this->setLayout(strtolower($layout));
         switch ($layout) {
 
-            case 'DS_VAYVON':
-                $this->_pageVayVon();
+            case 'DS_GIADINHTREEM':
+                $this->_pageGiadinhtreem();
                 break;
             case 'DS_THONGKE':
                 $this->_pageThongke();
@@ -67,9 +67,9 @@ class RawView extends BaseHtmlView
 
 
 
-    private function _pageVayVon()
+    private function _pageGiadinhtreem()
     {
-        $model = Core::model('Vhytgd/Vayvon');
+        $model = Core::model('Vhytgd/Giadinhtreem');
         $app = Factory::getApplication()->input;
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', 0),
@@ -81,8 +81,8 @@ class RawView extends BaseHtmlView
 
         $perPage = 20;
         $startFrom = $app->getInt('start', 0);
-        $this->items = $model->getDanhSachVayVon($params, $startFrom, $perPage);
-        $this->total = $model->CountDBDT($params);
+        $this->items = $model->getDanhSachGiaDinhTreEm($params, $startFrom, $perPage);
+        $this->total = $model->CountGDTE($params);
         parent::display();
     }
     private function _pageThongke()

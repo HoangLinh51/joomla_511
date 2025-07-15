@@ -34,6 +34,14 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('edit_gdte');
                 $this->_getEditVayVon();
                 break;
+            case 'BAOLUC_GDTE':
+                $this->setLayout('baoluc_gdte');
+                $this->_getBaolucgiadinh();
+                break;
+            case 'TREEM_GDTE':
+                $this->setLayout('treem_gdte');
+                $this->_getBaolucgiadinh();
+                break;
             default:
                 $this->setLayout('default');
                 $this->_initDefaultPage();
@@ -127,7 +135,7 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/pace.min.js');
 
         $id = $app->getInt('thietche_id', null);
-        $model = Core::model('Vhytgd/Vayvon');
+        $model = Core::model('Vhytgd/Giadinhtreem');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
 
@@ -149,21 +157,22 @@ class HtmlView extends BaseHtmlView
         }
 
         $gioitinh = Core::loadAssocList('danhmuc_gioitinh', 'id,tengioitinh', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
-        $dantoc = Core::loadAssocList('danhmuc_dantoc', 'id,tendantoc', 'trangthai = 1 AND daxoa = 0 AND id != 1', 'sapxep ASC');
+        $dantoc = Core::loadAssocList('danhmuc_dantoc', 'id,tendantoc', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
         $vayvon = Core::loadAssocList('danhmuc_nguonvon', 'id,tennguonvon', 'trangthai = 1 AND daxoa = 0');
         $chuongtrinh = Core::loadAssocList('danhmuc_chuongtrinhvay', 'id,tenchuongtrinhvay', 'trangthai = 1 AND daxoa = 0');
         $tochuc = Core::loadAssocList('danhmuc_doanhoi', 'id, tendoanhoi', 'trangthai = 1 AND daxoa = 0');
         $tinhtrang = Core::loadAssocList('danhmuc_trangthaivay', 'id, tentrangthaivay', 'trangthai = 1 AND daxoa = 0');
-
-
-
-       
+        $quanhethannhan = Core::loadAssocList('danhmuc_quanhenhanthan', 'id, tenquanhenhanthan', 'trangthai = 1 AND daxoa = 0');
+        $nghenghiep = Core::loadAssocList('danhmuc_nghenghiep', 'id, tennghenghiep', 'trangthai = 1 AND daxoa = 0');
 
         $thonto_id = $app->getInt('thonto_id', null);
-        $vayvon_id = $app->getInt('vayvon_id', null);
+        $gdte_id = $app->getInt('gdte_id', null);
         $phuongxa_id = null;
-        if ((int)$vayvon_id > 0) {
-            $this->item = $model->getEditVayvon($vayvon_id);
+
+        if ((int)$gdte_id > 0) {
+            $this->item = $model->getEditGDTE($gdte_id);
+        } else {
+            $this->item = (object)['thannhan' => []]; // Mặc định nếu không có gdte_id
         }
 
         if ((int)$phuongxa_id > 0) {
@@ -172,7 +181,9 @@ class HtmlView extends BaseHtmlView
             $thonto = array();
         }
 
-        $this->tinhtrang = $tinhtrang;       
+        $this->quanhethannhan = $quanhethannhan;
+        $this->nghenghiep = $nghenghiep;
+        $this->tinhtrang = $tinhtrang;
         $this->dantoc = $dantoc;
         $this->tochuc = $tochuc;
         $this->vayvon = $vayvon;
@@ -180,6 +191,51 @@ class HtmlView extends BaseHtmlView
         $this->phuongxa = $phuongxa;
         $this->thonto = $thonto;
         $this->gioitinh = $gioitinh;
-      
+    }
+    public function _getBaolucgiadinh()
+    {
+        $document = Factory::getDocument();
+        $app = Factory::getApplication()->input;
+
+        // Thêm các tag CSS và JS cần thiết
+        $document->addCustomTag('<link href="' . Uri::base(true) . '/media/cbcc/css/jquery.fileupload.css" rel="stylesheet" />');
+        $document->addCustomTag('<link href="' . Uri::base(true) . '/templates/adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css" rel="stylesheet" />');
+        $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/style.bundle.css');
+        $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/plugins.bundle.css');
+        $document->addStyleSheet(Uri::root(true) . '/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
+        $document->addStyleSheet(Uri::root(true) . '/media/cbcc/js/bootstrap/bootstrap-datetimepicker.min.css');
+        $document->addStyleSheet(Uri::root(true) . '/media/cbcc/css/jquery.toast.css');
+        $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
+
+        // Thêm các script cần thiết
+        $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/jquery/jquery.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js');
+        $document->addScript(Uri::root(true) . '/media/cbcc/js/bootbox.min.js');
+        $document->addScript(Uri::root(true) . '/media/cbcc/js/jquery/jquery.gritter.min.js');
+        $document->addScript(Uri::root(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/jquery.validate.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.toast.js');
+        $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/pace.min.js');
+
+        $model = Core::model('Vhytgd/Giadinhtreem');
+
+        $xuly = Core::loadAssocList('danhmuc_bienphapxuly', 'id, tenxuly', 'trangthai = 1 AND daxoa = 0');
+        $hotro = Core::loadAssocList('danhmuc_bienphaphotro', 'id, tenhotro', 'trangthai = 1 AND daxoa = 0');
+        $hoancanh = Core::loadAssocList('danhmuc_nhomhoancanh', 'id, tennhom', 'trangthai = 1 AND daxoa = 0');
+        $trogiup = Core::loadAssocList('danhmuc_nhomhoancanh2trogiup', 'id, tenhotro', 'trangthai = 1 AND daxoa = 0');
+        $this->xuly = $xuly;
+        $this->hotro = $hotro;
+        $this->hoancanh = $hoancanh;
+        $this->trogiup = $trogiup;
+
     }
 }

@@ -66,7 +66,7 @@ $idUser = JFactory::getUser()->id;
 						<tr>
 							<td colspan="4" class="text-center" style="padding-top:10px;">
 								<button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
-								<span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
+								<!-- <span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span> -->
 							</td>
 						</tr>
 					</table>
@@ -75,15 +75,15 @@ $idUser = JFactory::getUser()->id;
 			<div id="div_danhsach">
 				<div class="table-responsive">
 					<table class="table table-striped table-bordered table-hover" id="tblDanhsach">
-						<thead>
+						<tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
 							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Mã khách hàng</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên</th>
+							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Mã hộ gia đình</th>
+							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên chủ hộ</th>
 							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Điện thoại</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Lịch sử vay vốn</th>
+							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Bạo lực gia đình</th>
+							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Hỗ trợ trẻ em</th>
 							<th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
-						</thead>
+						</tr>
 						<tbody id="tbody_danhsach"></tbody>
 					</table>
 				</div>
@@ -137,9 +137,9 @@ $idUser = JFactory::getUser()->id;
 			$("#overlay").fadeIn(300);
 			$('#div_danhsach').load('index.php', {
 				option: 'com_vhytgd',
-				view: 'vayvon',
+				view: 'giadinhtreem',
 				format: 'raw',
-				task: 'DS_VAYVON',
+				task: 'DS_GIADINHTREEM',
 				phuongxa_id: $('#phuongxa_id').val(),
 				thonto_id: $('#thonto_id').val(),
 				makhachhang: $('#makhachhang').val(),
@@ -163,7 +163,13 @@ $idUser = JFactory::getUser()->id;
 			loadDanhSach();
 		});
 		$('body').delegate('.btn_hieuchinh', 'click', function() {
-			window.location.href = 'index.php?option=com_vhytgd&view=vayvon&task=edit_vayvon&vayvon_id=' + $(this).data('id');
+			window.location.href = 'index.php?option=com_vhytgd&view=giadinhtreem&task=edit_gdte&gdte_id=' + $(this).data('id');
+		});
+		$('body').delegate('.btn_baoluc', 'click', function() {
+			window.location.href = 'index.php?option=com_vhytgd&view=giadinhtreem&task=baoluc_gdte&gdte_id=' + $(this).data('id');
+		});
+		$('body').delegate('.btn_treem', 'click', function() {
+			window.location.href = 'index.php?option=com_vhytgd&view=giadinhtreem&task=treem_gdte&gdte_id=' + $(this).data('id');
 		});
 		$('#btn_xuatexcel').on('click', function() {
 			let params = {
@@ -207,14 +213,15 @@ $idUser = JFactory::getUser()->id;
 	}
 
 	.btn_hieuchinh,
-	.btn_cathuong,
+	.btn_baoluc,
 	.btn_xoa {
 		position: relative;
 		transition: color 0.3s;
 	}
 
 	.btn_hieuchinh,
-	.btn_cathuong,
+	.btn_treem,
+	.btn_baoluc,
 	.btn_xoa {
 		cursor: pointer;
 		pointer-events: auto;
@@ -223,13 +230,15 @@ $idUser = JFactory::getUser()->id;
 	}
 
 	.btn_hieuchinh:hover i,
-	.btn_cathuong:hover i,
+	.btn_treem:hover i,
+	.btn_baoluc:hover i,
 	.btn_xoa:hover i {
 		color: #0066ff;
 	}
 
 	.btn_hieuchinh::after,
-	.btn_cathuong::after,
+	.btn_treem::after,
+	.btn_baoluc::after,
 	.btn_xoa::after {
 		content: attr(data-title);
 		position: absolute;
@@ -251,7 +260,8 @@ $idUser = JFactory::getUser()->id;
 
 
 	.btn_hieuchinh:hover::after,
-	.btn_cathuong:hover::after,
+	.btn_treem:hover::after,
+	.btn_baoluc:hover::after,
 	.btn_xoa:hover::after {
 		opacity: 1;
 		visibility: visible;

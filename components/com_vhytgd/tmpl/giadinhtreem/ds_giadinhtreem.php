@@ -23,11 +23,11 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         <thead>
             <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
                 <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Mã khách hàng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Mã hộ gia đình</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên chủ hộ</th>
                 <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Điện thoại</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Lịch sử vay vốn</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Bạo lực gia đình</th>
+                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Hỗ trợ trẻ em</th>
                 <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
@@ -38,16 +38,32 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                         <td style="vertical-align:middle;text-align: center;"><?php echo $startRecord + $i; ?></td>
                         <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['makh']); ?></td>
                         <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['n_hoten']); ?></td>
-                        <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['phuongxathonto']); ?></td>
-                        <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['n_dienthoai']); ?></td>
+                        <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['n_diachi']); ?></td>
                         <td style="vertical-align:middle;text-align: center;">
-                            <span><?php echo htmlspecialchars($item['tong']); ?></span>
-                            <i class="fas fa-eye btn_eye" style="cursor: pointer; margin-left: 10px; color: #007bff;" data-id="<?php echo $item['id']; ?>" title="Xem chi tiết"></i>
+                            <?php if (!empty($item['baoluc'])): ?>
+                                <i class="fas fa-check" style="color: green;"></i> <!-- Biểu tượng tích xanh -->
+                            <?php else: ?>
+                                <!-- <i class="fas fa-times" style="color: red;"></i> Biểu tượng x đỏ nếu không có dữ liệu -->
+                            <?php endif; ?>
                         </td>
-                          </td>
+                        <td style="vertical-align:middle;text-align: center;">
+                            <?php if (!empty($item['treem'])): ?>
+                                <i class="fas fa-check" style="color: green;"></i> <!-- Biểu tượng tích xanh -->
+                            <?php else: ?>
+                                <!-- <i class="fas fa-times" style="color: red;"></i> Biểu tượng x đỏ nếu không có dữ liệu -->
+                            <?php endif; ?>
+                        </td>
+                        </td>
                         <td style="vertical-align:middle;text-align: center;">
                             <div class="btn-group" role="group">
-                              
+                                <span class="btn btn-sm btn_treem" data-id="<?php echo $item['id']; ?>" data-title="Trẻ em" style="cursor: pointer;">
+                                    <i class="fas fa-child"></i>
+                                </span>
+                                <span style="padding: 0 5px;font-size:20px;color:#ccc">|</span>
+                                <span class="btn btn-sm btn_baoluc" data-id="<?php echo $item['id']; ?>" data-title="Bạo lực gia đình" style="cursor: pointer;">
+                                    <i class="fas fa-hand-paper"></i>
+                                </span>
+                                <span style="padding: 0 5px;font-size:20px;color:#ccc">|</span>
                                 <span class="btn btn-sm btn_hieuchinh" data-id="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh" style="cursor: pointer;">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
@@ -229,12 +245,12 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
             $("#overlay").fadeIn(300);
             var params = {
                 option: 'com_vhytgd',
-                view: 'vayvon',
+                view: 'giadinhtreem',
                 format: 'raw',
-                task: 'DS_VAYVON',
+                task: 'DS_GIADINHTREEM',
                 phuongxa_id: $('#phuongxa_id').val(),
                 thonto_id: $('#thonto_id').val(),
-                cccd: $('#cccd').val(),
+                makhachhang: $('#makhachhang').val(),
                 hoten: $('#hoten').val(),
                 daxoa: 0,
                 start: start
@@ -293,9 +309,9 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         });
 
         // Xử lý click nút cắt hưởng
-    
+
         $('body').off('click', '.btn_xoa').on('click', '.btn_xoa', function() {
-            const chinhsach_id = $(this).data('id');
+            const giadinh_id = $(this).data('id');
 
             // Hàm hiển thị thông báo
 
@@ -335,10 +351,10 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
                     // Gửi yêu cầu AJAX
                     $.ajax({
-                        url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vhytgd&controller=vayvon&task=removeVayVon',
+                        url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vhytgd&controller=giadinhtreem&task=removeGDTE',
                         type: 'POST',
                         data: {
-                            chinhsach_id: chinhsach_id,
+                            giadinh_id: giadinh_id,
                             [csrfToken]: 1
                         },
                         dataType: 'json',
