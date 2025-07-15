@@ -82,7 +82,7 @@ class Vhytgd_Model_Vayvon extends JModelLegacy
             ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
             ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
             ->where('nk.daxoa = 0')
-            ->where('hk.daxoa = 0 and nk.dantoc_id != 1');
+            ->where('hk.daxoa = 0');
 
         if ($nhankhau_id > 0) {
             $query->where('nk.id = ' . (int)$nhankhau_id);
