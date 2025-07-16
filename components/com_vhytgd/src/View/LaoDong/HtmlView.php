@@ -28,41 +28,47 @@ class HtmlView extends BaseHtmlView
         $id = $input->getInt('id');
         $component = 'com_vhytgd';
         $controller = $input->getCmd('view', '');
-        $task = strtolower($input->getCmd('task', 'default'));
+        $task = strtolower($input->getCmd('task', ''));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'DS_LAODONG' || $task === 'ADD_LAODONG' || $task === 'EDIT_LAODONG') {
-            $checkTask = 'default';
-        }
+
+        $checkTask = in_array($task, ['ds_laodong', 'add_laodong', 'edit_laodong']) ? 'default' : $task;
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-                    <a href="/index.php" style="text-decoration: none;">
-                        <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">Trang chủ</button>
-                    </a>
-                </div>';
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                    <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">Trang chủ</button>
+                </a>
+            </div>';
             exit;
         }
 
-        // Phân biệt edit vs add
         if ($task === 'edit_laodong') {
-            $layout = $id > 0 ? 'EDIT_LAODONG' : 'ADD_LAODONG';
+            $layout = $id > 0 ? 'edit_laodong' : 'add_laodong';
         } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
+            $layout = empty($task) || $task === 'default' ? 'ds_laodong' : $task;
         }
 
         switch ($layout) {
-            case 'DEFAULT':
-            case 'DS_LAODONG':
+            case 'thongke':
+                $this->setLayout('thongke');
+                $this->_initDefaultPage();
+                break;
+            case 'ds_laodong':
                 $this->setLayout('ds_laodong');
                 $this->_initDefaultPage();
                 break;
-            case 'ADD_LAODONG':
-            case 'EDIT_LAODONG':
+            case 'add_laodong':
+            case 'edit_laodong':
                 $this->setLayout('edit_laodong');
                 $this->_editDVNhayCam();
                 break;
+            default:
+                $this->setLayout('ds_laodong');
+                $this->_initDefaultPage();
         }
 
         parent::display($tpl);
@@ -79,6 +85,8 @@ class HtmlView extends BaseHtmlView
         }
         $doituong = $model->getDoiTuong();
         $gioitinh = $model->getDanhMucGioiTinh();
+        $doituonguutien = $model->getListDoiTuongUuTien();
+        $this->doituonguutien = $doituonguutien;
 
         $this->gioitinh = $gioitinh;
         $this->doituong = $doituong;

@@ -3,17 +3,22 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
 
 
 $idUser = Factory::getApplication()->getIdentity()->id;
 ?>
+<meta>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
 
+</meta>
 <form action="index.php" method="post" id="frmThongKeNHK" name="frmThongKeNHK" class="form-horizontal" style="font-size:16px;">
     <div class="container-fluid" style="padding-left:20px; padding-right:20px;">
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê nhân hộ khẩu</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê gia đình trẻ em</h3>
                 </div>
             </div>
         </div>
@@ -47,9 +52,10 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                                 </select>
                             </td>
                         </tr>
+                       
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
-                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i>Thống kê</button>
                             </td>
                         </tr>
                     </table>
@@ -126,7 +132,13 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 $(this).find('[data-card-widget="collapse"]').trigger('click');
             }
         });
-
+        $('.yearpicker').datepicker({
+            format: 'yyyy',
+            viewMode: 'years',
+            minViewMode: 'years',
+            language: 'vi',
+            autoclose: true
+        });
         // Khởi tạo Select2
         $('#phuongxa_id, #thonto_id').select2({
             width: '100%',
@@ -169,12 +181,13 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_vptk',
-                view: 'nhk',
+                option: 'com_vhytgd',
+                view: 'giadinhtreem',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
                 thonto_id: thontoValue,
+
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);
@@ -184,7 +197,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             });
         }
 
-        // Xử lý nút Tìm kiếm
+        // Xử lý nút Thống kê
         $('#btn_filter').on('click', function(e) {
             e.preventDefault();
             loadDanhSach();

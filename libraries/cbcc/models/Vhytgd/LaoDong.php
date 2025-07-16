@@ -254,8 +254,8 @@ class Vhytgd_Model_LaoDong extends BaseDatabaseModel
       ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON a.n_thonto_id = tt.id')
       ->leftJoin($db->quoteName('danhmuc_gioitinh', 'gt') . ' ON a.n_gioitinh_id = gt.id')
       ->where('a.daxoa = 0');
-// var_dump($filters);
-// exit;
+    // var_dump($filters);
+    // exit;
 
     $filterPhuongXaId = !empty($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : null;
 
@@ -501,5 +501,94 @@ class Vhytgd_Model_LaoDong extends BaseDatabaseModel
     } catch (\Exception $e) {
       throw new \RuntimeException('Lỗi xóa dữ liệu: ' . $e->getMessage(), 500);
     }
+  }
+  public function getThongKeGiaLaoDong($params = array())
+  {
+    $db = Factory::getDbo();
+
+    // 1. Subquery thống kê theo thôn
+    $queryThon = $db->getQuery(true);
+    $queryThon->select([
+      'a.n_thonto_id AS khuvuc_id',
+      'COUNT(DISTINCT a.id) AS tong_nhankhau',
+      'SUM(a.doituonglaodong_id = 8) AS covieclam',
+      'SUM(a.doituonglaodong_id = 9) AS chuacovieclam',
+      'SUM(a.doituonglaodong_id = 10) AS khongthamgialaodong'
+    ])
+      ->from('vhxhytgd_laodong AS a')
+      ->where('a.daxoa = 0')
+      ->group('a.n_thonto_id'); // Thêm GROUP BY cho subquery thôn
+
+    // 2. Subquery thống kê tổng hợp phường
+    $queryPhuong = $db->getQuery(true);
+    $queryPhuong->select([
+      $db->quote($params['phuongxa_id']) . ' AS khuvuc_id',
+      'COUNT(DISTINCT a.id) AS tong_nhankhau',
+      'SUM(a.doituonglaodong_id = 8) AS covieclam',
+      'SUM(a.doituonglaodong_id = 9) AS chuacovieclam',
+      'SUM(a.doituonglaodong_id = 10) AS khongthamgialaodong'
+    ])
+      ->from('vhxhytgd_laodong AS a')
+      ->where('a.daxoa = 0');
+
+    // Áp dụng điều kiện chung
+    if (!empty($params['phuongxa_id'])) {
+      $phuongxaId = $db->quote($params['phuongxa_id']);
+      $queryThon->where('a.n_phuongxa_id = ' . $phuongxaId);
+      $queryPhuong->where('a.n_phuongxa_id = ' . $phuongxaId);
+    }
+
+    if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+      $thontoIds = array_map([$db, 'quote'], $params['thonto_id']);
+      $queryThon->where('a.n_thonto_id IN (' . implode(',', $thontoIds) . ')');
+      $queryPhuong->where('a.n_thonto_id IN (' . implode(',', $thontoIds) . ')');
+    }
+
+    if (!empty($params['doituong_id'])) {
+      $doituongId = $db->quote($params['doituong_id']);
+      $queryThon->where('a.doituonguutien = ' . $doituongId);
+      $queryPhuong->where('a.doituonguutien = ' . $doituongId);
+    }
+
+    // Kết hợp 2 subquery bằng UNION ALL
+    $unionQuery = $queryThon->union($queryPhuong);
+
+    // Query chính
+    $query = $db->getQuery(true);
+    $query->select([
+      'a.id',
+      'a.cha_id',
+      'a.tenkhuvuc',
+      'a.level',
+      'COALESCE(SUM(ab.tong_nhankhau), 0) AS tong_nhankhau',
+      'COALESCE(SUM(ab.covieclam), 0) AS covieclam',
+      'COALESCE(SUM(ab.chuacovieclam), 0) AS chuacovieclam',
+      'COALESCE(SUM(ab.khongthamgialaodong), 0) AS khongthamgialaodong'
+    ])
+      ->from('danhmuc_khuvuc AS a')
+      ->leftJoin('(' . $unionQuery . ') AS ab ON a.id = ab.khuvuc_id');
+
+    // Điều kiện query chính
+    $where = [];
+    if (!empty($params['phuongxa_id'])) {
+      $phuongxaId = $db->quote($params['phuongxa_id']);
+      $where[] = '(a.id = ' . $phuongxaId . ' OR a.cha_id = ' . $phuongxaId . ')';
+
+      $inIds = [$phuongxaId];
+      if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+        $inIds = array_merge($inIds, array_map([$db, 'quote'], $params['thonto_id']));
+      }
+      $where[] = 'a.id IN (' . implode(',', $inIds) . ')';
+    }
+
+    if (!empty($where)) {
+      $query->where(implode(' AND ', $where));
+    }
+
+    $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level'])
+      ->order('a.level, a.id ASC');
+
+    $db->setQuery($query);
+    return $db->loadAssocList();
   }
 }

@@ -13,7 +13,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê biển số nhà</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê xe ôm</h3>
                 </div>
             </div>
         </div>
@@ -173,7 +173,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
                 option: 'com_dcxddt',
-                view: 'biensonha',
+                view: 'xeom',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,

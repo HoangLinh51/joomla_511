@@ -13,11 +13,10 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê biển số nhà</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê lao động</h3>
                 </div>
             </div>
         </div>
-        <!-- <h2 class="header smaller lighter text-primary"><i class="fas fa-chart-bar"></i> Thống kê</h2> -->
         <div id="main-right">
             <div class="card card-primary">
 
@@ -32,7 +31,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                     <table class="w-100">
                         <tr>
                             <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Phường xã</b></td>
-                            <td style="width:40%;padding:10px">
+                            <td style="width:45%;">
                                 <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn phường xã">
                                     <option value=""></option>
                                     <?php foreach ($this->phuongxa as $px) { ?>
@@ -47,6 +46,19 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                                 </select>
                             </td>
                         </tr>
+                        <tr>
+                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Đối tượng</b></td>
+                            <td style="width:45%;">
+                                <select id="doituong_id" name="doituong_id" class="custom-select" data-placeholder="Chọn đối tượng ưu tiên">
+                                    <option value=""></option>
+                                    <?php foreach ($this->doituonguutien as $dt) { ?>
+                                        <option value="<?php echo $dt['id']; ?>"><?php echo $dt['tendoituong']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                           
+                        </tr>
+                    
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
                                 <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Thống kê</button>
@@ -128,7 +140,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         });
 
         // Khởi tạo Select2
-        $('#phuongxa_id, #thonto_id, #nhiemky_id, #chucdanh_id').select2({
+        $('#phuongxa_id, #thonto_id, #doituong_id').select2({
             width: '100%',
             allowClear: true,
             placeholder: function() {
@@ -160,10 +172,8 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
         function loadDanhSach(start = 0) {
             const phuongxaId = $('#phuongxa_id').val();
-
-            const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
+ const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
             const thontoValue = Array.isArray(thontoIds) ? thontoIds.join(',') : '';
-
             // Kiểm tra xem phường xã đã được chọn hay chưa
             if (!phuongxaId) {
                 showToast('Vui lòng chọn phường xã!', false);
@@ -172,13 +182,14 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_dcxddt',
-                view: 'biensonha',
+                option: 'com_vhytgd',
+                view: 'laodong',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
                 thonto_id: thontoValue,
-               
+                doituong_id: $('#doituong_id').val(),
+
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);

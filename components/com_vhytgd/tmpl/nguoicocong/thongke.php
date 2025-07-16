@@ -68,7 +68,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                         </tr>
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
-                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Thống kê</button>
                             </td>
                         </tr>
                     </table>
@@ -174,7 +174,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         $('.custom-select').select2({
             width: '100%', // Sử dụng 100% chiều rộng của container
             dropdownAutoWidth: true, // Tự động điều chỉnh chiều rộng dropdown
-            minimumResultsForSearch: 10 // Chỉ hiển thị ô tìm kiếm khi có nhiều kết quả
+            minimumResultsForSearch: 10 // Chỉ hiển thị ô Thống kê khi có nhiều kết quả
         });
 
         // Tùy chỉnh riêng cho select multiple (thôn tổ)
@@ -235,7 +235,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             });
         }
 
-        // Xử lý nút Tìm kiếm
+        // Xử lý nút Thống kê
         $('#btn_filter').on('click', function(e) {
             e.preventDefault();
             loadDanhSach();

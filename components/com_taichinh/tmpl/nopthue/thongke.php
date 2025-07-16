@@ -184,7 +184,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             });
         }
 
-        // Xử lý nút Tìm kiếm
+        // Xử lý nút Thống kê
         $('#btn_filter').on('click', function(e) {
             e.preventDefault();
             loadDanhSach();

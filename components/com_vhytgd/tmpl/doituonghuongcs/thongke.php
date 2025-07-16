@@ -240,7 +240,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
             const thontoValue = Array.isArray(thontoIds) ? thontoIds.join(',') : '';
             if (namFrom === null || namTo === null) {
-                alert('Vui lòng chọn năm trước khi tìm kiếm');
+                alert('Vui lòng chọn năm trước khi Thống kê');
                 return; // Ngừng thực hiện nếu không có năm
             }
 
@@ -286,7 +286,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             });
         }
 
-        // Xử lý nút Tìm kiếm
+        // Xử lý nút Thống kê
         $('#btn_filter').on('click', function(e) {
             e.preventDefault();
             loadDanhSach();

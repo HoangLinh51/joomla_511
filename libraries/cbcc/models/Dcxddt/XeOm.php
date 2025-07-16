@@ -54,7 +54,8 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
-  public function getDanhMucTinhTrangThe(){
+  public function getDanhMucTinhTrangThe()
+  {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
     $query->select('id, tentinhtrang')
@@ -352,7 +353,7 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     if (!empty($formdata['modal_namsinh'])) {
       $columns['n_namsinh'] = (new \DateTime($formdata['modal_namsinh']))->format('Y-m-d');
     }
-    if (!empty($formdata['modal_ngayhethan_thehanhnghe'])){
+    if (!empty($formdata['modal_ngayhethan_thehanhnghe'])) {
       $columns['thehanhnghe_ngayhethan'] =  (new \DateTime($formdata['modal_ngayhethan_thehanhnghe']))->format('Y-m-d');
     }
     if (!empty($formdata['tinhtrang_id'])) {
@@ -422,5 +423,68 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     $db->setQuery($query);
     $db->execute();
     return true;
+  }
+  public function getThongKeXeOm($params = array())
+  {
+    $db = Factory::getDbo();
+
+    // Subquery
+    $query_left = $db->getQuery(true);
+    $query_left->select([
+      'a.n_phuongxa_id',
+      'px.tenkhuvuc AS phuongxa',
+      'a.n_thonto_id',
+      'f.tenkhuvuc AS thonto',
+      'SUM(CASE WHEN a.id THEN 1 ELSE 0 END) AS soluong'
+
+    ]);
+    $query_left->from('dcxddtmt_xeom AS a')
+      ->leftJoin('danhmuc_khuvuc AS f ON a.n_thonto_id = f.id')
+      ->innerJoin('danhmuc_khuvuc AS px ON a.n_phuongxa_id = px.id')
+      ->where('a.daxoa = 0 ');
+
+    // Điều kiện WHERE cho subquery
+    if (!empty($params['phuongxa_id'])) {
+      $query_left->where('a.n_phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+    }
+
+    if (!empty($params['thonto_id'])) {
+      $thonto_ids = is_array($params['thonto_id']) ?
+        $params['thonto_id'] :
+        explode(',', $params['thonto_id']);
+      $query_left->where('a.n_thonto_id IN (' . implode(',', array_map([$db, 'quote'], $thonto_ids)) . ')');
+    }
+
+
+    // Query chính
+    $query = $db->getQuery(true);
+    $query->select([
+      'a.id',
+      'a.cha_id',
+      'a.tenkhuvuc',
+      'a.level',
+      'IFNULL(SUM(ab.soluong), 0) AS soluong'
+
+    ])
+      ->from('danhmuc_khuvuc AS a')
+      ->leftJoin('(' . $query_left . ') AS ab ON (a.id = ab.n_thonto_id OR a.id = ab.n_phuongxa_id)');
+
+    // Điều kiện cho query chính
+    if (!empty($params['phuongxa_id'])) {
+      $query->where($db->quoteName('a.id') . ' = ' . $db->quote($params['phuongxa_id']) . ' OR ' . $db->quoteName('a.cha_id') . ' = ' . $db->quote($params['phuongxa_id']));
+    }
+    if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+      $query->where($db->quoteName('a.id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+    }
+
+    $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level']);
+    $query->order('a.level, a.id ASC');
+    // echo $query;
+    $db->setQuery($query);
+    $results = $db->loadAssocList();
+
+
+
+    return $results;
   }
 }
