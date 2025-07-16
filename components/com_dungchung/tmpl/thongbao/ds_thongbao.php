@@ -10,7 +10,7 @@ defined('_JEXEC') or die('Restricted access');
   <div class="content-header">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý thông báo hổ trợ</h3>
+        <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý thông báo hỗ trợ</h3>
       </div>
       <?php if ($this->permissionAdmin === true) { ?>
         <div class="col-sm-6 text-right" style="padding:0;">
