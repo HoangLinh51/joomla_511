@@ -24,7 +24,7 @@ class HtmlView extends BaseHtmlView
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
         $component = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
+        $controller = $input->getCmd('view', 'dongbaodantoc');
         $task =  strtoupper($input->getCmd('task', 'default'));
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
@@ -105,12 +105,12 @@ class HtmlView extends BaseHtmlView
         } else {
             $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0 AND id IN (' . $phanquyen['phuongxa_id'] . ')', 'tenkhuvuc ASC');
         }
-        $loaihinhthietche = Core::loadAssocList('danhmuc_loaihinhthietche', 'id,tenloaihinhthietche', 'trangthai = 1 AND daxoa = 0');
+        $chinhsach = Core::loadAssocList('danhmuc_chinhsachdongbao', 'id,tenchinhsach', 'trangthai = 1 AND daxoa = 0');
         $nhiemky = Core::loadAssocList('danhmuc_nhiemky', 'id,tennhiemky', 'trangthai = 1 AND daxoa = 0');
         $this->nhiemky = $nhiemky;
 
         $this->phuongxa = $phuongxa;
-        $this->loaihinhthietche = $loaihinhthietche;
+        $this->chinhsach = $chinhsach;
     }
     public function _getEditDongbaodantoc()
     {

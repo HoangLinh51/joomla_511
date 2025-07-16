@@ -68,7 +68,7 @@ $idUser = Factory::getUser()->id;
 						<tr>
 							<td colspan="4" class="text-center" style="padding-top:10px;">
 								<button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
-								<span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
+								<!-- <span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span> -->
 							</td>
 						</tr>
 					</table>

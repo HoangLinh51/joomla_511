@@ -25,14 +25,13 @@ class HtmlView extends BaseHtmlView
         $app    = Factory::getApplication();
         $user   = Factory::getUser();
         $input  = $app->input;
-        $id     = $input->getInt('id');
         $component  = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
+        $controller = $input->getCmd('view', 'dichvunhaycam');
         $task       = strtoupper($input->getCmd('task', 'default'));
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'DS_DICHVUNHAYCAM' || $task === 'ADD_DICHVUNHAYCAM' || $task === 'EDIT_DICHVUNHAYCAM') {
+        if ($task === 'DS_DICHVUNHAYCAM' || $task === 'EDIT_DICHVUNHAYCAM' || $task === 'THONGKE') {
             $checkTask = 'default';
         }
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
@@ -45,24 +44,14 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        // Xác định layout
-        if ($task === 'EDIT_DICHVUNHAYCAM') {
-            $task = $id > 0 ? 'EDIT_DICHVUNHAYCAM' : 'ADD_DICHVUNHAYCAM';
-        }
-        //  else {
-        //     $layout = $task ? strtoupper($task) : 'DEFAULT';
-        // }
-
         switch ($task) {
-            case 'DEFAULT':
-            case 'DS_DICHVUNHAYCAM':
-                $this->setLayout('ds_dichvunhaycam');
-                $this->_initDefaultPage();
-                break;
-            case 'ADD_DICHVUNHAYCAM':
             case 'EDIT_DICHVUNHAYCAM':
                 $this->setLayout('edit_dichvunhaycam');
                 $this->_editDVNhayCam();
+                break;
+            case 'THONGKE':
+                $this->setLayout('thongke');
+                $this->_initDefaultPage();
                 break;
         }
 

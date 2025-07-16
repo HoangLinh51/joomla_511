@@ -22,32 +22,32 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $user = Factory::getUser();
-        $app = Factory::getApplication();
-        $input = $app->input;
-        $component = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
-        $task = strtoupper($input->getCmd('task', 'default'));
+        $input = Factory::getApplication()->input;
+        $component  = 'com_vhytgd';
+        $controller = $input->getCmd('view', 'doituonghuongcs');
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'THONGKE' || $task === 'ADD_DTCS' || $task === 'EDIT_DTCS') {
+
+        if ($task === 'ADD_DTCS' || $task === 'EDIT_DTCS' || $task === 'THONGKE') {
             $checkTask = 'default';
         }
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
-            echo '<div style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-                    <a href="/index.php" style="text-decoration: none;">
-                        <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">Trang chủ</button>
-                    </a>
-                </div>';
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
             exit;
         }
 
-        switch ($task) {
-            case 'DEFAULT':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
+        switch ($task) {          
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();
@@ -108,12 +108,12 @@ class HtmlView extends BaseHtmlView
         } else {
             $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0 AND id IN (' . $phanquyen['phuongxa_id'] . ')', 'tenkhuvuc ASC');
         }
-        $loaihinhthietche = Core::loadAssocList('danhmuc_loaihinhthietche', 'id,tenloaihinhthietche', 'trangthai = 1 AND daxoa = 0');
+        $loaidoituong = Core::loadAssocList('dmloaidoituong', 'id, ten, ma, macs, heso, sotien', 'trangthai = 1 AND daxoa = 0');
         $nhiemky = Core::loadAssocList('danhmuc_nhiemky', 'id,tennhiemky', 'trangthai = 1 AND daxoa = 0');
         $this->nhiemky = $nhiemky;
 
         $this->phuongxa = $phuongxa;
-        $this->loaihinhthietche = $loaihinhthietche;
+        $this->loaidoituong = $loaidoituong;
     }
     public function _getEditDoituongcs()
     {

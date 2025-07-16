@@ -39,9 +39,9 @@ $idUser = JFactory::getUser()->id;
 							<td style="width:45%;">
 								<input type="text" name="hoten" id="hoten" class="form-control" style="font-size:16px;" placeholder="Nhập họ và tên" />
 							</td>
-							<td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:17px;line-height:2.5">Mã khác hàng</b></td>
+							<td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:17px;line-height:2.5">Mã hộ gia đình</b></td>
 							<td style="width:45%;">
-								<input type="text" name="makhachhang" id="makhachhang" class="form-control" style="font-size:16px;" placeholder="Nhập mã khách hàng" />
+								<input type="text" name="makhachhang" id="makhachhang" class="form-control" style="font-size:16px;" placeholder="Nhập mã hộ gia đình" />
 							</td>
 						</tr>
 

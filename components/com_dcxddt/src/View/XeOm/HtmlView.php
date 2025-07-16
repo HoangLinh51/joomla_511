@@ -24,27 +24,39 @@ class HtmlView extends BaseHtmlView
     {
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
-        $component = 'com_dcxddt';
+        $component  = 'com_dcxddt';
         $controller = $input->getCmd('view', 'xeom');
-        $task =  strtoupper($input->getCmd('task', 'default'));
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        // if (!Core::checkUserMenuPermission($user->id, $component, $controller, $task)) {
-        //     echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        //         <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-        //         <a href="/index.php" style="text-decoration: none;">
-        //         <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
-        //             Trang chủ
-        //         </button>
-        //         </a>
-        //       </div>';
-        //     exit;
-        // }
 
-        if ($task === 'DEFAULT') {
-            $this->setLayout('default');
-            $this->_initDefaultPage();
+        if ($task === 'THONGKE') {
+            $checkTask = 'default';
+        }
+
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
+
+        switch ($task) {
+            case 'THONGKE':
+                $this->setLayout('thongke');
+                $this->_initDefaultPage();
+                break;
+            default:
+                $this->setLayout('default');
+                $this->_initDefaultPage();
+                break;
         }
 
         parent::display($tpl);
@@ -75,7 +87,7 @@ class HtmlView extends BaseHtmlView
         $this->tongiao = $tongiao;
         $this->phuongxa = $phuongxa;
     }
-    
+
 
     private function import()
     {
@@ -87,16 +99,16 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
         // $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2-bootstrap.css');
-        
 
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js'); 
-        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js'); 
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js'); 
+
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js'); 
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');

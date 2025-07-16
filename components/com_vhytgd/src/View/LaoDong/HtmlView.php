@@ -23,40 +23,34 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $user = Factory::getUser();
-        $app = Factory::getApplication();
-        $input = $app->input;
-        $id = $input->getInt('id');
-        $component = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
-        $task = strtoupper($input->getCmd('task', 'default'));
+        $input = Factory::getApplication()->input;
+        $component  = 'com_vhytgd';
+        $controller = $input->getCmd('view', 'laodong');
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'DS_LAODONG' || $task === 'ADD_LAODONG' || $task === 'EDIT_LAODONG') {
+
+        if ($task === 'ADD_LAODONG' || $task === 'EDIT_LAODONG' || $task === 'THONGKE') {
             $checkTask = 'default';
         }
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
-            echo '<div style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-                    <a href="/index.php" style="text-decoration: none;">
-                        <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">Trang chủ</button>
-                    </a>
-                </div>';
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
             exit;
         }
 
-        // Phân biệt edit vs add
-        if ($task === 'EDIT_LAODONG') {
-            $task = $id > 0 ? 'EDIT_LAODONG' : 'ADD_LAODONG';
-        } 
-        // else {
-        //     $layout = $task ? strtoupper($task) : 'DEFAULT';
-        // }
-
         switch ($task) {
-            case 'DEFAULT':
-            case 'DS_LAODONG':
-                $this->setLayout('ds_laodong');
+            case 'THONGKE':
+                $this->setLayout('thongke');
                 $this->_initDefaultPage();
                 break;
             case 'ADD_LAODONG':
@@ -64,6 +58,9 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('edit_laodong');
                 $this->_editDVNhayCam();
                 break;
+            default:
+                $this->setLayout('ds_laodong');
+                $this->_initDefaultPage();
         }
 
         parent::display($tpl);
@@ -80,6 +77,8 @@ class HtmlView extends BaseHtmlView
         }
         $doituong = $model->getDoiTuong();
         $gioitinh = $model->getDanhMucGioiTinh();
+        $doituonguutien = $model->getListDoiTuongUuTien();
+        $this->doituonguutien = $doituonguutien;
 
         $this->gioitinh = $gioitinh;
         $this->doituong = $doituong;

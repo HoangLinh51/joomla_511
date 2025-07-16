@@ -23,32 +23,32 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $user = Factory::getUser();
-        $app = Factory::getApplication();
-        $input = $app->input;
-        $component = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
-        $task = strtoupper($input->getCmd('task', 'default'));
+        $input = Factory::getApplication()->input;
+        $component  = 'com_vhytgd';
+        $controller = $input->getCmd('view', 'giadinhvanhoa');
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'THONGKE' || $task === 'ADD_GDVANHOA' || $task === 'EDIT_GDVANHOA') {
+
+        if ($task === 'ADD_GDVANHOA' || $task === 'EDIT_GDVANHOA' || $task === 'THONGKE') {
             $checkTask = 'default';
         }
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
-            echo '<div style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-                    <a href="/index.php" style="text-decoration: none;">
-                        <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">Trang chủ</button>
-                    </a>
-                </div>';
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
             exit;
         }
-        
+
         switch ($task) {
-            case 'DEFAULT':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();

@@ -119,7 +119,6 @@ class HtmlView extends BaseHtmlView
   {
     $document = Factory::getDocument();
     $document->addStyleSheet(Uri::base(true) . 'templates\adminlte\plugins\chart.js\Chart.min.js');
-    $document->addScript(Uri::base(true) . 'templates\adminlte\plugins\bootstrap\js\bootstrap.bundle.min.js');
     // $document->addStyleSheet(Uri::base(true) . 'templates\adminlte\plugins\chart.js\Chart.min.js');
     $model = Core::model('Content/Feature');
     $this->moduleName =  $model->getNameModule();

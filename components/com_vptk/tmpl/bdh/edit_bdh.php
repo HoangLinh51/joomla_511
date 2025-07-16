@@ -82,7 +82,7 @@ $item = $this->item;
                 </tr>
             </tbody>
         </table>
-        <h3 style="padding-left:15px;" class="mb-0 fw-bold">Thông tin nhân khẩu
+        <h3 style="padding-left:15px;" class="mb-0 fw-bold">Thông tin ban điều hành
             <span class="float-right">
                 <button type="button" class="btn btn-primary" id="btn_themthanhvien" data-toggle="modal" data-target="#modalBanDieuHanh"><i class="fas fa-plus"></i> Thêm thành viên</button>
             </span>

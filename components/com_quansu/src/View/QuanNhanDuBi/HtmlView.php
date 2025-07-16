@@ -24,16 +24,18 @@ class HtmlView extends BaseHtmlView
     {
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
-        $id = $input->getInt('id');
-        $component = 'com_quansu';
-        $controller = $input->getCmd('view', '');
-        $task = strtoupper($input->getCmd('task', 'default'));
+        $component  = 'com_quansu';
+        $controller = $input->getCmd('view', 'quannhandubi');
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'DEFAULT'|| $task === 'DS_QUANNHANDUBI' || $task === 'ADD_QUANNHANDUBI' || $task === 'EDIT_QUANNHANDUBI') {
+
+        if ($task === 'DS_QUANNHANDUBI' || $task === 'ADD_QUANNHANDUBI' || $task === 'EDIT_QUANNHANDUBI') {
             $checkTask = 'default';
         }
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
@@ -46,23 +48,15 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        if ($task === 'EDIT_QUANNHANDUBI') {
-            $layout = $id > 0 ? 'EDIT_QUANNHANDUBI' : 'ADD_QUANNHANDUBI';
-        } 
-        // else {
-        //     $layout = $task ? strtoupper($task) : 'DEFAULT';
-        // }
-
-        switch ($layout) {
-            case 'DEFAULT':
-            case 'DS_QUANNHANDUBI':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
+        switch ($task) {
             case 'ADD_QUANNHANDUBI':
             case 'EDIT_QUANNHANDUBI':
                 $this->setLayout('edit_quannhandubi');
                 $this->_editQuanNhanDuBi();
+                break;
+            default:
+                $this->setLayout('default');
+                $this->_initDefaultPage();
                 break;
         }
 
@@ -87,7 +81,7 @@ class HtmlView extends BaseHtmlView
         }
         $this->detailQuanNhanDuBi = $detailQuanNhanDuBi;
     }
-    
+
 
     private function import()
     {
@@ -99,15 +93,15 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2-bootstrap.css');
-        
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js'); 
-        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js'); 
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js'); 
+
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js'); 
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');
@@ -116,7 +110,7 @@ class HtmlView extends BaseHtmlView
         $document->addScript(Uri::base(true) . '/media/cbcc/js/bootbox.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.gritter.min.js');
 
-        
+
         $model = Core::model('QuanSu/Base');
         $phanquyen = $model->getPhanQuyen();
         $phuongxa = array();

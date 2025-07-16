@@ -328,7 +328,6 @@ class Vhytgd_Model_Giadinhtreem extends JModelLegacy
     if (!empty($params['makhachhang'])) {
         $query->where('a.makh = ' . $db->quote($params['makhachhang']));
     }
-
     // Nhóm theo ID
     $query->group('a.id');
 
@@ -690,4 +689,91 @@ class Vhytgd_Model_Giadinhtreem extends JModelLegacy
         $db->setQuery($query);
         return $db->execute();
     }
+    public function getThongKeGiadinhtreem($params = array())
+{
+    $db = Factory::getDbo();
+
+    // Subquery 1: Aggregate by thonto_id
+    $query_left = $db->getQuery(true);
+    $query_left->select([
+        'kv.id AS khuvuc_id',
+        'hgd.nhankhau_id',
+        'COUNT(DISTINCT bl.id) AS tongbaoluc',
+        'COUNT(DISTINCT te.id) AS tongtreem'
+    ]);
+    $query_left->from('vhxhytgd_thongtinhogiadinh AS hgd');
+    $query_left->innerJoin('vhxhytgd_thanhviengiadinh AS tv ON hgd.id = tv.hogiadinh_id');
+    $query_left->leftJoin('vhxhytgd_thongtinbaoluc AS bl ON hgd.id = bl.hogiadinh_id AND bl.daxoa = 0');
+    $query_left->leftJoin('vhxhytgd_thongtinhotrotreem AS te ON hgd.id = te.hogiadinh_id AND te.daxoa = 0');
+    $query_left->innerJoin('danhmuc_khuvuc AS kv ON hgd.thonto_id = kv.id');
+    $query_left->innerJoin('danhmuc_khuvuc AS kv_ph ON hgd.phuongxa_id = kv_ph.id');
+    $query_left->where([
+        'hgd.daxoa = 0',
+        'tv.daxoa = 0'
+    ]);
+
+    // Subquery 2: Aggregate by phuongxa_id
+    $query_left2 = $db->getQuery(true);
+    $query_left2->select([
+        'kv_ph.id AS khuvuc_id',
+        'hgd.nhankhau_id',
+        'COUNT(DISTINCT bl.id) AS tongbaoluc',
+        'COUNT(DISTINCT te.id) AS tongtreem'
+    ]);
+    $query_left2->from('vhxhytgd_thongtinhogiadinh AS hgd');
+    $query_left2->innerJoin('vhxhytgd_thanhviengiadinh AS tv ON hgd.id = tv.hogiadinh_id');
+    $query_left2->leftJoin('vhxhytgd_thongtinbaoluc AS bl ON hgd.id = bl.hogiadinh_id AND bl.daxoa = 0');
+    $query_left2->leftJoin('vhxhytgd_thongtinhotrotreem AS te ON hgd.id = te.hogiadinh_id AND te.daxoa = 0');
+    $query_left2->innerJoin('danhmuc_khuvuc AS kv ON hgd.thonto_id = kv.id');
+    $query_left2->innerJoin('danhmuc_khuvuc AS kv_ph ON hgd.phuongxa_id = kv_ph.id');
+    $query_left2->where([
+        'hgd.daxoa = 0',
+        'tv.daxoa = 0'
+    ]);
+
+    // Apply filters to both subqueries
+   if (!empty($params['phuongxa_id'])) {
+            $query_left->where('hgd.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        }
+
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query_left->where($db->quoteName('hgd.thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+    $query_left->group('kv.id');
+    $query_left2->group('kv_ph.id');
+
+    // Combine subqueries with UNION
+    $subQuery = '(' . (string)$query_left . ' UNION ' . (string)$query_left2 . ')';
+
+    // Main query
+    $query = $db->getQuery(true);
+    $query->select([
+        'a.id',
+        'a.cha_id',
+        'a.tenkhuvuc',
+        'a.level',
+        'ab.nhankhau_id',
+        'COALESCE(ab.tongbaoluc, 0) AS tongbaoluc',
+        'COALESCE(ab.tongtreem, 0) AS tongtreem'
+    ]);
+    $query->from('danhmuc_khuvuc AS a');
+    $query->leftJoin($subQuery . ' AS ab ON a.id = ab.khuvuc_id');
+
+    // Conditions for main query
+     if (!empty($params['phuongxa_id'])) {
+            $query->where($db->quoteName('a.id') . ' = ' . $db->quote($params['phuongxa_id']) . ' OR ' . $db->quoteName('a.cha_id') . ' = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query->where($db->quoteName('a.id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+    $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level']);
+    $query->order('a.level ASC, a.id ASC');
+    // echo $query;
+    $db->setQuery($query);
+    $results = $db->loadAssocList();
+
+    return $results;
+}
 }

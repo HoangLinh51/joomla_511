@@ -20,20 +20,23 @@ use stdClass;
 
 class HtmlView extends BaseHtmlView
 {
+
     public function display($tpl = null)
     {
-
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
-        $component = 'com_dcxddt';
-        $controller = $input->getCmd('view', '');
-        $task =  strtoupper($input->getCmd('task', 'default'));
+        $component  = 'com_dcxddt';
+        $controller = $input->getCmd('view', 'biensonha');
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
+
         if ($task === 'THONGKE' || $task === 'ADD_BSN' || $task === 'EDIT_BSN') {
             $checkTask = 'default';
         }
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
@@ -47,10 +50,6 @@ class HtmlView extends BaseHtmlView
         }
 
         switch ($task) {
-            case 'DEFAULT':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();
@@ -65,7 +64,6 @@ class HtmlView extends BaseHtmlView
                 $this->_initDefaultPage();
                 break;
         }
-
         parent::display($tpl);
     }
 

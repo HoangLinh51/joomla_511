@@ -300,8 +300,8 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         $query->where('a.daxoa = 0 and dh.daxoa = 0');
         $query->group('g.tenkhuvuc,a.id');
         $query->order('so_nguoi DESC');
-        if (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
-            $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
+        if (!empty($params['phuongxa_id'])) {
+            $query->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
         }
 
         if (!empty($params['nam'])) {
@@ -315,8 +315,8 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
             }
         }
 
-        if (!empty($params['phuongxa_id'])) {
-            $query->where('c.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+         if (empty($params['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
+            $query->where('a.phuongxa_id IN (' . str_replace("'", '', $db->quote($phanquyen['phuongxa_id'])) . ')');
         }
         if (!empty($params['thonto_id'])) {
             $query->where('c.thonto_id = ' . $db->quote($params['thonto_id']));
@@ -355,18 +355,8 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         $query->leftJoin('danhmuc_tongiao AS l ON b.tongiao_id = l.id');
         $query->where('a.daxoa = 0');
 
-        if (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
-            $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
-        }
-
-        if (!empty($params['keyWord'])) {
-            $query->where('b.hoten LIKE ' . $db->quote('%' . $params['keyWord'] . '%'));
-        }
-        if (!empty($params['hoten'])) {
-            $query->where('b.hoten LIKE ' . $db->quote('%' . $params['hoten'] . '%'));
-        }
-        if (!empty($params['cmnd'])) {
-            $query->where('b.cccd_so = ' . $db->quote($params['cmnd']));
+        if (!empty($params['phuongxa_id'])) {
+            $query->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
         }
 
         if (!empty($params['nam'])) {
@@ -380,8 +370,8 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
             }
         }
 
-        if (!empty($params['phuongxa_id'])) {
-            $query->where('c.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+         if (empty($params['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
+            $query->where('a.phuongxa_id IN (' . str_replace("'", '', $db->quote($phanquyen['phuongxa_id'])) . ')');
         }
         if (!empty($params['thonto_id'])) {
             $query->where('c.thonto_id = ' . $db->quote($params['thonto_id']));
@@ -513,5 +503,57 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
                 'message' => 'Lỗi khi lấy danh sách gia đình văn hóa: ' . $e->getMessage()
             );
         }
+    }
+     public function getThongKeGiadinhvanhoa($params = array())
+    {
+        $db = Factory::getDbo();
+
+        // Subquery
+        $query_left = $db->getQuery(true);
+      $query_left->select('
+        IF(cs.is_dat = 1,1,0) as dat,
+        IF(cs.is_dat = 0,1,0) as khongdat,
+        cs.nhankhau_id as nhankhau_id, a.phuongxa_id,d.tenkhuvuc AS tenphuongxa,a.thonto_id,c.tenkhuvuc AS tenthonto');
+        $query_left->from('vhxhytgd_giadinhvanhoa AS a');
+        $query_left->innerJoin('vhxhytgd_giadinhvanhoa2danhhieu AS cs ON a.id = cs.giadinhvanhoa_id');
+        $query_left->innerJoin('danhmuc_khuvuc AS c ON a.thonto_id = c.id');
+        $query_left->innerJoin('danhmuc_khuvuc AS d ON a.phuongxa_id = d.id');
+        $query_left->where('a.daxoa = 0 AND cs.daxoa = 0');
+        // Điều kiện WHERE cho subquery
+        if (!empty($params['phuongxa_id'])) {
+            $query_left->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        }
+
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query_left->where($db->quoteName('a.thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+        if (!empty($params['nam'] )) {
+            $query_left->where('a.nam = ' . $db->quote($params['nam']));
+        }
+
+
+        // Query chính
+        $query = $db->getQuery(true);
+        $query->select(['a.id,a.cha_id,a.tenkhuvuc,a.level, SUM(ab.dat) as datgiai,SUM(ab.khongdat) as khongdatgiai, ab.nhankhau_id'])
+            ->from('danhmuc_khuvuc AS a')
+            ->leftJoin('(' . $query_left . ') AS ab ON (a.id = ab.thonto_id OR a.id = ab.phuongxa_id)');
+
+        // Điều kiện cho query chính
+        if (!empty($params['phuongxa_id'])) {
+            $query->where($db->quoteName('a.id') . ' = ' . $db->quote($params['phuongxa_id']) . ' OR ' . $db->quoteName('a.cha_id') . ' = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query->where($db->quoteName('a.id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+        $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level']);
+        $query->order('a.level, a.id ASC');
+        // echo $query;
+        $db->setQuery($query);
+        $results = $db->loadAssocList();
+
+
+
+        return $results;
     }
 }

@@ -32,7 +32,11 @@ class HtmlView extends BaseHtmlView
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $task)) {
+
+        if ($task === 'THONGKE') {
+            $checkTask = 'default';
+        }
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
                 <a href="/index.php" style="text-decoration: none;">
@@ -44,9 +48,15 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        if ($task === 'DEFAULT') {
-            $this->setLayout('default');
-            $this->_initDefaultPage();
+        switch ($task) {
+            case 'DEFAULT':
+                $this->setLayout('default');
+                $this->_initDefaultPage();
+                break;
+            case 'THONGKE':
+                $this->setLayout('thongke');
+                $this->_initDefaultPage();
+                break;
         }
 
         parent::display($tpl);

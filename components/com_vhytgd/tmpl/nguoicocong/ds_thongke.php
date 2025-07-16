@@ -14,17 +14,13 @@ $current_phuongxa_id = null;
     <thead>
          <thead>
         <tr class="bg-primary">
-            <th class="align-middel text-center" rowspan="2">STT</th>
-            <th class="align-middel text-center" rowspan="2">Khu vực</th>
-            <th class="align-middel text-center" colspan="2">Giới tính</th>
-            <th class="align-middel text-center" colspan="3">Tổng số công dân</th>
-        </tr>
-        <tr class="bg-primary">
-            <th class="align-middel text-center">Nam</th>
-            <th class="align-middel text-center">Nữ</th>
-            <th class="align-middel text-center">thường trú</th>
-            <th class="align-middel text-center">Tạm trú</th>
-            <th class="align-middel text-center">Trên 18 tuổi</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">STT</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Tên khu vực</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Số lượng hỗ trợ</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Số lượng cắt giảm</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Tổng mức trợ cấp</th>
+
+        
         </tr>
     </thead>
     </thead>
@@ -49,18 +45,18 @@ $current_phuongxa_id = null;
             }
             ?>
             <tr>
-                <?php if ($item['nam'] == '0' && $item['nu'] == '0' && $item['thuongtru'] == '0' && $item['tamtru'] == '0' && $item['tren18'] == '0' && $item['level'] == '3') : ?>
+                <?php if ($item['tong_nhankhau'] == '') : ?>
                     <td style="vertical-align:middle;" class="text-center text-danger"><?php echo htmlspecialchars($stt); ?></td>
                     <td style="vertical-align:middle;" class="text-danger"><?php echo htmlspecialchars($item['tenkhuvuc']); ?></td>
-                    <td style="vertical-align:middle;" class="text-danger" colspan="5">Chưa có dữ liệu></td>
+                    <td style="vertical-align:middle;" class="text-danger" colspan="5">Chưa có dữ liệu</td>
                 <?php else : ?>
                     <td style="vertical-align:middle;" class="text-center"><?php echo htmlspecialchars($stt); ?></td>
                     <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['tenkhuvuc']); ?></td>
-                    <td style="vertical-align:middle;text-align:right;"><?php echo htmlspecialchars($item['nam']); ?></td>
-                    <td style="vertical-align:middle;text-align:right;"><?php echo htmlspecialchars($item['nu']); ?></td>
-                    <td style="vertical-align:middle;text-align:right;"><?php echo htmlspecialchars($item['thuongtru']); ?></td>
-                    <td style="vertical-align:middle;text-align:right;"><?php echo htmlspecialchars($item['tamtru']); ?></td>
-                    <td style="vertical-align:middle;text-align:right;"><?php echo htmlspecialchars($item['tren18']); ?></td>
+                    <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['tong_nhankhau']); ?></td>
+                    <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['catgiam']); ?></td>
+                    <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['trocap']); ?></td>
+
+                  
                 <?php endif; ?>
             </tr>
         <?php endforeach; ?>

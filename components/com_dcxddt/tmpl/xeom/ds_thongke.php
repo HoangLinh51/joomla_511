@@ -1,10 +1,8 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Language\Text;
-use Joomla\CMS\HTML\HTMLHelper;
 
+// Initialize variables
 $stt_phuongxa = 1;
 $stt_thonto = 1;
 $current_phuongxa_id = null;
@@ -12,13 +10,12 @@ $current_phuongxa_id = null;
 
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
     <thead>
-        <thead>
-            <tr class="bg-primary">
-                <th style="vertical-align:middle;color:#FFF!important;" class="center">STT</th>
-                <th style="vertical-align:middle;color:#FFF!important;" class="center">Tên khu vực</th>
-                <th style="vertical-align:middle;color:#FFF!important;" class="center">Số lượng hỗ trợ</th>
-            </tr>
-        </thead>
+        <tr class="bg-primary">
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">STT</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Tên khu vực</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Số lượng</th>
+        </tr>
+
     </thead>
     <tbody id="tbody_danhsach">
         <?php foreach ($this->items as $i => $item) : ?>
@@ -41,22 +38,17 @@ $current_phuongxa_id = null;
             }
             ?>
             <tr>
-                <?php if ($item['tongsodongbao'] == '0') : ?>
+                <?php if ($item['soluong'] == '0' ) : ?>
                     <td style="vertical-align:middle;" class="text-center text-danger"><?php echo htmlspecialchars($stt); ?></td>
                     <td style="vertical-align:middle;" class="text-danger"><?php echo htmlspecialchars($item['tenkhuvuc']); ?></td>
-                    <td style="vertical-align:middle;" class="text-danger" colspan="5">Chưa có dữ liệu </td>
+                    <td style="vertical-align:middle;" class="text-danger" colspan="4">Chưa có dữ liệu</td>
                 <?php else : ?>
                     <td style="vertical-align:middle;" class="text-center"><?php echo htmlspecialchars($stt); ?></td>
                     <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['tenkhuvuc']); ?></td>
-                    <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['tongsodongbao']); ?></td>
+                    <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['soluong']); ?></td>
+                
                 <?php endif; ?>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
-
-<?php
-// Load Bootstrap 5 and jQuery (if needed)
-HTMLHelper::_('bootstrap.framework');
-HTMLHelper::_('jquery.framework');
-?>

@@ -13,11 +13,10 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê nộp thuế đất</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê lao động</h3>
                 </div>
             </div>
         </div>
-        <!-- <h2 class="header smaller lighter text-primary"><i class="fas fa-chart-bar"></i> Thống kê</h2> -->
         <div id="main-right">
             <div class="card card-primary">
 
@@ -47,6 +46,19 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                                 </select>
                             </td>
                         </tr>
+                        <tr>
+                            <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Đối tượng</b></td>
+                            <td style="width:45%;">
+                                <select id="doituong_id" name="doituong_id" class="custom-select" data-placeholder="Chọn đối tượng ưu tiên">
+                                    <option value=""></option>
+                                    <?php foreach ($this->doituonguutien as $dt) { ?>
+                                        <option value="<?php echo $dt['id']; ?>"><?php echo $dt['tendoituong']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+
+                        </tr>
+
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
                                 <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Thống kê</button>
@@ -80,26 +92,16 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
     .form-select {
         height: 38px;
-        font-size: 15px;
+        font-size: 16px;
     }
 
     .select2-container .select2-choice {
         height: 34px !important;
     }
 
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: #007b8b;
-        color: #fff
-    }
-
     .select2-container .select2-choice .select2-chosen {
         height: 34px !important;
         padding: 5px 0 0 5px !important;
-    }
-
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: #007b8b;
-        color: #fff
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -108,6 +110,11 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         float: left;
         padding: 0 10px;
         color: #181616;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .select2-container .select2-selection--single {
@@ -127,7 +134,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         });
 
         // Khởi tạo Select2
-        $('#phuongxa_id, #thonto_id').select2({
+        $('#phuongxa_id, #thonto_id, #doituong_id').select2({
             width: '100%',
             allowClear: true,
             placeholder: function() {
@@ -161,6 +168,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             const phuongxaId = $('#phuongxa_id').val();
             const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
             const thontoValue = Array.isArray(thontoIds) ? thontoIds.join(',') : '';
+            // Kiểm tra xem phường xã đã được chọn hay chưa
             if (!phuongxaId) {
                 showToast('Vui lòng chọn phường xã!', false);
                 return; // Dừng thực hiện nếu không chọn
@@ -168,12 +176,14 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_taichinh',
-                view: 'nopthue',
+                option: 'com_vhytgd',
+                view: 'laodong',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
                 thonto_id: thontoValue,
+                doituong_id: $('#doituong_id').val(),
+
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);
@@ -182,6 +192,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 }
             });
         }
+
 
         // Xử lý nút Thống kê
         $('#btn_filter').on('click', function(e) {

@@ -49,7 +49,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                         </tr>
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
-                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Thống kê</button>
                             </td>
                         </tr>
                     </table>
@@ -98,15 +98,11 @@ $idUser = Factory::getApplication()->getIdentity()->id;
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #69d7e9;
-        border: 1px solid #080808;
         border-radius: 4px;
         cursor: default;
         float: left;
-        margin: 0 5px;
         padding: 0 10px;
         color: #181616;
-        margin-top: .31rem;
     }
 
     .select2-container .select2-selection--single {
@@ -182,7 +178,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             });
         }
 
-        // Xử lý nút Tìm kiếm
+        // Xử lý nút Thống kê
         $('#btn_filter').on('click', function(e) {
             e.preventDefault();
             loadDanhSach();

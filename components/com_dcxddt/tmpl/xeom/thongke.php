@@ -13,7 +13,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê nộp thuế đất</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê hành nghề vận chuyển</h3>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                     <table class="w-100">
                         <tr>
                             <td style="width:5%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Phường xã</b></td>
-                            <td style="width:45%;">
+                            <td style="width:40%;padding:10px">
                                 <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn phường xã">
                                     <option value=""></option>
                                     <?php foreach ($this->phuongxa as $px) { ?>
@@ -80,26 +80,16 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
     .form-select {
         height: 38px;
-        font-size: 15px;
+        font-size: 16px;
     }
 
     .select2-container .select2-choice {
         height: 34px !important;
     }
 
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: #007b8b;
-        color: #fff
-    }
-
     .select2-container .select2-choice .select2-chosen {
         height: 34px !important;
         padding: 5px 0 0 5px !important;
-    }
-
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: #007b8b;
-        color: #fff
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -112,6 +102,11 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
     .select2-container .select2-selection--single {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 </style>
 
@@ -127,7 +122,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         });
 
         // Khởi tạo Select2
-        $('#phuongxa_id, #thonto_id').select2({
+        $('#phuongxa_id, #thonto_id, #nhiemky_id, #chucdanh_id').select2({
             width: '100%',
             allowClear: true,
             placeholder: function() {
@@ -159,8 +154,11 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
         function loadDanhSach(start = 0) {
             const phuongxaId = $('#phuongxa_id').val();
+
             const thontoIds = $('#thonto_id').val() || []; // Mảng hoặc rỗng
             const thontoValue = Array.isArray(thontoIds) ? thontoIds.join(',') : '';
+
+            // Kiểm tra xem phường xã đã được chọn hay chưa
             if (!phuongxaId) {
                 showToast('Vui lòng chọn phường xã!', false);
                 return; // Dừng thực hiện nếu không chọn
@@ -168,12 +166,13 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
-                option: 'com_taichinh',
-                view: 'nopthue',
+                option: 'com_dcxddt',
+                view: 'xeom',
                 format: 'raw',
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
                 thonto_id: thontoValue,
+
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);
@@ -182,6 +181,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 }
             });
         }
+
 
         // Xử lý nút Thống kê
         $('#btn_filter').on('click', function(e) {

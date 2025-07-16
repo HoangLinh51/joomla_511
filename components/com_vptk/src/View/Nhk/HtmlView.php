@@ -46,10 +46,6 @@ class HtmlView extends BaseHtmlView
         }
 
         switch ($task) {
-            case 'DEFAULT':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();

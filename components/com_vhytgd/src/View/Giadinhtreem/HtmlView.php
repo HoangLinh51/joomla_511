@@ -24,7 +24,7 @@ class HtmlView extends BaseHtmlView
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
         $component = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
+        $controller = $input->getCmd('view', 'giadinhtreem');
         $task =  strtoupper($input->getCmd('task', 'default'));
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';

@@ -90,13 +90,12 @@ class RawView extends BaseHtmlView
     }
     private function _pageThongke()
     {
-        $model = Core::model('Vptk/Bdh');
+        $model = Core::model('Vhytgd/Giadinhvanhoa');
         $app = Factory::getApplication()->input;
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', 0),
             'thonto_id' => $app->getString('thonto_id', ''),
-            'chucdanh_id' => $app->getInt('chucdanh_id', 0),
-            'nhiemky_id' => $app->getInt('nhiemky_id', 0),
+            'nam' => $app->getString('nam', 0),
 
         ];
         if (!empty($params['thonto_id'])) {
@@ -104,7 +103,7 @@ class RawView extends BaseHtmlView
         } else {
             $params['thonto_id'] = [];
         }
-        $items = $model->getThongKeBanDieuHanh($params);
+        $items = $model->getThongKeGiadinhvanhoa($params);
         // var_dump($items);exit;
 
         $this->items = $items;

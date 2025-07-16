@@ -21,10 +21,33 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $layout = Factory::getApplication()->input->get('task');
-        $layout = ($layout == null) ? 'default' : strtoupper($layout);
+        $user = Factory::getUser();
+        $input = Factory::getApplication()->input;
+        $component  = 'com_vhytgd';
+        $controller = $input->getCmd('view', 'vayvon');
+        $task       = strtoupper($input->getCmd('task', 'default'));
 
-        switch ($layout) {
+        if (!$user->id) {
+            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
+        }
+
+        if ($task === 'ADD_VAYVON' || $task === 'EDIT_VAYVON' || $task === 'THONGKE') {
+            $checkTask = 'default';
+        }
+
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
+
+        switch ($task) {
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();
@@ -85,12 +108,12 @@ class HtmlView extends BaseHtmlView
         } else {
             $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0 AND id IN (' . $phanquyen['phuongxa_id'] . ')', 'tenkhuvuc ASC');
         }
-        $loaihinhthietche = Core::loadAssocList('danhmuc_loaihinhthietche', 'id,tenloaihinhthietche', 'trangthai = 1 AND daxoa = 0');
-        $nhiemky = Core::loadAssocList('danhmuc_nhiemky', 'id,tennhiemky', 'trangthai = 1 AND daxoa = 0');
-        $this->nhiemky = $nhiemky;
+        $tinhtrang = Core::loadAssocList('danhmuc_trangthaivay', 'id, tentrangthaivay', 'trangthai = 1 AND daxoa = 0');
+        $chuongtrinh = Core::loadAssocList('danhmuc_chuongtrinhvay', 'id,tenchuongtrinhvay', 'trangthai = 1 AND daxoa = 0');
+        $this->chuongtrinh = $chuongtrinh;
 
         $this->phuongxa = $phuongxa;
-        $this->loaihinhthietche = $loaihinhthietche;
+        $this->tinhtrang = $tinhtrang;
     }
     public function _getEditVayVon()
     {
