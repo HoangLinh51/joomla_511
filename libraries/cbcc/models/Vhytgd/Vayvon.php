@@ -510,4 +510,56 @@ class Vhytgd_Model_Vayvon extends JModelLegacy
 
         return true;
     }
+    public function getThongKeVayvon($params = array())
+    {
+        $db = Factory::getDbo();
+
+        // Subquery
+        $query_left = $db->getQuery(true);
+        $query_left->select('SUM( cs.tongduno ) AS kinhphi,a.nhankhau_id as songuoivayvon, a.phuongxa_id,d.tenkhuvuc AS tenphuongxa,a.thonto_id,c.tenkhuvuc AS tenthonto');
+        $query_left->from('vhxhytgd_nguoivayvon AS a');
+        $query_left->innerJoin('vhxhytgd_nguoivayvon2chuongtrinh AS cs ON a.id = cs.nguoivayvon_id');
+        $query_left->innerJoin('danhmuc_khuvuc AS c ON a.thonto_id = c.id');
+        $query_left->innerJoin('danhmuc_khuvuc AS d ON a.phuongxa_id = d.id');
+        $query_left->where('a.daxoa = 0 AND cs.daxoa = 0');
+        $query_left->group('a.thonto_id');
+        // Điều kiện WHERE cho subquery
+        if (!empty($params['phuongxa_id'])) {
+            $query_left->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
+        }
+
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query_left->where($db->quoteName('a.thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+        if (!empty($params['chuongtrinh_id'])) {
+            $query_left->where('cs.chuongtrinhvay_id = ' . $db->quote($params['chuongtrinh_id']));
+        }
+
+        if (!empty($params['trangthai_id'])) {
+            $query_left->where('cs.trangthaivay_id = ' . $db->quote($params['trangthai_id']));
+        }
+        // Query chính
+        $query = $db->getQuery(true);
+        $query->select(['a.id,a.cha_id,a.tenkhuvuc,a.level, COUNT(ab.songuoivayvon) as tongsonguoivayvon, CONCAT(FORMAT(SUM(ab.kinhphi),"vi_VN")) AS tongkinhphi'])
+            ->from('danhmuc_khuvuc AS a')
+            ->leftJoin('(' . $query_left . ') AS ab ON (a.id = ab.thonto_id OR a.id = ab.phuongxa_id)');
+
+        // Điều kiện cho query chính
+        if (!empty($params['phuongxa_id'])) {
+            $query->where($db->quoteName('a.id') . ' = ' . $db->quote($params['phuongxa_id']) . ' OR ' . $db->quoteName('a.cha_id') . ' = ' . $db->quote($params['phuongxa_id']));
+        }
+        if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
+            $query->where($db->quoteName('a.id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+        }
+
+        $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level']);
+        $query->order('a.level, a.id ASC');
+        // echo $query;
+        $db->setQuery($query);
+        $results = $db->loadAssocList();
+
+
+
+        return $results;
+    }
 }

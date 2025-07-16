@@ -85,12 +85,12 @@ class HtmlView extends BaseHtmlView
         } else {
             $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0 AND id IN (' . $phanquyen['phuongxa_id'] . ')', 'tenkhuvuc ASC');
         }
-        $loaihinhthietche = Core::loadAssocList('danhmuc_loaihinhthietche', 'id,tenloaihinhthietche', 'trangthai = 1 AND daxoa = 0');
-        $nhiemky = Core::loadAssocList('danhmuc_nhiemky', 'id,tennhiemky', 'trangthai = 1 AND daxoa = 0');
-        $this->nhiemky = $nhiemky;
+        $tinhtrang = Core::loadAssocList('danhmuc_trangthaivay', 'id, tentrangthaivay', 'trangthai = 1 AND daxoa = 0');
+        $chuongtrinh = Core::loadAssocList('danhmuc_chuongtrinhvay', 'id,tenchuongtrinhvay', 'trangthai = 1 AND daxoa = 0');
+        $this->chuongtrinh = $chuongtrinh;
 
         $this->phuongxa = $phuongxa;
-        $this->loaihinhthietche = $loaihinhthietche;
+        $this->tinhtrang = $tinhtrang;
     }
     public function _getEditVayVon()
     {
