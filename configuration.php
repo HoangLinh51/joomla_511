@@ -19,11 +19,16 @@ class JConfig {
 	// public $password = 'Abc123@@@';
 	// public $db = 'joomla511';
 
-	// public $host = 'localhost:3306';
-	public $host = '10.49.41.247:3306';
+	public $host = 'localhost:3306';
+	// public $host = '10.49.41.247:3306';
 	public $user = 'pxdnict';
 	public $password = 'PX@2024!@#';
 	public $db = 'phuongxa_2025';
+
+	// public $host = '10.49.41.247:7306';
+	// public $user = 'root';
+	// public $password = 'database@Mysql8.0@';
+	// public $db = 'phuongxa_2025';
 
 	// public $host = '10.49.45.13:3306';
 	// public $user = 'cbccdang';

@@ -99,7 +99,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
     .form-select {
         height: 38px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .select2-container {
@@ -128,24 +128,19 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         padding: 5px 0 0 5px !important;
     }
 
-    .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #69d7e9;
-        border: 1px solid #080808;
-        border-radius: 4px;
-        cursor: default;
-        float: left;
-        margin-right: 5px;
-        margin-top: 5px;
-        padding: 0 5px;
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #007bff;
-        border-color: #006fe6;
-        color: #181616;
+        border-radius: 4px;
+        cursor: default;
+        float: left;
         padding: 0 10px;
-        margin-top: .31rem;
+        color: #181616;
     }
+
 
     .select2-container .select2-selection--single {
         height: 38px;
@@ -176,14 +171,6 @@ $idUser = Factory::getApplication()->getIdentity()->id;
             dropdownAutoWidth: true, // Tự động điều chỉnh chiều rộng dropdown
             minimumResultsForSearch: 10 // Chỉ hiển thị ô Thống kê khi có nhiều kết quả
         });
-
-        // Tùy chỉnh riêng cho select multiple (thôn tổ)
-        // $('#thonto_id').select2({
-        //     width: '100%',
-        //     dropdownAutoWidth: true,
-        //     placeholder: "Chọn thôn/tổ",
-        //     allowClear: true
-        // });
 
         // Xử lý sự kiện change cho phuongxa_id
         $('#phuongxa_id').on('change', function() {

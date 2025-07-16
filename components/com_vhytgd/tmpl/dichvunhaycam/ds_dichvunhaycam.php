@@ -97,13 +97,13 @@ defined('_JEXEC') or die('Restricted access');
   <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
       <thead>
-        <tr style="background-color: #FBFBFB !important;" class="bg-primary">
-          <th style="vertical-align: middle" class="text-center text-dark">STT</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Tên cơ sở</th>
-          <th style="vertical-align: middle" class="text-center text-dark">Địa chỉ</th>
-          <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center text-dark">Thông tin chủ cơ sở</th>
-          <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Trạng thái</th>
-          <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center text-dark">Chức năng </th>
+        <tr class="bg-primary">
+          <th style="vertical-align: middle" class="text-center">STT</th>
+          <th style="vertical-align: middle" class="text-center">Tên cơ sở</th>
+          <th style="vertical-align: middle" class="text-center">Địa chỉ</th>
+          <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center">Thông tin chủ cơ sở</th>
+          <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Trạng thái</th>
+          <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center">Chức năng </th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
@@ -149,19 +149,19 @@ defined('_JEXEC') or die('Restricted access');
     }
     return items.map((item, index) => `
       <tr>
-        <td class="text-center" style="vertical-align: middle">${start + index}</td>
-        <td style="vertical-align: middle">
+        <td class="text-center align-middle" >${start + index}</td>
+        <td class="align-middle">
           ${item.coso_ten || ''}
         </td>
-        <td style="vertical-align:middle;">${item.coso_diachi || ''}</td>
-        <td style="vertical-align:middle;"><strong>${item.chucoso_ten || ''}</strong> <br>CCCD: ${item.chucoso_cccd || ''} <br>SDT: ${item.chucoso_dienthoai || ''}</td>
-        <td style="vertical-align:middle;">${renderStatus(item.tentrangthaihoatdong)}</td>
-        <td class="text-center" style="vertical-align: middle">
-         <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-idcoso="${item.id}" data-title="Hiệu chỉnh">
+        <td class="align-middle;">${item.coso_diachi || ''}</td>
+        <td class="align-middle;"><strong>${item.chucoso_ten || ''}</strong> <br>CCCD: ${item.chucoso_cccd || ''} <br>SDT: ${item.chucoso_dienthoai || ''}</td>
+        <td class="align-middle;">${renderStatus(item.tentrangthaihoatdong)}</td>
+        <td class="text-center align-middle">
+         <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px;" data-idcoso="${item.id}" data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>
           </span>
           <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;" data-idcoso="${item.id}" data-title="Xóa">
+          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px;" data-idcoso="${item.id}" data-title="Xóa">
             <i class="fas fa-trash-alt"></i>
           </span>
         </td>
@@ -171,12 +171,11 @@ defined('_JEXEC') or die('Restricted access');
 
   function renderStatus(status) {
     if (status === "Đang hoạt động") {
-      return `<span class="text-success">${status}</span>`;
+      return `<span class="badge bg-success">${status}</span>`;
     } else if (status === "Đang xây dựng") {
-      return `<span class="text-warning">${status}</span>`;
-      return '<span class="text-warning"></span>';
+      return `<span class="badge bg-warning">${status}</span>`;
     } else if (status === "Tạm ngưng hoạt động") {
-      return `<span class="text-danger">${status}</span>`;
+      return `<span class="badge bg-danger  ">${status}</span>`;
     }
   }
 
@@ -342,37 +341,90 @@ defined('_JEXEC') or die('Restricted access');
         });
       }
     });
-
-    $('body').on('click', '.btn_xoa', async function() {
-      if (!confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) return;
-
+    $('body').on('click', '.btn_xoa', function() {
       const idCoso = $(this).data('idcoso');
-      console.log('idCoso', idCoso)
-      try {
-        const response = await fetch(`index.php?option=com_vhytgd&controller=dichvunhaycam&task=xoa_dichvunhaycam`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            idUser,
-            idCoso: idCoso,
-            [csrfToken]: 1
-          })
-        });
-        const data = await response.json();
-        showToast(data.message || 'Xóa cơ sở thành công', 'success');
-        if (data.success !== false) {
-          setTimeout(() => {
-            window.location.href = '/index.php/component/dichvunhaycam/?view=dichvunhaycam';
-          }, 500);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        showToast('Đã xảy ra lỗi khi xóa dữ liệu', false);
-      }
-    });
 
+      bootbox.confirm({
+        title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+        message: '<span style="font-size:20px;">Bạn có chắc chắn muốn xóa dữ liệu này?</span>',
+        buttons: {
+          confirm: {
+            label: '<i class="icon-ok"></i> Đồng ý',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '<i class="icon-remove"></i> Không',
+            className: 'btn-danger'
+          }
+        },
+        callback: async function(result) {
+          if (!result) return;
+
+          try {
+            const response = await fetch(`index.php?option=com_vhytgd&controller=dichvunhaycam&task=xoa_dichvunhaycam`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                idUser,
+                idCoso: idCoso,
+                [csrfToken]: 1
+              })
+            });
+
+            const data = await response.json();
+
+            const message = data.message || (data.success !== false ? 'Xóa cơ sở thành công' : 'Xóa thất bại!');
+            const icon = data.success !== false ?
+              '<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
+              '';
+
+            bootbox.alert({
+              title: icon + '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+              message: '<span style="font-size:20px;">' + message + '</span>',
+              backdrop: true,
+              className: 'small-alert',
+              buttons: {
+                ok: {
+                  label: 'OK',
+                  className: 'hidden' // Ẩn nút OK
+                }
+              },
+              onShown: function() {
+                setTimeout(function() {
+                  bootbox.hideAll();
+                  if (data.success !== false) {
+                    window.location.href = '/index.php/component/dichvunhaycam/?view=dichvunhaycam';
+                  }
+                }, 2000);
+              }
+            });
+
+          } catch (error) {
+            console.error('Error:', error);
+            bootbox.alert({
+              title: "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
+              message: '<span style="font-size:20px;">Đã xảy ra lỗi khi xóa dữ liệu</span>',
+              className: 'small-alert',
+              buttons: {
+                ok: {
+                  label: 'OK',
+                  className: 'hidden'
+                }
+              },
+              onShown: function() {
+                setTimeout(function() {
+                  bootbox.hideAll();
+                }, 2000);
+              }
+            });
+          }
+        },
+        className: 'custom-bootbox'
+      });
+    });
+    
     $('#btn_xuatexcel').on('click', function() {
       let params = {
         option: 'com_vhytgd',
@@ -441,10 +493,10 @@ defined('_JEXEC') or die('Restricted access');
     padding: 5px 0 0 5px !important;
   }
 
-  .text-primary {
-    color: #478fca !important;
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
-
 
   .select2-container .select2-selection--single {
     height: 38px;
@@ -469,7 +521,7 @@ defined('_JEXEC') or die('Restricted access');
 
   .btn_hieuchinh:hover i,
   .btn_xoa:hover i {
-    color: #0066ff;
+    color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,

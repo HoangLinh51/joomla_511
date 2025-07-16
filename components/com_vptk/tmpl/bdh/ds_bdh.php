@@ -17,15 +17,14 @@ $actualDisplayedRows = 0;
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <!-- <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th> -->
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thôn/ Tổ dân phố</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Nhiệm kỳ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên thành viên</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Chức danh</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số điện thoại</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tình trạng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center" style="width:131px;">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">Thôn/ Tổ dân phố</th>
+                <th style="vertical-align:middle;" class="text-center">Nhiệm kỳ</th>
+                <th style="vertical-align:middle;" class="text-center">Họ tên thành viên</th>
+                <th style="vertical-align:middle;" class="text-center">Chức danh</th>
+                <th style="vertical-align:middle;" class="text-center">Số điện thoại</th>
+                <th style="vertical-align:middle;" class="text-center">Tình trạng</th>
+                <th style="vertical-align:middle;" class="text-center" style="width:131px;">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -52,9 +51,9 @@ $actualDisplayedRows = 0;
                             <td style="vertical-align:middle;" class="text-center"><?php echo htmlspecialchars($item['dienthoai']); ?></td>
                             <td style="vertical-align:middle;" class="text-center">
                                 <?php if ($item['tinhtrang_id'] == '1') {
-                                    echo '<span class="text-success"><i class="fas fa-check"></i> ' . htmlspecialchars($item['tentinhtrang']) . '</span>';
+                                    echo '<span class="badge bg-success"><i class="fas fa-check"></i> ' . htmlspecialchars($item['tentinhtrang']) . '</span>';
                                 } else {
-                                    echo '<span class="text-danger"><i class="fas fa-times"></i> ' . htmlspecialchars($item['tentinhtrang']) . '</span>';
+                                    echo '<span class="badge bg-danger"><i class="fas fa-times"></i> ' . htmlspecialchars($item['tentinhtrang']) . '</span>';
                                 } ?>
                             </td>
                             <?php if ($index == 0) { ?>
@@ -203,10 +202,8 @@ $actualDisplayedRows = 0;
         $('.pagination').on('click', '.page-link', function(e) {
             e.preventDefault();
             var page = $(this).data('page');
-            console.log('Page clicked:', page, 'Current page:', currentPage);
             if (page && !$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
                 var start = (page - 1) * <?php echo $perPage; ?>;
-                console.log('Loading start from:', start);
                 loadDanhSach(start);
             }
         });
@@ -264,7 +261,6 @@ $actualDisplayedRows = 0;
                 callback: function(result) {
                     if (!result) return;
 
-                    console.log('Sending AJAX with thonto_id:', thonto_id, 'nhiemky_id:', nhiemky_id);
 
                     // Lấy CSRF token an toàn
                     const csrfToken = Joomla.getOptions('csrf.token', '');
@@ -284,7 +280,6 @@ $actualDisplayedRows = 0;
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -384,20 +379,14 @@ $actualDisplayedRows = 0;
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {
@@ -413,13 +402,13 @@ $actualDisplayedRows = 0;
     }
 
     .btn-group .btn i {
-        font-size: 16px;
+        font-size: 15px;
         vertical-align: middle;
     }
 
     .text-success i,
     .text-danger i {
-        font-size: 16px;
+        font-size: 15px;
         vertical-align: middle;
     }
 </style>

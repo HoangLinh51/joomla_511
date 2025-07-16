@@ -167,11 +167,12 @@ defined('_JEXEC') or die('Restricted access');
     padding: 5px 0 0 5px !important;
   }
 
-  .select2-container .select2-selection--single {
-    height: 38px;
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
 
-  .text-primary {
-    color: #478fca !important;
+  .select2-container .select2-selection--single {
+    height: 38px;
   }
 </style>

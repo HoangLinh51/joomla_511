@@ -5,6 +5,7 @@ use Joomla\CMS\Uri\Uri;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Session\Session;
 
 // Get database object
 $db = Factory::getDbo();
@@ -192,7 +193,7 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
                     <?php else: ?>
                         <tr class="thietbi_0">
                             <td>
-                                <select name="loaithietbi[]" class="loaithietbi custom-select">
+                                <select id="loaithietbi" name="loaithietbi[]" class="loaithietbi custom-select">
                                     <option value="0">-- Chọn loại thiết bị --</option>
                                     <?php foreach ($loaithietbi as $ltb): ?>
                                         <option value="<?php echo $ltb['id']; ?>"><?php echo htmlspecialchars($ltb['ten']); ?></option>
@@ -200,7 +201,7 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
                                 </select>
                             </td>
                             <td>
-                                <select name="tenthietbi[]" class="tenthietbi custom-select">
+                                <select id="tenthietbi" name="tenthietbi[]" class="tenthietbi custom-select">
                                     <option value="0">-- Chọn tên thiết bị --</option>
                                 </select>
                             </td>
@@ -265,15 +266,15 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
                                     <?php if ($index === array_key_first($activitiesInYear)): // Chỉ hiển thị ô 'Năm' cho hàng đầu tiên của nhóm 
                                     ?>
                                         <td class="text-center year-cell" style="width:11%" rowspan="<?php echo $rowspan; ?>" data-group-index="<?php echo $groupIndexCounter; ?>">
-                                            <input type="text"  value="<?php echo htmlspecialchars($namhd['nam']); ?>" class="form-control yearpicker yearpicker_<?php echo $groupIndexCounter; ?>" name="nam_hoatdong[<?php echo $groupIndexCounter; ?>]" />
+                                            <input type="text" value="<?php echo htmlspecialchars($namhd['nam']); ?>" class="form-control yearpicker yearpicker_<?php echo $groupIndexCounter; ?>" name="nam_hoatdong[<?php echo $groupIndexCounter; ?>]" />
                                         </td>
                                     <?php endif; ?>
 
                                     <td class="text-center"><input type="text" value="<?php echo htmlspecialchars($hd['noidunghoatdong']); ?>" class="form-control" name="noidung_hoatdong[<?php echo $groupIndexCounter; ?>][]" /></td>
-                                    <td class="text-center" style="width:11%"><input type="text"  value="<?php echo date('d/m/Y', strtotime($hd['thoigianhoatdong_tungay'])); ?>" class="form-control date-picker" name="tungay_hoatdong[<?php echo $groupIndexCounter; ?>][]" autocomplete="off" /></td>
+                                    <td class="text-center" style="width:11%"><input type="text" value="<?php echo date('d/m/Y', strtotime($hd['thoigianhoatdong_tungay'])); ?>" class="form-control date-picker" name="tungay_hoatdong[<?php echo $groupIndexCounter; ?>][]" autocomplete="off" /></td>
                                     <td class="text-center" style="width:11%"><input type="text" value="<?php echo date('d/m/Y', strtotime($hd['thoigianhoatdong_denngay'])); ?>" class="form-control date-picker" name="denngay_hoatdong[<?php echo $groupIndexCounter; ?>][]" autocomplete="off" /></td>
                                     <td class="text-center">
-                                        <select name="nguonkinhphi[<?php echo $groupIndexCounter; ?>][]" class="custom-select">
+                                        <select id="nguonkinhphi" name="nguonkinhphi[<?php echo $groupIndexCounter; ?>][]" class="custom-select">
                                             <option value="0">-- Chọn --</option>
                                             <option value="1" <?php echo $hd['nguonkinhphi_id'] == 1 ? 'selected' : ''; ?>>Tự chủ</option>
                                             <option value="2" <?php echo $hd['nguonkinhphi_id'] == 2 ? 'selected' : ''; ?>>Đầu tư</option>
@@ -359,6 +360,11 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
         height: 38px !important;
     }
 
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
+
     .table-responsive {
         overflow-x: auto;
     }
@@ -402,7 +408,7 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
 <script>
     jQuery(document).ready(function($) {
         // Initialize Select2
-        $('#phuongxa_id, #thonto_id, #gioitinh_id, #tinhtrang_id, #congviechientai_id, #phuongxagioithieu_id').select2({
+        $('#phuongxa_id, #thonto_id, #gioitinh_id, #trangthaihoatdong_id, #loaithietbi, #loaihinhthietche_id, #tenthietbi, #nguonkinhphi').select2({
             width: '100%',
             allowClear: true,
             placeholder: function() {
@@ -513,7 +519,7 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
             const newRow = `
             <tr class="thietbi_${stt}">
                 <td>
-                    <select name="loaithietbi[]" class="loaithietbi custom-select">
+                    <select id="loaithietbi" name="loaithietbi[]" class="loaithietbi custom-select">
                         <option value="0">-- Chọn loại thiết bị --</option>
                         <?php foreach ($loaithietbi as $ltb): ?>
                             <option value="<?php echo $ltb['id']; ?>"><?php echo htmlspecialchars($ltb['ten']); ?></option>
@@ -585,7 +591,7 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
                 <input type="text" class="form-control date-picker" name="denngay_hoatdong[${stt}][]" autocomplete="off" />
             </td>
             <td class="text-center">
-                <select name="nguonkinhphi[${stt}][]" class="custom-select">
+                <select id="nguonkinhphi" name="nguonkinhphi[${stt}][]" class="custom-select">
                     <option value="0">-- Chọn --</option>
                     <option value="1">Tự chủ</option>
                     <option value="2">Đầu tư</option>
@@ -607,52 +613,6 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
             $('#dsHoatDong').append(newRow);
             initializeDatepickers(newRow);
         });
-        // 2. THÊM HOẠT ĐỘNG TRONG NĂM
-        // $('#dsHoatDong').on('click', '.btn-themnoidunghoatdong', function() {
-        //     const groupId = $(this).data('group-id');
-        //     const nam = $(`.yearpicker_${groupId}`).val() || new Date().getFullYear();
-
-        //     const newRowHtml = `
-        // <tr class="year-group-${groupId}">
-        //     <td class="text-center">
-        //         <input type="text" class="form-control" name="noidung_hoatdong[${groupId}][]" />
-        //     </td>
-        //     <td class="text-center">
-        //         <input type="text" class="form-control date-picker" name="tungay_hoatdong[${groupId}][]" autocomplete="off" />
-        //     </td>
-        //     <td class="text-center">
-        //         <input type="text" class="form-control date-picker" name="denngay_hoatdong[${groupId}][]" autocomplete="off" />
-        //     </td>
-        //     <td class="text-center">
-        //         <select name="nguonkinhphi[${groupId}][]" class="custom-select">
-        //             <option value="0">-- Chọn --</option>
-        //             <option value="1">Tự chủ</option>
-        //             <option value="2">Đầu tư</option>
-        //         </select>
-        //     </td>
-        //     <td class="text-center">
-        //         <input type="text" class="form-control" name="kinhphi[${groupId}][]" />
-        //     </td>
-        //     <td class="text-center">
-        //         <input type="text" class="form-control" name="ghichu_hoatdong[${groupId}][]" />
-        //     </td>
-        //     <td class="text-center">
-        //         <input type="hidden" name="hoatdong_id[${groupId}][]" value="0" />
-        //         <button type="button" class="btn btn-danger btn_xoa_hoatdong"><i class="fas fa-trash-alt"></i></button>
-        //     </td>
-        // </tr>`;
-
-        //     // Tìm hàng cuối cùng của nhóm và chèn hàng mới vào sau nó
-        //     const lastRowInGroup = $(`#dsHoatDong .year-group-${groupId}`).last();
-        //     const newRow = $(newRowHtml);
-        //     lastRowInGroup.after(newRow);
-
-        //     // Cập nhật rowspan cho ô năm của nhóm đó
-        //     const rowCount = $(`#dsHoatDong .year-group-${groupId}`).length;
-        //     lastRowInGroup.closest('tr').find('.year-cell').attr('rowspan', rowCount);
-
-        //     initializeDatepickers(newRow); // Khởi tạo datepicker cho hàng mới
-        // });
 
         // Delete activity
         $('body').on('click', '.btn_xoa_hoatdong', function() {
@@ -685,7 +645,7 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
                                 dataType: 'json',
                                 data: {
                                     hoatdong_id: id,
-                                    '<?php echo JSession::getFormToken(); ?>': 1
+                                    '<?php echo Session::getFormToken(); ?>': 1
                                 },
                                 success: function(response) {
                                     if (response.success) {

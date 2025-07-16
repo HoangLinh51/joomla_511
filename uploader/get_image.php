@@ -3,13 +3,23 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $code = $_GET['code'] ?? null;
+$folder = $_GET['folder'] ?? null;
+
+if(empty($folder) || $folder === null){
+    $uri = $_SERVER['REQUEST_URI'];
+    $part = parse_url($uri, PHP_URL_PATH); // /uploader/get_image.php/upload/2025/7
+    $parts = explode('/uploader/get_image.php/', $part);
+    $folder = isset($parts[1]) ? $parts[1] : null;
+}
+
+// Loại bỏ phần đầu để chỉ còn "upload/2025/7"
 
 if (!$code) {
     die("❌ Không có mã code ảnh!");
 }
 
 // ⚡ Tạo đường dẫn đến file trong tmp
-$filePath = "C:/xampp/htdocs/Joomla_511/upload/2025/5/" . $code;
+$filePath = "C:/xampp/htdocs/Joomla_511/". $folder. "/" . $code;
 
 // 🔍 Kiểm tra file tồn tại
 if (!file_exists($filePath)) {

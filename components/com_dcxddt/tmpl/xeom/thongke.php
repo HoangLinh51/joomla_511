@@ -13,7 +13,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         <div class="content-header">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê xe ôm</h3>
+                    <h3 class="m-0 text-primary"><i class="fas fa-chart-bar"></i> Thống kê hành nghề vận chuyển</h3>
                 </div>
             </div>
         </div>
@@ -93,26 +93,20 @@ $idUser = Factory::getApplication()->getIdentity()->id;
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #69d7e9;
-        border: 1px solid #080808;
         border-radius: 4px;
         cursor: default;
         float: left;
-        margin-right: 5px;
-        margin-top: 5px;
-        padding: 0 5px;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #007bff;
-        border-color: #006fe6;
-        color: #181616;
         padding: 0 10px;
-        margin-top: .31rem;
+        color: #181616;
     }
 
     .select2-container .select2-selection--single {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 </style>
 
@@ -178,7 +172,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 task: 'DS_THONGKE',
                 phuongxa_id: phuongxaId,
                 thonto_id: thontoValue,
-               
+
                 start: start
             }, function(response, status, xhr) {
                 $("#overlay").fadeOut(300);

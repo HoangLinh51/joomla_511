@@ -51,7 +51,7 @@ $item = $this->item;
                 <input id="hoten" type="text" name="hoten" class="form-control" placeholder="Nhập họ và tên công dân" value="<?php echo htmlspecialchars($item[0]['n_hoten']); ?>">
             </div>
             <div class="col-md-4 mb-2">
-                <label for="select_gioitinh_id" class="form-label fw-bold">Giới tính</label>
+                <label for="select_gioitinh_id" class="form-label fw-bold">Giới tính <span class="text-danger">*</span></label>
                 <input type="hidden" id="input_gioitinh_id" name="input_gioitinh_id" value="<?php echo htmlspecialchars($item[0]['n_gioitinh_id']); ?>">
                 <select id="select_gioitinh_id" name="select_gioitinh_id" class="custom-select" data-placeholder="Chọn giới tính">
                     <option value=""></option>
@@ -119,7 +119,7 @@ $item = $this->item;
         <div class="row g-3 mb-4">
 
             <div class="col-md-4 mb-2">
-                <label for="namsinh" class="form-label fw-bold">Mã số thuế</label>
+                <label for="namsinh" class="form-label fw-bold">Mã số thuế <span class="text-danger">*</span></label>
                 <div class="input-group">
                     <input type="text" id="masothue" name="masothue" class="form-control" placeholder="Nhập mã số thuế" value="<?php echo htmlspecialchars($item[0]['masothue']); ?>">
                 </div>
@@ -133,7 +133,7 @@ $item = $this->item;
         </div>
         <div class="row g-3 mb-4">
             <table class="table table-striped table-bordered" style="height: 150px; overflow-y: auto;">
-                <thead class="table-primary">
+                <thead class="table-primary text-white">
                     <tr>
                         <th>STT</th>
                         <th>Mã phi nông nghiệp</th>
@@ -173,7 +173,11 @@ $item = $this->item;
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['sotienmiengiam'] ?? ''); ?></td>
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['tongtiennop'] ?? ''); ?></td>
                                 <td class="align-middle">
-                                    <?php echo $nk['tinhtrang'] == 1 ? 'Chưa nộp' : ($nk['tinhtrang'] == 2 ? 'Đã nộp' : ''); ?>
+                                    <?php if ($nk['tinhtrang'] === 1) { ?>
+                                        <span class="badge bg-success">Đã nộp</span>
+                                    <?php } else if ($nk['tinhtrang'] === 2) { ?>
+                                        <span class="badge bg-danger">Chưa nộp</span>
+                                    <?php } ?>
                                 </td>
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['ghichu'] ?? ''); ?></td>
 
@@ -646,7 +650,6 @@ $item = $this->item;
                     error.appendTo(element.closest('.mb-3'));
                 },
                 success: function(label) {
-                    console.log('Validate success for:', label.prev().attr('id'));
                     label.remove();
                 },
                 rules: {
@@ -728,8 +731,6 @@ $item = $this->item;
                 const originalOption = selectedData[0].element;
                 sotien = $(originalOption).data('sotien');
             }
-
-            console.log('Loại đối tượng selected. Lấy "sotien" từ data attribute:', sotien);
             sotien = cleanNumberString(sotien);
 
             if (sotien !== undefined && sotien !== '' && !isNaN(parseFloat(sotien))) {
@@ -775,7 +776,6 @@ $item = $this->item;
             const he_so = parseFloat($(this).val());
             let muc_tien_chuan = $('#modal_muc_tien_chuan').val();
             muc_tien_chuan = cleanNumberString(muc_tien_chuan);
-            console.log('Hệ số:', he_so, 'Mức tiền chuẩn (cleaned):', muc_tien_chuan);
 
             if (!isNaN(he_so) && !isNaN(parseFloat(muc_tien_chuan))) {
                 const thuc_nhan = he_so * parseFloat(muc_tien_chuan);
@@ -831,8 +831,6 @@ $item = $this->item;
                 tinhtrang: $row.find('[name="tinhtrang[]"]').val() || '',
                 ghichu: $row.find('[name="ghichu[]"]').val() || ''
             };
-
-            console.log('Dữ liệu từ row:', data); // Debug row data
 
             // Set modal title and reset form
             $('#modalNopthuedatLabel').text('Chỉnh sửa thông tin nộp thuế đất');
@@ -891,10 +889,7 @@ $item = $this->item;
                 data.modal_tinhtang = $('#modal_tinhtang').val() || '';
                 data.modal_ghichu = $('#modal_ghichu').val() || '';
 
-
                 const editIndex = parseInt($('#modal_edit_index').val());
-                console.log('editIndex:', editIndex);
-                console.log('Dữ liệu nộp thuế:', data);
 
                 // Get text for select fields
                 const mucdichsudung_text = $('#modal_mucdichsudung option:selected').text() || '';
@@ -971,7 +966,6 @@ $item = $this->item;
         $('.dsThongtinnopthue').on('click', '.btn_xoa_trocap', async function() {
             const $row = $(this).closest('tr');
             const nopthue_id = $(this).data('trocap-id');
-            console.log('Xóa thông tin trợ cấp:', nopthue_id);
 
             if (!confirm('Bạn có chắc chắn muốn xóa thông tin trợ cấp này?')) {
                 return;
@@ -1175,7 +1169,6 @@ $item = $this->item;
         // select nhân khẩu theo laodongdetail (nếu có)
         async function fetchNhanKhauTheoLaoDongDetail() {
             if (item && item[0] && item[0].nhanhokhau_id) {
-                console.log('Fetching nhanhokhau_id:', item[0].nhanhokhau_id);
                 try {
                     const nhankhauResponse = await $.post('index.php', {
                         option: 'com_vhytgd',
@@ -1183,7 +1176,6 @@ $item = $this->item;
                         format: 'json',
                         nhankhau_id: item[0].nhanhokhau_id,
                     }, null, 'json');
-                    console.log('nhankhauResponse:', nhankhauResponse);
                     if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
                         const nhankhau = nhankhauResponse.items.find(nk => nk.id === item[0].nhanhokhau_id) || nhankhauResponse.items[0];
                         if (nhankhau) {
@@ -1192,7 +1184,6 @@ $item = $this->item;
                             $('#select_top').append(newOption);
                             initSelect2('#select_top'); // Khởi tạo lại Select2
                             $('#select_top').val(nhankhau.id).trigger('change.select2');
-                            console.log('select_top set to:', nhankhau.id, optionText);
                             $('#select_top').trigger({
                                 type: 'select2:select',
                                 params: {
@@ -1363,36 +1354,6 @@ $item = $this->item;
             }
         });
 
-        // submit form chính
-        // $('#formNopThueDat').on('submit', function(e) {
-        //     e.preventDefault();
-        //     if (!$(this).valid()) {
-        //         showToast('Vui lòng nhập đầy đủ thông tin', false);
-        //         return;
-        //     }
-
-        //     const formData = new FormData(this);
-
-        //     $.ajax({
-        //         url: $(this).attr('action'),
-        //         type: 'POST',
-        //         data: formData,
-        //         contentType: false,
-        //         processData: false,
-        //         success: function(response) {
-        //             const isSuccess = response.success ?? true;
-        //             showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
-        //             if (isSuccess) {
-        //                 setTimeout(() => location.href = "/index.php/component/vhytgd/?view=nguoicocong&task=default", 500);
-        //             }
-        //         },
-        //         error: function(xhr) {
-        //             console.error('Submit error:', xhr.responseText);
-        //             showToast('Đã xảy ra lỗi khi gửi dữ liệu', false);
-        //         }
-        //     });
-        // });
-
         const showToast = (message, isSuccess = true) => {
             const toast = $('<div></div>')
                 .text(message)
@@ -1445,6 +1406,11 @@ $item = $this->item;
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .table#tblThongtin td.align-middle {
@@ -1580,10 +1546,6 @@ $item = $this->item;
         max-width: 800px;
         overflow-x: scroll;
         display: block;
-    }
-
-    table.tableFixHead thead {
-        background-color: #027be3;
     }
 
     table.tableFixHead thead,

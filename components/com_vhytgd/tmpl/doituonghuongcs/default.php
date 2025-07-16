@@ -1,8 +1,10 @@
 <?php
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die('Restricted access');
-$idUser = JFactory::getUser()->id;
-
-
+$idUser = Factory::getUser()->id;
 ?>
 
 <form action="index.php" method="post" id="frmDoituonghuongcs" name="frmDoituonghuongcs" class="form-horizontal" style="font-size:16px;background:white">
@@ -76,13 +78,13 @@ $idUser = JFactory::getUser()->id;
 				<div class="table-responsive">
 					<table class="table table-striped table-bordered table-hover" id="tblDanhsach">
 						<thead>
-							<tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin đối tượng hưởng</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin hưởng</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Trạng thái</th>
-								<th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+							<tr class="bg-primary text-white">
+								<th style="vertical-align:middle;" class="text-center">STT</th>
+								<th style="vertical-align:middle;" class="text-center">Thông tin đối tượng hưởng</th>
+								<th style="vertical-align:middle;" class="text-center">Địa chỉ</th>
+								<th style="vertical-align:middle;" class="text-center">Thông tin hưởng</th>
+								<th style="vertical-align:middle;" class="text-center">Trạng thái</th>
+								<th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
 							</tr>
 						</thead>
 						<tbody id="tbody_danhsach"></tbody>
@@ -91,7 +93,7 @@ $idUser = JFactory::getUser()->id;
 			</div>
 		</div>
 	</div>
-	<?php echo JHTML::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <script>
@@ -226,7 +228,7 @@ $idUser = JFactory::getUser()->id;
 	.btn_hieuchinh:hover i,
 	.btn_cathuong:hover i,
 	.btn_xoa:hover i {
-		color: #0066ff;
+		color: #007b8bb8;
 	}
 
 	.btn_hieuchinh::after,
@@ -262,13 +264,9 @@ $idUser = JFactory::getUser()->id;
 		padding: 20px .5rem 15px .5rem;
 	}
 
-	.text-primary {
-		color: #478fca !important;
-	}
-
 	.form-control {
 		height: 38px;
-		font-size: 16px;
+		font-size: 15px;
 	}
 
 	.select2-container .select2-choice {
@@ -280,9 +278,12 @@ $idUser = JFactory::getUser()->id;
 		padding: 5px 0 0 5px !important;
 	}
 
-
-
 	.select2-container .select2-selection--single {
 		height: 38px;
+	}
+
+	.select2-container--default .select2-results__option--highlighted[aria-selected] {
+		background-color: #007b8b;
+		color: #fff
 	}
 </style>

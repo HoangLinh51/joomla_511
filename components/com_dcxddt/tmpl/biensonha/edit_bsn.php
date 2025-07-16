@@ -497,22 +497,10 @@ $item = $this->item;
             currentSearch.includes('view=biensonha') &&
             currentSearch.includes('task=add_bsn');
 
-        console.log('isCorrectPage:', isCorrectPage, {
-            currentPath,
-            currentSearch
-        });
-
         if (isCorrectPage && sessionStorage.getItem(REDIRECT_KEY) !== '1') {
             function handleChange(e) {
-                // console.log('handleChange called:', {
-                //     phuongxa_id: $('#phuongxa_id').val(),
-                //     thonto_id: $('#thonto_id').val(),
-                //     tuyenduong: $('#tuyenduong').val(),
-                //     event_target: e.target.id
-                // });
 
                 if (isChecking) {
-                    console.log('Đang kiểm tra, bỏ qua');
                     return;
                 }
 
@@ -544,7 +532,6 @@ $item = $this->item;
                             $('#tblDanhsach tbody').html('<tr><td colspan="10" class="text-center">Đang kiểm tra...</td></tr>');
                         },
                         success: function(response) {
-                            console.log('AJAX response:', response);
                             isChecking = false;
                             $('#btn_luu_nhankhau').prop('disabled', false);
                             selectElements.prop('disabled', false);
@@ -558,9 +545,7 @@ $item = $this->item;
                                     const redirectUrl = `index.php?option=com_dcxddt&view=biensonha&task=edit_bsn&bsn_id=${bsn_id}`;
                                     window.location.assign(redirectUrl);
                                 }, 2000);
-                            } else {
-                                showToast('Có thể thêm tuyến đường nhà mới', true);
-                            }
+                            } 
                         },
                         error: function(xhr, status, error) {
                             console.error('AJAX error:', status, error);
@@ -574,12 +559,7 @@ $item = $this->item;
                             showToast(errorMessage, false);
                         }
                     });
-                } else {
-                    console.log('Thiếu thonto_id hoặc tuyenduong:', {
-                        thonto_id,
-                        tuyenduong
-                    });
-                }
+                } 
             }
 
             // Ngăn sự kiện change trùng lặp
@@ -597,7 +577,6 @@ $item = $this->item;
                 }, 100);
             }
         } else if (sessionStorage.getItem(REDIRECT_KEY) === '1') {
-            console.log('Đã chuyển hướng trước đó, bỏ qua xử lý');
             sessionStorage.removeItem(REDIRECT_KEY);
         }
 
@@ -615,7 +594,7 @@ $item = $this->item;
             const selectedNam = $('#tuyenduong').val();
 
             if (!selectedThontoId || !selectedNam) {
-                showToast('Vui lòng chọn Thôn/Tổ và Năm trước khi thêm danh hiệu', false);
+                showToast('Vui lòng chọn Phường/Xã, Thôn/Tổ và tuyến đường', false);
                 return false;
             }
 
@@ -644,19 +623,10 @@ $item = $this->item;
         });
         $('#modal_search_toggle').on('change', function() {
             const isChecked = $(this).is(':checked');
-            console.log('modal_search_toggle changed:', isChecked);
             const loaisohuu = $('#modal_loaisohuu').val();
-
-            // if (loaisohuu !== '1') {
-            //     showToast('Vui lòng chọn Loại sở hữu là Cá nhân trước khi tìm kiếm', false);
-            //     $(this).prop('checked', false);
-            //     $('#search_fields').hide();
-            //     return;
-            // }
 
             $('#search_fields').toggle(isChecked);
             $('#modal_hoten, #modal_cccd_so, #modal_dienthoai, #modal_diachi, #modal_gioitinh_id, #modal_ngaysinh').prop('disabled', isChecked);
-            // $('#modal_hoten, #modal_cccd_so, #modal_gioitinh_id, #modal_ngaysinh, #modal_diachi').prop('required', !isChecked);
             $('#modal_nhankhau_search').prop('required', isChecked);
 
             if (isChecked) {
@@ -692,11 +662,9 @@ $item = $this->item;
                                 tuyenduong: tuyenduong,
                                 [Joomla.getOptions('csrf.token')]: 1
                             };
-                            console.log('Search params:', data);
                             return data;
                         },
                         processResults: function(data) {
-                            console.log('Search response:', data);
                             if (!data || !Array.isArray(data)) {
                                 showToast('Không tìm thấy dữ liệu thành viên!', false);
                                 return {
@@ -942,8 +910,6 @@ $item = $this->item;
                 ghichu: $row.find('input[name="ghichu[]"]').val() || ''
             };
 
-            console.log('Edit data:', data); // Debug dữ liệu
-
             $('#modalThongtinsonhaLabel').text('Chỉnh sửa thông tin số nhà');
             $('#modal_edit_index').val(index);
             resetModal(); // Đảm bảo modal được reset trước khi điền dữ liệu
@@ -1064,7 +1030,6 @@ $item = $this->item;
             $('#frmModalBiensonha').validate({
                 ignore: ':hidden, [disabled]', // Bỏ qua các trường ẩn và disabled
                 errorPlacement: function(error, element) {
-                    console.log('Validation error for:', element.attr('name'), error.text());
                     error.addClass('error_modal');
                     error.appendTo(element.closest('.mb-3'));
                 },
@@ -1375,6 +1340,11 @@ $item = $this->item;
         height: 38px;
     }
 
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
+
     .table#tblThongtin td.align-middle {
         width: 33.33%;
         padding: .75rem 0rem .75rem .75rem;
@@ -1436,7 +1406,7 @@ $item = $this->item;
         overflow-x: hidden;
     }
 
-  
+
 
     #modalThongTinSoNha .form-control,
     #modalThongTinSoNha .custom-select,

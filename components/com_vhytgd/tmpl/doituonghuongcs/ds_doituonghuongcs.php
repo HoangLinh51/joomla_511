@@ -20,13 +20,13 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin đối tượng hưởng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin hưởng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Trạng thái</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Thông tin đối tượng hưởng</th>
+                <th style="vertical-align:middle;" class="text-center">Địa chỉ</th>
+                <th style="vertical-align:middle;" class="text-center">Thông tin hưởng</th>
+                <th style="vertical-align:middle;" class="text-center">Trạng thái</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -51,9 +51,9 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
                             // Kiểm tra trangthai_id
                             if ($item['trangthai_id'] == 1 || $item['trangthai_id'] == 2) {
-                                $color = 'class="badge bg-success" style="padding: 0.4em; font-size: 80%;"'; // Màu xanh lá
+                                $color = 'class="badge bg-success"'; // Màu xanh lá
                             } elseif ($item['trangthai_id'] == 11) {
-                                $color = 'class="badge" style="background-color: gray; padding: 0.4em; font-size: 80%;"'; // Màu xám
+                                $color = 'class="badge bg-secondary"'; // Màu xám
                             }
 
                             // Kiểm tra nếu tentrangthaicathuong không có hoặc rỗng
@@ -62,7 +62,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                                 echo '<span ' . $color . '>' . htmlspecialchars($item['trangthaiten']) . '</span>';
                             } else {
                                 // Nếu có, hiển thị tentrangthaicathuong với màu đỏ
-                                echo '<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%;">' . htmlspecialchars($item['tentrangthaicathuong']) . '</span>'; // Màu đỏ
+                                echo '<span class="badge bg-danger">' . htmlspecialchars($item['tentrangthaicathuong']) . '</span>'; // Màu đỏ
                             }
                             ?>
                         </td>
@@ -220,7 +220,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 task: 'DETAIL_DOITUONGCS',
                 doituong_id: chinhsachID
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -377,7 +376,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 },
                 dataType: 'json',
                 success: function(response) {
-                    console.log('CheckCatHuong Response:', response); // Debug response
 
                     // Reset form
                     $('#cut_trocap_id').val(doituong_id);
@@ -455,7 +453,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -512,7 +509,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                     data: data,
                     dataType: 'json',
                     success: function(response) {
-                        console.log('Cut AJAX Success:', response);
                         const message = response.success ?
                             (response.message || 'Cắt hưởng thành công') :
                             (response.message || 'Cắt hưởng thất bại!');
@@ -589,7 +585,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {
@@ -668,20 +664,15 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
 
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {
@@ -696,12 +687,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         /* Trượt vào vị trí */
     }
 
-    /* CSS cho modal Bootbox (.custom-bootbox) */
-    /* .custom-bootbox {
-    right: 0;
-    top: 60%;
-    margin: 0;
-} */
     .custom-bootbox .modal-dialog {
         /* position: absolute; */
         width: 498px !important;

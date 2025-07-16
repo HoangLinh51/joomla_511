@@ -1,34 +1,37 @@
 <?php
+
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die('Restricted access');
 $perPage = 20;
 $result = $this->countitems;
 $totalRecords = $result[0]['tongnhankhau'];
 $totalPages = ceil($totalRecords / $perPage);
-$currentPage = JFactory::getApplication()->input->getInt('start', 0) / $perPage + 1;
+$currentPage = Factory::getApplication()->input->getInt('start', 0) / $perPage + 1;
 
 // Tính toán START và END
-$startRecord = JFactory::getApplication()->input->getInt('start', 0) + 1;
+$startRecord = Factory::getApplication()->input->getInt('start', 0) + 1;
 $endRecord = min($startRecord + $perPage - 1, $totalRecords);
 ?>
 
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số hộ khẩu</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên chủ hộ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Giới tính</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Năm sinh</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Chỗ ở hiện nay</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số điện thoại</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center" style="width:131px;">Chức năng</th>
+            <tr class="bg-primary">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Số hộ khẩu</th>
+                <th style="vertical-align:middle;" class="text-center">Tên chủ hộ</th>
+                <th style="vertical-align:middle;" class="text-center">Giới tính</th>
+                <th style="vertical-align:middle;" class="text-center">Năm sinh</th>
+                <th style="vertical-align:middle;" class="text-center">Chỗ ở hiện nay</th>
+                <th style="vertical-align:middle;" class="text-center">Số điện thoại</th>
+                <th style="vertical-align:middle;" class="text-center" style="width:131px;">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
             <?php
             if (!empty($this->rows)) {
-                $stt = JFactory::getApplication()->input->getInt('start', 0) + 1;
+                $stt = Factory::getApplication()->input->getInt('start', 0) + 1;
                 foreach ($this->rows as $item) {
             ?>
                     <tr>
@@ -93,7 +96,8 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                     </li>
                     <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
                         <a class="page-link" href="#" data-page="<?php echo max(1, $currentPage - 1); ?>">
-                            <</a>
+                            <
+                                </a>
                     </li>
                     <?php
                     $range = 2;
@@ -213,7 +217,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 daxoa: 0,
                 start: start
             };
-            console.log('Pagination Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -240,7 +243,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 task: 'DETAIL_NHK',
                 hokhau_id: hokhauId
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -258,7 +260,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
             });
         }
         $('<style>.small-alert .bootbox.modal { width: 300px !important; margin: 0 auto; } .small-alert .modal-dialog { width: 300px !important; } .small-alert .modal-footer { display:none } .small-alert .modal-header { height:44px; padding: 7px 20px } .small-alert .modal-body { padding:14px } .success-icon { margin-right: 8px; vertical-align: middle; } </style>').appendTo('head');
-       
+
 
         $('body').delegate('.btn_xoa', 'click', function() {
             var hokhau_id = $(this).data('hokhau');
@@ -277,7 +279,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 },
                 callback: function(result) {
                     if (result) {
-                        console.log('Sending AJAX with hokhau_id:', hokhau_id);
                         $.ajax({
                             url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vptk&task=vptk.delHoKhau&format=raw',
                             type: 'POST',
@@ -286,7 +287,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                                 [Joomla.getOptions('csrf.token')]: 1
                             },
                             success: function(response) {
-                                console.log('AJAX Success:', response);
                                 var res = typeof response === 'string' ? JSON.parse(response) : response;
                                 var message = res.success ? res.message : 'Xóa thất bại!';
                                 var icon = res.success ?
@@ -384,7 +384,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {
@@ -433,14 +433,9 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
         min-height: 300px;
     }
 
-    .hoten-link {
-        color: #007bff;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
+    .hoten-link,
     .hoten-link:hover {
-        text-decoration: underline;
+        cursor: pointer;
     }
 
     .pagination-container {
@@ -463,20 +458,14 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

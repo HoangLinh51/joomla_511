@@ -7,15 +7,15 @@ defined('_JEXEC') or die('Restricted access');
 
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
   <thead>
-    <tr style="background-color: #FBFBFB !important;" class="bg-primary">
-      <th style="vertical-align: middle" class="text-center text-dark">STT</th>
-      <th style="vertical-align: middle" class="text-center text-dark">Họ và tên</th>
-      <th style="vertical-align: middle" class="text-center text-dark">Địa chỉ</th>
-      <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center text-dark">Giới tính</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">CCCD/CMND</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Số điện thoại</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center text-dark">Chức vụ</th>
-      <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center text-dark">Chức năng</th>
+    <tr class="bg-primary">
+      <th style="vertical-align: middle" class="text-center">STT</th>
+      <th style="vertical-align: middle" class="text-center">Họ và tên</th>
+      <th style="vertical-align: middle" class="text-center">Địa chỉ</th>
+      <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center">Giới tính</th>
+      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">CCCD/CMND</th>
+      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Số điện thoại</th>
+      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Chức vụ</th>
+      <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center">Chức năng</th>
     </tr>
   </thead>
   <tbody id="tbody_danhsach">
@@ -64,11 +64,11 @@ defined('_JEXEC') or die('Restricted access');
   function renderTextChucVu(id, tenchucdanh) {
     let stringchucvu = ""
     if (id === 5 || id === 7 || id === 15) {
-      stringchucvu = `<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%" >${tenchucdanh}</span>`
+      stringchucvu = `<span class="badge bg-danger">${tenchucdanh}</span>`
     } else if (id === 8 || id === 10 || id === 14) {
-      stringchucvu = `<span class="badge bg-primary" style="padding: 0.4em; font-size: 80%" >${tenchucdanh}</span>`
+      stringchucvu = `<span class="badge bg-primary">${tenchucdanh}</span>`
     } else if (id === 6 || id === 9 || id === 15) {
-      stringchucvu = `<span class="badge bg-success" style="padding: 0.4em; font-size: 80%" >${tenchucdanh}</span>`
+      stringchucvu = `<span class="badge bg-success">${tenchucdanh}</span>`
     }
     return stringchucvu
   }
@@ -275,7 +275,7 @@ defined('_JEXEC') or die('Restricted access');
 
   .btn_hieuchinh:hover i,
   .btn_xoa:hover i {
-    color: #0066ff;
+    color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,

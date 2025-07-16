@@ -22,14 +22,33 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $layout = Factory::getApplication()->input->get('task');
-        $layout = ($layout == null) ? 'default' : strtoupper($layout);
+        $user = Factory::getUser();
+        $input = Factory::getApplication()->input;
+        $component  = 'com_taichinh';
+        $controller = $input->getCmd('view', 'nopthue');
+        $task       = strtoupper($input->getCmd('task', 'default'));
 
-        switch ($layout) {
-            case 'DEFAULT':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
+        if (!$user->id) {
+            echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
+        }
+
+        if ($task === 'ADD_THUEDAT' || $task === 'EDIT_THUEDAT' || $task === 'THONGKE') {
+            $checkTask = 'default';
+        }
+
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
+
+        switch ($task) {
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();
@@ -152,6 +171,7 @@ class HtmlView extends BaseHtmlView
 
         $mucdich = Core::loadAssocList('danhmuc_mucdichsudung', 'id,tenmucdich', 'trangthai = 1 AND daxoa = 0');
         $gioitinh = Core::loadAssocList('danhmuc_gioitinh', 'id,tengioitinh', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
+        $dantoc = Core::loadAssocList('danhmuc_dantoc', 'id,tendantoc', 'daxoa = 0', 'sapxep ASC');
 
         $tenduong = Core::loadAssocList('danhmuc_tenduong', 'id,tenduong', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
 
@@ -173,6 +193,7 @@ class HtmlView extends BaseHtmlView
         // Gán các biến cho view
         $this->tenduong = $tenduong;
         $this->gioitinh = $gioitinh;
+        $this->dantoc = $dantoc;
         $this->mucdich = $mucdich;
         $this->phuongxa = $phuongxa;
         $this->thonto = $thonto;

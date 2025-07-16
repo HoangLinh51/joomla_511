@@ -40,10 +40,7 @@ use Joomla\CMS\Factory;
 
   .main-body .nav-tabs .nav-link.active {
     color: #fff;
-    background-color: #007bff;
-  }
-  .nav-link{
-    background-color:#d1d1d1;
+    background-color: #007b8b;
   }
 
   .nav-tabs {
@@ -66,7 +63,7 @@ use Joomla\CMS\Factory;
 
   .btn_hieuchinh:hover i,
   .btn_xoa:hover i {
-    color: #0066ff;
+    color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,

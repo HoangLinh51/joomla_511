@@ -88,8 +88,6 @@ class QuanSu_Model_Base extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
-
-
   // lấy danh sách dân tộc
   public function getDanhMucDanToc()
   {

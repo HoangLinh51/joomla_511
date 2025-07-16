@@ -23,49 +23,40 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $user = Factory::getUser();
-        $app = Factory::getApplication();
-        $input = $app->input;
-        $id = $input->getInt('id');
-        $component = 'com_quansu';
+        $input = Factory::getApplication()->input;
+        $component  = 'com_quansu';
         $controller = $input->getCmd('view', 'danquan');
-        $task = strtoupper($input->getCmd('task', 'default'));
+        $task       = strtoupper($input->getCmd('task', 'default'));
 
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'DS_DANQUAN' || $task === 'ADD_DANQUAN' || $task === 'EDIT_DANQUAN') {
+
+        if ($task === 'ADD_DANQUAN' || $task === 'EDIT_DANQUAN') {
             $checkTask = 'default';
         }
-        // Kiểm tra quyền truy cập
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-            <a href="/index.php" style="text-decoration: none;">
-            <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
-                Trang chủ
-            </button>
-            </a>
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
               </div>';
             exit;
         }
 
-        // Xác định layout
-        if ($task === 'edit_danquan') {
-            $layout = $id > 0 ? 'EDIT_DANQUAN' : 'ADD_DANQUAN';
-        } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
-        }
-
-        switch ($layout) {
-            case 'DEFAULT':
-            case 'DS_DANQUAN':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
+        switch ($task) {
             case 'ADD_DANQUAN':
             case 'EDIT_DANQUAN':
                 $this->setLayout('edit_danquan');
                 $this->_editDanQuan();
+                break;
+            default:
+                $this->setLayout('default');
+                $this->_initDefaultPage();
                 break;
         }
 

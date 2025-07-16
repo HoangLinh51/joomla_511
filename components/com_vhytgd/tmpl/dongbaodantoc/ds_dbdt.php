@@ -21,13 +21,13 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin đối tượng hưởng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Thông tin hưởng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Trạng thái</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Thông tin đối tượng hưởng</th>
+                <th style="vertical-align:middle;" class="text-center">Địa chỉ</th>
+                <th style="vertical-align:middle;" class="text-center">Thông tin hưởng</th>
+                <th style="vertical-align:middle;" class="text-center">Trạng thái</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -46,16 +46,16 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                             <span><?php echo htmlspecialchars($item['total_chinhsach']); ?></span>
                             <i class="fas fa-eye btn_eye" style="cursor: pointer; margin-left: 10px; color: #007bff;" data-id="<?php echo $item['id']; ?>" title="Xem chi tiết"></i>
                         </td>
-                          </td>
-                          <td style="vertical-align:middle;">
+                        </td>
+                        <td style="vertical-align:middle;">
                             <?php
                             $color = '';
 
                             // Kiểm tra trangthai_id
-                            if ($item['trangthai_id'] == 22 ) {
-                                $color = 'class="badge bg-success" style="padding: 0.4em; font-size: 80%;"'; // Màu xanh lá
-                            } elseif ($item['trangthai_id'] == 21|| $item['trangthai_id'] == 23) {
-                                $color = 'class="badge" style="background-color: gray; padding: 0.4em; font-size: 80%;"'; // Màu xám
+                            if ($item['trangthai_id'] == 22) {
+                                $color = 'class="badge bg-success"'; // Màu xanh lá
+                            } elseif ($item['trangthai_id'] == 21 || $item['trangthai_id'] == 23) {
+                                $color = 'class="badge bg-secondary"'; // Màu xám
                             }
 
                             // Kiểm tra nếu tentrangthaicathuong không có hoặc rỗng
@@ -64,13 +64,13 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                                 echo '<span ' . $color . '>' . htmlspecialchars($item['tentrangthai']) . '</span>';
                             } else {
                                 // Nếu có, hiển thị tentrangthaicathuong với màu đỏ
-                                echo '<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%;">' . htmlspecialchars($item['tentrangthaicathuong']) . '</span>'; // Màu đỏ
+                                echo '<span class="badge bg-danger">' . htmlspecialchars($item['tentrangthaicathuong']) . '</span>'; // Màu đỏ
                             }
                             ?>
                         </td>
                         <td style="vertical-align:middle;text-align: center;">
                             <div class="btn-group" role="group">
-                              
+
                                 <span class="btn btn-sm btn_hieuchinh" data-id="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh" style="cursor: pointer;">
                                     <i class="fas fa-pencil-alt"></i>
                                 </span>
@@ -216,7 +216,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 task: 'DETAIL_DBDT',
                 doituong_id: chinhsachID
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -357,7 +356,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         });
 
         // Xử lý click nút cắt hưởng
-    
+
         $('body').on('click', '.btn_xoa', function() {
             const chinhsach_id = $(this).data('id');
 
@@ -407,7 +406,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -464,7 +462,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                     data: data,
                     dataType: 'json',
                     success: function(response) {
-                        console.log('Cut AJAX Success:', response);
                         const message = response.success ?
                             (response.message || 'Cắt hưởng thành công') :
                             (response.message || 'Cắt hưởng thất bại!');
@@ -541,7 +538,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {
@@ -590,16 +587,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         min-height: 300px;
     }
 
-    .hoten-link {
-        color: #007bff;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .hoten-link:hover {
-        text-decoration: underline;
-    }
-
     .pagination-container {
         display: flex;
         justify-content: space-between;
@@ -620,20 +607,14 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

@@ -127,7 +127,7 @@ $group = Core::loadAssocList('#__usergroups', 'id, parent_id, title', '', 'title
 				<label class="control-label" for="icon">Nhóm người dùng</label>
 				<div class="controls">
 					<select id="usergroup" name="jform[usergroup]" class="form-control" style="background-color: var(--form-control-bg);">
-						<option value="">Chọn nhóm người dùng</option>
+						<option value="0">Chọn nhóm người dùng</option>
 						<?php foreach ($group as $gr) { ?>
 							<option value="<?php echo $gr['id']; ?>" <?php echo htmlspecialchars($this->rows->selectedGroup->usergroup_id) == $gr['id'] ? 'selected' : ''; ?>><?php echo $gr['title']; ?></option>
 						<?php } ?>
