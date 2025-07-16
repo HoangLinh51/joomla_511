@@ -193,7 +193,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 task: 'DETAIL_THUEDAT',
                 thuedat_id: nopthueID
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -377,7 +376,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -434,7 +432,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                     data: data,
                     dataType: 'json',
                     success: function(response) {
-                        console.log('Cut AJAX Success:', response);
                         const message = response.success ?
                             (response.message || 'Cắt hưởng thành công') :
                             (response.message || 'Cắt hưởng thất bại!');
@@ -590,20 +587,14 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

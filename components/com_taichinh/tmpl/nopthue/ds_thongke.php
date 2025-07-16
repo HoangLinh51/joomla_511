@@ -12,21 +12,21 @@ $current_phuongxa_id = null;
 
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
     <thead>
-         <thead>
-        <tr style="background: #027be3;">
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">STT</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">Khu vực</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="2">Giới tính</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="3">Tổng số công dân</th>
-        </tr>
-        <tr style="background: #027be3;">
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nam</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nữ</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">thường trú</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Tạm trú</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Trên 18 tuổi</th>
-        </tr>
-    </thead>
+        <thead>
+            <tr class="bg-primary">
+                <th class="text-center align-middle" rowspan="2">STT</th>
+                <th class="text-center align-middle" rowspan="2">Khu vực</th>
+                <th class="text-center align-middle" colspan="2">Giới tính</th>
+                <th class="text-center align-middle" colspan="3">Tổng số công dân</th>
+            </tr>
+            <tr class="bg-primary">
+                <th class="text-center align-middle">Nam</th>
+                <th class="text-center align-middle">Nữ</th>
+                <th class="text-center align-middle">thường trú</th>
+                <th class="text-center align-middle">Tạm trú</th>
+                <th class="text-center align-middle">Trên 18 tuổi</th>
+            </tr>
+        </thead>
     </thead>
     <tbody id="tbody_danhsach">
         <?php foreach ($this->items as $i => $item) : ?>

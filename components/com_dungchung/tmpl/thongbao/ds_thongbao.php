@@ -12,7 +12,7 @@ defined('_JEXEC') or die('Restricted access');
       <div class="col-sm-6">
         <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý thông báo hổ trợ</h3>
       </div>
-      <?php if ($this->permission === true) { ?>
+      <?php if ($this->permissionAdmin === true) { ?>
         <div class="col-sm-6 text-right" style="padding:0;">
           <a href="index.php?option=com_dungchung&view=thongbao&task=add_thongbao" class="btn btn-primary" style="font-size:16px;width:136px">
             <i class="fas fa-plus"></i> Thêm mới
@@ -54,7 +54,9 @@ defined('_JEXEC') or die('Restricted access');
           <th class="text-center align-middle">Tiêu đề</th>
           <th class="text-center align-middle">Nội dung</th>
           <th class="text-center align-middle">Văn bản đính kèm</th>
+          <?php if($this->permissionAdmin === true){?> 
           <th style="width:131px;" class="text-center align-middle">Chức năng</th>
+          <?php }?>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
@@ -140,6 +142,7 @@ defined('_JEXEC') or die('Restricted access');
           </td>
           <td class="align-middle;">${item.noidung || ''}</td>
           <td class="text-center align-middle">${vanbanHtml}</td>
+          <?php if($this->permissionAdmin === true){?>
           <td class="text-center align-middle">
             <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px;"data-thongbao="${item.id}"
               data-title="Hiệu chỉnh">
@@ -150,6 +153,7 @@ defined('_JEXEC') or die('Restricted access');
               <i class="fas fa-trash-alt"></i>
             </span>
           </td>
+          <?php }?> 
         </tr>
       `;
     }).join('');

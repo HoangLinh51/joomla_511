@@ -102,7 +102,6 @@ class RawView extends BaseHtmlView
             $params['thonto_id'] = [];
         }
         $items = $model->getThongKeBanDieuHanh($params);
-        // var_dump($items);exit;
 
         $this->items = $items;
         parent::display();

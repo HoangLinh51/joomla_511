@@ -64,11 +64,11 @@ defined('_JEXEC') or die('Restricted access');
   function renderTextChucVu(id, tenchucdanh) {
     let stringchucvu = ""
     if (id === 5 || id === 7 || id === 15) {
-      stringchucvu = `<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%" >${tenchucdanh}</span>`
+      stringchucvu = `<span class="badge bg-danger">${tenchucdanh}</span>`
     } else if (id === 8 || id === 10 || id === 14) {
-      stringchucvu = `<span class="badge bg-primary" style="padding: 0.4em; font-size: 80%" >${tenchucdanh}</span>`
+      stringchucvu = `<span class="badge bg-primary">${tenchucdanh}</span>`
     } else if (id === 6 || id === 9 || id === 15) {
-      stringchucvu = `<span class="badge bg-success" style="padding: 0.4em; font-size: 80%" >${tenchucdanh}</span>`
+      stringchucvu = `<span class="badge bg-success">${tenchucdanh}</span>`
     }
     return stringchucvu
   }

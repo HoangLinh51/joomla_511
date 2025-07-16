@@ -306,7 +306,6 @@ $detailLaoDong = $this->detailLaoDong;
       // Xử lý hiển thị/ẩn container thoigianlamviec khi chọn đối tượng thất nghiệp (id = 9)
       if (selectedValue === 9) {
         const datunglamviecValue = detailLaoDong.datunglamviec ?? $('#datunglamviec').val();
-        console.log(datunglamviecValue)
         $('#datunglamviec').val(datunglamviecValue).trigger('change');
         $('.thoigianlamviec_container').toggle(datunglamviecValue === '1' || datunglamviecValue === 1);
       } else {
@@ -704,6 +703,11 @@ $detailLaoDong = $this->detailLaoDong;
 
   .select2-container .select2-selection--single {
     height: 38px;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
 
   .error {

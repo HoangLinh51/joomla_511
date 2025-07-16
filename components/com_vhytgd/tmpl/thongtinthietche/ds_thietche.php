@@ -38,11 +38,11 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
                         <td style="vertical-align:middle;text-align: center;">
                             <?php
                             if ($item['trangthaihoatdong_id'] == '1') {
-                                echo '<span class="status-building">Đang xây dựng</span>';
+                                echo '<span class="badge bg-secondary">Đang xây dựng</span>';
                             } else if ($item['trangthaihoatdong_id'] == '2') {
-                                echo '<span class="status-repairing">Đang sửa chữa</span>';
+                                echo '<span class="badge bg-danger">Đang sửa chữa</span>';
                             } else {
-                                echo '<span class="status-using">Đang sử dụng</span>';
+                                echo '<span class="badge bg-success">Đang sử dụng</span>';
                             }
                             ?>
                         </td>
@@ -68,8 +68,6 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         </tbody>
     </table>
     <div class="pagination-container d-flex align-items-right mt-3">
-        <div id="pagination" class="mx-auto" style="margin-left:0 !important">
-        </div>
         <div id="pagination" class="mx-auto">
             <?php if ($totalPages > 0): ?>
                 <ul class="pagination">
@@ -183,10 +181,8 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         $('.pagination').on('click', '.page-link', function(e) {
             e.preventDefault();
             var page = $(this).data('page');
-            console.log('Page clicked:', page, 'Current page:', currentPage);
             if (page && !$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
                 var start = (page - 1) * <?php echo $perPage; ?>;
-                console.log('Loading start from:', start);
                 loadDanhSach(start);
             }
         });
@@ -257,7 +253,6 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -333,19 +328,6 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         vertical-align: unset;
     }
 
-    .status-building {
-        color: black;
-    }
-
-    .status-repairing {
-        color: red;
-    }
-
-    .status-using {
-        color: green;
-    }
-
-
     .pagination-container {
         display: flex;
         justify-content: space-between;
@@ -367,8 +349,8 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
     }
 
     .page-link:hover {
-        background-color: #029cb0;
-
+        background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

@@ -152,6 +152,7 @@ class HtmlView extends BaseHtmlView
 
         $mucdich = Core::loadAssocList('danhmuc_mucdichsudung', 'id,tenmucdich', 'trangthai = 1 AND daxoa = 0');
         $gioitinh = Core::loadAssocList('danhmuc_gioitinh', 'id,tengioitinh', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
+        $dantoc = Core::loadAssocList('danhmuc_dantoc', 'id,tendantoc', 'daxoa = 0', 'sapxep ASC');
 
         $tenduong = Core::loadAssocList('danhmuc_tenduong', 'id,tenduong', 'trangthai = 1 AND daxoa = 0', 'sapxep ASC');
 
@@ -173,6 +174,7 @@ class HtmlView extends BaseHtmlView
         // Gán các biến cho view
         $this->tenduong = $tenduong;
         $this->gioitinh = $gioitinh;
+        $this->dantoc = $dantoc;
         $this->mucdich = $mucdich;
         $this->phuongxa = $phuongxa;
         $this->thonto = $thonto;

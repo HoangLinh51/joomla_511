@@ -147,7 +147,6 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
                 thonto_id: thontoID,
                 nam: nam
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -213,10 +212,8 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         $('.pagination').on('click', '.page-link', function(e) {
             e.preventDefault();
             var page = $(this).data('page');
-            console.log('Page clicked:', page, 'Current page:', currentPage);
             if (page && !$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
                 var start = (page - 1) * <?php echo $perPage; ?>;
-                console.log('Loading start from:', start);
                 loadDanhSach(start);
             }
         });
@@ -287,7 +284,6 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -489,6 +485,7 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

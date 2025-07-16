@@ -1,8 +1,10 @@
 <?php
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die('Restricted access');
-$idUser = JFactory::getUser()->id;
-
-
+$idUser = Factory::getUser()->id;
 ?>
 
 <form action="index.php" method="post" id="frmDoituonghuongcs" name="frmDoituonghuongcs" class="form-horizontal" style="font-size:16px;background:white">
@@ -91,7 +93,7 @@ $idUser = JFactory::getUser()->id;
 			</div>
 		</div>
 	</div>
-	<?php echo JHTML::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <script>
@@ -276,9 +278,12 @@ $idUser = JFactory::getUser()->id;
 		padding: 5px 0 0 5px !important;
 	}
 
-
-
 	.select2-container .select2-selection--single {
 		height: 38px;
+	}
+
+	.select2-container--default .select2-results__option--highlighted[aria-selected] {
+		background-color: #007b8b;
+		color: #fff
 	}
 </style>

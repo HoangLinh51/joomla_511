@@ -40,11 +40,11 @@ defined('_JEXEC') or die('Restricted access');
   function renderTextTrangThai(id, tentrangthai) {
     let stringchucvu = ""
     if (id == 8) {
-      stringchucvu = `<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
+      stringchucvu = `<span class="badge bg-danger">${tentrangthai}</span>`
     } else if (id == 11) {
-      stringchucvu = `<span class="badge bg-secondary" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
+      stringchucvu = `<span class="badge bg-secondary">${tentrangthai}</span>`
     } else if (id == 10) {
-      stringchucvu = `<span class="badge bg-success" style="padding: 0.4em; font-size: 80%" >${tentrangthai}</span>`
+      stringchucvu = `<span class="badge bg-success">${tentrangthai}</span>`
     }
     return stringchucvu
   }

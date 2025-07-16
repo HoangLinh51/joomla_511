@@ -14,8 +14,11 @@ class DungChung_Model_BaoCaoLoi extends BaseDatabaseModel
 
   public function getListErrorReport($keyword, $page, $take)
   {
+    $userid = Factory::getUser()->id;
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
+    $modal = Core::model('DungChung/Base');
+    $permissionAdmin = $modal->checkPermissionAdmin();
 
     $query->select([
       'a.id',
@@ -36,7 +39,9 @@ class DungChung_Model_BaoCaoLoi extends BaseDatabaseModel
       $quotedKeyword = $db->quote('%' . $keyword . '%');
       $query->where('(a.content LIKE ' . $quotedKeyword . ' OR c.name LIKE ' . $quotedKeyword . ' OR b.name_error LIKE ' . $quotedKeyword . ')');
     }
-
+    if($permissionAdmin === false ){
+      $query->where('a.created_by = ' . $userid);
+    }
     $query->where('a.deleted = 0');
     $query->order($db->quoteName('a.created_at') . ' DESC');
 

@@ -113,8 +113,6 @@ class Dcxddt_Model_Biensonha extends JModelLegacy
     {
         $db = Factory::getDbo();
         $user_id = Factory::getUser()->id;
-        // var_dump($formData['tuyenduong']);
-        // exit;
 
         $fields_to_array = [
             'nam',

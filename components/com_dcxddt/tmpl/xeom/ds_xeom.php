@@ -63,11 +63,11 @@ defined('_JEXEC') or die('Restricted access');
   function renderTextTinhTrang(id, tentinhtrang) {
     let stringtinhtrang = ""
     if (id === 1) {
-      stringtinhtrang = `<span class="badge bg-success" style="padding: 0.4em; font-size: 80%" >${tentinhtrang}</span>`
+      stringtinhtrang = `<span class="badge bg-success">${tentinhtrang}</span>`
     } else if (id === 2) {
-      stringtinhtrang = `<span class="badge bg-warning" style="padding: 0.4em; font-size: 80%" >${tentinhtrang}</span>`
+      stringtinhtrang = `<span class="badge bg-warning">${tentinhtrang}</span>`
     } else if (id === 3) {
-      stringtinhtrang = `<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%" >${tentinhtrang}</span>`
+      stringtinhtrang = `<span class="badge bg-danger">${tentinhtrang}</span>`
     }
     return stringtinhtrang
   }
@@ -77,11 +77,11 @@ defined('_JEXEC') or die('Restricted access');
     let html = '<ul class="pagination">';
     // First and Previous buttons
     html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="1">&lt;&lt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="1">&lt;&lt;</a>
+    </li>`;
     html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${Math.max(1, currentPage - 1)}">&lt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${Math.max(1, currentPage - 1)}">&lt;</a>
+    </li>`;
 
     // Page numbers with a range of 2 pages before and after current page
     const range = 2;
@@ -104,11 +104,11 @@ defined('_JEXEC') or die('Restricted access');
 
     // Next and Last buttons
     html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${Math.min(totalPages, currentPage + 1)}">&gt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${Math.min(totalPages, currentPage + 1)}">&gt;</a>
+    </li>`;
     html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${totalPages}">&gt;&gt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${totalPages}">&gt;&gt;</a>
+    </li>`;
     html += '</ul>';
 
     // Pagination info (e.g., "Showing 1-20 of 50 items")
@@ -203,31 +203,89 @@ defined('_JEXEC') or die('Restricted access');
     });
 
     // hành động xóa
-    $('body').on('click', '.btn_xoa', async function() {
-      if (!confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) return;
-
+    $('body').on('click', '.btn_xoa', function() {
       const idTaiXe = $(this).data('xeom');
-      try {
-        const response = await fetch(`index.php?option=com_dcxddt&controller=xeom&task=xoa_xeom`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
+
+      bootbox.confirm({
+        title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+        message: '<span class="red" style="font-size:20px;">Bạn có chắc chắn muốn xóa dữ liệu này?</span>',
+        buttons: {
+          confirm: {
+            label: '<i class="icon-ok"></i> Đồng ý',
+            className: 'btn-success'
           },
-          body: JSON.stringify({
-            idUser,
-            idTaiXe,
-            [csrfToken]: 1
-          })
-        });
-        const data = await response.json();
-        showToastDS(data.message || 'Xóa thành công', data.success !== false);
-        if (data.success !== false) {
-          setTimeout(() => window.location.reload());
-        }
-      } catch (error) {
-        console.error('Error deleting:', error);
-        showToastDS('Đã xảy ra lỗi khi xóa dữ liệu', false);
-      }
+          cancel: {
+            label: '<i class="icon-remove"></i> Không',
+            className: 'btn-danger'
+          }
+        },
+        callback: async function(result) {
+          if (!result) return;
+
+          try {
+            const response = await fetch(`index.php?option=com_dcxddt&controller=xeom&task=xoa_xeom`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                idUser,
+                idTaiXe,
+                [csrfToken]: 1
+              })
+            });
+
+            const data = await response.json();
+
+            // Tùy theo kết quả trả về
+            const message = data.message || (data.success !== false ? 'Xóa thành công' : 'Xóa thất bại!');
+            const icon = data.success !== false ?
+              '<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
+              '';
+
+            bootbox.alert({
+              title: icon + '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+              message: '<span style="font-size:20px;">' + message + '</span>',
+              backdrop: true,
+              className: 'small-alert',
+              buttons: {
+                ok: {
+                  label: 'OK',
+                  className: 'hidden' // Ẩn nút OK
+                }
+              },
+              onShown: function() {
+                setTimeout(function() {
+                  bootbox.hideAll();
+                  if (data.success !== false) {
+                    window.location.reload();
+                  }
+                }, 2000);
+              }
+            });
+
+          } catch (error) {
+            console.error('Error deleting:', error);
+            bootbox.alert({
+              title: "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
+              message: '<span style="font-size:20px;">Đã xảy ra lỗi khi xóa dữ liệu</span>',
+              className: 'small-alert',
+              buttons: {
+                ok: {
+                  label: 'OK',
+                  className: 'hidden'
+                }
+              },
+              onShown: function() {
+                setTimeout(function() {
+                  bootbox.hideAll();
+                }, 2000);
+              }
+            });
+          }
+        },
+        className: 'custom-bootbox'
+      });
     });
   });
 

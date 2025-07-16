@@ -43,7 +43,6 @@ class Vhytgd_Model_Thietche extends JModelLegacy
     {
         $db = Factory::getDbo();
         $user_id = Factory::getUser()->id;
-        // var_dump()
         // Dữ liệu thiết chế
         $data = [
             'id' => $formData['id_thietche'],
@@ -192,11 +191,6 @@ if (!empty($formData['noidung_hoatdong']) && is_array($formData['noidung_hoatdon
                 'is_cha' => $formData['is_cha'][$groupKey][$subIndex] ?? 0,
                 'daxoa' => '0',
             ];
-
-            // Debug dữ liệu
-            echo "<pre>Dữ liệu hoạt động (groupKey=$groupKey, subIndex=$subIndex): ";
-            var_dump($data_hoatdong);
-            echo "</pre>";
 
             if ((int)$data_hoatdong['id'] == 0) {
                 $data_hoatdong['nguoitao_id'] = $user_id;

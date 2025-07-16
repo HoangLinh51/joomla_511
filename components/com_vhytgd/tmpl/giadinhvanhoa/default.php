@@ -117,22 +117,6 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 </div>
             </div>
             <div id="div_danhsach">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
-                        <thead>
-                            <tr class="bg-primary text-white">
-                                <th style="vertical-align:middle;" class="text-center">STT</th>
-                                <th style="vertical-align:middle;" class="text-center">Tên thiết chế</th>
-                                <th style="vertical-align:middle;" class="text-center">Loại hình</th>
-                                <th style="vertical-align:middle;" class="text-center">Vị trí</th>
-                                <th style="vertical-align:middle;" class="text-center">Diện tích (m²)</th>
-                                <th style="vertical-align:middle;" class="text-center">Tình trạng</th>
-                                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody_danhsach"></tbody>
-                    </table>
-                </div>
             </div>
         </div>
         <?php echo JHtml::_('form.token'); ?>
@@ -316,5 +300,10 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .select2-container .select2-selection--single {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 </style>

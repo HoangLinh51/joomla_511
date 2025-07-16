@@ -122,8 +122,6 @@ class Vhytgd_Model_Vayvon extends JModelLegacy
     {
         $db = Factory::getDbo();
         $user_id = Factory::getUser()->id;
-        // var_dump($formData);
-        // exit;
         // Danh sách các trường cần chuyển thành mảng
         $fields_to_array = [
             'nguonvon_id',
@@ -179,9 +177,6 @@ class Vhytgd_Model_Vayvon extends JModelLegacy
                 $data[$key] = (string)$value;
             }
         }
-        // var_dump($data);
-        // exit;
-
         if ((int) $data['id'] == 0) {
             $data['nguoitao_id'] = $user_id;
             $data['ngaytao'] = 'NOW()';
@@ -239,7 +234,6 @@ class Vhytgd_Model_Vayvon extends JModelLegacy
             $ngaygiaingan = !empty($formData['ngaygiaingan'][$dt]) ? DateTime::createFromFormat('d/m/Y', $formData['ngaygiaingan'][$dt]) : false;
             $ngaydenhan = !empty($formData['ngaydenhan'][$dt]) ? DateTime::createFromFormat('d/m/Y', $formData['ngaydenhan'][$dt]) : false;
 
-            // var_dump($formData['nguoivayvon_id']);exit;
             $data_chuyennganh[$dt] = array(
                 'id' => $formData['id_2nguonvon'][$dt] ?? 0,
                 'nguoivayvon_id' => $nguoivayvon_id,

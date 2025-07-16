@@ -14,7 +14,7 @@ $item = $this->item;
 			<h3>Chi tiết lỗi hệ thống</h3>
 			<div>
 
-				<?php if ($item->status === 1): ?>
+				<?php if ($item->status === 1 && $this->permissionAdmin === true): ?>
 					<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reasonModal" data-action="cancel">Hủy</button>
 					<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#reasonModal" data-action="complete">Hoàn thành</button>
 				<?php endif; ?>

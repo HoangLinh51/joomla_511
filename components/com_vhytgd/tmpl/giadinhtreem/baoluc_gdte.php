@@ -300,7 +300,6 @@ function fetchHouseholdMembers() {
             },
             dataType: 'json',
             success: function(response) {
-                console.log('Phản hồi từ getThannhanBaoluc:', response); // Gỡ lỗi
                 if (response && Array.isArray(response) && response.length > 0) {
                     const $nguoigaySelect = $('#modal_nguoigay_id');
                     const $nannhanSelect = $('#modal_nannhan_id');
@@ -412,11 +411,6 @@ function fetchHouseholdMembers() {
       const hoten = selectedOption.data('hoten') || '';
       const gioitinh = selectedOption.data('gioitinh') || '';
       const namsinh = selectedOption.data('namsinh') || '';
-      console.log('Change nguoigay_id:', {
-        hoten,
-        gioitinh,
-        namsinh
-      });
       $('#modal_hoten_nguoigay').val(hoten);
       $('#modal_gioitinh_nguoigay').val(gioitinh);
       $('#modal_namsinh_nguoigay').val(namsinh);
@@ -427,11 +421,6 @@ function fetchHouseholdMembers() {
       const hoten = selectedOption.data('hoten') || '';
       const gioitinh = selectedOption.data('gioitinh') || '';
       const namsinh = selectedOption.data('namsinh') || '';
-      console.log('Change nannhan_id:', {
-        hoten,
-        gioitinh,
-        namsinh
-      });
       $('#modal_hoten_nannhan').val(hoten);
       $('#modal_gioitinh_nannhan').val(gioitinh);
       $('#modal_namsinh_nannhan').val(namsinh);
@@ -506,8 +495,6 @@ function fetchHouseholdMembers() {
         tinhtrang: $row.find('[name="tinhtrang[]"]').val() || '',
         ghichu: $row.find('[name="ghichu[]"]').val() || ''
       };
-      console.log('Dữ liệu hàng:', data);
-
       $('#modalBaoLucLabel').text('Chỉnh sửa thông tin bạo lực gia đình');
       $('#frmModalBaoLuc')[0].reset();
 

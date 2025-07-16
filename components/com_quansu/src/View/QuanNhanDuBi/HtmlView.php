@@ -27,7 +27,7 @@ class HtmlView extends BaseHtmlView
         $id = $input->getInt('id');
         $component = 'com_quansu';
         $controller = $input->getCmd('view', '');
-        $task = strtolower($input->getCmd('task', 'default'));
+        $task = strtoupper($input->getCmd('task', 'default'));
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
@@ -46,11 +46,12 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        if ($task === 'edit_quannhandubi') {
+        if ($task === 'EDIT_QUANNHANDUBI') {
             $layout = $id > 0 ? 'EDIT_QUANNHANDUBI' : 'ADD_QUANNHANDUBI';
-        } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
-        }
+        } 
+        // else {
+        //     $layout = $task ? strtoupper($task) : 'DEFAULT';
+        // }
 
         switch ($layout) {
             case 'DEFAULT':

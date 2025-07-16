@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
 
 
@@ -155,7 +156,7 @@ $item = $this->item;
             </table>
         </div>
         <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
-        <?php echo JHTML::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
 
@@ -409,13 +410,6 @@ $item = $this->item;
 
         if (isCorrectPage && sessionStorage.getItem(REDIRECT_KEY) !== '1') {
             function handleChange(e) {
-                console.log('handleChange called:', {
-                    phuongxa_id: $('#phuongxa_id').val(),
-                    thonto_id: $('#thonto_id').val(),
-                    nhiemky_id: $('#nhiemky_id').val(),
-                    event_target: e.target.id
-                });
-
                 if (isChecking) {
                     console.log('Đang kiểm tra, bỏ qua');
                     return;
@@ -472,11 +466,6 @@ $item = $this->item;
                             selectElements.prop('disabled', false);
                             showToast('Lỗi khi kiểm tra ban điều hành!', false);
                         }
-                    });
-                } else {
-                    console.log('Thiếu thonto_id hoặc nhiemky_id:', {
-                        thonto_id,
-                        nhiemky_id
                     });
                 }
             }

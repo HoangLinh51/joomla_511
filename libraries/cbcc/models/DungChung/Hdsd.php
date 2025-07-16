@@ -12,20 +12,6 @@ class DungChung_Model_Hdsd extends BaseDatabaseModel
     return "Tie";
   }
 
-  public function checkPermission() 
-  {
-    $userId = Factory::getUser()->id;
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select('COUNT(*)')
-      ->from('jos_user_usergroup_map')
-      ->where('user_id = ' . (int) $userId)
-      ->where('group_id =' .  75);
-    $db->setQuery($query);
-    $permission = (int) $db->loadResult();
-    return $permission > 0;
-  }
-
   public function getListHdsd()
   {
     $db = Factory::getDbo();

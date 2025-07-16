@@ -26,7 +26,7 @@ class HtmlView extends BaseHtmlView
         $input = $app->input;
         $component = 'com_vhytgd';
         $controller = $input->getCmd('view', '');
-        $task = strtolower($input->getCmd('task', 'default'));
+        $task = strtoupper($input->getCmd('task', 'default'));
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }

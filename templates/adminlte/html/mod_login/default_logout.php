@@ -70,7 +70,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 
 
 <li class="dropdown user user-menu open">
-	<a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+	<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>"
 			alt="Avatar" class="img-circle" style="width: 35px; height: 35px;">
 
@@ -91,7 +91,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 				}
 			endif; ?>
 		<?php endif; ?>
-	</a>
+	</button>
 	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
 		<li class="user-header">
 			<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>" class="img-circle" alt="User Image">
@@ -204,5 +204,10 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		border: none;
 		background-color: #fff;
 		color: #0ec4a8ff
+	}
+
+	button.dropdown-toggle{
+		border: none;
+		background-color: #fff;
 	}
 </style>

@@ -387,7 +387,6 @@ use Joomla\CMS\HTML\HTMLHelper;
           return;
         }
       }
-      console.log(data)
 
       $('#nhankhau_id').val(data.id || '');
       $('#modal_gioitinh_id').val(data.gioitinh_id || '');

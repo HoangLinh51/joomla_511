@@ -30,10 +30,12 @@ class HtmlView extends BaseHtmlView
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        $modelHdsd = Core::model('DungChung/Hdsd');
-        $permission = $modelHdsd->checkPermission();
-        $this->permission = $permission;
-        if ( ($task === 'DETAIL_BAOCAOLOI' || $task === 'ADD_BAOCAOLOI') && $permission === false) {
+        $modelHdsd = Core::model('DungChung/Base');
+        $permissionAdmin = $modelHdsd->checkPermissionAdmin();
+        $permissioError = $modelHdsd->checkPermissionError();
+        $this->permissionAdmin = $permissionAdmin;
+        $this->permissioError = $permissioError;
+        if ($permissioError === false && $permissionAdmin === false) {
             echo '<div style="display: flex; flex-direction: column; align-items: center;">
                 <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
                 <a href="/index.php" style="text-decoration: none;">

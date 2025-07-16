@@ -53,9 +53,9 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 
                             // Kiểm tra trangthai_id
                             if ($item['trangthai_id'] == 22) {
-                                $color = 'class="badge bg-success" style="padding: 0.4em; font-size: 80%;"'; // Màu xanh lá
+                                $color = 'class="badge bg-success"'; // Màu xanh lá
                             } elseif ($item['trangthai_id'] == 21 || $item['trangthai_id'] == 23) {
-                                $color = 'class="badge" style="background-color: gray; padding: 0.4em; font-size: 80%;"'; // Màu xám
+                                $color = 'class="badge bg-secondary"'; // Màu xám
                             }
 
                             // Kiểm tra nếu tentrangthaicathuong không có hoặc rỗng
@@ -64,7 +64,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                                 echo '<span ' . $color . '>' . htmlspecialchars($item['tentrangthai']) . '</span>';
                             } else {
                                 // Nếu có, hiển thị tentrangthaicathuong với màu đỏ
-                                echo '<span class="badge bg-danger" style="padding: 0.4em; font-size: 80%;">' . htmlspecialchars($item['tentrangthaicathuong']) . '</span>'; // Màu đỏ
+                                echo '<span class="badge bg-danger">' . htmlspecialchars($item['tentrangthaicathuong']) . '</span>'; // Màu đỏ
                             }
                             ?>
                         </td>
@@ -216,7 +216,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 task: 'DETAIL_DBDT',
                 doituong_id: chinhsachID
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -407,7 +406,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -464,7 +462,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                     data: data,
                     dataType: 'json',
                     success: function(response) {
-                        console.log('Cut AJAX Success:', response);
                         const message = response.success ?
                             (response.message || 'Cắt hưởng thành công') :
                             (response.message || 'Cắt hưởng thất bại!');
@@ -590,16 +587,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         min-height: 300px;
     }
 
-    .hoten-link {
-        color: #007bff;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    .hoten-link:hover {
-        text-decoration: underline;
-    }
-
     .pagination-container {
         display: flex;
         justify-content: space-between;
@@ -620,20 +607,14 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

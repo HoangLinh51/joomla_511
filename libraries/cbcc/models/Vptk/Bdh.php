@@ -323,8 +323,6 @@ class Vptk_Model_Bdh extends JModelLegacy
         for ($i = 0, $n = count($formData['nhankhau_id']); $i < $n; $i++) {
             // Xác định chế độ nhập tay hay tìm kiếm
             $is_ngoai = isset($formData['is_search'][$i]) && $formData['is_search'][$i] == '0' ? 1 : 0;
-            // var_dump($formData['bandieuhanh_id'][$i]);
-            // exit;
 
             // Chuẩn bị dữ liệu cho bảng vptk_bandieuhanh
             $data[$i] = [

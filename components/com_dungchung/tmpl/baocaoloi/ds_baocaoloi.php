@@ -11,7 +11,7 @@ defined('_JEXEC') or die('Restricted access');
       <div class="col-sm-6">
         <h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý báo cáo lỗi</h3>
       </div>
-      <?php if ($this->permission === true) { ?>
+      <?php if ($this->permissioError === true) { ?>
         <div class="col-sm-6 text-right" style="padding:0;">
           <a href="<?php echo Route::_('index.php?option=com_dungchung&view=baocaoloi&task=add_baocaoloi') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
             <i class="fas fa-plus"></i> Thêm mới
@@ -96,13 +96,13 @@ defined('_JEXEC') or die('Restricted access');
   function renderStatus(status) {
     switch (parseInt(status)) {
       case 1:
-        return statusHtml = '<span class="text-warning">Chờ xử lý</span>';
+        return statusHtml = '<span class="badge bg-warning">Chờ xử lý</span>';
       case 2:
-        return statusHtml = '<span class="text-success">Đã hoàn thành</span>';
+        return statusHtml = '<span class="badge bg-success">Đã hoàn thành</span>';
       case 3:
-        return statusHtml = '<span class="text-danger">Đã hủy</span>';
+        return statusHtml = '<span class="badge bg-danger">Đã hủy</span>';
       default:
-        return statusHtml = '<span class="text-muted">Không xác định</span>';
+        return statusHtml = '<span class="badge bg-secondary">Không xác định</span>';
     }
   }
 

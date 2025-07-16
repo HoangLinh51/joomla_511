@@ -1,13 +1,16 @@
 <?php
+
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die('Restricted access');
 $perPage = 20;
 $result = $this->countitems;
 $totalRecords = $result[0]['tongnhankhau'];
 $totalPages = ceil($totalRecords / $perPage);
-$currentPage = JFactory::getApplication()->input->getInt('start', 0) / $perPage + 1;
+$currentPage = Factory::getApplication()->input->getInt('start', 0) / $perPage + 1;
 
 // Tính toán START và END
-$startRecord = JFactory::getApplication()->input->getInt('start', 0) + 1;
+$startRecord = Factory::getApplication()->input->getInt('start', 0) + 1;
 $endRecord = min($startRecord + $perPage - 1, $totalRecords);
 ?>
 
@@ -28,7 +31,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
         <tbody id="tbody_danhsach">
             <?php
             if (!empty($this->rows)) {
-                $stt = JFactory::getApplication()->input->getInt('start', 0) + 1;
+                $stt = Factory::getApplication()->input->getInt('start', 0) + 1;
                 foreach ($this->rows as $item) {
             ?>
                     <tr>
@@ -214,7 +217,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 daxoa: 0,
                 start: start
             };
-            console.log('Pagination Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -241,7 +243,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 task: 'DETAIL_NHK',
                 hokhau_id: hokhauId
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -278,7 +279,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                 },
                 callback: function(result) {
                     if (result) {
-                        console.log('Sending AJAX with hokhau_id:', hokhau_id);
                         $.ajax({
                             url: Joomla.getOptions('system.paths').base + '/index.php?option=com_vptk&task=vptk.delHoKhau&format=raw',
                             type: 'POST',
@@ -287,7 +287,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                                 [Joomla.getOptions('csrf.token')]: 1
                             },
                             success: function(response) {
-                                console.log('AJAX Success:', response);
                                 var res = typeof response === 'string' ? JSON.parse(response) : response;
                                 var message = res.success ? res.message : 'Xóa thất bại!';
                                 var icon = res.success ?
@@ -459,20 +458,14 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

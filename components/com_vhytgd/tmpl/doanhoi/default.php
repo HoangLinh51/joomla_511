@@ -468,7 +468,6 @@ use Joomla\CMS\HTML\HTMLHelper;
             return;
           }
         } catch (error) {
-          console.log(error)
           showToast('Lỗi khi kiểm tra trạng thái nhân khẩu trong đoàn hội', false);
           return;
         }

@@ -171,12 +171,11 @@ defined('_JEXEC') or die('Restricted access');
 
   function renderStatus(status) {
     if (status === "Đang hoạt động") {
-      return `<span class="text-success">${status}</span>`;
+      return `<span class="badge bg-success">${status}</span>`;
     } else if (status === "Đang xây dựng") {
-      return `<span class="text-warning">${status}</span>`;
-      return '<span class="text-warning"></span>';
+      return `<span class="badge bg-warning">${status}</span>`;
     } else if (status === "Tạm ngưng hoạt động") {
-      return `<span class="text-danger">${status}</span>`;
+      return `<span class="badge bg-danger  ">${status}</span>`;
     }
   }
 
@@ -342,37 +341,90 @@ defined('_JEXEC') or die('Restricted access');
         });
       }
     });
-
-    $('body').on('click', '.btn_xoa', async function() {
-      if (!confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) return;
-
+    $('body').on('click', '.btn_xoa', function() {
       const idCoso = $(this).data('idcoso');
-      console.log('idCoso', idCoso)
-      try {
-        const response = await fetch(`index.php?option=com_vhytgd&controller=dichvunhaycam&task=xoa_dichvunhaycam`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            idUser,
-            idCoso: idCoso,
-            [csrfToken]: 1
-          })
-        });
-        const data = await response.json();
-        showToast(data.message || 'Xóa cơ sở thành công', 'success');
-        if (data.success !== false) {
-          setTimeout(() => {
-            window.location.href = '/index.php/component/dichvunhaycam/?view=dichvunhaycam';
-          }, 500);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        showToast('Đã xảy ra lỗi khi xóa dữ liệu', false);
-      }
-    });
 
+      bootbox.confirm({
+        title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+        message: '<span style="font-size:20px;">Bạn có chắc chắn muốn xóa dữ liệu này?</span>',
+        buttons: {
+          confirm: {
+            label: '<i class="icon-ok"></i> Đồng ý',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '<i class="icon-remove"></i> Không',
+            className: 'btn-danger'
+          }
+        },
+        callback: async function(result) {
+          if (!result) return;
+
+          try {
+            const response = await fetch(`index.php?option=com_vhytgd&controller=dichvunhaycam&task=xoa_dichvunhaycam`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                idUser,
+                idCoso: idCoso,
+                [csrfToken]: 1
+              })
+            });
+
+            const data = await response.json();
+
+            const message = data.message || (data.success !== false ? 'Xóa cơ sở thành công' : 'Xóa thất bại!');
+            const icon = data.success !== false ?
+              '<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
+              '';
+
+            bootbox.alert({
+              title: icon + '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+              message: '<span style="font-size:20px;">' + message + '</span>',
+              backdrop: true,
+              className: 'small-alert',
+              buttons: {
+                ok: {
+                  label: 'OK',
+                  className: 'hidden' // Ẩn nút OK
+                }
+              },
+              onShown: function() {
+                setTimeout(function() {
+                  bootbox.hideAll();
+                  if (data.success !== false) {
+                    window.location.href = '/index.php/component/dichvunhaycam/?view=dichvunhaycam';
+                  }
+                }, 2000);
+              }
+            });
+
+          } catch (error) {
+            console.error('Error:', error);
+            bootbox.alert({
+              title: "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
+              message: '<span style="font-size:20px;">Đã xảy ra lỗi khi xóa dữ liệu</span>',
+              className: 'small-alert',
+              buttons: {
+                ok: {
+                  label: 'OK',
+                  className: 'hidden'
+                }
+              },
+              onShown: function() {
+                setTimeout(function() {
+                  bootbox.hideAll();
+                }, 2000);
+              }
+            });
+          }
+        },
+        className: 'custom-bootbox'
+      });
+    });
+    
     $('#btn_xuatexcel').on('click', function() {
       let params = {
         option: 'com_vhytgd',

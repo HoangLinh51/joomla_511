@@ -312,4 +312,9 @@ $messages = JFactory::getApplication()->getMessageQueue();
     .select2-container .select2-selection--single {
         height: 38px;
     }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
+    }
 </style>

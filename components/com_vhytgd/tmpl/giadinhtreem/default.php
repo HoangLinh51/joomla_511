@@ -75,14 +75,14 @@ $idUser = JFactory::getUser()->id;
 			<div id="div_danhsach">
 				<div class="table-responsive">
 					<table class="table table-striped table-bordered table-hover" id="tblDanhsach">
-						<tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Mã hộ gia đình</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên chủ hộ</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Bạo lực gia đình</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Hỗ trợ trẻ em</th>
-							<th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+						<tr class="bg-primary text-white">
+							<th style="vertical-align:middle" class="text-center">STT</th>
+							<th style="vertical-align:middle" class="text-center">Mã hộ gia đình</th>
+							<th style="vertical-align:middle" class="text-center">Tên chủ hộ</th>
+							<th style="vertical-align:middle" class="text-center">Địa chỉ</th>
+							<th style="vertical-align:middle" class="text-center">Bạo lực gia đình</th>
+							<th style="vertical-align:middle" class="text-center">Hỗ trợ trẻ em</th>
+							<th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
 						</tr>
 						<tbody id="tbody_danhsach"></tbody>
 					</table>
@@ -233,7 +233,7 @@ $idUser = JFactory::getUser()->id;
 	.btn_treem:hover i,
 	.btn_baoluc:hover i,
 	.btn_xoa:hover i {
-		color: #0066ff;
+		color: #029cb0;
 	}
 
 	.btn_hieuchinh::after,
@@ -271,10 +271,6 @@ $idUser = JFactory::getUser()->id;
 		padding: 20px .5rem 15px .5rem;
 	}
 
-	.text-primary {
-		color: #478fca !important;
-	}
-
 	.form-control {
 		height: 38px;
 		font-size: 16px;
@@ -288,8 +284,6 @@ $idUser = JFactory::getUser()->id;
 		height: 34px !important;
 		padding: 5px 0 0 5px !important;
 	}
-
-
 
 	.select2-container .select2-selection--single {
 		height: 38px;

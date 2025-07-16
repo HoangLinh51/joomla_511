@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
 
 
@@ -143,7 +144,7 @@ $item = $this->item;
         </div>
         <input type="hidden" name="giadinhvanhoa" value="<?php echo (int)$item[0]['giadinhvanhoa_id']; ?>">
 
-        <?php echo JHTML::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
 
@@ -359,13 +360,11 @@ $item = $this->item;
         // Hàm load danh sách gia đình văn hóa năm trước
         function loadPreviousYearData(thonto_id, nam) {
             if (!thonto_id || !nam) {
-                console.log('Thiếu thonto_id hoặc nam, không load dữ liệu');
                 $('#tblDanhsach tbody').html('<tr class="no-data"><td colspan="7" class="text-center">Vui lòng chọn Thôn/Tổ và Năm</td></tr>');
                 return;
             }
 
             const previousYear = parseInt(nam) - 1;
-            console.log('Load dữ liệu gia đình văn hóa cho thonto_id:', thonto_id, 'năm:', previousYear);
 
             $.ajax({
                 url: 'index.php?option=com_vhytgd&controller=giadinhvanhoa&task=GiaDinhVH1nam',
@@ -381,7 +380,6 @@ $item = $this->item;
                     $('#tblDanhsach tbody').html('<tr><td colspan="7" class="text-center">Đang tải...</td></tr>');
                 },
                 success: function(response) {
-                    console.log('Response từ GiaDinhVH1nam:', response);
                     let html = '';
                     if (response.success && response.data && response.data.length > 0) {
                         response.data.forEach(function(item, index) {
@@ -451,18 +449,10 @@ $item = $this->item;
         });
         // Xử lý sự kiện change cho thonto_id và nam
         const isAddGdVanHoaPage = window.location.search.includes('task=add_gdvanhoa');
-        console.log('Is add_gdvanhoa page:', isAddGdVanHoaPage);
 
         if (isAddGdVanHoaPage) {
             // Xử lý sự kiện change cho thonto_id và nam
             const debouncedLoadData = debounce(function(e) {
-                console.log('Change event triggered:', {
-                    phuongxa_id: $('#phuongxa_id').val(),
-                    thonto_id: $('#thonto_id').val(),
-                    nam: $('#nam').val(),
-                    event_target: e.target.id
-                });
-
                 const phuongxa_id = $('#phuongxa_id').val();
                 const thonto_id = $('#thonto_id').val();
                 const nam = $('#nam').val();
@@ -476,10 +466,6 @@ $item = $this->item;
                 if (thonto_id && nam && !isNaN(parseInt(nam))) {
                     loadPreviousYearData(thonto_id, nam);
                 } else {
-                    console.log('Thiếu thonto_id, nam hoặc nam không hợp lệ:', {
-                        thonto_id,
-                        nam
-                    });
                     $('#tblDanhsach tbody').html('<tr class="no-data"><td colspan="7" class="text-center">Vui lòng chọn Thôn/Tổ và nhập Năm hợp lệ</td></tr>');
                 }
             }, 500);
@@ -569,7 +555,6 @@ $item = $this->item;
                             };
                         },
                         processResults: function(data, params) {
-                            console.log('Dữ liệu trả về từ server:', data);
                             var results = [];
                             if (data && Array.isArray(data) && data.length > 0) {
                                 results = data.map(function(v) {
@@ -627,7 +612,6 @@ $item = $this->item;
 
         $('#modal_nhankhau_search').on('change', function(e) {
             var selectedData = $(this).select2('data')[0] || $(this).data('select2-data');
-            console.log('Dữ liệu của tùy chọn được chọn:', selectedData);
             if (selectedData && selectedData.id && selectedData.data) {
                 $('#modal_hoten').val(selectedData.data.hoten || '');
                 $('#modal_nhankhau_id').val(selectedData.data.id || '');
@@ -656,7 +640,6 @@ $item = $this->item;
 
         $('#modal_dat').on('change', function() {
             const isDat = $(this).val() === '1';
-            console.log('isDat', isDat);
             $('#gdvh_tieubieu_container').toggle(isDat);
             if (!isDat) {
                 $('#modal_gdvh_tieubieu').prop('checked', false);
@@ -781,12 +764,6 @@ $item = $this->item;
                     console.error('Error processing row:', e);
                     showToast('Lỗi khi ' + (isEditing ? 'cập nhật' : 'thêm') + ' thành viên!', false);
                 }
-
-                // Debug nhankhauId và selectedData
-                console.log('isSearch:', isSearch);
-                console.log('isEditing:', isEditing);
-                console.log('nhankhauId:', nhankhauId);
-                console.log('selectedData:', $('#modal_nhankhau_search').select2('data')[0]);
             }
         });
 
@@ -1283,6 +1260,11 @@ $item = $this->item;
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .table#tblThongtin td.align-middle {

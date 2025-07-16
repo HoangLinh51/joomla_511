@@ -268,7 +268,7 @@ $nameModule = $this->nameModule;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
             setTimeout(() => {
-              // window.location.href = '/index.php/component/dungchung/?view=baocaoloi&task=ds_baocaoloi';
+              window.location.href = '/index.php/component/dungchung/?view=baocaoloi&task=ds_baocaoloi';
             }, 500);
           }
         },

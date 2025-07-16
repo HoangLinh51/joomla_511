@@ -59,7 +59,8 @@ class RawView extends BaseHtmlView
     public function viewpdf()
     {
         $file = $_GET['file'];
-        $filePath = JPATH_ROOT . '/upload/2025/6/' . basename($file); // đảm bảo chống path traversal
+        $folder = $_GET['folder'];
+        $filePath = JPATH_ROOT . '/' . $folder . '/' . basename($file); // đảm bảo chống path traversal
 
         if (file_exists($filePath)) {
             header('Content-Type: application/pdf');
@@ -67,7 +68,7 @@ class RawView extends BaseHtmlView
             header('Content-Length: ' . filesize($filePath));
             header('Accept-Ranges: bytes');
             header('Cache-Control: public, must-revalidate, max-age=0');
-            readfile($filePath);      // Header chuẩn
+            readfile($filePath);
             exit;
         } else {
             echo "File không tồn tại.";

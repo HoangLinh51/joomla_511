@@ -221,7 +221,7 @@ $nhankhau = $item['nhankhau'];
         </table>
     </div>
     <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
-    <?php echo JHTML::_('form.token'); ?>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <!-- Modal Nhân Khẩu -->
@@ -521,12 +521,7 @@ $nhankhau = $item['nhankhau'];
         /* Chia đều 3 cột */
         padding: .75rem 0rem .75rem .75rem;
     }
-
-    /* .table#tblThongtin .mb-3 {
-    width: 100%; /* Container lấp đầy <td> */
-    }
-
-    */ .table#tblThongtin .form-control,
+     .table#tblThongtin .form-control,
     .table#tblThongtin .custom-select,
     .table#tblThongtin .input-group {
         width: 100% !important;
@@ -1147,7 +1142,6 @@ $nhankhau = $item['nhankhau'];
         $('#phuongxa_id').on('change', function() {
             var $phuongxa_id = $(this);
             var $thonto_id = $('#thonto_id');
-            console.log($thonto_id);
 
             var phuongxa_val = $phuongxa_id.val();
 
@@ -1249,7 +1243,6 @@ $nhankhau = $item['nhankhau'];
                                 }, function(data) {
                                     // Phân tích cú pháp JSON
                                     var response = typeof data === 'string' ? JSON.parse(data) : data;
-                                    console.log('Response:', response); // Debug phản hồi
 
                                     if (response.success) {
                                         $row.remove();
