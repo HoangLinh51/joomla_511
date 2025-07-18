@@ -149,7 +149,7 @@ $item = $this->item;
         </div>
         <div class="row g-3 mb-4">
             <table class="table table-striped table-bordered" style="height: 150px; overflow-y: auto;">
-                <thead class="table-primary">
+                <thead class="bg-primary text-white">
                     <tr>
                         <th>STT</th>
                         <th>Mã hỗ trợ</th>
@@ -225,7 +225,6 @@ $item = $this->item;
                         </tr>
                     <?php } ?>
                 </tbody>
-
             </table>
         </div>
         <?php echo HTMLHelper::_('form.token'); ?>
@@ -464,7 +463,6 @@ $item = $this->item;
                     error.appendTo(element.closest('.mb-3'));
                 },
                 success: function(label) {
-                    console.log('Validate success for:', label.prev().attr('id'));
                     label.remove();
                 },
                 rules: {
@@ -547,11 +545,9 @@ $item = $this->item;
             }
             // --- KẾT THÚC THAY ĐỔI ---
 
-            console.log('Loại đối tượng selected. Lấy "sotien" từ data attribute:', sotien);
 
             // Làm sạch sotien
             sotien = cleanNumberString(sotien);
-            console.log('sotien (cleaned):', sotien);
 
             if (sotien !== undefined && sotien !== '' && !isNaN(parseFloat(sotien))) {
                 const sotienValue = parseFloat(sotien);
@@ -598,7 +594,6 @@ $item = $this->item;
             const he_so = parseFloat($(this).val());
             let muc_tien_chuan = $('#modal_muc_tien_chuan').val();
             muc_tien_chuan = cleanNumberString(muc_tien_chuan);
-            console.log('Hệ số:', he_so, 'Mức tiền chuẩn (cleaned):', muc_tien_chuan);
 
             if (!isNaN(he_so) && !isNaN(parseFloat(muc_tien_chuan))) {
                 const thuc_nhan = he_so * parseFloat(muc_tien_chuan);
@@ -698,8 +693,6 @@ $item = $this->item;
 
                 // Debug giá trị editIndex và dữ liệu
                 const editIndex = parseInt($('#modal_edit_index').val());
-                console.log('editIndex:', editIndex);
-                console.log('Dữ liệu trợ cấp:', data);
 
                 // Lấy text từ các dropdown
                 const bien_dong_text = $('#modal_bien_dong option:selected').data('text') || $('#modal_bien_dong option:selected').text() || '';
@@ -767,7 +760,6 @@ $item = $this->item;
         $('.dsThongtintrocap').on('click', '.btn_xoa_trocap', async function() {
             const $row = $(this).closest('tr');
             const trocap_id = $(this).data('trocap-id');
-            console.log('Xóa thông tin trợ cấp:', trocap_id);
 
             // Xác nhận trước khi xóa
             if (!confirm('Bạn có chắc chắn muốn xóa thông tin trợ cấp này?')) {
@@ -972,7 +964,6 @@ $item = $this->item;
         // select nhân khẩu theo laodongdetail (nếu có)
         async function fetchNhanKhauTheoLaoDongDetail() {
             if (item && item[0] && item[0].nhankhau_id) {
-                console.log('Fetching nhankhau_id:', item[0].nhankhau_id);
                 try {
                     const nhankhauResponse = await $.post('index.php', {
                         option: 'com_vhytgd',
@@ -980,7 +971,6 @@ $item = $this->item;
                         format: 'json',
                         nhankhau_id: item[0].nhankhau_id,
                     }, null, 'json');
-                    console.log('nhankhauResponse:', nhankhauResponse);
                     if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
                         const nhankhau = nhankhauResponse.items.find(nk => nk.id === item[0].nhankhau_id) || nhankhauResponse.items[0];
                         if (nhankhau) {
@@ -989,7 +979,6 @@ $item = $this->item;
                             $('#select_top').append(newOption);
                             initSelect2('#select_top'); // Khởi tạo lại Select2
                             $('#select_top').val(nhankhau.id).trigger('change.select2');
-                            console.log('select_top set to:', nhankhau.id, optionText);
                             $('#select_top').trigger({
                                 type: 'select2:select',
                                 params: {
@@ -1224,6 +1213,11 @@ $item = $this->item;
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .table#tblThongtin td.align-middle {

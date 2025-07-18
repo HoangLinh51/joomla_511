@@ -12,21 +12,21 @@ $current_phuongxa_id = null;
 
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
     <thead>
-         <thead>
-        <tr style="background: #027be3;">
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">STT</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">Khu vực</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="2">Giới tính</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="3">Tổng số công dân</th>
-        </tr>
-        <tr style="background: #027be3;">
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nam</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nữ</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">thường trú</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Tạm trú</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Trên 18 tuổi</th>
-        </tr>
-    </thead>
+        <thead>
+            <tr class="bg-primary">
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">STT</th>
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center" rowspan="2">Khu vực</th>
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="2">Giới tính</th>
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center" colspan="3">Tổng số công dân</th>
+            </tr>
+            <tr class="bg-primary">
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nam</th>
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Nữ</th>
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center">thường trú</th>
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Tạm trú</th>
+                <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Trên 18 tuổi</th>
+            </tr>
+        </thead>
     </thead>
     <tbody id="tbody_danhsach">
         <?php foreach ($this->items as $i => $item) : ?>

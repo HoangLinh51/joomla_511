@@ -23,46 +23,38 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $user = Factory::getUser();
-        $app = Factory::getApplication();
-        $input = $app->input;
-        $id = $input->getInt('id');
-        $component = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
-        $task = strtolower($input->getCmd('task', ''));
+        $input = Factory::getApplication()->input;
+        $component  = 'com_vhytgd';
+        $controller = $input->getCmd('view', 'laodong');
+        $task       = strtoupper($input->getCmd('task', 'default'));
 
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
 
-        $checkTask = in_array($task, ['ds_laodong', 'add_laodong', 'edit_laodong']) ? 'default' : $task;
+        if ($task === 'ADD_LAODONG' || $task === 'EDIT_LAODONG' || $task === 'THONGKE') {
+            $checkTask = 'default';
+        }
 
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
-            echo '<div style="display: flex; flex-direction: column; align-items: center;">
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
                 <a href="/index.php" style="text-decoration: none;">
-                    <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">Trang chủ</button>
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
                 </a>
-            </div>';
+              </div>';
             exit;
         }
 
-        if ($task === 'edit_laodong') {
-            $layout = $id > 0 ? 'edit_laodong' : 'add_laodong';
-        } else {
-            $layout = empty($task) || $task === 'default' ? 'ds_laodong' : $task;
-        }
-
-        switch ($layout) {
-            case 'thongke':
+        switch ($task) {
+            case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_initDefaultPage();
                 break;
-            case 'ds_laodong':
-                $this->setLayout('ds_laodong');
-                $this->_initDefaultPage();
-                break;
-            case 'add_laodong':
-            case 'edit_laodong':
+            case 'ADD_LAODONG':
+            case 'EDIT_LAODONG':
                 $this->setLayout('edit_laodong');
                 $this->_editDVNhayCam();
                 break;

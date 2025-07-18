@@ -30,7 +30,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 </div>
                 <div class="card-body">
                     <table class="w-100">
-                        
+
                         <tr>
                             <td style="width: 10%; padding: 10px;"><b class="text-primary" style="font-size: 17px; line-height: 2.5;">Thiết chế</b></td>
                             <td style="padding:10px">
@@ -53,7 +53,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                         </tr>
                         <tr>
                             <td style="width:10%;padding:10px;" nowrap><b class="text-primary" style="font-size:18px;">Phường xã</b></td>
-                            <td  style="width:40%;padding:10px">
+                            <td style="width:40%;padding:10px">
                                 <select id="phuongxa_id" name="phuongxa_id" class="custom-select" data-placeholder="Chọn phường xã">
                                     <option value=""></option>
                                     <?php foreach ($this->phuongxa as $px) { ?>
@@ -61,7 +61,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                                     <?php } ?>
                                 </select>
                             </td>
-                            
+
                         </tr>
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
@@ -108,31 +108,23 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         padding: 5px 0 0 5px !important;
     }
 
-    .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #69d7e9;
-        border: 1px solid #080808;
-        border-radius: 4px;
-        cursor: default;
-        float: left;
-        margin-right: 5px;
-        margin-top: 5px;
-        padding: 0 5px;
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #007bff;
-        border-color: #006fe6;
-        color: #181616;
+        border-radius: 4px;
+        cursor: default;
+        float: left;
         padding: 0 10px;
-        margin-top: .31rem;
+        color: #181616;
     }
 
     .select2-container .select2-selection--single {
         height: 38px;
     }
 </style>
-
-
 
 <script>
     jQuery(document).ready(function($) {
@@ -176,8 +168,8 @@ $idUser = Factory::getApplication()->getIdentity()->id;
 
         function loadDanhSach(start = 0) {
             const phuongxaId = $('#phuongxa_id').val();
-           
-          
+
+
 
             // Kiểm tra xem phường xã đã được chọn hay chưa
             if (!phuongxaId) {

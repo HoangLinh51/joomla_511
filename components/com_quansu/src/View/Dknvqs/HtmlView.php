@@ -23,18 +23,19 @@ class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $user = Factory::getUser();
-        $app = Factory::getApplication();
-        $input = $app->input;
-        $id = $input->getInt('id');
-        $component = 'com_quansu';
-        $controller = $input->getCmd('view', '');
-        $task = strtolower($input->getCmd('task', 'default'));
+        $input = Factory::getApplication()->input;
+        $component  = 'com_quansu';
+        $controller = $input->getCmd('view', 'dknvqs');
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'DS_DKNVQS' || $task === 'EDIT_DKNVQS' || $task === 'ADD_DKNVQS') {
+
+        if ($task === 'DS_DKNVQS' || $task === 'ADD_DKNVQS' || $task === 'EDIT_DKNVQS') {
             $checkTask = 'default';
         }
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
@@ -47,29 +48,19 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        // Phân biệt edit vs add
-        if ($task === 'edit_dknvqs') {
-            $layout = $id > 0 ? 'EDIT_DKNVQS' : 'ADD_DKNVQS';
-        } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
-        }
-
-        switch ($layout) {
-            case 'DEFAULT':
-            case 'DS_DKNVQS':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
+        switch ($task) {
             case 'ADD_DKNVQS':
             case 'EDIT_DKNVQS':
                 $this->setLayout('edit_dknvqs');
                 $this->_editDknvqs();
                 break;
+            default:
+                $this->setLayout('default');
+                $this->_initDefaultPage();
+                break;
         }
-
         parent::display($tpl);
     }
-
 
     private function _initDefaultPage()
     {

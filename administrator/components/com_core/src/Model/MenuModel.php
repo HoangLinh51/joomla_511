@@ -128,7 +128,6 @@ class MenuModel extends ListModel
 		return $data;
 	}
 
-
 	public function save($data)
 	{
 		$table = $this->getTable();
@@ -165,22 +164,35 @@ class MenuModel extends ListModel
 		}
 		$menuId = (int) $table->id;
 		$usergroupId = isset($data['usergroup']) ? (int) $data['usergroup'] : 0;
-
 		if ($menuId > 0 && $usergroupId > 0) {
 			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
 
-			// Tạo câu lệnh insert
-			$columns = ['menu_id', 'usergroup_id'];
-			$values = [$db->quote($menuId), $db->quote($usergroupId)];
-
-			$query
-				->insert($db->quoteName('#__core_menu_usergroup'))
-				->columns($db->quoteName($columns))
-				->values(implode(',', $values));
-
+			// Kiểm tra xem đã tồn tại bản ghi với menu_id và usergroup_id chưa
+			$query->clear()
+				->select($db->quoteName('id')) // Giả sử bảng có cột id là khóa chính
+				->from($db->quoteName('jos_core_menu_usergroup'))
+				->where($db->quoteName('menu_id') . ' = ' . $db->quote($menuId));
 			$db->setQuery($query);
-			$db->execute();
+			$existingId = $db->loadResult();
+
+			if ($existingId) {
+				// Đã tồn tại -> thực hiện cập nhật nếu cần (ở đây update ví dụ cột khác nếu có)
+				$query->clear()
+					->update($db->quoteName('jos_core_menu_usergroup'))
+					->set($db->quoteName('usergroup_id') . ' = ' . $db->quote($usergroupId)) 
+					->where($db->quoteName('id') . ' = ' . (int) $existingId);
+				$db->setQuery($query);
+				$db->execute();
+			} else {
+				// Chưa có -> thực hiện thêm mới
+				$query->clear()
+					->insert($db->quoteName('jos_core_menu_usergroup'))
+					->columns([$db->quoteName('menu_id'), $db->quoteName('usergroup_id')])
+					->values(implode(',', [$db->quote($menuId), $db->quote($usergroupId)]));
+				$db->setQuery($query);
+				$db->execute();
+			}
 		}
 		return $table->id;
 	}

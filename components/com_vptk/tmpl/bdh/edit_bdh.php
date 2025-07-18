@@ -1,6 +1,7 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
 
 
@@ -106,7 +107,7 @@ $item = $this->item;
                             <tr>
                                 <td class="align-middle text-center stt"><?php echo $index + 1; ?></td>
                                 <td class="align-middle hoten" style="cursor: pointer;">
-                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>" style="color: blue;">
+                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>">
                                         <strong>Họ tên:</strong> <?php echo htmlspecialchars($nk['n_hoten'] ?? ''); ?>
                                     </a><br>
                                     <strong>CCCD:</strong> <?php echo htmlspecialchars($nk['n_cccd'] ?? ''); ?><br>
@@ -155,7 +156,7 @@ $item = $this->item;
             </table>
         </div>
         <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
-        <?php echo JHTML::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
 
@@ -409,13 +410,6 @@ $item = $this->item;
 
         if (isCorrectPage && sessionStorage.getItem(REDIRECT_KEY) !== '1') {
             function handleChange(e) {
-                console.log('handleChange called:', {
-                    phuongxa_id: $('#phuongxa_id').val(),
-                    thonto_id: $('#thonto_id').val(),
-                    nhiemky_id: $('#nhiemky_id').val(),
-                    event_target: e.target.id
-                });
-
                 if (isChecking) {
                     console.log('Đang kiểm tra, bỏ qua');
                     return;
@@ -472,11 +466,6 @@ $item = $this->item;
                             selectElements.prop('disabled', false);
                             showToast('Lỗi khi kiểm tra ban điều hành!', false);
                         }
-                    });
-                } else {
-                    console.log('Thiếu thonto_id hoặc nhiemky_id:', {
-                        thonto_id,
-                        nhiemky_id
                     });
                 }
             }
@@ -827,7 +816,7 @@ $item = $this->item;
             <tr>
                 <td class="align-middle text-center stt">${stt}</td>
                 <td class="align-middle hoten">
-                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $('#tblDanhsach tbody tr').length}" style="color: blue;">
+                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $('#tblDanhsach tbody tr').length}">
                         <strong>Họ tên:</strong> ${hoten}
                     </a><br>
                     <strong>CCCD:</strong> ${cccd_so}<br>
@@ -1381,6 +1370,11 @@ $item = $this->item;
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .table#tblThongtin td.align-middle {

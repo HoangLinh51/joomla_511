@@ -40,7 +40,7 @@ $avatar_url = $base_url . "/uploader/defaultImage.png";
 
 if (!empty($avatarId)) {
     $query = $db->getQuery(true)
-        ->select($db->quoteName('code'))
+        ->select(['code', 'folder'])
         ->from($db->quoteName('core_attachment'))
         ->where($db->quoteName('id') . ' = ' . $db->quote($avatarId))
         ->order($db->quoteName('created_at') . ' DESC');
@@ -48,7 +48,7 @@ if (!empty($avatarId)) {
     $result = $db->loadObject();
 
     if (!empty($result) && !empty($result->code)) {
-        $avatar_url = $base_url . "/uploader/get_image.php?code=" . $result->code;
+        $avatar_url = $base_url . "/uploader/get_image.php/" . $result->folder . "?code=" . $result->code;
     }
 }
 ?>

@@ -125,12 +125,12 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
                         <thead>
-                            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tổ dân phố/Thôn</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tuyến đường</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tổng số nhà được cấp</th>
-                                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+                            <tr class="bg-primary text-white">
+                                <th style="vertical-align:middle;" class="text-center">STT</th>
+                                <th style="vertical-align:middle;" class="text-center">Tổ dân phố/Thôn</th>
+                                <th style="vertical-align:middle;" class="text-center">Tuyến đường</th>
+                                <th style="vertical-align:middle;" class="text-center">Tổng số nhà được cấp</th>
+                                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
                             </tr>
                         </thead>
                         <tbody id="tbody_danhsach"></tbody>
@@ -279,7 +279,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 
     .btn_hieuchinh:hover i,
     .btn_xoa:hover i {
-        color: #0066ff;
+        color: #007b8bb8;
     }
 
     .btn_hieuchinh::after,
@@ -312,16 +312,16 @@ $messages = JFactory::getApplication()->getMessageQueue();
         padding: 20px .5rem 15px .5rem;
     }
 
-    .text-primary {
-        color: #478fca !important;
-    }
-
     .form-control {
         height: 38px;
-        font-size: 16px;
     }
 
     .select2-container .select2-selection--single {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 </style>

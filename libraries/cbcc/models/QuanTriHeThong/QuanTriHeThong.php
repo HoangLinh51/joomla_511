@@ -177,7 +177,6 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     if (!$user->bind($data)) {
       return ['success' => false, 'message' => $user->getError()];
     }
-    var_dump('newPassword--->', $newPassword);
 
     // Test nội bộ hash đúng chưa
     if (!UserHelper::verifyPassword($newPassword, $user->password, $user->id)) {

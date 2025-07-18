@@ -24,16 +24,18 @@ class HtmlView extends BaseHtmlView
     {
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
-        $id = $input->getInt('id');
-        $component = 'com_quansu';
-        $controller = $input->getCmd('view', '');
-        $task = strtolower($input->getCmd('task', 'default'));
+        $component  = 'com_quansu';
+        $controller = $input->getCmd('view', 'dktuoi17');
+        $task       = strtoupper($input->getCmd('task', 'default'));
+
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
+
         if ($task === 'DS_DKTUOI17' || $task === 'ADD_DKTUOI17' || $task === 'EDIT_DKTUOI17') {
             $checkTask = 'default';
         }
+
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
@@ -46,22 +48,15 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        if ($task === 'edit_dktuoi17') {
-            $layout = $id > 0 ? 'EDIT_DKTUOI17' : 'ADD_DKTUOI17';
-        } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
-        }
-
-        switch ($layout) {
-            case 'DEFAULT':
-            case 'DS_DKTUOI17':
-                $this->setLayout('default');
-                $this->_initDefaultPage();
-                break;
+        switch ($task) {
             case 'ADD_DKTUOI17':
             case 'EDIT_DKTUOI17':
                 $this->setLayout('edit_dktuoi17');
                 $this->_editDkTuoi17();
+                break;
+            default:
+                $this->setLayout('default');
+                $this->_initDefaultPage();
                 break;
         }
 
@@ -86,7 +81,7 @@ class HtmlView extends BaseHtmlView
         }
         $this->detailDkTuoi17 = $detailDkTuoi17;
     }
-    
+
 
     private function import()
     {
@@ -98,16 +93,16 @@ class HtmlView extends BaseHtmlView
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2-bootstrap.css');
-        
 
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js'); 
-        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js'); 
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js'); 
+
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js'); 
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');
@@ -128,7 +123,7 @@ class HtmlView extends BaseHtmlView
         $trinhdohocvan = $model->getDanhMucTrinhDoHocVan();
         $quanhethannhan = $model->getDanhMucQuanHeThanNhan();
         $nghenghiep = $model->getDanhMucNgheNghiep();
-        
+
         $this->nghenghiep = $nghenghiep;
         $this->quanhethannhan = $quanhethannhan;
         $this->trinhdohocvan = $trinhdohocvan;

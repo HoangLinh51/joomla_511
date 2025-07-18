@@ -160,7 +160,7 @@ $item = $item ?? (object)[
     </div>
     <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto; border: 1px solid #d9d9d9; border-radius: 4px;">
       <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
-        <thead class="table-primary">
+        <thead class="table-primary text-white">
           <tr>
             <th style="width: 50px; text-align: center;">STT</th>
             <th style="width: 175px; text-align: center;">Quan hệ</th>
@@ -754,9 +754,7 @@ $item = $item ?? (object)[
     }
 
     async function fetchNhanKhauTheoLaoDongDetail() {
-      console.log('item:', item);
       if (item && item.nhankhau_id) {
-        console.log('Fetching nhankhau_id:', item.nhankhau_id);
         try {
           const nhankhauResponse = await $.post('index.php', {
             option: 'com_vhytgd',
@@ -767,7 +765,6 @@ $item = $item ?? (object)[
 
           if (nhankhauResponse && nhankhauResponse.items && Array.isArray(nhankhauResponse.items) && nhankhauResponse.items.length > 0) {
             const nhankhau = nhankhauResponse.items.find(nk => nk.id === item.nhankhau_id) || nhankhauResponse.items[0];
-            console.log('select_top set to:', nhankhau);
 
             if (nhankhau) {
               const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
@@ -876,7 +873,6 @@ $item = $item ?? (object)[
     $('.dsThanNhan').on('click', '.btn-xoathannhan', async function() {
       const $row = $(this).closest('tr');
       const nhanthan_id = $(this).data('nhanthan-id');
-      console.log('Xóa thông tin trợ cấp:', nhanthan_id);
 
       if (!confirm('Bạn có chắc chắn muốn xóa thông tin này?')) {
         return;
@@ -916,7 +912,6 @@ $item = $item ?? (object)[
     // });
 
     function populateThanNhan(item) {
-      console.log('populateThanNhan item:', item);
       if (item && item.thannhan && Array.isArray(item.thannhan) && item.thannhan.length > 0) {
         $('.dsThanNhan').empty();
 
@@ -995,7 +990,6 @@ $item = $item ?? (object)[
           allowClear: true
         });
       } else {
-        console.log('No valid thannhan data:', item);
         $('.dsThanNhan').empty().append(`
                 <tr>
                     <td colspan="6" class="text-center">Không có dữ liệu thân nhân</td>
@@ -1095,7 +1089,6 @@ $item = $item ?? (object)[
           nhankhau_id: data.id,
         }, null, 'json');
 
-        console.log('com_quansu getThanNhan response:', response);
 
         // Kiểm tra nếu response không phải là mảng
         let responses = Array.isArray(response) ? response : (response.thannhan || []);
@@ -1185,7 +1178,6 @@ $item = $item ?? (object)[
             allowClear: true
           });
         } else {
-          console.log('No valid thannhan data from com_quansu:', responses);
           showToast('Không có dữ liệu thân nhân', false);
           $('.dsThanNhan').empty().append(`
                     <tr>
@@ -1314,6 +1306,11 @@ $item = $item ?? (object)[
 
   .select2-container--default .select2-selection--single .select2-selection__arrow {
     height: 38px;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
 
   .table#tblThongtin td.align-middle {

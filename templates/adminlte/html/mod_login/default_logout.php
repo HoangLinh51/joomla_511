@@ -21,7 +21,7 @@ $user = Factory::getUser();
 $app = Factory::getApplication();
 $doc = Factory::getDocument();
 $coreTemplate = new CoreTemplate();
-$modelThongbao = Core::model('Thongbao/Thongbao');
+$modelThongbao = Core::model('DungChung/Thongbao');
 $listThongBao = $modelThongbao->getListThongBao('today', '', 1, 10);
 $countThongBao =  $modelThongbao->countThongBao($user->id, 'unread');
 $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
@@ -29,25 +29,31 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 ?>
 
 <div class="dropdown mr-2">
-	<a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+	<a class="mr-2 ml-2" href="/index.php/component/dungchung/?view=hdsd&task=default">
+		<i class="fas fa-download"></i>
+	</a>
+
+	<!-- <a type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<i class="far fa-bell" style="font-size: 20px"></i>
 		<?php if ($countThongBao > 0): ?>
 			<span class="badge bg-danger navbar-badge" id="unread-badge"></span>
 		<?php endif; ?>
 	</a>
-	<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="notificationList">
-		<?php if (!empty($listThongBao)) { ?>
-			<?php foreach ($listThongBao as $index => $item): ?>
+	<ul class="dropdown-menu menu-thongbao" aria-labelledby="dropdownMenuButton" id="notificationList">
+		<?php if (!empty($listThongBao['data'])) { ?>
+			<?php foreach ($listThongBao['data'] as $index => $item): ?>
 				<?php $isRead = $modelThongbao->getTrangThaiThongBao($user->id, $item->id); ?>
 				<li class="notification-item">
-					<a class="dropdown-item <?php echo $isRead ? 'text-muted' : 'fw-bold'; ?>"
-						href="<?= Route::_('index.php?option=com_thongbao&view=thongbao&task=detail_thongbao&id=' . $item->id); ?>"
-						onclick="markAsRead(<?= $item->id; ?>, <?= $user->id; ?>)">
-						<?= htmlspecialchars($item->tieude); ?>
+					<div class="dropdown-item">
+						<a class=" <?php echo $isRead ? 'text-muted' : 'fw-bold'; ?> text-title"
+							href="<?= Route::_('index.php?option=com_thongbao&view=thongbao&task=edit_thongbao&id=' . $item->id); ?>"
+							onclick="markAsRead(<?= $item->id; ?>, <?= $user->id; ?>)">
+							<?= htmlspecialchars($item->tieude); ?>
+						</a>
 						<?php if (!$isRead): ?>
-							<span class="badge bg-info ms-2">Mới</span>
+							<span class="badge bg-info ms-2 mb-2">Mới</span>
 						<?php endif; ?>
-					</a>
+					</div>
 				</li>
 			<?php endforeach; ?>
 			<?php if (count($listThongBao) < $totalThongBao): ?>
@@ -56,15 +62,15 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 				</li>
 			<?php endif; ?>
 		<?php } else { ?>
-			<li class="dropdown-item text-muted">Không có thông báo mới.</li>
+			<span class="dropdown-item text-muted">Không có thông báo mới.</span>
 		<?php } ?>
-	</ul>
+	</ul> -->
 </div>
 
 
 
 <li class="dropdown user user-menu open">
-	<a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+	<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>"
 			alt="Avatar" class="img-circle" style="width: 35px; height: 35px;">
 
@@ -85,7 +91,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 				}
 			endif; ?>
 		<?php endif; ?>
-	</a>
+	</button>
 	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
 		<li class="user-header">
 			<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>" class="img-circle" alt="User Image">
@@ -100,14 +106,14 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		</li>
 		<li class="user-footer">
 			<div class="pull-left" style="float: left;">
-				<a href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
+				<button class="btn-editprofile" href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
 					<i class="icon-key"></i>
 					<?php echo Route::_('Thay đổi mật khẩu'); ?>
-				</a>
+				</button>
 			</div>
 
 			<div class="pull-right" style="float: right;">
-				<button type="button" href="#" onclick="document.getElementById('login-form').submit();">
+				<button class="btn-logout" type="button" onclick="document.getElementById('login-form').submit();">
 					<i class="icon-off"></i>
 					<?php echo Text::_('JLOGOUT'); ?>
 				</button>
@@ -125,7 +131,6 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 <script>
 	function markAsRead(thongbao_id, user_id) {
 		// Gửi yêu cầu cập nhật trạng thái đến server
-		console.log(thongbao_id, user_id)
 		fetch('', {
 			method: 'POST',
 			headers: {
@@ -138,7 +143,6 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 
 		// Cập nhật giao diện ngay lập tức
 		const link = document.querySelector(`a[data-id="${thongbao_id}"]`);
-		console.log(link);
 		if (link) {
 			link.classList.remove('fw-bold');
 			link.classList.add('text-muted');
@@ -152,6 +156,11 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 			}
 		}
 	}
+	$(document).ready(function() {
+		$('body').delegate('.btn-editprofile', 'click', function() {
+			window.location.href = '/index.php?option=com_users&view=profile&layout=edit';
+		});
+	})
 </script>
 
 <style>
@@ -169,5 +178,36 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		display: flex !important;
 		align-items: center;
 		justify-content: space-between;
+	}
+
+	.dropdown-menu.menu-thongbao {
+		right: 0;
+		min-width: 12rem;
+	}
+
+	.text-title {
+		width: 160px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.btn-editprofile,
+	.btn-logout {
+		border: none;
+		background-color: #fff;
+		color: #0c9984
+	}
+
+	.btn-editprofile:hover,
+	.btn-logout:hover {
+		border: none;
+		background-color: #fff;
+		color: #0ec4a8ff
+	}
+
+	button.dropdown-toggle{
+		border: none;
+		background-color: #fff;
 	}
 </style>

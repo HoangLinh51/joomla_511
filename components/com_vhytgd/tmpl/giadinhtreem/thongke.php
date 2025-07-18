@@ -52,7 +52,7 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                                 </select>
                             </td>
                         </tr>
-                       
+
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top:10px;">
                                 <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i>Thống kê</button>
@@ -98,24 +98,19 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         padding: 5px 0 0 5px !important;
     }
 
-    .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #69d7e9;
-        border: 1px solid #080808;
-        border-radius: 4px;
-        cursor: default;
-        float: left;
-        margin-right: 5px;
-        margin-top: 5px;
-        padding: 0 5px;
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        background-color: #007bff;
-        border-color: #006fe6;
-        color: #181616;
+        border-radius: 4px;
+        cursor: default;
+        float: left;
         padding: 0 10px;
-        margin-top: .31rem;
+        color: #181616;
     }
+
 
     .select2-container .select2-selection--single {
         height: 38px;

@@ -14,12 +14,12 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tổ dân phố/Thôn</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Năm</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Số lượng gia đình văn hóa</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle;" class="text-center">STT</th>
+                <th style="vertical-align:middle;" class="text-center">Tổ dân phố/Thôn</th>
+                <th style="vertical-align:middle;" class="text-center">Năm</th>
+                <th style="vertical-align:middle;" class="text-center">Số lượng gia đình văn hóa</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -147,7 +147,6 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
                 thonto_id: thontoID,
                 nam: nam
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -213,10 +212,8 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         $('.pagination').on('click', '.page-link', function(e) {
             e.preventDefault();
             var page = $(this).data('page');
-            console.log('Page clicked:', page, 'Current page:', currentPage);
             if (page && !$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
                 var start = (page - 1) * <?php echo $perPage; ?>;
-                console.log('Loading start from:', start);
                 loadDanhSach(start);
             }
         });
@@ -287,7 +284,6 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -325,7 +321,7 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         function loadDanhSach(start = 0) {
             $("#overlay").fadeIn(300);
             var params = {
-               option: 'com_vhytgd',
+                option: 'com_vhytgd',
                 view: 'giadinhvanhoa',
                 format: 'raw',
                 task: 'DS_GDVANHOA',
@@ -403,7 +399,7 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {
@@ -482,20 +478,14 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

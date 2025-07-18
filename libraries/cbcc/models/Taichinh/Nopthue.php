@@ -113,8 +113,7 @@ class Taichinh_Model_Nopthue extends JModelLegacy
     {
         $db = Factory::getDbo();
         $user_id = Factory::getUser()->id;
-        // var_dump($formData);
-        // exit;
+
 
         $fields_to_array = [
             'maphinongnghiep',
@@ -249,12 +248,7 @@ class Taichinh_Model_Nopthue extends JModelLegacy
                 'tinhtrang' => $formData['tinhtrang'][$dt] ?? null,
                 'ghichu' => $formData['ghichu'][$dt] ?? null,
                 'dientich_sd' => $formData['dientichsd'][$dt] ?? null
-
-
             );
-            // var_dump($formData['maphinongnghiep']);
-            // exit;
-
             if ((int) $data_chuyennganh[$dt]['id'] == 0) {
                 $data_chuyennganh[$dt]['nguoitao_id'] = $user_id;
                 $data_chuyennganh[$dt]['ngaytao'] = 'NOW()';

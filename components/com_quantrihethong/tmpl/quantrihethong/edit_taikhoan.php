@@ -266,7 +266,7 @@ $user = $this->user;
 
   .formGroup .chosen-container,
   .formGroup .chosen-choices .search-choice span {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
     line-height: 1.5;
     color: #495057
@@ -323,7 +323,7 @@ $user = $this->user;
     border-radius: 50%;
     text-align: center;
     line-height: 24px;
-    font-size: 16px;
+    font-size: 15px;
     color: #888;
   }
 
@@ -368,7 +368,7 @@ $user = $this->user;
 
     // Tạo nội dung HTML
     toast.innerHTML = `
-      <strong style="display:block; font-size: 16px; margin-bottom: 5px;">
+      <strong style="display:block; font-size: 15px; margin-bottom: 5px;">
        ${message}
       </strong>
       <span style="font-size: 14px;">${error}</span>

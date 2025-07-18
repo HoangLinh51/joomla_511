@@ -43,7 +43,6 @@ class Vhytgd_Model_Thietche extends JModelLegacy
     {
         $db = Factory::getDbo();
         $user_id = Factory::getUser()->id;
-        // var_dump()
         // Dữ liệu thiết chế
         $data = [
             'id' => $formData['id_thietche'],

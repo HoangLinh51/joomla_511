@@ -133,7 +133,7 @@ $nhankhau = $item['nhankhau'];
                                 <td class="align-middle text-center stt"><?php echo $index + 1; ?></td>
                                 <td class="align-middle quanhe"><?php echo htmlspecialchars($nk['quanhe'] ?? ''); ?></td>
                                 <td class="align-middle hoten" style="cursor: pointer;">
-                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>" style=" color: blue;">
+                                    <a href="#" class="edit-nhankhau" data-index="<?php echo $index; ?>">
                                         <strong>Họ tên:</strong> <?php echo htmlspecialchars($nk['hoten'] ?? ''); ?>
                                     </a><br>
                                     <strong>Ngày sinh:</strong> <?php echo htmlspecialchars($nk['ngaysinh'] ?? ''); ?><br>
@@ -221,7 +221,7 @@ $nhankhau = $item['nhankhau'];
         </table>
     </div>
     <input type="hidden" name="id" value="<?php echo (int)$item['id']; ?>">
-    <?php echo JHTML::_('form.token'); ?>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <!-- Modal Nhân Khẩu -->
@@ -521,12 +521,7 @@ $nhankhau = $item['nhankhau'];
         /* Chia đều 3 cột */
         padding: .75rem 0rem .75rem .75rem;
     }
-
-    /* .table#tblThongtin .mb-3 {
-    width: 100%; /* Container lấp đầy <td> */
-    }
-
-    */ .table#tblThongtin .form-control,
+     .table#tblThongtin .form-control,
     .table#tblThongtin .custom-select,
     .table#tblThongtin .input-group {
         width: 100% !important;
@@ -572,6 +567,11 @@ $nhankhau = $item['nhankhau'];
 
     .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #007b8b;
+        color: #fff
     }
 
     table.tableFixHead {
@@ -727,7 +727,7 @@ $nhankhau = $item['nhankhau'];
 
     .modal-body p {
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .modal-content {
@@ -1075,7 +1075,7 @@ $nhankhau = $item['nhankhau'];
                 <td class="align-middle text-center stt">${stt}</td>
                 <td class="align-middle quanhe">${quanhe_text}</td>
                 <td class="align-middle hoten">
-                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : stt - 1}" style="color: blue;">
+                    <a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : stt - 1}">
                        <strong> Họ tên </strong>: ${hoten}
                     </a><br>
                     <strong> Ngày sinh: </strong> ${ngaysinh}<br>
@@ -1142,7 +1142,6 @@ $nhankhau = $item['nhankhau'];
         $('#phuongxa_id').on('change', function() {
             var $phuongxa_id = $(this);
             var $thonto_id = $('#thonto_id');
-            console.log($thonto_id);
 
             var phuongxa_val = $phuongxa_id.val();
 
@@ -1244,7 +1243,6 @@ $nhankhau = $item['nhankhau'];
                                 }, function(data) {
                                     // Phân tích cú pháp JSON
                                     var response = typeof data === 'string' ? JSON.parse(data) : data;
-                                    console.log('Response:', response); // Debug phản hồi
 
                                     if (response.success) {
                                         $row.remove();

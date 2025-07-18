@@ -21,14 +21,14 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Mã khách hàng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Họ tên</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Địa chỉ</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Điện thoại</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Lịch sử vay vốn</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
+            <tr class="bg-primary text-white">
+                <th style="vertical-align:middle" class="text-center">STT</th>
+                <th style="vertical-align:middle" class="text-center">Mã khách hàng</th>
+                <th style="vertical-align:middle" class="text-center">Họ tên</th>
+                <th style="vertical-align:middle" class="text-center">Địa chỉ</th>
+                <th style="vertical-align:middle" class="text-center">Điện thoại</th>
+                <th style="vertical-align:middle" class="text-center">Lịch sử vay vốn</th>
+                <th style="vertical-align:middle; width:131px;" class="text-center">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -152,7 +152,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 task: 'DETAIL_VAYVON',
                 vayvon_id: vayvonID
             };
-            console.log('Detail Params:', params);
             $.ajax({
                 url: 'index.php',
                 type: 'GET',
@@ -343,7 +342,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                         },
                         dataType: 'json',
                         success: function(response) {
-                            console.log('AJAX Success:', response);
                             const message = response.success ?
                                 (response.message || 'Xóa thành công') :
                                 (response.message || 'Xóa thất bại!');
@@ -400,7 +398,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                     data: data,
                     dataType: 'json',
                     success: function(response) {
-                        console.log('Cut AJAX Success:', response);
                         const message = response.success ?
                             (response.message || 'Cắt hưởng thành công') :
                             (response.message || 'Cắt hưởng thất bại!');
@@ -556,20 +553,14 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         opacity: 0.5;
     }
 
-    .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
-    }
-
     .page-link {
         padding: 6px 12px;
         margin: 0 2px;
-        color: #007bff;
     }
 
     .page-link:hover {
         background-color: #e9ecef;
+        color: #007b8b
     }
 
     .pagination-info {

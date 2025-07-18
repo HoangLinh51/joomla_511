@@ -35,7 +35,7 @@ $item = $item;
     <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($gdte_id); ?>">
     <div class="row g-3 mb-4">
       <table id="table-baoluc" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
-        <thead class="table-primary">
+        <thead class="table-primary text-white">
           <tr>
             <th style="width: 50px; text-align: center;" rowspan="2">STT</th>
             <th style="width: 175px; text-align: center;" colspan="3">Thông tin trẻ em</th>
@@ -307,7 +307,7 @@ $item = $item;
           if (response.success && response.data && Array.isArray(response.data)) {
             $('.dsBaoluc').empty();
             if (response.data.length === 0) {
-              $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+              $('.dsBaoluc').html('<tr class="no-data"><td colspan="10s" class="text-center">Không có dữ liệu</td></tr>');
               return;
             }
 
@@ -346,14 +346,14 @@ $item = $item;
               $('.dsBaoluc').append(html);
             });
           } else {
-            $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+            $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
             showToast('Không tìm thấy dữ liệu trẻ em', false);
           }
         },
         error: function(xhr, status, error) {
           console.error('Lỗi khi tải danh sách bạo lực:', error);
           showToast('Lỗi khi tải danh sách trẻ em', false);
-          $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+          $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
         }
       });
     }
@@ -542,7 +542,7 @@ $item = $item;
           updateBaoLucSTT();
           showToast('Xóa thông tin trẻ em thành công', true);
           if ($('.dsBaoluc tr').length === 0) {
-            $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+            $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
           }
         } else {
           showToast('Xóa thông tin trẻ em thất bại: ' + (response.message || 'Lỗi không xác định'), false);

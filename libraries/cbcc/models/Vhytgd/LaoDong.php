@@ -587,7 +587,7 @@ class Vhytgd_Model_LaoDong extends BaseDatabaseModel
 
     $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level'])
       ->order('a.level, a.id ASC');
-
+    // echo $query;
     $db->setQuery($query);
     return $db->loadAssocList();
   }

@@ -152,12 +152,12 @@ $detailDknvqs = $this->detailDknvqs;
       <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
         <thead class="table-primary">
           <tr>
-            <th style="width: 50px; text-align: center;">STT</th>
-            <th style="width: 175px; text-align: center;">Quan hệ</th>
-            <th style="width: 200px; text-align: center;">Họ và tên</th>
-            <th style="width: 150px; text-align: center;">Năm sinh</th>
-            <th style="width: 300px; text-align: center;">Ngành nghề</th>
-            <th style="width: 55px; text-align: center;"></th>
+            <th style="width: 50px; text-align: center; color: #fff">STT</th>
+            <th style="width: 175px; text-align: center; color: #fff">Quan hệ</th>
+            <th style="width: 200px; text-align: center; color: #fff">Họ và tên</th>
+            <th style="width: 150px; text-align: center; color: #fff">Năm sinh</th>
+            <th style="width: 300px; text-align: center; color: #fff">Ngành nghề</th>
+            <th style="width: 55px; text-align: center; color: #fff"></th>
           </tr>
         </thead>
         <tbody class="dsThanNhan">
@@ -855,6 +855,11 @@ $detailDknvqs = $this->detailDknvqs;
 
   .select2-container .select2-selection--single {
     height: 38px;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #007b8b;
+    color: #fff
   }
 
   .error {

@@ -25,14 +25,13 @@ class HtmlView extends BaseHtmlView
         $app    = Factory::getApplication();
         $user   = Factory::getUser();
         $input  = $app->input;
-        $id     = $input->getInt('id');
         $component  = 'com_vhytgd';
-        $controller = $input->getCmd('view', '');
-        $task       = strtolower($input->getCmd('task', 'default'));
+        $controller = $input->getCmd('view', 'dichvunhaycam');
+        $task       = strtoupper($input->getCmd('task', 'default'));
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
         }
-        if ($task === 'DS_DICHVUNHAYCAM' || $task === 'ADD_DICHVUNHAYCAM' || $task === 'EDIT_DICHVUNHAYCAM') {
+        if ($task === 'DS_DICHVUNHAYCAM' || $task === 'EDIT_DICHVUNHAYCAM' || $task === 'THONGKE') {
             $checkTask = 'default';
         }
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
@@ -45,23 +44,18 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        // Xác định layout
-        if ($task === 'edit_dichvunhaycam') {
-            $layout = $id > 0 ? 'EDIT_DICHVUNHAYCAM' : 'ADD_DICHVUNHAYCAM';
-        } else {
-            $layout = $task ? strtoupper($task) : 'DEFAULT';
-        }
-
-        switch ($layout) {
-            case 'DEFAULT':
-            case 'DS_DICHVUNHAYCAM':
-                $this->setLayout('ds_dichvunhaycam');
-                $this->_initDefaultPage();
-                break;
-            case 'ADD_DICHVUNHAYCAM':
+        switch ($task) {
             case 'EDIT_DICHVUNHAYCAM':
                 $this->setLayout('edit_dichvunhaycam');
                 $this->_editDVNhayCam();
+                break;
+            case 'THONGKE':
+                $this->setLayout('thongke');
+                $this->_initDefaultPage();
+                break;
+            default:
+                $this->setLayout('ds_dichvunhaycam');
+                $this->_initDefaultPage();
                 break;
         }
 
@@ -109,13 +103,13 @@ class HtmlView extends BaseHtmlView
         $model = Core::model('Vhytgd/DichVuNhayCam');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
-        $detailCoSo = null; 
+        $detailCoSo = null;
         $idCoSo = $app->getInt('id', null);
 
         if ($phanquyen['phuongxa_id'] != '') {
             $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
         }
-        if($idCoSo){
+        if ($idCoSo) {
             $detailCoSo = $model->getDetailDichVuNhayCam($idCoSo);
         }
 
