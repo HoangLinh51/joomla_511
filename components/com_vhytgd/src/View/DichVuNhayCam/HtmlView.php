@@ -53,6 +53,10 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('ds_dichvunhaycam');
                 $this->_initDefaultPage();
                 break;
+            default:
+                $this->setLayout('ds_dichvunhaycam');
+                $this->_initDefaultPage();
+                break;
         }
 
         parent::display($tpl);
@@ -99,13 +103,13 @@ class HtmlView extends BaseHtmlView
         $model = Core::model('Vhytgd/DichVuNhayCam');
         $phanquyen = $model->getPhanquyen();
         $phuongxa = array();
-        $detailCoSo = null; 
+        $detailCoSo = null;
         $idCoSo = $app->getInt('id', null);
 
         if ($phanquyen['phuongxa_id'] != '') {
             $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
         }
-        if($idCoSo){
+        if ($idCoSo) {
             $detailCoSo = $model->getDetailDichVuNhayCam($idCoSo);
         }
 

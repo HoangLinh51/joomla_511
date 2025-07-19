@@ -13,6 +13,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
+
 
 defined('_JEXEC') or die;
 
@@ -86,7 +88,7 @@ $doc = Factory::getDocument();
 			<div class="form-floating captcha-floating">
 				<input class="form-control" autocomplete="off" type="text" placeholder=" " name="captcha" id="captcha" required>
 				<label for="captcha">Mã xác thực</label>
-				<img src="uploader/files/login_captcha<?php echo date('Ymd'); ?>.jpg" class="captcha-img" alt="captcha">
+				<img src="<?php echo Uri::root(); ?>uploader/files/login_captcha<?php echo date('Ymd'); ?>.jpg" class="captcha-img" alt="captcha">
 			</div>
 
 			<div class="controls-group">
