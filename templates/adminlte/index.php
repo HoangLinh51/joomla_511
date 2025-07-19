@@ -131,7 +131,7 @@ if ($coreTemplate->isLogin() == true) {
 			<?php endif; ?>
 		<?php endforeach; ?>
 		<div class="wrapper">
-			<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+			<nav class="main-header navbar navbar-expand navbar-white navbar-light" style="height:64px">
 				<ul class="navbar-nav">
 					<li class="nav-item">
 						<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -144,7 +144,7 @@ if ($coreTemplate->isLogin() == true) {
 			<aside class="main-sidebar sidebar-dark-primary elevation-4">
 				<a href="index.php" class="d-flex align-items-center gap-3 logo-brand">
 					<img src="/images/banners/logo-DN.png" alt="DNICT Logo" class="brand-image img-circle">
-					<span class="brand-text font-weight-light ">CSDL Xã/Phường</span>
+					<span class="brand-text font-weight-light pl-1"> CSDL Xã/Phường</span>
 				</a>
 				<div class="line"></div>
 
@@ -243,7 +243,7 @@ if ($coreTemplate->isLogin() == true) {
 		}
 
 		.logo-brand {
-			height: 56px;
+			height: 64px;
 			padding: .5rem 1rem;
 			color: #fff;
 			font-weight: 500;

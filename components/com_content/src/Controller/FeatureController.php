@@ -10,6 +10,8 @@
 
 namespace Joomla\Component\Content\Site\Controller;
 
+use Core;
+use Exception;
 use Joomla\CMS\Application\SiteApplication;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -31,4 +33,43 @@ use Joomla\Utilities\ArrayHelper;
 class FeatureController extends FormController
 {
 
+  public function getTongTheoNamCTL()
+  {
+    $raw = file_get_contents('php://input');
+    $json = json_decode($raw, true);
+
+    $phuongxa_id = isset($json['phuongxa']) ? $json['phuongxa'] : null;
+
+    $model = Core::model('Content/Feature');
+
+    try {
+      $data =  $model->getTongTheoNam($phuongxa_id);
+    } catch (Exception $e) {
+      $data = $e->getMessage();
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    jexit();
+  }
+  
+  public function getDataChart ()
+  {
+    $raw = file_get_contents('php://input');
+    $json = json_decode($raw, true);
+
+    $phuongxa_id = isset($json['phuongxa']) ? $json['phuongxa'] : null;
+
+    $model = Core::model('Content/Feature');
+
+    try {
+      $data =  $model->getTongHopLuyKe($phuongxa_id);
+    } catch (Exception $e) {
+      $data = $e->getMessage();
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($data);
+    jexit();
+  }
 }
