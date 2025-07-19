@@ -535,10 +535,10 @@ class Vhytgd_Model_Giadinhtreem extends JModelLegacy
             $db->quoteName('b.n_hoten', 'hoten_hogiadinh'),
             'COALESCE(' . $db->quoteName('c.hoten') . ', ' . $db->quoteName('b.n_hoten') . ') AS hoten_nguoigay',
             'COALESCE(' . $db->quoteName('gt2.tengioitinh') . ', ' . $db->quoteName('gt3.tengioitinh') . ') AS gioitinh_nguoigay',
-            'COALESCE(DATE_FORMAT(' . $db->quoteName('c.namsinh') . ', \'%d/%m/%Y\'), DATE_FORMAT(' . $db->quoteName('b.n_namsinh') . ', \'%Y\')) AS namsinh_nguoigay',
+            'COALESCE(' . $db->quoteName('c.namsinh') . ', DATE_FORMAT(' . $db->quoteName('b.n_namsinh') . ', \'%Y\')) AS namsinh_nguoigay',
             'COALESCE(' . $db->quoteName('e.hoten') . ', ' . $db->quoteName('b.n_hoten') . ') AS hoten_nannhan',
             'COALESCE(' . $db->quoteName('gt.tengioitinh') . ', ' . $db->quoteName('gt3.tengioitinh') . ') AS gioitinh_nannhan',
-            'COALESCE(DATE_FORMAT(' . $db->quoteName('e.namsinh') . ', \'%d/%m/%Y\'), DATE_FORMAT(' . $db->quoteName('b.n_namsinh') . ', \'%Y\')) AS namsinh_nannhan',
+            'COALESCE(' . $db->quoteName('e.namsinh') . ', DATE_FORMAT(' . $db->quoteName('b.n_namsinh') . ', \'%Y\')) AS namsinh_nannhan',
             'DATE_FORMAT(' . $db->quoteName('a.ngayxuly') . ', \'%d/%m/%Y\') AS ngayxuly2',
             $db->quoteName('xuly.tenxuly', 'bienphap_text'),
             $db->quoteName('hotro.tenhotro', 'hotro_text')

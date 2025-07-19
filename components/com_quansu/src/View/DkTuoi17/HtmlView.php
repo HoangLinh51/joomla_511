@@ -54,7 +54,11 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('edit_dktuoi17');
                 $this->_editDkTuoi17();
                 break;
-            default:
+            case 'THONGKE':
+                $this->setLayout('thongke');
+                $this->_initDefaultPage();
+                break;
+            case 'DEFAULT':
                 $this->setLayout('default');
                 $this->_initDefaultPage();
                 break;
@@ -66,6 +70,8 @@ class HtmlView extends BaseHtmlView
 
     private function _initDefaultPage()
     {
+        $loaidoituong = Core::loadAssocList('danhmuc_trangthaiquansu', 'id,tentrangthai', 'trangthai = 1 AND daxoa = 0 AND type = 1');
+        $this->loaidoituong = $loaidoituong;
         $this->import();
     }
 
