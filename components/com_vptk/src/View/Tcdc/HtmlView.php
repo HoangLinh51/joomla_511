@@ -13,7 +13,7 @@ namespace Joomla\Component\VPTK\Site\View\Tcdc;
 defined('_JEXEC') or die;
 
 use Core;
-use Joomla\CMS\Factory;
+use Joomla\CMS\Factory; 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
 use stdClass;

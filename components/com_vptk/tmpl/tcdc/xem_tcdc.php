@@ -94,6 +94,7 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin nhân thân</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->nhanthan); ?></span>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
@@ -120,10 +121,10 @@ $item = $this->item;
                                         <?php foreach ($this->nhanthan as $index => $nt) : ?>
                                             <tr>
                                                 <td class="text-center"><?php echo $index + 1; ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($nt['tenquanhenhanthan']); ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($nt['hoten']); ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($nt['ngaysinh']); ?></td>
-                                                <td class="text-center"><?php echo htmlspecialchars($nt['nghenghiep']); ?></td>
+                                                <td class="text-center"><?php echo htmlspecialchars($nt['tenquanhenhanthan'] ?? ''); ?></td>
+                                                <td class="text-center"><?php echo htmlspecialchars($nt['hoten'] ?? ''); ?></td>
+                                                <td class="text-center"><?php echo htmlspecialchars($nt['ngaysinh'] ?? ''); ?></td>
+                                                <td class="text-center"><?php echo htmlspecialchars($nt['nghenghiep'] ?? ''); ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php endif; ?>
@@ -139,6 +140,8 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Ban điều hành tổ dân phố</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->bandieuhanh); ?></span>
+
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -187,6 +190,8 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Đối tượng bảo trợ xã hội</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->chinhsach); ?></span>
+                            
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -239,6 +244,7 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Vay vốn</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->vayvon); ?></span>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -287,6 +293,7 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Người có công</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->nguoicocong); ?></span>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -350,6 +357,8 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Gia đình văn hóa</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->giadinhvanhoa); ?></span>
+
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -421,6 +430,7 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Đoàn hội</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->doanhoi); ?></span>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -469,6 +479,7 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Số nhà</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->sonha); ?></span>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -517,6 +528,7 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin Nộp thuế sử dụng đất</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->nopthue); ?></span>
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -581,6 +593,8 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin bạo lực gia đình</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->baoluc); ?></span>
+
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -661,6 +675,8 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin hỗ trợ trẻ em</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->treem); ?></span>
+
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -720,6 +736,8 @@ $item = $this->item;
                     <div class="card-header" data-card-widget="collapse" style="background-color: #688fb112">
                         <h5 class="card-title mb-0">Thông tin đồng bào dân tộc</h5>
                         <div class="card-tools">
+                            <span class="badge badge-primary mr-2"><?php echo count($this->dongbao); ?></span>
+
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                 <i class="fas fa-chevron-up"></i>
                             </button>

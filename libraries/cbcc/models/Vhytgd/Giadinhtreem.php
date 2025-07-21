@@ -527,7 +527,7 @@ class Vhytgd_Model_Giadinhtreem extends JModelLegacy
     }
     public function getBaoLucList($giadinh_id)
     {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
 
         $query->select([
@@ -581,8 +581,8 @@ class Vhytgd_Model_Giadinhtreem extends JModelLegacy
         $object->daxoa = 0;
 
         // Gán thông tin người dùng và thời gian
-        $user = JFactory::getUser();
-        $currentTime = JFactory::getDate()->toSql();
+        $user = Factory::getUser();
+        $currentTime = Factory::getDate()->toSql();
         if ($object->id) {
             $object->nguoihieuchinh_id = $user->id;
             $object->ngayhieuchinh = $currentTime;
@@ -617,7 +617,7 @@ class Vhytgd_Model_Giadinhtreem extends JModelLegacy
     }
     public function getTreEmList($giadinh_id)
     {
-        $db = JFactory::getDbo();
+        $db = Factory::getDbo();
         $query = $db->getQuery(true);
 
         $query->select([

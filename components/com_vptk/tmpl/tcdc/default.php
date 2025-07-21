@@ -1,9 +1,11 @@
 <?php
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die('Restricted access');
-$idUser = JFactory::getUser()->id;
+$idUser = Factory::getUser()->id;
 
 // Lấy giá trị is_quyen từ bảng jos_users
-$db = JFactory::getDbo();
+$db = Factory::getDbo();
 $query = $db->getQuery(true)
     ->select('is_quyen')
     ->from($db->quoteName('jos_users'))
@@ -12,7 +14,7 @@ $db->setQuery($query);
 $is_quyen = $db->loadResult();
 
 // Lấy thông báo từ session
-$session = JFactory::getSession();
+$session = Factory::getSession();
 $messageBootbox = $session->get('message_bootbox', '');
 
 // Xóa session sau khi lấy để tránh hiển thị lại
@@ -21,7 +23,7 @@ if ($messageBootbox) {
 }
 
 // Lấy thông báo từ hàng đợi Joomla
-$messages = JFactory::getApplication()->getMessageQueue();
+$messages = Factory::getApplication()->getMessageQueue();
 ?>
 
 <form action="index.php" method="post" id="frmNhanhokhau" name="frmNhanhokhau" class="form-horizontal" style="font-size:16px;background:white">
