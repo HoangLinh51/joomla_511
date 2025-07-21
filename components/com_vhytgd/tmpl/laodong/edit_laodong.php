@@ -33,7 +33,7 @@ $detailLaoDong = $this->detailLaoDong;
       <h5 style="margin: 0">Thông tin cá nhân</h5>
       <div class="d-flex align-items-center" style="gap:5px">
         <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($detailLaoDong->nhankhau_id) ? 'checked' : ''; ?>>
-        <small>Chọn người lao động từ danh sách nhân khẩu</small>
+        <small>Chọn công dân từ danh sách nhân khẩu</small>
       </div>
     </div>
     <div id="select-container" style="display: <?php echo htmlspecialchars($detailLaoDong->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">

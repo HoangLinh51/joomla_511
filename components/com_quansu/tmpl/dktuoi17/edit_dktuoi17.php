@@ -32,12 +32,12 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
       <h5 style="margin: 0">Thông tin cá nhân</h5>
       <div class="d-flex align-items-center" style="gap:5px">
         <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($detailDkTuoi17->nhankhau_id) ? 'checked' : ''; ?>>
-        <small>Chọn người đăng ký từ danh sách nhân khẩu</small>
+        <small>Chọn công dân từ danh sách nhân khẩu</small>
       </div>
     </div>
     <div id="select-container" style="display: <?php echo htmlspecialchars($detailDkTuoi17->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">
       <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
-      <select id="select_top" name="select_top" class="select2">
+      <select id="select_top" name="select_top" class="form-control">
         <option value="">-- Chọn --</option>
         <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
           <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($detailDkTuoi17->nhankhau_id) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
@@ -137,7 +137,7 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
 
     <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
       <h5 class="">Thông tin nhân thân</h5>
-      <button type="button" class="btn btn-success btn-themnhanthan">Thêm nhân thân</button>
+      <button type="button" class="btn btn-primary btn-themnhanthan">Thêm nhân thân</button>
     </div>
     <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto; border: 1px solid #d9d9d9; border-radius: 4px;">
       <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">

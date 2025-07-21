@@ -11,6 +11,7 @@
 namespace Joomla\Component\Dcxddt\Site\Controller;
 
 use Core;
+use DateTime;
 use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -174,10 +175,13 @@ class XeOmController extends BaseController
         $formData = $json ?? $formData;
 
         $formData['dantoc_id'] = $formData['modal_dantoc_id'] ?? $formData['input_dantoc_id'];
+        $formData['namsinh'] = $formData['select_namsinh'] ?? $formData['input_namsinh'];
+        $formData['namsinh'] = !empty($formData['namsinh']) ? $this->formatDate($formData['namsinh']) : '';
         $formData['gioitinh_id'] = $formData['modal_gioitinh_id'] ?? $formData['input_gioitinh_id'];
         $formData['phuongxa_id'] = $formData['modal_phuongxa_id'] ?? $formData['input_phuongxa_id'];
         $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
-
+        $formData['ngayhethan_thehanhnghe'] = $formData['modal_ngayhethan_thehanhnghe']  ?? '';
+        $formData['ngayhethan_thehanhnghe'] = !empty($formData['ngayhethan_thehanhnghe']) ? $this->formatDate($formData['ngayhethan_thehanhnghe']) : '';
         try {
             $model = Core::model('Dcxddt/XeOm');
 
@@ -194,6 +198,16 @@ class XeOmController extends BaseController
         header('Content-Type: application/json');
         echo json_encode($response);
         jexit();
+    }
+
+    function formatDate($dateString)
+    {
+        $date = DateTime::createFromFormat('d/m/Y', $dateString);
+
+        if ($date === false || $date->format('d/m/Y') !== $dateString) {
+            throw new Exception('Định dạng ngày tháng không hợp lệ');
+        }
+        return $date->format('Y-m-d');
     }
 
     public function xoa_xeom()

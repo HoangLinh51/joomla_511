@@ -27,7 +27,7 @@ $item = $item;
       </h2>
       <span>
         <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>
-        <button type="button" class="btn btn-success btn-thembaoluc">Thêm thông tin</button>
+        <button type="button" class="btn btn-primary btn-thembaoluc">Thêm thông tin</button>
       </span>
     </div>
     <input type="hidden" name="giadinh_id" value="<?php echo htmlspecialchars($gdte_id); ?>">

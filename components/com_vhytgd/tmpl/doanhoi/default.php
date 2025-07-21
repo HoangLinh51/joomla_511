@@ -98,12 +98,12 @@ use Joomla\CMS\HTML\HTMLHelper;
               <h5 style="margin: 0">Thông tin cá nhân</h5>
               <div class="d-flex align-items-center" style="gap:5px">
                 <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;">
-                <small>Chọn thành viên từ danh sách nhân khẩu</small>
+                <small>Chọn công dân từ danh sách nhân khẩu</small>
               </div>
             </div>
             <div id="select-container" style="display: none;" class="mb-3">
-              <label for="select_top" class="form-label fw-bold">Chọn thành viên từ danh sách nhân khẩu</label>
-              <select id="select_top" name="select_top" class="select2">
+              <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+              <select id="select_top" name="select_top" class="form-control">
                 <option value="">-- Chọn --</option>
                 <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
                   <option value="<?php echo $tv['id']; ?>"><?php echo htmlspecialchars($tv['hoten']); ?></option>
@@ -123,9 +123,10 @@ use Joomla\CMS\HTML\HTMLHelper;
                 <input id="modal_cccd" type="text" name="modal_cccd" class="form-control" placeholder="Nhập CCCD/CMND">
               </div>
               <div class="col-md-4 mb-2">
-                <label for="modal_namsinh" class="form-label fw-bold">Năm sinh <span class="text-danger">*</span></label>
+                <label for="select_namsinh" class="form-label fw-bold">Năm sinh <span class="text-danger">*</span></label>
+                <input type="hidden" id="input_namsinh" name="input_namsinh" class="form-control" placeholder="dd/mm/yyyy">
                 <div class="input-group">
-                  <input type="text" id="modal_namsinh" name="modal_namsinh" class="form-control" placeholder="dd/mm/yyyy">
+                  <input type="text" id="select_namsinh" name="select_namsinh" class="form-control" placeholder="dd/mm/yyyy">
                   <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                 </div>
               </div>
@@ -254,7 +255,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     const fieldsToReset = [
       '#modal_hoten',
       '#modal_cccd',
-      '#modal_namsinh',
+      '#select_namsinh',
       '#modal_dienthoai',
       '#modal_dantoc_id',
       '#modal_gioitinh_id',
@@ -311,7 +312,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
   $(document).ready(function() {
 
-    $('#modal_namsinh').datepicker({
+    $('#select_namsinh').datepicker({
       autoclose: true,
       language: 'vi',
       format: 'dd/mm/yyyy',
@@ -384,7 +385,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     $('#checkbox_toggle').change(function() {
       const isChecked = $(this).is(':checked');
       const textFields = ['#modal_hoten', '#modal_cccd', '#modal_dienthoai', '#modal_diachi'];
-      const selectFields = ['#modal_dantoc_id', '#modal_gioitinh_id', '#modal_namsinh', '#modal_phuongxa_id', '#modal_thonto_id'];
+      const selectFields = ['#modal_dantoc_id', '#modal_gioitinh_id', '#select_namsinh', '#modal_phuongxa_id', '#modal_thonto_id'];
 
       $('#select-container').toggle(isChecked);
       textFields.forEach(selector => $(selector).prop('readonly', isChecked));
@@ -449,7 +450,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       $('#modal_gioitinh_id').val(data.gioitinh_id || '').trigger('change');
       $('#modal_hoten').val(data.hoten || '');
       $('#modal_cccd').val(data.cccd_so || '');
-      $('#modal_namsinh').val(formatDate(data.ngaysinh));
+      $('#select_namsinh').val(formatDate(data.ngaysinh));
       $('#modal_dienthoai').val(data.dienthoai || '');
       $('#input_dantoc_id').val(data.dantoc_id || '');
       $('#modal_dantoc_id').val(data.dantoc_id || '').trigger('change');
@@ -578,7 +579,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             $('#modal_gioitinh_id').val(response.n_gioitinh_id || '');
             $('#modal_hoten').val(response.n_hoten || '');
             $('#modal_cccd').val(response.n_cccd || '');
-            // $('#modal_namsinh').val(formatDate(response.n_namsinh));
+            $('#select_namsinh').val(formatDate(response.n_namsinh));
             $('#modal_dienthoai').val(response.n_dienthoai || '');
             $('#input_dantoc_id').val(response.n_dantoc_id || '');
             $('#modal_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
@@ -631,7 +632,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             return !$('#checkbox_toggle').is(':checked');
           }
         },
-        modal_namsinh: {
+        select_namsinh: {
           required: function() {
             return !$('#checkbox_toggle').is(':checked');
           }
@@ -646,7 +647,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         select_top: 'Vui lòng chọn công dân',
         modal_hoten: 'Vui lòng nhập họ tên',
         modal_cccd: 'Vui lòng nhập CCCD/CMND',
-        modal_namsinh: 'Vui lòng chọn năm sinh',
+        select_namsinh: 'Vui lòng chọn năm sinh',
         modal_phuongxa_id: 'Vui lòng chọn phường/xã',
       },
       errorPlacement: function(error, element) {

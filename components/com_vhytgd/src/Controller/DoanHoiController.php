@@ -182,7 +182,7 @@ class DoanHoiController extends BaseController
         $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
 
 
-        $formData['namsinh'] = $formData['modal_namsinh'] ?? '';
+        $formData['namsinh'] = $formData['select_namsinh'] ?? $formData['input_namsinh'];
         $formData['namsinh'] = !empty($formData['namsinh']) ? $this->formatDate($formData['namsinh']) : '';
         $formData['thoidiem_batdau'] = $formData['form_thoidiem_batdau'] ?? '';
         $formData['thoidiem_batdau'] = !empty($formData['thoidiem_batdau']) ? $this->formatDate($formData['thoidiem_batdau']) : '';

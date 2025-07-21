@@ -33,7 +33,7 @@ $item = $this->item;
             <h5 style="margin: 0">Thông tin cá nhân</h5>
             <div class="d-flex align-items-center" style="gap:5px">
                 <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($item[0]['nhankhau_id']) ? 'checked' : ''; ?>>
-                <small>Chọn người lao động từ danh sách nhân khẩu</small>
+                <small>Chọn công dân từ danh sách nhân khẩu</small>
             </div>
         </div>
         <div id="select-container" style="display: <?php echo htmlspecialchars($item[0]['nhankhau_id']) ? 'block' : 'none'; ?>;" class="mb-3">
@@ -143,8 +143,7 @@ $item = $this->item;
 
         <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
             <h5 class="">Thông tin hưởng chính sách</h5>
-            <!-- <button class="btn btn-success btn_themchinhsach">Thêm chính sách</button> -->
-            <button type="button" class="btn btn-success" id="btn_themchinhsach" data-toggle="modal" data-target="#modalTroCap"><i class="fas fa-plus"></i> Thêm chính sách</button>
+            <button type="button" class="btn btn-primary" id="btn_themchinhsach" data-toggle="modal" data-target="#modalTroCap"><i class="fas fa-plus"></i> Thêm chính sách</button>
 
         </div>
         <div class="row g-3 mb-4">
@@ -676,6 +675,7 @@ $item = $this->item;
 
             // Mở modal
             $('#modalTroCap').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
         // Xử lý nút Lưu
         $('#btn_luu_trocap').on('click', function() {
@@ -752,6 +752,7 @@ $item = $this->item;
                 $('#modal_edit_index').val('');
                 updateTroCapSTT();
                 $('#modalTroCap').modal('hide');
+                $('div.modal-backdrop').css('display', 'none');
             } else {
                 showToast('Vui lòng điền đầy đủ các trường bắt buộc', false);
             }
@@ -815,6 +816,7 @@ $item = $this->item;
             $('#modal_thuc_nhan').val('').prop('readonly', true);
             initializeModalSelect2();
             $('#modalTroCap').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
     });
 </script>

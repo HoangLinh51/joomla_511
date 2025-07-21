@@ -31,7 +31,7 @@ $detailDanQuan = $this->detailDanQuan;
       <h5 style="margin: 0">Thông tin cá nhân</h5>
       <div class="d-flex align-items-center" style="gap:5px">
         <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) ? 'checked' : ''; ?>>
-        <small>Chọn người quân nhân từ danh sách nhân khẩu</small>
+        <small>Chọn công dân danh sách nhân khẩu</small>
       </div>
     </div>
     <div id="select-container" style="display: <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">
@@ -136,7 +136,7 @@ $detailDanQuan = $this->detailDanQuan;
 
     <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
       <h5 class="">Thông tin nhân thân</h5>
-      <button type="button" class="btn btn-success btn-themnhanthan">Thêm nhân thân</button>
+      <button type="button" class="btn btn-primary btn-themnhanthan">Thêm nhân thân</button>
     </div>
     <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto; border: 1px solid #d9d9d9; border-radius: 4px;">
       <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
@@ -639,7 +639,7 @@ $detailDanQuan = $this->detailDanQuan;
       var selector = '.vanban_' + id;
 
       bootbox.confirm({
-        title: `<span class='text-danger' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
+        title: `<span class='text-primary' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
         message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa văn bản này không?</span>`,
         buttons: {
           confirm: {

@@ -521,7 +521,8 @@ $nhankhau = $item['nhankhau'];
         /* Chia đều 3 cột */
         padding: .75rem 0rem .75rem .75rem;
     }
-     .table#tblThongtin .form-control,
+
+    .table#tblThongtin .form-control,
     .table#tblThongtin .custom-select,
     .table#tblThongtin .input-group {
         width: 100% !important;
@@ -1251,13 +1252,13 @@ $nhankhau = $item['nhankhau'];
                                             $(this).html(i + 1);
                                             $(this).closest('tr').find('.edit-nhankhau').data('index', i);
                                         });
-                                        alert(response.message || 'Đã xử lý xóa dữ liệu thành công!');
+                                        showToast((response.message || 'Đã xử lý xóa dữ liệu thành công!'), true)
                                     } else {
-                                        alert(response.message || 'Có lỗi xảy ra khi xóa dữ liệu!');
+                                        showToast((response.message || 'Có lỗi xảy ra khi xóa dữ liệu!'), false)
                                     }
                                 }).fail(function(xhr, status, error) {
                                     console.error('AJAX error:', status, error); // Debug lỗi
-                                    alert('Lỗi kết nối server!');
+                                    showToast((error || 'Lỗi kết nối server!'), false)
                                 });
                             } else {
                                 $row.remove();
@@ -1419,4 +1420,23 @@ $nhankhau = $item['nhankhau'];
         });
 
     });
+
+    function showToast(message, isSuccess = true) {
+        const toast = $('<div></div>')
+            .text(message)
+            .css({
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                background: isSuccess ? '#28a745' : '#dc3545',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+                zIndex: 9999
+            })
+            .appendTo('body');
+
+        setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
+    }
 </script>

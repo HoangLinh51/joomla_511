@@ -522,6 +522,7 @@ $item = $this->item;
 
             $('#modal_search_toggle').prop('checked', true).trigger('change');
             $('#modalGiaDinhVanHoa').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
 
         $('#modal_search_toggle').on('change', function() {
@@ -758,6 +759,7 @@ $item = $this->item;
 
                     updateSTT();
                     $('#modalGiaDinhVanHoa').modal('hide');
+                    $('div.modal-backdrop').css('display', 'none');
                     resetModal();
                     showToast('Lưu thành viên thành công', true);
                 } catch (e) {
@@ -910,6 +912,7 @@ $item = $this->item;
             });
 
             $('#modalGiaDinhVanHoa').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
 
         $('body').on('click', '.btn_xoa', function() {
@@ -1271,7 +1274,7 @@ $item = $this->item;
         width: 33.33%;
         padding: .75rem 0rem .75rem .75rem;
     }
-    
+
     .table#tblThongtin .form-control,
     .table#tblThongtin .custom-select,
     .table#tblThongtin .input-group {

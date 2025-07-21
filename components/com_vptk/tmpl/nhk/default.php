@@ -22,9 +22,9 @@ $is_quyen = $db->loadResult();
 				</div>
 				<div class="col-sm-6 text-right" style="padding:0;">
 					<?php if ($is_quyen == 0) { ?>
-						<a href="index.php?option=com_vptk&view=nhk&task=chonfile" class="btn btn-success" style="font-size:16px;">
+						<!-- <a href="index.php?option=com_vptk&view=nhk&task=chonfile" class="btn btn-success" style="font-size:16px;">
 							<i class="fas fa-file-download"></i> Import Excel
-						</a>
+						</a> -->
 						<a href="index.php?option=com_vptk&view=nhk&task=add_nhk" class="btn btn-primary" style="font-size:16px;width:136px">
 							<i class="fas fa-plus"></i> Thêm mới
 						</a>

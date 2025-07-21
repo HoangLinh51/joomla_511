@@ -146,7 +146,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="detailModalLabel">Thông tin chi tiết</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -154,7 +154,7 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                     <div id="detailContent">Đang tải...</div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
@@ -287,52 +287,18 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                                 [Joomla.getOptions('csrf.token')]: 1
                             },
                             success: function(response) {
-                                var res = typeof response === 'string' ? JSON.parse(response) : response;
-                                var message = res.success ? res.message : 'Xóa thất bại!';
-                                var icon = res.success ?
-                                    '<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
-                                    '';
-                                bootbox.alert({
-                                    title: icon + "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-                                    message: '<span style="font-size:20px;">' + message + '</span>',
-                                    backdrop: true,
-                                    className: 'small-alert',
-                                    buttons: {
-                                        ok: {
-                                            label: 'OK',
-                                            className: 'hidden' // Ẩn nút OK
-                                        }
-                                    },
-                                    onShown: function() {
-                                        // Tự động đóng sau 2 giây
-                                        setTimeout(function() {
-                                            bootbox.hideAll();
-                                            if (res.success) {
-                                                window.location.reload();
-                                            }
-                                        }, 2000);
+                                let res = typeof response === 'string' ? JSON.parse(response) : response;
+                                let message = res.success ? res.message : 'Xóa thất bại!';
+                                showToast(message, res.success)
+                                setTimeout(function() {
+                                    if (res.success) {
+                                        window.location.reload();
                                     }
-                                });
+                                }, 500);
                             },
                             error: function(xhr) {
                                 console.error('AJAX Error:', xhr.status, xhr.responseText);
-                                bootbox.alert({
-                                    title: "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-                                    message: '<span style="font-size:20px;">Lỗi: ' + xhr.responseText + '</span>',
-                                    className: 'small-alert',
-                                    buttons: {
-                                        ok: {
-                                            label: 'OK',
-                                            className: 'hidden' // Ẩn nút OK
-                                        }
-                                    },
-                                    onShown: function() {
-                                        // Tự động đóng sau 2 giây
-                                        setTimeout(function() {
-                                            bootbox.hideAll();
-                                        }, 2000);
-                                    }
-                                });
+                                showToast(xhr.responseText, false)
                             }
                         });
                     }
@@ -341,6 +307,25 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
             });
         });
     });
+
+    function showToast(message, isSuccess = true) {
+        const toast = $('<div></div>')
+            .text(message)
+            .css({
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                background: isSuccess ? '#28a745' : '#dc3545',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+                zIndex: 9999
+            })
+            .appendTo('body');
+
+        setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
+    }
 </script>
 
 <style>

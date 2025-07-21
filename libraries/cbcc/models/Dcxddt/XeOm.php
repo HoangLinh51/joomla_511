@@ -350,11 +350,11 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     if (!empty($formdata['loaixe_id'])) {
       $columns['loaixe_id'] = $formdata['loaixe_id'];
     }
-    if (!empty($formdata['modal_namsinh'])) {
-      $columns['n_namsinh'] = (new \DateTime($formdata['modal_namsinh']))->format('Y-m-d');
+    if (!empty($formdata['namsinh'])) {
+      $columns['n_namsinh'] = (new \DateTime($formdata['namsinh']))->format('Y-m-d');
     }
-    if (!empty($formdata['modal_ngayhethan_thehanhnghe'])) {
-      $columns['thehanhnghe_ngayhethan'] =  (new \DateTime($formdata['modal_ngayhethan_thehanhnghe']))->format('Y-m-d');
+    if (!empty($formdata['ngayhethan_thehanhnghe'])) {
+      $columns['thehanhnghe_ngayhethan'] =  (new \DateTime($formdata['ngayhethan_thehanhnghe']))->format('Y-m-d');
     }
     if (!empty($formdata['tinhtrang_id'])) {
       $columns['tinhtrangthe_id'] = $formdata['tinhtrang_id'];

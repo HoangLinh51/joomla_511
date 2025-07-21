@@ -78,35 +78,37 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 					<span class="user-info">
 						<?php echo htmlspecialchars($user->get('name')); ?>
 					</span>
-				<?php
-				}
+				<?php }
 			else : { ?>
 					<span class="user-info">
 						<?php echo htmlspecialchars($user->get('username')); ?>
 					</span>
-			<?php
-				}
+			<?php }
 			endif; ?>
 		<?php endif; ?>
 	</button>
-	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
+	<ul class="dropdown-menu menu-profile" style="position: absolute;right: 11px;left: auto;">
 		<li class="">
-			<div class="d-flex align-items-center p-3">
+			<div class="d-flex align-items-center p-3" style="gap:10px ">
 				<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>" style="width: 65px; height: 65px" alt="User Image">
 				<div>
-					<p class="m-0"><?php echo $user->name ?></p>
-					<p class="m-0"><?php echo $user->email ?></p>
+					<strong>
+						<p class="m-0"><?php echo $user->name ?></p>
+					</strong>
+					<div class="text-ellipsis">
+						<span class="m-0" title="<?php echo $user->email ?>"><?php echo $user->email ?></span>
+					</div>
 				</div>
 			</div>
 		</li>
 		<li class="">
 			<div class="d-flex flex-column align-items-start border-top">
 				<button class="btn-editprofile text-left" href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
-					<i class="fas fa-user" style="font-size: 20px;"></i>
+					<i class="fas fa-user" style="font-size: 18px;"></i>
 					<?php echo Route::_('Thay đổi mật khẩu'); ?>
 				</button>
 				<button class="btn-logout text-left" type="button" onclick="document.getElementById('login-form').submit();">
-					<i class="fas fa-power-off" style="font-size: 20px;"></i>
+					<i class="fas fa-power-off" style="font-size: 18px;"></i>
 					<?php echo Text::_('JLOGOUT'); ?>
 				</button>
 			</div>
@@ -172,19 +174,27 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		justify-content: space-between;
 	}
 
+	.text-ellipsis {
+		width: 175px;
+		cursor: default;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
 	.dropdown-menu.menu-thongbao {
 		right: 0;
 		min-width: 12rem;
 	}
 
+	/* 
 	.text-title {
 		width: 160px;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
+	} */
 
-	.dropdown-menu::after {
+	.dropdown-menu.menu-profile::after {
 		content: "";
 		position: absolute;
 		top: -10px;
@@ -193,7 +203,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		height: 0;
 		border-left: 10px solid transparent;
 		border-right: 10px solid transparent;
-		border-bottom: 10px solid #0000004d ;
+		border-bottom: 10px solid #0000004d;
 		z-index: 9;
 	}
 
@@ -201,7 +211,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 	.btn-logout {
 		border: none;
 		background-color: #fff;
-		color: #0c9984;
+		color: #3b3b3b;
 		padding: 15px 25px;
 		width: 100%
 	}

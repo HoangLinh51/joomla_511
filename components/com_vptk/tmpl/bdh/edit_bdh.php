@@ -316,18 +316,18 @@ $item = $this->item;
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mb-3" style="margin-left:2px">
-                                <div class="col-md-6">
+                            <div class="col-md-6 d-flex justify-content-between">
+                                <div class="mb-3">
                                     <label class="form-label">Từ ngày</label>
                                     <input type="text" id="modal_thoigian_tungay" name="modal_thoigian_tungay" class="form-control date-picker" placeholder="Từ ngày">
                                 </div>
-                                <div class="col-md-6" style="padding-left:19px;padding-right:10px">
+                                <div class="mb-3">
                                     <label class="form-label">Đến ngày</label>
                                     <input type="text" id="modal_thoigian_denngay" name="modal_thoigian_denngay" class="form-control date-picker" placeholder="Đến ngày">
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-left:6px">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Tình trạng <span class="text-danger">*</span></label>
                                     <select id="modal_tinhtrang_id" name="modal_tinhtrang_id" class="custom-select" data-placeholder="Chọn tình trạng">
@@ -590,6 +590,7 @@ $item = $this->item;
             $('#modal_search_toggle').prop('checked', true).trigger('change');
             // $('#modal_nhankhau_search').val('').trigger('change.select2');
             $('#modalBanDieuHanh').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
         $('#modal_search_toggle').on('change', function() {
             const isChecked = $(this).is(':checked');
@@ -855,6 +856,7 @@ $item = $this->item;
                     }
                     updateSTT();
                     $('#modalBanDieuHanh').modal('hide');
+                    $('div.modal-backdrop').css('display', 'none');
                     $('#frmModalBanDieuHanh')[0].reset();
                     $('#frmModalBanDieuHanh select').val('').trigger('change.select2');
                     resetModal();
@@ -1025,6 +1027,8 @@ $item = $this->item;
 
             // Show modal
             $('#modalBanDieuHanh').modal('show');
+
+            $('div.modal-backdrop').css('display', 'block');
 
             // Gán dữ liệu vào các input khi modal đã hiển thị
             $('#modalBanDieuHanh').one('shown.bs.modal', function() {

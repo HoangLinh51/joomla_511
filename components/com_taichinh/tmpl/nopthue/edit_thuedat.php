@@ -33,7 +33,7 @@ $item = $this->item;
             <h5 style="margin: 0">Thông tin cá nhân</h5>
             <div class="d-flex align-items-center" style="gap:5px">
                 <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($item[0]['nhanhokhau_id']) ? 'checked' : ''; ?>>
-                <small>Chọn người lao động từ danh sách nhân khẩu</small>
+                <small>Chọn công dân từ danh sách nhân khẩu</small>
             </div>
         </div>
         <div id="select-container" style="display: <?php echo htmlspecialchars($item[0]['nhanhokhau_id']) ? 'block' : 'none'; ?>;margin-bottom: 1rem !important" class="mb-3">
@@ -128,7 +128,7 @@ $item = $this->item;
         <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
             <h5 class="">Thông tin nộp thuế</h5>
             <!-- <button class="btn btn-success btn_themnopthue">Thêm chính sách</button> -->
-            <button type="button" class="btn btn-success" id="btn_themnopthue" data-toggle="modal" data-target="#modalNopThueDat"><i class="fas fa-plus"></i> Thêm mới</button>
+            <button type="button" class="btn btn-primary" id="btn_themnopthue" data-toggle="modal" data-target="#modalNopThueDat"><i class="fas fa-plus"></i> Thêm mới</button>
 
         </div>
         <div class="row g-3 mb-4">
@@ -172,7 +172,7 @@ $item = $this->item;
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['tenmucdich'] ?? ''); ?></td>
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['sotienmiengiam'] ?? ''); ?></td>
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['tongtiennop'] ?? ''); ?></td>
-                                <td class="align-middle">
+                                <td class="align-middle text-center">
                                     <?php if ($nk['tinhtrang'] === 1) { ?>
                                         <span class="badge bg-success">Đã nộp</span>
                                     <?php } else if ($nk['tinhtrang'] === 2) { ?>

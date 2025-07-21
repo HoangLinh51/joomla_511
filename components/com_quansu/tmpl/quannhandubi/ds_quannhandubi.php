@@ -8,14 +8,14 @@ defined('_JEXEC') or die('Restricted access');
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
   <thead>
     <tr class="bg-primary">
-      <th style="vertical-align: middle" class="text-center">STT</th>
-      <th style="vertical-align: middle" class="text-center">Họ và tên</th>
-      <th style="vertical-align: middle" class="text-center">Địa chỉ</th>
-      <th style="vertical-align: middle" class="text-center">Giới tính</th>
-      <th style="vertical-align: middle" class="text-center">CCCD/CMND</th>
-      <th style="vertical-align: middle" class="text-center">Số điện thoại</th>
-      <th style="vertical-align: middle" class="text-center">Tình trạng đăng ký</th>
-      <th style="vertical-align: middle" class="text-center">Chức năng</th>
+      <th class="text-center align-middle">STT</th>
+      <th class="text-center align-middle">Họ và tên</th>
+      <th class="text-center align-middle">Địa chỉ</th>
+      <th class="text-center align-middle">Giới tính</th>
+      <th class="text-center align-middle">CCCD/CMND</th>
+      <th class="text-center align-middle">Số điện thoại</th>
+      <th class="text-center align-middle">Tình trạng đăng ký</th>
+      <th class="text-center align-middle">Chức năng</th>
     </tr>
   </thead>
   <tbody id="tbody_danhsach">
@@ -53,14 +53,14 @@ defined('_JEXEC') or die('Restricted access');
     }
     return items.map((item, index) => `
       <tr>
-        <td class="text-center" style="vertical-align: middle">${start + index}</td>
-        <td style="vertical-align: middle">${item.n_hoten || ''}</td>
-        <td style="vertical-align:middle;">${renderTextDiaChi((item.n_diachi || ''), (item.thonto || ''), (item.phuongxa || ''))}</td>
-        <td style="vertical-align:middle;">${item.tengioitinh || ''}</td>
-        <td style="vertical-align:middle;">${item.n_cccd || ''}</td>
-        <td style="vertical-align:middle;">${item.n_dienthoai || ''}</td>
-        <td style="vertical-align:middle; text-align: center">${renderTextTrangThai(item.trangthaiquannhan_id,item.tentrangthai)}</td>
-        <td class="text-center" style="vertical-align: middle;min-width: 120px" >
+        <td class="text-center align-middle">${start + index}</td>
+        <td class="align-middle">${item.n_hoten || ''}</td>
+        <td class="align-middle">${renderTextDiaChi((item.n_diachi || ''), (item.thonto || ''), (item.phuongxa || ''))}</td>
+        <td class="align-middle">${item.tengioitinh || ''}</td>
+        <td class="align-middle">${item.n_cccd || ''}</td>
+        <td class="align-middle">${item.n_dienthoai || ''}</td>
+        <td class="align-middle text-align: center">${renderTextTrangThai(item.trangthaiquannhan_id,item.tentrangthai)}</td>
+        <td class="text-center align-middle" style="min-width: 120px" >
          <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:7px; cursor: pointer;" data-idquannhandubi="${item.id}" data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>
           </span>
@@ -215,7 +215,7 @@ defined('_JEXEC') or die('Restricted access');
       const idquannhandubi = $(this).data('idquannhandubi');
 
       bootbox.confirm({
-        title: `<span class='text-danger' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
+        title: `<span class='text-primary' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
         message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa quân nhân dự bị này?</span>`,
         buttons: {
           confirm: {

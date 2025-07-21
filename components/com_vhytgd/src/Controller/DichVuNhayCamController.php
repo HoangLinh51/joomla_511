@@ -173,7 +173,7 @@ class DichVuNhayCamController extends BaseController
             $result = $model->deleteDichVuNhayCam($formData['idUser'], $formData['idCoso']);
             $response = [
                 'success' => $result,
-                'message' => 'Đã xóa file thành công',
+                'message' => 'Xóa cơ sở thành công',
             ];
         } catch (Exception $e) {
             $response = [

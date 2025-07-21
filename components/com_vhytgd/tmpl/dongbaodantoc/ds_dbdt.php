@@ -47,7 +47,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                             <i class="fas fa-eye btn_eye" style="cursor: pointer; margin-left: 10px; color: #007bff;" data-id="<?php echo $item['id']; ?>" title="Xem chi tiết"></i>
                         </td>
                         </td>
-                        <td style="vertical-align:middle;">
+                        <td class="text-center align-middle">
                             <?php
                             $color = '';
 
