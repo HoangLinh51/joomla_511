@@ -11,6 +11,7 @@
 
 namespace Joomla\Component\QuanSu\Site\View\DanQuan;
 
+use Core;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 
@@ -50,6 +51,9 @@ class RawView extends BaseHtmlView
       case 'VIEWPDF':
         $this->viewpdf();
         break;
+      case 'DS_THONGKE':
+        $this->_pageThongke();
+        break;
     }
   }
 
@@ -57,7 +61,7 @@ class RawView extends BaseHtmlView
   {
     $file = $_GET['file'];
     $folder = $_GET['folder'];
-    $filePath = JPATH_ROOT .'/'. $folder . '/' . basename($file); // đảm bảo chống path traversal
+    $filePath = JPATH_ROOT . '/' . $folder . '/' . basename($file); // đảm bảo chống path traversal
 
     if (file_exists($filePath)) {
       header('Content-Type: application/pdf');
@@ -71,4 +75,25 @@ class RawView extends BaseHtmlView
       echo "File không tồn tại.";
     }
   }
+    private function _pageThongke()
+    {
+        $model = Core::model('QuanSu/DanQuan');
+        $app = Factory::getApplication()->input;
+        $params = [
+            'phuongxa_id' => $app->getInt('phuongxa_id', 0),
+            'thonto_id' => $app->getString('thonto_id', ''),
+            'loaidoituong_id' => $app->getInt('loaidoituong_id', 0),
+
+        ];
+        if (!empty($params['thonto_id'])) {
+            $params['thonto_id'] = array_filter(explode(',', $params['thonto_id']), 'is_numeric');
+        } else {
+            $params['thonto_id'] = [];
+        }
+        $items = $model->getThongKeDanQuan($params);
+        // var_dump($items);exit;
+
+        $this->items = $items;
+        parent::display();
+    }
 }

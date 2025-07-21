@@ -12,7 +12,7 @@ $current_phuongxa_id = null;
         <tr class="bg-primary">
             <th style="vertical-align:middle;color:#FFF!important;" class="text-center">STT</th>
             <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Tên khu vực</th>
-            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Số lượng đoàn viên - hội viên</th>
+            <th style="vertical-align:middle;color:#FFF!important;" class="text-center">Số lượng </th>
        
         </tr>
     </thead>
