@@ -525,11 +525,12 @@ class Core
 	}
 
 	//check người dùng có thuộc nhóm người dùng được phân quyền không
-	public static function checkUserMenuPermission($id_user, $component, $controller = null, $task = 'default')
+	public static function checkUserMenuPermission($id_user, $component, $controller, $task = 'default')
 	{
 		if($task == '' || empty($task) ){
 			$task = 'default';
 		}
+		
 		$db = Factory::getDbo();
 		// lấy menu id
 		$query = $db->getQuery(true);
@@ -537,7 +538,8 @@ class Core
 			->from($db->quoteName('core_menu'))
 			->where('component = ' . $db->quote($component))
 			->where('controller = ' . $db->quote($controller))
-			->where('task = ' . $db->quote($task));
+			->where('task = ' . $db->quote($task))
+			->where('parent_id = 1');
 		$db->setQuery($query);
 		$menu_id = $db->loadAssoc();
 

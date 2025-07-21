@@ -826,7 +826,7 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
           const isSuccess = response.success ?? true;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
-            // setTimeout(() => location.href = "/index.php/component/quansu/?view=dktuoi17&task=default", 500);
+            setTimeout(() => location.href = "/index.php/component/quansu/?view=dktuoi17&task=default", 500);
           }
         },
         error: function(xhr) {

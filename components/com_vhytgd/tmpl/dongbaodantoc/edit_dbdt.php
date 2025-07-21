@@ -1136,10 +1136,6 @@ $item = $this->item;
         padding: .75rem 0rem .75rem .75rem;
     }
 
-    .modal-backdrop {
-        display: none;
-    }
-
     .table#tblThongtin .form-control,
     .table#tblThongtin .custom-select,
     .table#tblThongtin .input-group {

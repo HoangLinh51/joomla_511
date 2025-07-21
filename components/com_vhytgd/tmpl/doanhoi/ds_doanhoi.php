@@ -79,11 +79,11 @@ defined('_JEXEC') or die('Restricted access');
     let html = '<ul class="pagination">';
     // First and Previous buttons
     html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="1">&lt;&lt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="1">&lt;&lt;</a>
+    </li>`;
     html += `<li class="page-item ${currentPage === 1 || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${Math.max(1, currentPage - 1)}">&lt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${Math.max(1, currentPage - 1)}">&lt;</a>
+    </li>`;
 
     // Page numbers with a range of 2 pages before and after current page
     const range = 2;
@@ -96,8 +96,8 @@ defined('_JEXEC') or die('Restricted access');
 
     for (let i = startPage; i <= endPage; i++) {
       html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-      <a class="page-link" href="#" data-page="${i}">${i}</a>
-    </li>`;
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>`;
     }
 
     if (totalPages > 1 && endPage < totalPages) {
@@ -106,11 +106,11 @@ defined('_JEXEC') or die('Restricted access');
 
     // Next and Last buttons
     html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${Math.min(totalPages, currentPage + 1)}">&gt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${Math.min(totalPages, currentPage + 1)}">&gt;</a>
+    </li>`;
     html += `<li class="page-item ${currentPage === totalPages || totalPages <= 1 ? 'disabled' : ''}">
-    <a class="page-link" href="#" data-page="${totalPages}">&gt;&gt;</a>
-  </li>`;
+      <a class="page-link" href="#" data-page="${totalPages}">&gt;&gt;</a>
+    </li>`;
     html += '</ul>';
 
     // Pagination info (e.g., "Showing 1-20 of 50 items")

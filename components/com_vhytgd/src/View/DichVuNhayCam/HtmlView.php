@@ -49,8 +49,8 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('edit_dichvunhaycam');
                 $this->_editDVNhayCam();
                 break;
-            default:
-                $this->setLayout('ds_dichvunhaycam');
+            case 'THONGKE':
+                $this->setLayout('thongke');
                 $this->_initDefaultPage();
                 break;
             default:

@@ -236,10 +236,8 @@ $detaiCoSo = $this->detailCoSo;
       width: '100%'
     });
 
-    $.validator.addMethod('select2', value => value !== '', 'Vui lòng chọn một giá trị');
-
     $('#phuongxa_id, #thonto_id, #ngaykhaosat, #trangthai_id').on('change', function() {
-      $(this).valid(); // Gọi validate lại field này
+      $(this).valid();
     });
 
     $('#btn_quaylai').click(() =>
@@ -256,11 +254,8 @@ $detaiCoSo = $this->detailCoSo;
 
       applyLockState($newRow, isLocked);
     });
-    $('#tblDanhsach').on('click', '.btn-huy', function() {
-      $(this).closest('tr').remove();
-    });
 
-    // Gán phường/xã nếu có
+    // Gán thôn tổ edit 
     if (phuongxa_id) {
       $('#phuongxa_id').val(phuongxa_id);
       fetchKhuVuc(phuongxa_id, '#thonto_id', thonto_id, );
@@ -365,10 +360,29 @@ $detaiCoSo = $this->detailCoSo;
 
     //xóa 1 hàng nhân viên
     $(document).on('click', '.btn-xoa-nv', function() {
-      if (confirm('Bạn có chắc muốn xoá nhân khẩu này không?')) {
-        $(this).closest('tr').remove();
-      }
+      let $row = $(this).closest('tr'); // lưu lại row cần xoá
+
+      bootbox.confirm({
+        title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+        message: '<span style="font-size:20px;">Bạn có chắc chắn muốn xóa dữ liệu này?</span>',
+        buttons: {
+          confirm: {
+            label: '<i class="icon-ok"></i> Đồng ý',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '<i class="icon-remove"></i> Không',
+            className: 'btn-danger'
+          }
+        },
+        callback: function(result) {
+          if (result) {
+            $row.remove();
+          }
+        }
+      });
     });
+
 
     // khóa nhân viên(để không thể hiệu chỉnh được)
     $(document).on('change', 'input[type="checkbox"].lock-user', function() {
@@ -379,7 +393,16 @@ $detaiCoSo = $this->detailCoSo;
 
     //danh sách nhân viên được lấy từ detail
     nhanviens.forEach(nv => {
-      const data = formatNhanVien(nv);
+      const data = {
+        id: nv.nhankhau_id,
+        hoten: nv.tennhanvien,
+        gioitinh: nv.tengioitinh,
+        cccd: nv.cccd,
+        dienthoai: nv.dienthoai,
+        diachi: nv.diachi,
+        tinhtrang: nv.is_thuongtru.toString(),
+        trangthai: nv.trangthai.toString()
+      }
       const row = $(renderNhanVien(data));
       $('#tblDanhsach tbody').append(row);
 
@@ -563,20 +586,6 @@ $detaiCoSo = $this->detailCoSo;
     });
   }
 
-  // format data phù hợp để render nhân viên khi đang trong hiệu chỉnh
-  function formatNhanVien(nv) {
-    return {
-      id: nv.nhankhau_id,
-      hoten: nv.tennhanvien,
-      gioitinh: nv.tengioitinh,
-      cccd: nv.cccd,
-      dienthoai: nv.dienthoai,
-      diachi: nv.diachi,
-      tinhtrang: nv.is_thuongtru.toString(),
-      trangthai: nv.trangthai.toString()
-    };
-  }
-
   function renderNhanVien(data = {}) {
     return `
     <tr class="input-row" data-id="${data.id || ''}">
@@ -757,10 +766,11 @@ $detaiCoSo = $this->detailCoSo;
   .btn_luu_nhankhau {
     position: relative;
     cursor: pointer;
+    color: #007b8b;
   }
 
   .btn_luu_nhankhau:hover {
-    color: #007bff;
+    color: #029cb0;
   }
 
   .btn_luu_nhankhau::after {
