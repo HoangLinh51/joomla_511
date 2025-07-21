@@ -403,15 +403,9 @@ $item = $this->item;
             currentSearch.includes('view=bdh') &&
             currentSearch.includes('task=add_bdh');
 
-        console.log('isCorrectPage:', isCorrectPage, {
-            currentPath,
-            currentSearch
-        });
-
         if (isCorrectPage && sessionStorage.getItem(REDIRECT_KEY) !== '1') {
             function handleChange(e) {
                 if (isChecking) {
-                    console.log('Đang kiểm tra, bỏ qua');
                     return;
                 }
 
@@ -442,7 +436,6 @@ $item = $this->item;
                             showToast('Đang kiểm tra ban điều hành...', true);
                         },
                         success: function(response) {
-                            console.log('AJAX response:', response);
                             isChecking = false;
                             $('#btn_luu_nhankhau').prop('disabled', false);
                             selectElements.prop('disabled', false);
@@ -480,7 +473,6 @@ $item = $this->item;
                 });
             }
         } else if (sessionStorage.getItem(REDIRECT_KEY) === '1') {
-            console.log('Đã chuyển hướng trước đó, bỏ qua xử lý');
             sessionStorage.removeItem(REDIRECT_KEY);
         }
 
@@ -630,7 +622,6 @@ $item = $this->item;
                             };
                         },
                         processResults: function(data, params) {
-                            console.log('Dữ liệu trả về từ server:', data);
                             var results = [];
                             if (data && Array.isArray(data) && data.length > 0) {
                                 results = data.map(function(v) {
@@ -702,7 +693,6 @@ $item = $this->item;
         // Xử lý sự kiện chọn từ dropdown tìm kiếm
         $('#modal_nhankhau_search').on('change', function(e) {
             var selectedData = $(this).select2('data')[0] || $(this).data('select2-data');
-            console.log('Dữ liệu của tùy chọn được chọn:', selectedData);
             if (selectedData && selectedData.id && selectedData.data) {
                 $('#modal_hoten').val(selectedData.data.hoten || '');
                 $('#modal_nhankhau_id').val(selectedData.data.nhankhau_id || '');
@@ -902,17 +892,6 @@ $item = $this->item;
             // Lấy phuongxa_id và thonto_id (từ input ẩn trong hàng hoặc từ form chính)
             const phuongxa_id = $row.find('input[name="phuongxa_id[]"]').val() || $('#phuongxa_id').val();
             const thonto_id = $row.find('input[name="thonto_id[]"]').val() || $('#thonto_id').val();
-
-            // Debug dữ liệu
-            console.log('Dữ liệu từ hàng bảng:', {
-                nhankhauId,
-                hoten,
-                cccd_so,
-                diachi,
-                isSearch,
-                phuongxa_id,
-                thonto_id
-            });
 
             $('#modalBanDieuHanhLabel').text('Chỉnh sửa Thành Viên');
             $('#modal_edit_index').val(index);
@@ -1380,10 +1359,6 @@ $item = $this->item;
     .table#tblThongtin td.align-middle {
         width: 33.33%;
         padding: .75rem 0rem .75rem .75rem;
-    }
-
-    .modal-backdrop {
-        display: none;
     }
 
     .table#tblThongtin .form-control,

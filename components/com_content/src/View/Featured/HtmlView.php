@@ -117,11 +117,9 @@ class HtmlView extends BaseHtmlView
    */
   public function display($tpl = null)
   {
-    $document = Factory::getDocument();
-    $document->addStyleSheet(Uri::base(true) . 'templates\adminlte\plugins\chart.js\Chart.min.js');
-    // $document->addStyleSheet(Uri::base(true) . 'templates\adminlte\plugins\chart.js\Chart.min.js');
     $model = Core::model('Content/Feature');
-    $this->moduleName =  $model->getNameModule();
+    $this->phanquyen =  $model->getPhanquyen();
+
     parent::display($tpl);
   }
 

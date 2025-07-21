@@ -575,36 +575,56 @@ $item = $this->item;
             }
         });
 
-        $('.dsThongtintrocap').on('click', '.btn_xoa_vayvon', async function() {
+        $('.dsThongtintrocap').on('click', '.btn_xoa_vayvon', function() {
             const $row = $(this).closest('tr');
             const trocap_id = $(this).data('trocap-id');
 
-            if (!confirm('Bạn có chắc chắn muốn xóa thông tin vay vốn này?')) {
-                return;
-            }
-
-            try {
-                const response = await $.post('index.php', {
-                    option: 'com_vhytgd',
-                    controller: 'vayvon',
-                    task: 'delThongtinvayvon',
-                    trocap_id: trocap_id
-                }, null, 'json');
-
-                if (response.success) {
-                    $row.remove();
-                    updateVayVonSTT();
-                    showToast('Xóa thông tin vay vốn thành công', true);
-                    if ($('.dsThongtintrocap tr').length === 0) {
-                        $('.dsThongtintrocap').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+            bootbox.confirm({
+                title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+                message: '<span style="font-size:18px;">Bạn có chắc chắn muốn xóa thông tin vay vốn này?</span>',
+                buttons: {
+                    confirm: {
+                        label: '<i class="icon-ok"></i> Đồng ý',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: '<i class="icon-remove"></i> Không',
+                        className: 'btn-danger'
                     }
-                } else {
-                    showToast('Xóa thông tin vay vốn thất bại: ' + (response.message || 'Lỗi không xác định'), false);
+                },
+                callback: async function(result) {
+                    if (!result) return; // Người dùng chọn "Không"
+
+                    try {
+                        const response = await $.post('index.php', {
+                            option: 'com_vhytgd',
+                            controller: 'vayvon',
+                            task: 'delThongtinvayvon',
+                            trocap_id: trocap_id
+                        }, null, 'json');
+
+                        if (response.success) {
+                            $row.remove();
+                            updateVayVonSTT();
+                            showToast('Xóa thông tin vay vốn thành công', true);
+
+                            if ($('.dsThongtintrocap tr').length === 0) {
+                                $('.dsThongtintrocap').html(
+                                    '<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>'
+                                );
+                            }
+                        } else {
+                            showToast(
+                                'Xóa thông tin vay vốn thất bại: ' + (response.message || 'Lỗi không xác định'),
+                                false
+                            );
+                        }
+                    } catch (error) {
+                        console.error('Delete error:', error);
+                        showToast('Lỗi khi xóa thông tin vay vốn', false);
+                    }
                 }
-            } catch (error) {
-                console.error('Delete error:', error);
-                showToast('Lỗi khi xóa thông tin vay vốn', false);
-            }
+            });
         });
 
         $('#btn_themvayvon').on('click', function(e) {
@@ -1047,10 +1067,6 @@ $item = $this->item;
     .table#tblThongtin td.align-middle {
         width: 33.33%;
         padding: .75rem 0rem .75rem .75rem;
-    }
-
-    .modal-backdrop {
-        display: none;
     }
 
     .table#tblThongtin .form-control,

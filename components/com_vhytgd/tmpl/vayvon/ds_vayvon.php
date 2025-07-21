@@ -295,11 +295,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
     
         $('body').off('click', '.btn_xoa').on('click', '.btn_xoa', function() {
             const chinhsach_id = $(this).data('id');
-
-            // Hàm hiển thị thông báo
-
-
-            // Hàm cập nhật số thứ tự (nếu sử dụng cột STT)
             function updateSTT() {
                 $('#tblDanhsach tbody tr').each(function(index) {
                     $(this).find('.stt').text(index + 1);

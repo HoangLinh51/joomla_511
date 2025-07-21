@@ -1059,37 +1059,57 @@ $item = $this->item;
             }
         });
 
-        $('.dsThongtintrocap').on('click', '.btn_xoa_trocap', async function() {
+        $('.dsThongtintrocap').on('click', '.btn_xoa_trocap', function() {
             const $row = $(this).closest('tr');
             const trocap_id = $(this).data('trocap-id');
 
-            if (!confirm('Bạn có chắc chắn muốn xóa thông tin trợ cấp này?')) {
-                return;
-            }
-
-            try {
-                const response = await $.post('index.php', {
-                    option: 'com_vhytgd',
-                    controller: 'nguoicocong',
-                    task: 'delThongtinhuongcs',
-                    trocap_id: trocap_id
-                }, null, 'json');
-
-                if (response.success) {
-                    $row.remove();
-                    updateTroCapSTT();
-                    showToast('Xóa thông tin trợ cấp thành công', true);
-                    if ($('.dsThongtintrocap tr').length === 0) {
-                        $('.dsThongtintrocap').html('<tr class="no-data"><td colspan="8" class="text-center">Không có dữ liệu</td></tr>');
+            bootbox.confirm({
+                title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+                message: '<span style="font-size:18px;">Bạn có chắc chắn muốn xóa thông tin trợ cấp này?</span>',
+                buttons: {
+                    confirm: {
+                        label: '<i class="icon-ok"></i> Đồng ý',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: '<i class="icon-remove"></i> Không',
+                        className: 'btn-danger'
                     }
-                } else {
-                    showToast('Xóa thông tin trợ cấp thất bại: ' + (response.message || 'Lỗi không xác định'), false);
+                },
+                callback: async function(result) {
+                    if (!result) return; // nếu bấm Không thì dừng luôn
+
+                    try {
+                        const response = await $.post('index.php', {
+                            option: 'com_vhytgd',
+                            controller: 'nguoicocong',
+                            task: 'delThongtinhuongcs',
+                            trocap_id: trocap_id
+                        }, null, 'json');
+
+                        if (response.success) {
+                            $row.remove();
+                            updateTroCapSTT();
+                            showToast('Xóa thông tin trợ cấp thành công', true);
+                            if ($('.dsThongtintrocap tr').length === 0) {
+                                $('.dsThongtintrocap').html(
+                                    '<tr class="no-data"><td colspan="8" class="text-center">Không có dữ liệu</td></tr>'
+                                );
+                            }
+                        } else {
+                            showToast(
+                                'Xóa thông tin trợ cấp thất bại: ' + (response.message || 'Lỗi không xác định'),
+                                false
+                            );
+                        }
+                    } catch (error) {
+                        console.error('Delete error:', error);
+                        showToast('Lỗi khi xóa thông tin trợ cấp', false);
+                    }
                 }
-            } catch (error) {
-                console.error('Delete error:', error);
-                showToast('Lỗi khi xóa thông tin trợ cấp', false);
-            }
+            });
         });
+
 
         $('#btn_themchinhsach').on('click', function(e) {
             e.preventDefault();
@@ -1518,10 +1538,6 @@ $item = $this->item;
     .table#tblThongtin td.align-middle {
         width: 33.33%;
         padding: .75rem 0rem .75rem .75rem;
-    }
-
-    .modal-backdrop {
-        display: none;
     }
 
     .table#tblThongtin .form-control,

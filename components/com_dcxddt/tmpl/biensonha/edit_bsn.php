@@ -1354,10 +1354,6 @@ $item = $this->item;
         margin-bottom: 0rem !important;
     }
 
-    .modal-backdrop {
-        display: none;
-    }
-
     .table#tblThongtin .form-control,
     .table#tblThongtin .custom-select,
     .table#tblThongtin .input-group {
