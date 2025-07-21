@@ -87,7 +87,7 @@ use Joomla\CMS\HTML\HTMLHelper;
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="mb-0 text-primary">
-          <span class="title-edit"></span> thông tin xe ôm
+          <span class="title-edit"></span> thông tin hành nghề vận chuyển
         </h4>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>

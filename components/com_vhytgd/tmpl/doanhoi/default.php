@@ -311,7 +311,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
   $(document).ready(function() {
 
-    $('.modal_namsinh').datepicker({
+    $('#modal_namsinh').datepicker({
       autoclose: true,
       language: 'vi',
       format: 'dd/mm/yyyy',
@@ -383,15 +383,14 @@ use Joomla\CMS\HTML\HTMLHelper;
     // Toggle input fields based on checkbox
     $('#checkbox_toggle').change(function() {
       const isChecked = $(this).is(':checked');
-      const textFields = ['#modal_hoten', '#modal_cccd', '#modal_namsinh', '#modal_dienthoai', '#modal_diachi'];
-      const selectFields = ['#modal_dantoc_id', '#modal_gioitinh_id', '#modal_phuongxa_id', '#modal_thonto_id'];
+      const textFields = ['#modal_hoten', '#modal_cccd', '#modal_dienthoai', '#modal_diachi'];
+      const selectFields = ['#modal_dantoc_id', '#modal_gioitinh_id', '#modal_namsinh', '#modal_phuongxa_id', '#modal_thonto_id'];
 
       $('#select-container').toggle(isChecked);
       textFields.forEach(selector => $(selector).prop('readonly', isChecked));
       selectFields.forEach(selector => $(selector).prop('disabled', isChecked));
 
       $('#nhankhau_id').val('');
-
 
       if (isChecked) {
         $('#select_top').select2({
@@ -444,13 +443,36 @@ use Joomla\CMS\HTML\HTMLHelper;
       $('.title-edit').text('');
       resetFormManually()
     });
+    // Hàm chung để đổ dữ liệu nhankhau vào form
+    function fillNhanKhauToForm(data) {
+      $('#nhankhau_id').val(data.id || '');
+      $('#modal_gioitinh_id').val(data.gioitinh_id || '').trigger('change');
+      $('#modal_hoten').val(data.hoten || '');
+      $('#modal_cccd').val(data.cccd_so || '');
+      $('#modal_namsinh').val(formatDate(data.ngaysinh));
+      $('#modal_dienthoai').val(data.dienthoai || '');
+      $('#input_dantoc_id').val(data.dantoc_id || '');
+      $('#modal_dantoc_id').val(data.dantoc_id || '').trigger('change');
+      $('#input_gioitinh_id').val(data.gioitinh_id || '');
+      $('#modal_gioitinh_id').val(data.gioitinh_id || '').trigger('change');
 
-    // Populate form with selected member data
+      isFetchingFromSelect = true;
+      $('#input_phuongxa_id').val(data.phuongxa_id || '');
+      $('#modal_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
+      fetchThonTo(data.phuongxa_id, '#modal_thonto_id', data.thonto_id).then(() => {
+        isFetchingFromSelect = false;
+      });
+
+      $('#input_thonto_id').val(data.thonto_id || '');
+      $('#modal_thonto_id').val(data.thonto_id || '').trigger('change');
+      $('#modal_diachi').val(data.diachi || '');
+    }
+
+    // Sự kiện chọn từ select2
     $('#select_top').on('select2:select', async function(e) {
       const data = e.params.data;
       const doanhoiPhanQuyen = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
 
-      // Check if nhankhau_id already exists in doanhoi      
       if (!isEditMode) {
         try {
           const response = await $.post('index.php', {
@@ -463,7 +485,6 @@ use Joomla\CMS\HTML\HTMLHelper;
 
           if (response.exists) {
             showToast('Nhân khẩu này đã là thành viên của đoàn hội', false);
-            // Optionally, you can clear the selection and reset the form
             $('#select_top').val('').trigger('change');
             return;
           }
@@ -472,29 +493,22 @@ use Joomla\CMS\HTML\HTMLHelper;
           return;
         }
       }
-      $('#nhankhau_id').val(data.id || '');
-      $('#modal_gioitinh_id').val(data.gioitinh_id || '');
-      $('#modal_hoten').val(data.hoten || '');
-      $('#modal_cccd').val(data.cccd_so || '');
-      $('#modal_namsinh').val(data.ngaysinh);
-      $('#modal_dienthoai').val(data.dienthoai || '');
-      $('#input_dantoc_id').val(data.dantoc_id || '');
-      $('#modal_dantoc_id').val(data.dantoc_id || '').trigger('change');
-      $('#input_gioitinh_id').val(data.gioitinh_id || '');
-      $('#modal_gioitinh_id').val(data.gioitinh_id || '').trigger('change');
 
-      isFetchingFromSelect = true;
-      $('#input_phuongxa_id').val(data.phuongxa_id || '');
-      $('#modal_phuongxa_id').val(data.phuongxa_id || '').trigger('change');
-      await fetchThonTo(data.phuongxa_id, '#modal_thonto_id', data.thonto_id);
-      isFetchingFromSelect = false;
-
-      $('#input_thonto_id').val(data.thonto_id || '');
-      $('#modal_thonto_id').val(data.thonto_id || '').trigger('change');
-      $('#modal_diachi').val(data.diachi || '');
+      fillNhanKhauToForm({
+        id: data.id,
+        hoten: data.hoten,
+        cccd_so: data.cccd_so,
+        ngaysinh: data.ngaysinh,
+        dienthoai: data.dienthoai,
+        dantoc_id: data.dantoc_id,
+        gioitinh_id: data.gioitinh_id,
+        phuongxa_id: data.phuongxa_id,
+        thonto_id: data.thonto_id,
+        diachi: data.diachi
+      });
     });
 
-    // Handle edit action
+    // Sự kiện bấm hiệu chỉnh
     $('body').on('click', '.btn_hieuchinh', async function() {
       $('.title-edit').text('Hiệu chỉnh');
       const memberId = $(this).data('doanhoi');
@@ -523,53 +537,40 @@ use Joomla\CMS\HTML\HTMLHelper;
           $('input[name="form_thoidiem_ketthuc"]').val(formatDate(response.thoidiem_ketthuc));
           $('#lydo_biendong').val(response.lydobiendong || '');
           $('#ghichu').val(response.ghichu || '');
-
           const hasNhankhauId = !!response.nhankhau_id;
           $('#checkbox_toggle').prop('checked', hasNhankhauId).trigger('change');
 
           if (hasNhankhauId) {
-            // Use cccd_so as keyword to fetch nhankhau details
+            // Tìm nhankhau chi tiết
             const nhankhauResponse = await $.post('index.php', {
               option: 'com_vhytgd',
               task: 'doanhoi.timkiem_nhankhau',
               format: 'json',
-              keyword: response.n_cccd || '', // Use cccd_so as keyword
+              keyword: response.n_cccd || '',
               phuongxa_id: response.n_phuongxa_id ? [response.n_phuongxa_id] : phuongxa_id.map(item => item.id)
             }, null, 'json');
 
-            if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
+            if (nhankhauResponse?.items?.length) {
               const nhankhau = nhankhauResponse.items.find(item => item.id === response.nhankhau_id) || nhankhauResponse.items[0];
-              if (nhankhau) {
-                // Add the fetched nhankhau as a selected option
-                const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${formatDate(nhankhau.ngaysinh)} - Địa chỉ: ${nhankhau.diachi || ''}`;
-                const newOption = new Option(optionText, nhankhau.id, true, true);
-                $('#select_top').append(newOption).trigger('change');
 
-                // Trigger select2:select to populate form
-                $('#select_top').trigger({
-                  type: 'select2:select',
-                  params: {
-                    data: {
-                      id: nhankhau.id,
-                      hoten: nhankhau.hoten,
-                      cccd_so: nhankhau.cccd_so,
-                      ngaysinh: formatDate(nhankhau.ngaysinh),
-                      dienthoai: nhankhau.dienthoai,
-                      dantoc_id: nhankhau.dantoc_id,
-                      gioitinh_id: nhankhau.gioitinh_id,
-                      phuongxa_id: nhankhau.phuongxa_id,
-                      thonto_id: nhankhau.thonto_id,
-                      diachi: nhankhau.diachi
-                    }
-                  }
-                });
-              } else {
-                showToast('Không tìm thấy nhân khẩu phù hợp', false);
-                $('#checkbox_toggle').prop('checked', false).trigger('change');
-              }
-            } else {
-              showToast('Không tìm thấy thông tin nhân khẩu', false);
-              $('#checkbox_toggle').prop('checked', false).trigger('change');
+              // Thêm vào select2 cho đẹp giao diện
+              const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${formatDate(nhankhau.ngaysinh)} - Địa chỉ: ${nhankhau.diachi || ''}`;
+              const newOption = new Option(optionText, nhankhau.id, true, true);
+              $('#select_top').append(newOption).trigger('change.select2');
+
+              // Gọi hàm fill dữ liệu
+              fillNhanKhauToForm({
+                id: nhankhau.id,
+                hoten: nhankhau.hoten,
+                cccd_so: nhankhau.cccd_so,
+                ngaysinh: nhankhau.ngaysinh,
+                dienthoai: nhankhau.dienthoai,
+                dantoc_id: nhankhau.dantoc_id,
+                gioitinh_id: nhankhau.gioitinh_id,
+                phuongxa_id: nhankhau.phuongxa_id,
+                thonto_id: nhankhau.thonto_id,
+                diachi: nhankhau.diachi
+              });
             }
           } else {
             // Populate manual input fields for non-nhankhau data
@@ -577,7 +578,7 @@ use Joomla\CMS\HTML\HTMLHelper;
             $('#modal_gioitinh_id').val(response.n_gioitinh_id || '');
             $('#modal_hoten').val(response.n_hoten || '');
             $('#modal_cccd').val(response.n_cccd || '');
-            $('#modal_namsinh').val(formatDate(response.n_namsinh) || '');
+            // $('#modal_namsinh').val(formatDate(response.n_namsinh));
             $('#modal_dienthoai').val(response.n_dienthoai || '');
             $('#input_dantoc_id').val(response.n_dantoc_id || '');
             $('#modal_dantoc_id').val(response.n_dantoc_id || '').trigger('change');
@@ -596,8 +597,8 @@ use Joomla\CMS\HTML\HTMLHelper;
             backdrop: 'static',
             keyboard: false
           }).css({
-            'opacity': 0,
-            'transition': 'opacity 0.3s ease-in-out'
+            opacity: 0,
+            transition: 'opacity 0.3s ease-in-out'
           }).animate({
             opacity: 1
           }, 300);
@@ -608,9 +609,10 @@ use Joomla\CMS\HTML\HTMLHelper;
         showToast('Lỗi khi gửi yêu cầu AJAX', false);
       } finally {
         hideLoadingOverlay($modalContent);
-        isEditMode = false; // Reset trạng thái sau khi đóng modal
+        isEditMode = false;
       }
     });
+
     $('#formDoanvienHoiVien').validate({
       ignore: [],
       rules: {
@@ -678,7 +680,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
             $('.modal').modal('hide');
-            // setTimeout(() => location.reload(), 500);
+            setTimeout(() => location.reload(), 500);
           }
         },
         error: function(xhr) {

@@ -14,8 +14,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 ?>
-<div class="com-users-profile profile">
-    <?php if ($this->params->get('show_page_heading')) : ?>
+<div class="com-users-profile profile p-3">
+    <!-- <?php if ($this->params->get('show_page_heading')) : ?>
         <div class="page-header">
             <h1>
                 <?php echo $this->escape($this->params->get('page_heading')); ?>
@@ -35,5 +35,5 @@ use Joomla\CMS\Router\Route;
 
     <?php echo $this->loadTemplate('core'); ?>
     <?php echo $this->loadTemplate('params'); ?>
-    <?php echo $this->loadTemplate('custom'); ?>
+    <?php echo $this->loadTemplate('custom'); ?> -->
 </div>

@@ -256,7 +256,6 @@ $item = $item;
           },
           dataType: 'json',
           success: function(response) {
-            console.log('Phản hồi từ getThannhanBaoluc:', response); // Gỡ lỗi
             if (response && Array.isArray(response) && response.length > 0) {
               const $treemSelect = $('#modal_treem_id');
               $treemSelect.empty().append('<option value=""></option>');
@@ -364,12 +363,6 @@ $item = $item;
       const gioitinh = selectedOption.data('gioitinh') || '';
       const namsinh = selectedOption.data('namsinh') || '';
       const nhankhau_id = $(this).val() || '';
-      console.log('Change modal_treem_id:', {
-        nhankhau_id,
-        hoten,
-        gioitinh,
-        namsinh
-      });
       $('#thanhviengiadinh_id').val(nhankhau_id);
 
       $('#modal_hoten').val(hoten);
@@ -439,7 +432,6 @@ $item = $item;
         trogiup_id: $row.find('[name="tenhotro[]"]').val() || '',
         tinhtrang: $row.find('[name="tinhtrang[]"]').val() || ''
       };
-      console.log('Dữ liệu hàng:', data);
 
       $('#modalTreEmLabel').text('Chỉnh sửa thông tin trẻ em');
       $('#frmmodalTreEm')[0].reset();
@@ -520,38 +512,56 @@ $item = $item;
       }
     });
 
-    $('.dsBaoluc').on('click', '.btn_xoa_treem', async function() {
+    $('.dsBaoluc').on('click', '.btn_xoa_treem', function() {
       const $row = $(this).closest('tr');
       const hotrotreem_id = $(this).data('treem-id');
 
-      if (!confirm('Bạn có chắc chắn muốn xóa thông tin trẻ em này?')) {
-        return;
-      }
-
-      try {
-        const response = await $.post('index.php', {
-          option: 'com_vhytgd',
-          controller: 'giadinhtreem',
-          task: 'delThongtinTreem',
-          hotrotreem_id: hotrotreem_id,
-          '<?php echo JSession::getFormToken(); ?>': 1
-        }, null, 'json');
-
-        if (response.success) {
-          $row.remove();
-          updateBaoLucSTT();
-          showToast('Xóa thông tin trẻ em thành công', true);
-          if ($('.dsBaoluc tr').length === 0) {
-            $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
+      bootbox.confirm({
+        title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+        message: '<span style="font-size:18px;">Bạn có chắc chắn muốn xóa thông tin trẻ em này?</span>',
+        buttons: {
+          confirm: {
+            label: '<i class="icon-ok"></i> Đồng ý',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '<i class="icon-remove"></i> Không',
+            className: 'btn-danger'
           }
-        } else {
-          showToast('Xóa thông tin trẻ em thất bại: ' + (response.message || 'Lỗi không xác định'), false);
+        },
+        callback: async function(result) {
+          if (!result) return;
+
+          try {
+            const response = await $.post('index.php', {
+              option: 'com_vhytgd',
+              controller: 'giadinhtreem',
+              task: 'delThongtinTreem',
+              hotrotreem_id: hotrotreem_id,
+              '<?php echo JSession::getFormToken(); ?>': 1
+            }, null, 'json');
+
+            if (response.success) {
+              $row.remove();
+              updateBaoLucSTT();
+              showToast('Xóa thông tin trẻ em thành công', true);
+              if ($('.dsBaoluc tr').length === 0) {
+                $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
+              }
+            } else {
+              showToast(
+                'Xóa thông tin trẻ em thất bại: ' + (response.message || 'Lỗi không xác định'),
+                false
+              );
+            }
+          } catch (error) {
+            console.error('Lỗi khi xóa:', error);
+            showToast('Lỗi khi xóa thông tin trẻ em', false);
+          }
         }
-      } catch (error) {
-        console.error('Lỗi khi xóa:', error);
-        showToast('Lỗi khi xóa thông tin trẻ em', false);
-      }
+      });
     });
+
 
     $('.btn-thembaoluc').on('click', function(e) {
       e.preventDefault();
@@ -619,10 +629,6 @@ $item = $item;
   .table#tblThongtin td.align-middle {
     width: 33.33%;
     padding: .75rem 0rem .75rem .75rem;
-  }
-
-  .modal-backdrop {
-    display: none;
   }
 
   .table#tblThongtin .form-control,

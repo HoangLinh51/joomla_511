@@ -67,24 +67,21 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 	</ul> -->
 </div>
 
-
-
 <li class="dropdown user user-menu open">
 	<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>"
-			alt="Avatar" class="img-circle" style="width: 35px; height: 35px;">
+			alt="Avatar" class="" style="width: 45px; height: 45px;">
+
 
 		<?php if ($params->get('greeting')) : ?>
 			<?php if ($params->get('name') == 0) : { ?>
 					<span class="user-info">
-						<small><?php echo Text::sprintf('MOD_LOGIN_HINAME', ''); ?></small>
 						<?php echo htmlspecialchars($user->get('name')); ?>
 					</span>
 				<?php
 				}
 			else : { ?>
 					<span class="user-info">
-						<small><?php echo Text::sprintf('MOD_LOGIN_HINAME', ''); ?>,</small>
 						<?php echo htmlspecialchars($user->get('username')); ?>
 					</span>
 			<?php
@@ -93,28 +90,23 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		<?php endif; ?>
 	</button>
 	<ul class="dropdown-menu" style="position: absolute;right: 0;left: auto;">
-		<li class="user-header">
-			<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>" class="img-circle" alt="User Image">
-			<p><?php echo $user->name ?></p>
-			<p>Tham gia từ
-				<?php
-				$date = new DateTime($user->registerDate);
-				echo $date->format('d-m-Y');
-				?>
-			</p>
-
+		<li class="">
+			<div class="d-flex align-items-center p-3">
+				<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>" style="width: 65px; height: 65px" alt="User Image">
+				<div>
+					<p class="m-0"><?php echo $user->name ?></p>
+					<p class="m-0"><?php echo $user->email ?></p>
+				</div>
+			</div>
 		</li>
-		<li class="user-footer">
-			<div class="pull-left" style="float: left;">
-				<button class="btn-editprofile" href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
-					<i class="icon-key"></i>
+		<li class="">
+			<div class="d-flex flex-column align-items-start border-top">
+				<button class="btn-editprofile text-left" href="<?php echo Route::_('index.php?option=com_users&view=profile&layout=edit'); ?>">
+					<i class="fas fa-user" style="font-size: 20px;"></i>
 					<?php echo Route::_('Thay đổi mật khẩu'); ?>
 				</button>
-			</div>
-
-			<div class="pull-right" style="float: right;">
-				<button class="btn-logout" type="button" onclick="document.getElementById('login-form').submit();">
-					<i class="icon-off"></i>
+				<button class="btn-logout text-left" type="button" onclick="document.getElementById('login-form').submit();">
+					<i class="fas fa-power-off" style="font-size: 20px;"></i>
 					<?php echo Text::_('JLOGOUT'); ?>
 				</button>
 			</div>
@@ -192,21 +184,46 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		text-overflow: ellipsis;
 	}
 
+	.dropdown-menu::after {
+		content: "";
+		position: absolute;
+		top: -10px;
+		right: 20px;
+		width: 0;
+		height: 0;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		border-bottom: 10px solid #0000004d ;
+		z-index: 9;
+	}
+
 	.btn-editprofile,
 	.btn-logout {
 		border: none;
 		background-color: #fff;
-		color: #0c9984
+		color: #0c9984;
+		padding: 15px 25px;
+		width: 100%
 	}
 
 	.btn-editprofile:hover,
 	.btn-logout:hover {
 		border: none;
-		background-color: #fff;
-		color: #0ec4a8ff
+		background-color: #0c9984;
+		color: #fff
 	}
 
-	button.dropdown-toggle{
+	.btn-editprofile i.fa,
+	.btn-logout i.fa {
+		color: #0c9984;
+	}
+
+	.btn-editprofile:hover i.fa,
+	.btn-logout:hover i.fa {
+		color: #fff
+	}
+
+	button.dropdown-toggle {
 		border: none;
 		background-color: #fff;
 	}

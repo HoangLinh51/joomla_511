@@ -325,35 +325,52 @@ defined('_JEXEC') or die('Restricted access');
         });
       }
     });
-
-    $('body').on('click', '.btn_xoa', async function() {
-      if (!confirm('Bạn có chắc chắn muốn xóa dữ liệu này?')) return;
-
+    $('body').on('click', '.btn_xoa', function() {
       const idLaoDong = $(this).data('idlaodong');
-      try {
-        const response = await fetch(`index.php?option=com_vhytgd&controller=laodong&task=xoa_laodong`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
+
+      bootbox.confirm({
+        title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+        message: '<span style="font-size:18px;">Bạn có chắc chắn muốn xóa dữ liệu này?</span>',
+        buttons: {
+          confirm: {
+            label: '<i class="icon-ok"></i> Đồng ý',
+            className: 'btn-success'
           },
-          body: JSON.stringify({
-            idUser,
-            idLaoDong,
-            [csrfToken]: 1
-          })
-        });
-        const data = await response.json();
-        showToast(data.message || 'Xóa thành công', 'success');
-        if (data.success !== false) {
-          setTimeout(() => {
-            window.location.reload()
-          }, 500);
+          cancel: {
+            label: '<i class="icon-remove"></i> Không',
+            className: 'btn-danger'
+          }
+        },
+        callback: async function(result) {
+          if (!result) return; // bấm Không thì thoát
+
+          try {
+            const response = await fetch(`index.php?option=com_vhytgd&controller=laodong&task=xoa_laodong`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                idUser,
+                idLaoDong,
+                [csrfToken]: 1
+              })
+            });
+            const data = await response.json();
+            showToast(data.message || 'Xóa thành công', 'success');
+            if (data.success !== false) {
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            showToast('Đã xảy ra lỗi khi xóa dữ liệu', false);
+          }
         }
-      } catch (error) {
-        console.error('Error:', error);
-        showToast('Đã xảy ra lỗi khi xóa dữ liệu', false);
-      }
+      });
     });
+
 
     // Pagination handler
     $('body').on('click', '#pagination .page-link', function(e) {

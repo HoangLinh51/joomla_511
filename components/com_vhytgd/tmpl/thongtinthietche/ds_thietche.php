@@ -15,16 +15,15 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
 
 <div id="div_danhsach">
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
-        <thead>
-            <tr style="background-color: #FBFBFB !important;" class="bg-primary text-white">
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">STT</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tên thiết chế</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Loại hình</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Vị trí</th>
-                <th style="vertical-align:middle;color:#4F4F    4F!important;" class="text-center">Diện tích (m²)</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important;" class="text-center">Tình trạng</th>
-                <th style="vertical-align:middle;color:#4F4F4F!important; width:131px;" class="text-center">Chức năng</th>
-            </tr>
+        <tr class="bg-primary text-white">
+            <th class="text-center align-middle">STT</th>
+            <th class="text-center align-middle">Tên thiết chế</th>
+            <th class="text-center align-middle">Loại hình</th>
+            <th class="text-center align-middle">Vị trí</th>
+            <th class="text-center align-middle">Diện tích (m²)</th>
+            <th class="text-center align-middle">Tình trạng</th>
+            <th style="width:131px;" class="text-center align-middle">Chức năng</th>
+        </tr>
         </thead>
         <tbody id="tbody_danhsach">
             <?php if (!empty($this->items)): ?>

@@ -50,7 +50,7 @@ $item = $item ?? (object)[
     <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($gdte_id); ?>">
     <div class="row g-3 mb-4">
       <table id="table-baoluc" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
-        <thead class="table-primary">
+        <thead class="bg-primary text-white">
           <tr>
             <th style="width: 50px; text-align: center;" rowspan="2">STT</th>
             <th style="width: 175px; text-align: center;" colspan="3">Người gây bạo lực</th>
@@ -70,7 +70,7 @@ $item = $item ?? (object)[
         </thead>
         <tbody class="dsBaoluc">
           <tr class="no-data">
-            <td colspan="9" class="text-center">Không có dữ liệu</td>
+            <td colspan="10" class="text-center">Không có dữ liệu</td>
           </tr>
         </tbody>
       </table>
@@ -277,60 +277,60 @@ $item = $item ?? (object)[
       });
     }
 
-function fetchHouseholdMembers() {
-    return new Promise((resolve, reject) => {
+    function fetchHouseholdMembers() {
+      return new Promise((resolve, reject) => {
         const nhankhau_id = $('#nhankhau_id').val();
         if (!nhankhau_id || nhankhau_id == '0') {
-            showToast('Không tìm thấy ID gia đình', false);
-            $('#modal_nguoigay_id, #modal_nannhan_id').empty().append('<option value="">Không có dữ liệu</option>');
-            initializeModalSelect2();
-            reject('Không tìm thấy ID gia đình');
-            return;
+          showToast('Không tìm thấy ID gia đình', false);
+          $('#modal_nguoigay_id, #modal_nannhan_id').empty().append('<option value="">Không có dữ liệu</option>');
+          initializeModalSelect2();
+          reject('Không tìm thấy ID gia đình');
+          return;
         }
 
         $.ajax({
-            url: 'index.php',
-            type: 'POST',
-            data: {
-                option: 'com_vhytgd',
-                controller: 'giadinhtreem',
-                task: 'getThannhanBaoluc',
-                nhankhau_id: nhankhau_id,
-                '<?php echo JSession::getFormToken(); ?>': 1
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response && Array.isArray(response) && response.length > 0) {
-                    const $nguoigaySelect = $('#modal_nguoigay_id');
-                    const $nannhanSelect = $('#modal_nannhan_id');
-                    $nguoigaySelect.empty().append('<option value=""></option>');
-                    $nannhanSelect.empty().append('<option value=""></option>');
+          url: 'index.php',
+          type: 'POST',
+          data: {
+            option: 'com_vhytgd',
+            controller: 'giadinhtreem',
+            task: 'getThannhanBaoluc',
+            nhankhau_id: nhankhau_id,
+            '<?php echo JSession::getFormToken(); ?>': 1
+          },
+          dataType: 'json',
+          success: function(response) {
+            if (response && Array.isArray(response) && response.length > 0) {
+              const $nguoigaySelect = $('#modal_nguoigay_id');
+              const $nannhanSelect = $('#modal_nannhan_id');
+              $nguoigaySelect.empty().append('<option value=""></option>');
+              $nannhanSelect.empty().append('<option value=""></option>');
 
-                    response.forEach(member => {
-                        const option = `<option value="${member.nhankhau_id}" data-hoten="${member.hoten}" data-gioitinh="${member.gioitinh || ''}" data-namsinh="${member.namsinh || ''}">${member.hoten}</option>`;
-                        $nguoigaySelect.append(option);
-                        $nannhanSelect.append(option);
-                    });
+              response.forEach(member => {
+                const option = `<option value="${member.nhankhau_id}" data-hoten="${member.hoten}" data-gioitinh="${member.gioitinh || ''}" data-namsinh="${member.namsinh || ''}">${member.hoten}</option>`;
+                $nguoigaySelect.append(option);
+                $nannhanSelect.append(option);
+              });
 
-                    initializeModalSelect2();
-                    resolve(response);
-                } else {
-                    showToast('Không tìm thấy thành viên gia đình', false);
-                    $('#modal_nguoigay_id, #modal_nannhan_id').empty().append('<option value="">Không có dữ liệu</option>');
-                    initializeModalSelect2();
-                    reject('Không tìm thấy thành viên gia đình');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Lỗi khi lấy danh sách thành viên:', error);
-                showToast('Lỗi khi lấy danh sách thành viên gia đình', false);
-                $('#modal_nguoigay_id, #modal_nannhan_id').empty().append('<option value="">Không có dữ liệu</option>');
-                initializeModalSelect2();
-                reject(error);
+              initializeModalSelect2();
+              resolve(response);
+            } else {
+              showToast('Không tìm thấy thành viên gia đình', false);
+              $('#modal_nguoigay_id, #modal_nannhan_id').empty().append('<option value="">Không có dữ liệu</option>');
+              initializeModalSelect2();
+              reject('Không tìm thấy thành viên gia đình');
             }
+          },
+          error: function(xhr, status, error) {
+            console.error('Lỗi khi lấy danh sách thành viên:', error);
+            showToast('Lỗi khi lấy danh sách thành viên gia đình', false);
+            $('#modal_nguoigay_id, #modal_nannhan_id').empty().append('<option value="">Không có dữ liệu</option>');
+            initializeModalSelect2();
+            reject(error);
+          }
         });
-    });
-}
+      });
+    }
 
     function loadBaoLucList() {
       const giadinh_id = $('#nhankhau_id').val();
@@ -578,39 +578,58 @@ function fetchHouseholdMembers() {
         showToast('Vui lòng điền đầy đủ các trường bắt buộc', false);
       }
     });
-
-    $('.dsBaoluc').on('click', '.btn_xoa_baoluc', async function() {
+    $('.dsBaoluc').on('click', '.btn_xoa_baoluc', function() {
       const $row = $(this).closest('tr');
       const baoluc_id = $(this).data('baoluc-id');
 
-      if (!confirm('Bạn có chắc chắn muốn xóa thông tin bạo lực gia đình này?')) {
-        return;
-      }
-
-      try {
-        const response = await $.post('index.php', {
-          option: 'com_vhytgd',
-          controller: 'giadinhtreem',
-          task: 'delThongtinBaoluc',
-          baoluc_id: baoluc_id,
-          '<?php echo JSession::getFormToken(); ?>': 1
-        }, null, 'json');
-
-        if (response.success) {
-          $row.remove();
-          updateBaoLucSTT();
-          showToast('Xóa thông tin bạo lực gia đình thành công', true);
-          if ($('.dsBaoluc tr').length === 0) {
-            $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+      bootbox.confirm({
+        title: '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
+        message: '<span style="font-size:18px;">Bạn có chắc chắn muốn xóa thông tin bạo lực gia đình này?</span>',
+        buttons: {
+          confirm: {
+            label: '<i class="icon-ok"></i> Đồng ý',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '<i class="icon-remove"></i> Không',
+            className: 'btn-danger'
           }
-        } else {
-          showToast('Xóa thông tin bạo lực gia đình thất bại: ' + (response.message || 'Lỗi không xác định'), false);
+        },
+        callback: async function(result) {
+          if (!result) return; // Người dùng bấm Không thì thoát
+
+          try {
+            const response = await $.post('index.php', {
+              option: 'com_vhytgd',
+              controller: 'giadinhtreem',
+              task: 'delThongtinBaoluc',
+              baoluc_id: baoluc_id,
+              '<?php echo JSession::getFormToken(); ?>': 1
+            }, null, 'json');
+
+            if (response.success) {
+              $row.remove();
+              updateBaoLucSTT();
+              showToast('Xóa thông tin bạo lực gia đình thành công', true);
+              if ($('.dsBaoluc tr').length === 0) {
+                $('.dsBaoluc').html(
+                  '<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>'
+                );
+              }
+            } else {
+              showToast(
+                'Xóa thông tin bạo lực gia đình thất bại: ' + (response.message || 'Lỗi không xác định'),
+                false
+              );
+            }
+          } catch (error) {
+            console.error('Lỗi khi xóa:', error);
+            showToast('Lỗi khi xóa thông tin bạo lực gia đình', false);
+          }
         }
-      } catch (error) {
-        console.error('Lỗi khi xóa:', error);
-        showToast('Lỗi khi xóa thông tin bạo lực gia đình', false);
-      }
+      });
     });
+
 
     $('.btn-thembaoluc').on('click', function(e) {
       e.preventDefault();
@@ -678,10 +697,6 @@ function fetchHouseholdMembers() {
   .table#tblThongtin td.align-middle {
     width: 33.33%;
     padding: .75rem 0rem .75rem .75rem;
-  }
-
-  .modal-backdrop {
-    display: none;
   }
 
   .table#tblThongtin .form-control,

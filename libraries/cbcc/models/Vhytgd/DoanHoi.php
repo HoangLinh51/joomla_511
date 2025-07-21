@@ -157,6 +157,7 @@ class Vhytgd_Model_DoanHoi extends BaseDatabaseModel
       'tv.n_dienthoai',
       'tv.n_diachi',
       'tv.n_gioitinh_id',
+      'tv.n_namsinh',
       'tvd.thoidiem_batdau',
       'tvd.thoidiem_ketthuc',
       'px.tenkhuvuc AS phuongxa_tenkhuvuc',
