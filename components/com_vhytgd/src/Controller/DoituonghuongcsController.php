@@ -15,7 +15,13 @@ use Exception;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
-use Joomla\CMS\Response\JsonResponse;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+
+
 
 defined('_JEXEC') or die;
 
@@ -208,5 +214,183 @@ class DoituonghuongcsController extends BaseController
         }
 
         Factory::getApplication()->close();
+    }
+    public function exportExcel()
+    {
+        // Tăng giới hạn bộ nhớ
+        ini_set('memory_limit', '1024M');
+
+        // Kiểm tra CSRF token
+        if (!Session::checkToken('get')) {
+            $this->outputJsonError('Token không hợp lệ');
+        }
+
+        // Kiểm tra người dùng
+        $user = Factory::getUser();
+        if (!$user->id) {
+            $this->outputJsonError('Bạn cần đăng nhập');
+        }
+
+        // Xóa bộ đệm đầu ra
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            // Tải model
+            $model = Core::model('Vhytgd/Doituonghuongcs');
+
+            // Lấy tham số tìm kiếm
+            $input = Factory::getApplication()->input;
+            $filters = [
+                'phuongxa_id' => $input->getString('phuongxa_id', ''),
+                'hoten' => $input->getString('hoten', ''),
+                'thonto_id' => $input->getString('thonto_id', ''),
+                'cccd' => $input->getString('cccd', ''),
+                'daxoa' => 0
+            ];
+
+            // Lấy dữ liệu từ model
+            $rows = $model->getDanhSachDTBTXHExel($filters);
+
+            // Kiểm tra dữ liệu
+            if (empty($rows)) {
+                $this->outputJsonError('Không có dữ liệu để xuất');
+            }
+
+            // Tải PhpSpreadsheet qua Composer
+            $autoloadPath = JPATH_ROOT . '/vendor/autoload.php';
+            if (!file_exists($autoloadPath)) {
+                $this->outputJsonError('File autoload.php không được tìm thấy');
+            }
+            require_once $autoloadPath;
+
+            // Tạo spreadsheet
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            $headers = [
+                'STT',
+                'Mã đối tượng',
+                'Họ và tên',
+                'Ngày sinh',
+                'Số CMND/CCCD',
+                'Ngày cấp',
+                'Nơi cấp',
+                'Giới tính',
+                'Điện thoại',
+                'Biến động',
+                'Mã hỗ trợ',
+                'Loại đối tượng',
+                'Mức hỗ trợ',
+                'Số quyết định',
+                'Ngày quyết định',
+                'Ngày hỗ trợ',
+                'Tình trạng',
+                'Cắt hưởng',
+                'Thời điểm cắt hưởng',
+                'Lý do',
+
+            ];
+            $sheet->fromArray($headers, null, 'A1');
+
+            // Bôi đậm tiêu đề
+            $sheet->getStyle('A1:T1')->getFont()->setBold(true);
+            $sheet->getRowDimension(1)->setRowHeight(30);
+            // Tăng chiều rộng cột
+            $columnWidths = [
+                'A' => 10,  // STT
+                'B' => 15,  // Số hộ 
+                'C' => 20,  // Quan hệ với chủ hộ
+                'D' => 25,  // Họ và tên
+                'E' => 15,  // Ngày sinh
+                'F' => 15,  // Giới tính
+                'G' => 15,  // CMND/CCCD 
+                'H' => 20,   // điện thoại
+                'I' => 20,   // Dân tộc
+                'J' => 20,   // Tôn giáo
+                'K' => 20,   // Trình độ học vấn
+                'L' => 40,   // Nghề nghiệp
+                'M' => 20,   // Nơi ở hiện tại
+                'N' => 20,   // Nơi thường trú
+                'O' => 20,   // lý do xóa
+                'P' => 20,   // lý do xóa
+                'Q' => 20,   // lý do xóa
+                'R' => 20,   // lý do xóa
+                'S' => 20,   // lý do xóa
+                'T' => 20,   // lý do xóa
+
+
+
+            ];
+            foreach ($columnWidths as $column => $width) {
+                $sheet->getColumnDimension($column)->setWidth($width);
+            }
+            $sheet->getStyle('K')->getNumberFormat()->setFormatCode('0');
+            // Thêm dữ liệu
+            $rowData = [];
+            foreach ($rows as $index => $item) {
+                $rowData[] = [
+
+                    $index + 1,
+                    $item['madoituong'] ?? '',
+                    $item['n_hoten'] ?? '',
+                    $item['ngaysinh'] ?? '',
+                    $item['n_cccd'] ?? '',
+                    $item['cccd_ngaycap'] ?? '',
+                    $item['cccd_coquancap'] ?? '',
+                    $item['tengioitinh'] ?? '',
+                    $item['n_dienthoai'] ?? '',
+                    $item['tenbiendong'] ?? '',
+                    $item['maht'] ?? '',
+                    $item['tenloaidoituong'] ?? '',
+                    $item['sotien'] ?? '',
+                    $item['soqdhuong'] ?? '',
+                    $item['ngayky'] ?? '',
+                    $item['huongtungay'] ?? '',
+                    $item['tentrangthai'] ?? '',
+                    $item['tentrangthaicathuong'] ?? '',
+                    $item['ngaycat'] ?? '',
+                    $item['lydo'] ?? '',
+
+                ];
+            }
+            $sheet->fromArray($rowData, null, 'A2');
+
+            // Bật wrapText cho cột Số hộ khẩu (cột B)
+            $lastRow = count($rowData) + 1; // Tính dòng cuối cùng
+            $sheet->getStyle('B2:B' . $lastRow)->getAlignment()->setWrapText(true);
+
+            // Căn lề giữa cho cột STT (cột A)
+            $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+            // Thêm đường viền cho tất cả các ô (A1:G$lastRow)
+            $sheet->getStyle('A1:T' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+            // Xuất file
+            $writer = new Xlsx($spreadsheet);
+            $this->outputExcel($writer);
+        } catch (Exception $e) {
+            $this->outputJsonError('Lỗi khi xuất Excel: ' . $e->getMessage());
+        }
+    }
+    private function outputJsonError($message)
+    {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => $message]);
+        jexit();
+    }
+
+    private function outputExcel($writer)
+    {
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="DanhSach_DoiTuongBaoTroXaHoi.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        jexit();
     }
 }
