@@ -931,7 +931,7 @@ $item = $this->item;
                 const gioitinh_text = $row.find('.hoten').find('strong:contains("Giới tính")').next().text().trim() || '';
                 const selectedOption = {
                     id: nhankhauId,
-                    text: `${hoten} - CCCD: ${cccd_so} - Địa chỉ: ${diachi}`,
+                    text: `${hoten} - CCCD: ${cccd_so}  - Địa chỉ: ${diachi}`,
                     data: {
                         nhankhau_id: nhankhauId,
                         hoten,
@@ -1233,7 +1233,9 @@ $item = $this->item;
                 if ($(this).data('select2')) {
                     $(this).select2('destroy');
                 }
-                $(this).val('').html('<option value=""></option>');
+                if ($(this).attr('id') !== 'modal_chucdanh_id' && $(this).attr('id') !== 'modal_chucdanh_kiemnhiem' && $(this).attr('id') !== 'modal_tinhtrang_id'&& $(this).attr('id') !== 'modal_is_dangvien'&& $(this).attr('id') !== 'modal_trinhdolyluanchinhtri_id'&& $(this).attr('id') !== 'modal_gioitinh_id') {
+                    $(this).val('').html('<option value=""></option>');
+                }
             });
 
             // Reset xác thực
@@ -1342,6 +1344,14 @@ $item = $this->item;
         height: 38px;
     }
 
+    .modal-backdrop.show {
+        opacity: 0;
+    }
+
+    .modal-backdrop {
+        position: unset;
+    }
+
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 28px;
         padding-left: 8px;
@@ -1425,14 +1435,15 @@ $item = $this->item;
         transform: translateX(0);
     }
 
-    #modalBanDieuHanh.fade .modal-dialog {
+    .modal.fade .modal-dialog {
         transition: transform 0.5s ease-in-out;
         opacity: 1;
     }
 
-    #modalBanDieuHanh.fade:not(.show) .modal-dialog {
+    .modal.fade:not(.show) .modal-dialog {
         transform: translateX(100%);
     }
+
 
     #modalBanDieuHanh .modal-content {
         border-radius: 8px;

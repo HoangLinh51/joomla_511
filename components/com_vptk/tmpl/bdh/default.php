@@ -118,6 +118,8 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top: 10px;">
                                 <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
+
                             </td>
                         </tr>
                     </table>
@@ -250,15 +252,14 @@ $messages = JFactory::getApplication()->getMessageQueue();
         $('#btn_xuatexcel').on('click', function() {
             let params = {
                 option: 'com_vptk',
-                controller: 'vptk',
+                controller: 'bdh',
                 task: 'exportExcel',
-                phuongxa_id: $('#phuongxa_id').val() || '',
-                hoten: $('#hoten').val() || '',
-                tinhtrang_id: $('#tinhtrang_id').val() || '',
-                is_tamtru: $('#is_tamtru').val() || '',
-                thonto_id: $('#thonto_id').val() || '',
-                cccd_so: $('#cccd_so').val() || '',
-                diachi: $('#diachi').val() || '',
+                phuongxa_id: $('#phuongxa_id').val(),
+                hoten: $('#hoten').val(),
+                chucdanh_id: $('#chucdanh_id').val(),
+                tinhtrang_id: $('#tinhtrang_id').val(),
+                thonto_id: $('#thonto_id').val(),
+                chucvukn_id: $('#chucvukn_id').val(),
                 daxoa: 0,
                 [Joomla.getOptions('csrf.token')]: 1
             };

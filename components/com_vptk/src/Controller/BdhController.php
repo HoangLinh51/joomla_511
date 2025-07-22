@@ -130,120 +130,7 @@ class BdhController extends BaseController
         jexit();
     }
 
-    public function exportExcel()
-    {
-        // Tăng giới hạn bộ nhớ
-        ini_set('memory_limit', '1024M');
 
-        // Kiểm tra CSRF token
-        if (!Session::checkToken('get')) {
-            $this->outputJsonError('Token không hợp lệ');
-        }
-
-        // Kiểm tra người dùng
-        $user = Factory::getUser();
-        if (!$user->id) {
-            $this->outputJsonError('Bạn cần đăng nhập');
-        }
-
-        // Xóa bộ đệm đầu ra
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        try {
-            // Tải model
-            $model = Core::model('Vptk/Vptk');
-
-            // Lấy tham số tìm kiếm
-            $input = Factory::getApplication()->input;
-            $filters = [
-                'phuongxa_id' => $input->getString('phuongxa_id', ''),
-                'hoten' => $input->getString('hoten', ''),
-                'gioitinh_id' => $input->getString('gioitinh_id', ''),
-                'is_tamtru' => $input->getString('is_tamtru', ''),
-                'thonto_id' => $input->getString('thonto_id', ''),
-                'hokhau_so' => $input->getString('hokhau_so', ''),
-                'cccd_so' => $input->getString('cccd_so', ''),
-                'diachi' => $input->getString('diachi', ''),
-                'daxoa' => 0
-            ];
-
-            // Lấy dữ liệu từ model
-            $rows = $model->getItems($filters);
-
-            // Kiểm tra dữ liệu
-            if (empty($rows)) {
-                $this->outputJsonError('Không có dữ liệu để xuất');
-            }
-
-            // Tải PhpSpreadsheet qua Composer
-            $autoloadPath = JPATH_ROOT . '/vendor/autoload.php';
-            if (!file_exists($autoloadPath)) {
-                $this->outputJsonError('File autoload.php không được tìm thấy');
-            }
-            require_once $autoloadPath;
-
-            // Thiết lập cache để giảm bộ nhớ
-
-
-            // Tạo spreadsheet
-            $spreadsheet = new Spreadsheet();
-            $sheet = $spreadsheet->getActiveSheet();
-
-            // Định dạng tiêu đề
-            $headers = ['STT', 'Số hộ khẩu', 'Tên chủ hộ', 'Giới tính', 'Năm sinh', 'Chỗ ở hiện nay', 'Số điện thoại'];
-            $sheet->fromArray($headers, null, 'A1');
-
-            // Bôi đậm tiêu đề
-            $sheet->getStyle('A1:G1')->getFont()->setBold(true);
-
-            // Tăng chiều rộng cột
-            $columnWidths = [
-                'A' => 10,  // STT
-                'B' => 25,  // Số hộ khẩu
-                'C' => 25,  // Tên chủ hộ
-                'D' => 15,  // Giới tính
-                'E' => 15,  // Năm sinh
-                'F' => 50,  // Chỗ ở hiện nay
-                'G' => 20   // Số điện thoại
-            ];
-            foreach ($columnWidths as $column => $width) {
-                $sheet->getColumnDimension($column)->setWidth($width);
-            }
-
-            // Thêm dữ liệu
-            $rowData = [];
-            foreach ($rows as $index => $item) {
-                $rowData[] = [
-                    $index + 1,
-                    $item['hokhau_so'] . ($item['hokhau_ngaycap'] ? "\nNgày cấp: " . $item['hokhau_ngaycap'] : ''),
-                    $item['hotenchuho'] ?? '',
-                    $item['tengioitinh'] ?? '',
-                    $item['namsinh'] ?? '',
-                    $item['diachi'] ?? '',
-                    $item['dienthoai'] ?? ''
-                ];
-            }
-            $sheet->fromArray($rowData, null, 'A2');
-
-            // Bật wrapText cho cột Số hộ khẩu (cột B)
-            $lastRow = count($rowData) + 1; // Tính dòng cuối cùng
-            $sheet->getStyle('B2:B' . $lastRow)->getAlignment()->setWrapText(true);
-
-            // Căn lề giữa cho cột STT (cột A)
-            $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
-            // Thêm đường viền cho tất cả các ô (A1:G$lastRow)
-            $sheet->getStyle('A1:G' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-            // Xuất file
-            $writer = new Xlsx($spreadsheet);
-            $this->outputExcel($writer);
-        } catch (Exception $e) {
-            $this->outputJsonError('Lỗi khi xuất Excel: ' . $e->getMessage());
-        }
-    }
     function saveBanDieuHanh()
     {
         Session::checkToken() or die('Invalid Token');
@@ -278,7 +165,7 @@ class BdhController extends BaseController
     private function outputExcel($writer)
     {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="DanhSachNhanKhau.xlsx"');
+        header('Content-Disposition: attachment;filename="DanhSach_BanDieuHanh.xlsx"');
         header('Cache-Control: max-age=0');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -344,5 +231,193 @@ class BdhController extends BaseController
         header('Content-type: application/json');
         echo json_encode($result);
         die;
+    }
+public function exportExcel()
+{
+    // Tăng giới hạn bộ nhớ
+    ini_set('memory_limit', '1024M');
+
+    // Kiểm tra CSRF token
+    if (!Session::checkToken('get')) {
+        $this->outputJsonError('Token không hợp lệ');
+    }
+
+    // Kiểm tra người dùng
+    $user = Factory::getUser();
+    if (!$user->id) {
+        $this->outputJsonError('Bạn cần đăng nhập');
+    }
+
+    // Xóa bộ đệm đầu ra
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
+    try {
+        // Tải model
+        $model = Core::model('Vptk/Bdh');
+
+        // Lấy tham số tìm kiếm
+        $input = Factory::getApplication()->input;
+        $filters = [
+            'phuongxa_id' => $input->getString('phuongxa_id', ''),
+            'hoten' => $input->getString('hoten', ''),
+            'chucdanh_id' => $input->getString('chucdanh_id', ''),
+            'tinhtrang_id' => $input->getString('tinhtrang_id', ''),
+            'thonto_id' => $input->getString('thonto_id', ''),
+            'hokhau_so' => $input->getString('hokhau_so', ''),
+            'chucvukn_id' => $input->getString('chucvukn_id', ''),
+            'daxoa' => 0
+        ];
+
+        // Lấy dữ liệu từ model
+        $rows = $model->getDanhSachBanDieuHanhExel($filters);
+
+        // Kiểm tra dữ liệu
+        if (empty($rows)) {
+            $this->outputJsonError('Không có dữ liệu để xuất');
+        }
+
+        // Tải PhpSpreadsheet qua Composer
+        $autoloadPath = JPATH_ROOT . '/vendor/autoload.php';
+        if (!file_exists($autoloadPath)) {
+            $this->outputJsonError('File autoload.php không được tìm thấy');
+        }
+        require_once $autoloadPath;
+
+        // Tạo spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Định dạng tiêu đề
+        $headersRow1 = [
+            'STT',                 // A
+            'Tổ',                  // B
+            'Nhiệm kỳ',            // C
+            'Họ tên thành viên',   // D
+            'Ngày sinh',           // E
+            'Giới tính',           // F
+            'Số điện thoại',       // G
+            'Thông tin CMND/CCCD', // H (spans H, I, J)
+            '',                    // I
+            '',                    // J
+            'Thông tin chức danh', // K (spans K, L, M)
+            '',                    // L
+            '',                    // M
+            'Đảng viên',           // N
+            'Trình độ lý luận chính trị', // O
+            'Tình trạng',          // P
+            'Lý do kết thúc',      // Q
+        ];
+
+        $headersRow2 = [
+            '',                    // A
+            '',                    // B
+            '',                    // C
+            '',                    // D
+            '',                    // E
+            '',                    // F
+            '',                    // G
+            'Số',                 // H
+            'Ngày cấp',           // I
+            'Nơi cấp',            // J
+            'Chức danh',          // K
+            'Từ ngày',            // L
+            'Đến ngày',           // M
+            '',                    // N
+            '',                    // O
+            '',                    // P
+            '',                    // Q
+        ];
+
+        // Ghi tiêu đề vào sheet
+        $sheet->fromArray($headersRow1, null, 'A1');
+        $sheet->fromArray($headersRow2, null, 'A2');
+
+        // Gộp ô cho tiêu đề chính
+        $sheet->mergeCells('H1:J1'); // Thông tin CMND/CCCD
+        $sheet->mergeCells('K1:M1'); // Thông tin chức danh
+
+        // Gộp ô dòng 1 và dòng 2 cho các cột không có tiêu đề phụ
+        $columnsToMerge = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'N', 'O', 'P', 'Q'];
+        foreach ($columnsToMerge as $column) {
+            $sheet->mergeCells("{$column}1:{$column}2");
+        }
+
+        // Bôi đậm tiêu đề
+        $sheet->getStyle('A1:Q2')->getFont()->setBold(true);
+        $sheet->getRowDimension(1)->setRowHeight(30);
+        $sheet->getRowDimension(2)->setRowHeight(20);
+
+            // Tăng chiều rộng cột
+            $columnWidths = [
+                'A' => 10,  // STT
+                'B' => 15,  // Tổ
+                'C' => 20,  // Nhiệm kỳ
+                'D' => 25,  // Họ và tên
+                'E' => 15,  // Ngày sinh
+                'F' => 15,  // Giới tính
+                'G' => 20,  // Số điện thoại
+                'H' => 15,  // CMND/CCCD: Số
+                'I' => 15,  // CMND/CCCD: Ngày cấp
+                'J' => 20,  // CMND/CCCD: Nơi cấp
+                'K' => 20,  // Chức danh
+                'L' => 15,  // Từ ngày
+                'M' => 15,  // Đến ngày
+                'N' => 20,  // Đảng viên
+                'O' => 20,  // Trình độ lý luận chính trị
+                'P' => 20,  // Tình trạng
+                'Q' => 40,  // Lý do kết thúc
+            ];
+            foreach ($columnWidths as $column => $width) {
+                $sheet->getColumnDimension($column)->setWidth($width);
+            }
+
+            // Thêm dữ liệu
+            $rowData = [];
+            foreach ($rows as $index => $item) {
+                $rowData[] = [
+                    $index + 1,                            // A: STT
+                    $item['thonto'] ?? '',              // B: Tổ
+                    $item['tennhiemky'] ?? '',      // C: Nhiệm kỳ
+                    $item['hoten'] ?? '',                  // D: Họ tên
+                    $item['ngaysinh'] ?? '',                // E: Ngày sinh
+                    $item['tengioitinh'] ?? '',            // F: Giới tính
+                    $item['dienthoai'] ?? '',              // G: Số điện thoại
+                    $item['cccd_so'] ?? '',                // H: CMND/CCCD Số
+                    $item['cccd_ngaycap'] ?? '',           // I: CMND/CCCD Ngày cấp
+                    $item['cccd_coquancap'] ?? '',         // J: CMND/CCCD Nơi cấp
+                    $item['tenchucdanh'] ?? '',            // K: Chức danh
+                    $item['ngaybatdau'] ?? '',        // L: Từ ngày
+                    $item['ngayketthuc'] ?? '',       // M: Đến ngày
+                    $item['dangvien'] ?? '',              // N: Đảng viên
+                    $item['tentrinhdo'] ?? '',             // O: Trình độ lý luận chính trị
+                    $item['tentinhtrang'] ?? '',       // P: Tình trạng
+                    $item['lydoketthuc'] ?? '',                // Q: Lý do kết thúc
+                ];
+            }
+            $sheet->fromArray($rowData, null, 'A3');
+
+            // Bật wrapText cho cột Tổ (cột B) và các cột văn bản dài
+            $lastRow = count($rowData) + 2; // Tính dòng cuối cùng (bắt đầu từ A3)
+            $sheet->getStyle('B3:B' . $lastRow)->getAlignment()->setWrapText(true);
+            $sheet->getStyle('H3:J' . $lastRow)->getAlignment()->setWrapText(true);
+            $sheet->getStyle('K3:M' . $lastRow)->getAlignment()->setWrapText(true);
+            $sheet->getStyle('Q3:Q' . $lastRow)->getAlignment()->setWrapText(true);
+
+            // Căn lề giữa cho cột STT (cột A) và các cột tiêu đề
+            $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('H1:M1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A2:Q2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+            // Thêm đường viền cho tất cả các ô (A1:Q$lastRow)
+            $sheet->getStyle('A1:Q' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+            // Xuất file
+            $writer = new Xlsx($spreadsheet);
+            $this->outputExcel($writer);
+        } catch (Exception $e) {
+            $this->outputJsonError('Lỗi khi xuất Excel: ' . $e->getMessage());
+        }
     }
 }

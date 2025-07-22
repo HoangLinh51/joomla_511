@@ -53,11 +53,7 @@ $messages = Factory::getApplication()->getMessageQueue();
                     <h3 class="m-0 text-primary"><i class="fas fa-users"></i>Tra cứu dân cư</h3>
                 </div>
                 <div class="col-sm-6 text-right" style="padding:0;">
-                    <?php if ($is_quyen == 0) { ?>
-                        <a href="index.php?option=com_vptk&view=bdh&task=add_bdh" class="btn btn-primary" style="font-size:16px;width:136px">
-                            <i class="fas fa-plus"></i> Thêm mới
-                        </a>
-                    <?php } ?>
+                  
                 </div>
             </div>
         </div>

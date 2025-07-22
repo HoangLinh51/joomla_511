@@ -81,7 +81,7 @@ class VptkController extends BaseController
         echo json_encode($response);
         jexit();
     }
-       public function delNhanKhau()
+    public function delNhanKhau()
     {
         $user = Factory::getUser();
         if (!$user->id) {
@@ -169,21 +169,51 @@ class VptkController extends BaseController
             $sheet = $spreadsheet->getActiveSheet();
 
             // Định dạng tiêu đề
-            $headers = ['STT', 'Số hộ khẩu', 'Tên chủ hộ', 'Giới tính', 'Năm sinh', 'Chỗ ở hiện nay', 'Số điện thoại'];
+            $headers = [
+                'STT',
+                'Số hộ khẩu',
+                'Quan hệ với chủ hộ',
+                'Họ và tên',
+                'Ngày sinh',
+                'Giới tính',
+                'Số CMND/CCCD',
+                'Ngày cấp',
+                'Nơi cấp',
+                'Điện thoại',
+                'Dân tộc',
+                'Tôn giáo',
+                'Trình độ học vấn',
+                'Nghề nghiệp',
+                'Nơi ở hiện tại',
+                'Nơi ở thường trú trước khi chuyển đến',
+                'Lý do xóa đăng ký thường trú'
+            ];
             $sheet->fromArray($headers, null, 'A1');
 
             // Bôi đậm tiêu đề
-            $sheet->getStyle('A1:G1')->getFont()->setBold(true);
-
+            $sheet->getStyle('A1:Q1')->getFont()->setBold(true);
+            $sheet->getRowDimension(1)->setRowHeight(30);
             // Tăng chiều rộng cột
             $columnWidths = [
                 'A' => 10,  // STT
-                'B' => 25,  // Số hộ khẩu
-                'C' => 25,  // Tên chủ hộ
-                'D' => 15,  // Giới tính
-                'E' => 15,  // Năm sinh
-                'F' => 50,  // Chỗ ở hiện nay
-                'G' => 20   // Số điện thoại
+                'B' => 15,  // Số hộ 
+                'C' => 20,  // Quan hệ với chủ hộ
+                'D' => 25,  // Họ và tên
+                'E' => 15,  // Ngày sinh
+                'F' => 15,  // Giới tính
+                'G' => 15,  // CMND/CCCD 
+                'H' => 20,   // điện thoại
+                'I' => 20,   // Dân tộc
+                'J' => 20,   // Tôn giáo
+                'K' => 20,   // Trình độ học vấn
+                'L' => 20,   // Nghề nghiệp
+                'M' => 20,   // Nơi ở hiện tại
+                'N' => 20,   // Nơi thường trú
+                'O' => 40,   // lý do xóa
+                'P' => 40,   // lý do xóa
+                'Q' => 20,   // lý do xóa
+
+
             ];
             foreach ($columnWidths as $column => $width) {
                 $sheet->getColumnDimension($column)->setWidth($width);
@@ -195,11 +225,21 @@ class VptkController extends BaseController
                 $rowData[] = [
                     $index + 1,
                     $item['hokhau_so'] . ($item['hokhau_ngaycap'] ? "\nNgày cấp: " . $item['hokhau_ngaycap'] : ''),
-                    $item['hotenchuho'] ?? '',
-                    $item['tengioitinh'] ?? '',
+                    $item['tenquanhenhanthan'] ?? '',
+                    $item['hoten'] ?? '',
                     $item['namsinh'] ?? '',
+                    $item['tengioitinh'] ?? '',
+                    $item['cccd_so'] ?? '',
+                    $item['cccd_ngaycap'] ?? '',
+                    $item['cccd_coquancap'] ?? '',
+                    $item['dienthoai'] ?? '',
+                    $item['tendantoc'] ?? '',
+                    $item['tentongiao'] ?? '',
+                    $item['tentrinhdohocvan'] ?? '',
+                    $item['tennghenghiep'] ?? '',
                     $item['diachi'] ?? '',
-                    $item['dienthoai'] ?? ''
+                    $item['diachi1'] ?? '',
+                    $item['tenlydo'] ?? '',
                 ];
             }
             $sheet->fromArray($rowData, null, 'A2');
@@ -212,7 +252,7 @@ class VptkController extends BaseController
             $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
             // Thêm đường viền cho tất cả các ô (A1:G$lastRow)
-            $sheet->getStyle('A1:G' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+            $sheet->getStyle('A1:Q' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
             // Xuất file
             $writer = new Xlsx($spreadsheet);
