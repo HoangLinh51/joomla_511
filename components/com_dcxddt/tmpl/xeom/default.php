@@ -30,7 +30,6 @@ use Joomla\CMS\HTML\HTMLHelper;
     <div class="card-header" data-card-widget="collapse">
       <h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
       <div class="card-tools">
-        <button type="button" class="btn btn-tool" data-card-widget="none" data-action="reload"><i class="fas fa-sync-alt"></i></button>
         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
       </div>
     </div>
@@ -104,9 +103,9 @@ use Joomla\CMS\HTML\HTMLHelper;
               </div>
             </div>
             <div id="select-container" style="display: none;" class="mb-3">
-              <label for="select_top" class="form-label fw-bold">Tìm tài xế</label>
+              <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
               <select id="select_top" name="select_top" class="select2">
-                <option value="">-- Chọn --</option>
+                <option value="">Chọn công dân</option>
                 <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
                   <option value="<?php echo $tv['id']; ?>"><?php echo htmlspecialchars($tv['hoten']); ?></option>
                 <?php } ?>
@@ -325,7 +324,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
       if (isChecked) {
         $('#select_top').select2({
-          placeholder: 'Chọn thành viên',
+          placeholder: 'Chọn công dân',
           allowClear: true,
           width: '100%',
           ajax: {
@@ -356,7 +355,7 @@ use Joomla\CMS\HTML\HTMLHelper;
           },
           minimumInputLength: 0,
           templateResult: data => data.loading ? data.text : $('<div>' + data.text + '</div>'),
-          templateSelection: data => data.text || 'Chọn thành viên',
+          templateSelection: data => data.text || 'Chọn công dân',
           dropdownParent: $('#modalThemXeOm')
         });
       }
@@ -568,7 +567,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         },
       },
       messages: {
-        select_top: 'Vui lòng chọn nhân khẩu',
+        select_top: 'Vui lòng chọn công dân',
         modal_hoten: 'Vui lòng nhập họ tên',
         modal_cccd: 'Vui lòng nhập CCCD/CMND',
         select_namsinh: 'Vui lòng chọn năm sinh',

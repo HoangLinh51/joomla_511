@@ -32,17 +32,17 @@ class HtmlView extends BaseHtmlView
         if ($task === 'THONGKE' || $task === 'ADD_GDTE' || $task === 'EDIT_GDTE' || $task === 'BAOLUC_GDTE' || $task === 'TREEM_GDTE') {
             $checkTask = 'default';
         }
-        // if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
-        //     echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        //         <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-        //         <a href="/index.php" style="text-decoration: none;">
-        //         <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
-        //             Trang chủ
-        //         </button>
-        //         </a>
-        //       </div>';
-        //     exit;
-        // }
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
 
         switch ($task) {
             case 'THONGKE':

@@ -37,9 +37,9 @@ $item = $this->item;
             </div>
         </div>
         <div id="select-container" style="display: <?php echo htmlspecialchars($item[0]['nhankhau_id']) ? 'block' : 'none'; ?>;" class="mb-3">
-            <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+            <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
             <select id="select_top" name="select_top" class="custom-select">
-                <option value="">-- Chọn --</option>
+                <option value="">Chọn công dân</option>
                 <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
                     <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($item[0]['nhankhau_id']) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
                 <?php } ?>
@@ -201,9 +201,6 @@ $item = $this->item;
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTroCapLabel">Thêm thông vay vốn</h5>
-                <button type="button" class="btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="frmModalTroCap">
@@ -352,7 +349,7 @@ $item = $this->item;
             <input type="hidden" id="modal_edit_index" name="modal_edit_index" value="">
             </form>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
 
                 <button type="button" class="btn btn-primary" id="btn_luu_trocap"><i class="fas fa-save"></i> Lưu</button>
@@ -957,7 +954,7 @@ $item = $this->item;
 
             },
             messages: {
-                select_top: 'Vui lòng chọn nhân khẩu',
+                select_top: 'Vui lòng chọn công dân',
                 hoten: 'Vui lòng nhập họ và tên',
                 cccd: 'Vui lòng nhập CCCD/CMND',
                 select_namsinh: 'Vui lòng chọn năm sinh',

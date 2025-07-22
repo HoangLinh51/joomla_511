@@ -85,7 +85,6 @@ $item = $item ?? (object)[
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalBaoLucLabel">Thêm thông tin bạo lực gia đình</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="frmModalBaoLuc">
@@ -93,7 +92,7 @@ $item = $item ?? (object)[
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Người gây bạo lực<span class="text-danger">*</span></label>
+                  <label class="form-label">Người gây bạo lực <span class="text-danger">*</span></label>
                   <select id="modal_nguoigay_id" name="modal_nguoigay_id" class="custom-select" data-placeholder="Chọn người gây bạo lực" required>
                     <option value=""></option>
                   </select>
@@ -114,7 +113,7 @@ $item = $item ?? (object)[
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Nạn nhân<span class="text-danger">*</span></label>
+                  <label class="form-label">Nạn nhân <span class="text-danger">*</span></label>
                   <select id="modal_nannhan_id" name="modal_nannhan_id" class="custom-select" data-placeholder="Chọn nạn nhân" required>
                     <option value=""></option>
                   </select>
@@ -135,7 +134,7 @@ $item = $item ?? (object)[
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Xử lý<span class="text-danger">*</span></label>
+                  <label class="form-label">Xử lý <span class="text-danger">*</span></label>
                   <select id="modal_bienphap" name="modal_bienphap" class="custom-select" data-placeholder="Chọn biện pháp xử lý" required>
                     <option value=""></option>
                     <?php if (is_array($this->xuly) && count($this->xuly) > 0) { ?>
@@ -153,7 +152,7 @@ $item = $item ?? (object)[
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Hỗ trợ<span class="text-danger">*</span></label>
+                  <label class="form-label">Hỗ trợ <span class="text-danger">*</span></label>
                   <select id="modal_hotro" name="modal_hotro" class="custom-select" data-placeholder="Chọn biện pháp hỗ trợ" required>
                     <option value=""></option>
                     <?php if (is_array($this->hotro) && count($this->hotro) > 0) { ?>
@@ -192,7 +191,7 @@ $item = $item ?? (object)[
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Tình trạng<span class="text-danger">*</span></label>
+                  <label class="form-label">Tình trạng <span class="text-danger">*</span></label>
                   <select id="modal_tinhtrang" name="modal_tinhtrang" class="custom-select" data-placeholder="Chọn tình trạng" required>
                     <option value=""></option>
                     <option value="1">Đã xử lý</option>
@@ -218,7 +217,7 @@ $item = $item ?? (object)[
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
         <button type="button" class="btn btn-primary" id="btn_luu_baoluc"><i class="fas fa-save"></i> Lưu</button>
       </div>
     </div>

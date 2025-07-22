@@ -36,9 +36,9 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
       </div>
     </div>
     <div id="select-container" style="display: <?php echo htmlspecialchars($detailQuanNhanDuBi->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">
-      <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+      <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
       <select id="select_top" name="select_top" class="form-control">
-        <option value="">-- Chọn --</option>
+        <option value="">Chọn công dân</option>
         <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
           <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($detailQuanNhanDuBi->nhankhau_id) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
         <?php } ?>
@@ -851,7 +851,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
         }
       },
       messages: {
-        select_top: 'Vui lòng chọn nhân khẩu',
+        select_top: 'Vui lòng chọn công dân',
         hoten: 'Vui lòng nhập họ và tên',
         cccd: 'Vui lòng nhập CCCD/CMND',
         select_namsinh: {

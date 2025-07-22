@@ -150,9 +150,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="detailModalLabel">Thông tin hưởng chi tiết</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
             <div class="modal-body">
                 <div id="detailContent">Đang tải...</div>
@@ -168,9 +165,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="cutModalLabel">Cắt hưởng trợ cấp</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="frmCutThongtinhuongcs">
@@ -199,7 +193,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <button type="button" class="btn btn-primary" id="btn_save_cathuong">Lưu</button>
             </div>
         </div>

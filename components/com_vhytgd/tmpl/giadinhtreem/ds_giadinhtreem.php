@@ -140,9 +140,6 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="detailModalLabel">Thông tin lịch sử vay vốn</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
             <div class="modal-body">
                 <div id="detailContent">Đang tải...</div>

@@ -179,16 +179,13 @@ $item = $this->item;
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalThongtinsonhaLabel">Thêm thông tin số nhà</h5>
-                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="frmModalBiensonha">
                     <input type="hidden" id="modal_edit_index" value="">
                     <input type="hidden" id="modal_nhankhau_id" name="modal_nhankhau_id" value="">
                     <div class="mb-3">
-                        <label class="form-label">Loại sở hữu<span class="text-danger">*</span></label>
+                        <label class="form-label">Loại sở hữu <span class="text-danger">*</span></label>
                         <select id="modal_loaisohuu" name="modal_loaisohuu" class="custom-select" data-placeholder="Chọn loại sở hữu" required>
                             <option value=""></option>
 
@@ -225,12 +222,12 @@ $item = $this->item;
                     <!-- Form cá nhân -->
                     <div id="individual_fields" style="display: none;">
                         <div class="mb-3">
-                            <label class="form-label">Tìm kiếm thành viên <input type="checkbox" id="modal_search_toggle" checked></label>
+                            <label class="form-label">Tìm kiếm công dân <input type="checkbox" id="modal_search_toggle" checked></label>
                         </div>
                         <div id="search_fields">
                             <div class="mb-3">
-                                <label class="form-label">Chọn thành viên <span class="text-danger">*</span></label>
-                                <select id="modal_nhankhau_search" name="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn thành viên"></select>
+                                <label class="form-label">Chọn công dân <span class="text-danger">*</span></label>
+                                <select id="modal_nhankhau_search" name="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn công dân"></select>
                                 <label class="error_modal" for="modal_nhankhau_search"></label>
                             </div>
                         </div>
@@ -392,6 +389,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <input type="hidden" id="modal_sonha_id" name="modal_sonha_id" value="">
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
             </div>
@@ -545,7 +543,7 @@ $item = $this->item;
                                     const redirectUrl = `index.php?option=com_dcxddt&view=biensonha&task=edit_bsn&bsn_id=${bsn_id}`;
                                     window.location.assign(redirectUrl);
                                 }, 2000);
-                            } 
+                            }
                         },
                         error: function(xhr, status, error) {
                             console.error('AJAX error:', status, error);
@@ -559,7 +557,7 @@ $item = $this->item;
                             showToast(errorMessage, false);
                         }
                     });
-                } 
+                }
             }
 
             // Ngăn sự kiện change trùng lặp
@@ -598,7 +596,7 @@ $item = $this->item;
                 return false;
             }
 
-            $('#modalThongtinsonhaLabel').text('Thêm danh hiệu');
+            $('#modalThongtinsonhaLabel').text('Thêm số nhà');
             $('#modal_edit_index').val('');
             $('#frmModalBiensonha')[0].reset();
             initializeModalSelect2();
@@ -620,6 +618,8 @@ $item = $this->item;
 
             $('#modal_search_toggle').prop('checked', true).trigger('change');
             $('#modalThongTinSoNha').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
+
         });
         $('#modal_search_toggle').on('change', function() {
             const isChecked = $(this).is(':checked');
@@ -874,6 +874,7 @@ $item = $this->item;
                     updateSTT();
                 }
                 $('#modalThongTinSoNha').modal('hide');
+                $('div.modal-backdrop').css('display', 'none');
                 $('#frmModalBiensonha')[0].reset();
                 resetModal();
             } else {
@@ -969,6 +970,7 @@ $item = $this->item;
             $('#modal_lydothaydoi').prop('required', data.hinhthuccap === '5');
 
             $('#modalThongTinSoNha').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
 
         // Xử lý hiển thị lý do thay đổi khi chọn hình thức cấp
@@ -1075,13 +1077,16 @@ $item = $this->item;
                     modal_hinhthuccap: {
                         required: true
                     },
+                    modal_loaisohuu: {
+                        required: true
+                    },
                     // modal_lydothaydoi: {
                     //     required: true
                     // }
                 },
                 messages: {
-                    // modal_loaisohuu: 'Chọn loại sở hữu',
-                    modal_nhankhau_search: 'Chọn thành viên',
+                    modal_loaisohuu: 'Chọn loại sở hữu',
+                    modal_nhankhau_search: 'Chọn công dân',
                     modal_hoten: {
                         required: 'Nhập họ tên',
                         regex: 'Họ tên không được chứa ký tự đặc biệt'
@@ -1094,7 +1099,6 @@ $item = $this->item;
                     modal_tobando: 'Nhập Tờ bản đồ',
                     modal_hinhthuccap: 'Chọn hình thức cấp',
                     // modal_lydothaydoi: 'Nhập lý do',
-
                 }
             });
 
@@ -1122,17 +1126,13 @@ $item = $this->item;
                     },
                     tuyenduong: {
                         required: true,
-
                     }
                 },
                 messages: {
                     phuongxa_id: 'Chọn Phường/Xã',
                     thonto_id: 'Chọn Thôn/Tổ',
                     tuyenduong: 'Vui lòng chọn tuyến đường',
-
-
                 }
-
             });
         }
         $('.yearpicker').datepicker({

@@ -59,7 +59,7 @@ defined('_JEXEC') or die('Restricted access');
         <td class="align-middle">${item.tengioitinh || ''}</td>
         <td class="align-middle">${item.n_cccd || ''}</td>
         <td class="align-middle">${item.n_dienthoai || ''}</td>
-        <td class="align-middle text-align: center">${renderTextTrangThai(item.trangthaiquannhan_id,item.tentrangthai)}</td>
+        <td class="align-middle text-center">${renderTextTrangThai(item.trangthaiquannhan_id,item.tentrangthai)}</td>
         <td class="text-center align-middle" style="min-width: 120px" >
          <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:7px; cursor: pointer;" data-idquannhandubi="${item.id}" data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>

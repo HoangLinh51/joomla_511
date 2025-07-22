@@ -232,9 +232,6 @@ $nhankhau = $item['nhankhau'];
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalNhankhauLabel">Thêm Nhân Khẩu</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="frmModalNhankhau">
@@ -507,7 +504,7 @@ $nhankhau = $item['nhankhau'];
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
             </div>
         </div>

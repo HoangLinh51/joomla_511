@@ -102,7 +102,6 @@ $is_quyen = $db->loadResult();
 						</tr>
 						<tr>
 							<td colspan="4" class="text-center" style="padding-top:10px;">
-								<button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
 								<span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
 							</td>
 						</tr>
@@ -114,14 +113,14 @@ $is_quyen = $db->loadResult();
 					<table class="table table-striped table-bordered table-hover" id="tblDanhsach">
 						<thead>
 							<tr class="bg-primary text-white">
-								<th style="vertical-align:middle;" class="text-center">STT</th>
-								<th style="vertical-align:middle;" class="text-center">Số hộ khẩu</th>
-								<th style="vertical-align:middle;" class="text-center">Tên chủ hộ</th>
-								<th style="vertical-align:middle;" class="text-center">Giới tính</th>
-								<th style="vertical-align:middle;" class="text-center">Năm sinh</th>
-								<th style="vertical-align:middle;" class="text-center">Chỗ ở hiện nay</th>
-								<th style="vertical-align:middle;" class="text-center">Số điện thoại</th>
-								<th style="vertical-align:middle;" class="text-center" style="width:131px;">Chức năng</th>
+								<th class="text-center align-middle">STT</th>
+								<th class="text-center align-middle">Số hộ khẩu</th>
+								<th class="text-center align-middle">Tên chủ hộ</th>
+								<th class="text-center align-middle">Giới tính</th>
+								<th class="text-center align-middle">Năm sinh</th>
+								<th class="text-center align-middle">Chỗ ở hiện nay</th>
+								<th class="text-center align-middle">Số điện thoại</th>
+								<th style="min-width: 120px;" class="text-center align-middle">Chức năng</th>
 							</tr>
 						</thead>
 						<tbody id="tbody_danhsach"></tbody>

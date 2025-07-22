@@ -28,7 +28,6 @@ use Joomla\CMS\HTML\HTMLHelper;
     <div class="card-header" data-card-widget="collapse">
       <h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
       <div class="card-tools">
-        <button type="button" class="btn btn-tool" data-card-widget="none" data-action="reload"><i class="fas fa-sync-alt"></i></button>
         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
       </div>
     </div>
@@ -102,9 +101,9 @@ use Joomla\CMS\HTML\HTMLHelper;
               </div>
             </div>
             <div id="select-container" style="display: none;" class="mb-3">
-              <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+              <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
               <select id="select_top" name="select_top" class="form-control">
-                <option value="">-- Chọn --</option>
+                <option value="">Chọn công dân</option>
                 <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
                   <option value="<?php echo $tv['id']; ?>"><?php echo htmlspecialchars($tv['hoten']); ?></option>
                 <?php } ?>

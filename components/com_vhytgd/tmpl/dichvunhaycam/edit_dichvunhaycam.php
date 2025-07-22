@@ -145,18 +145,15 @@ $detaiCoSo = $this->detailCoSo;
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalThemNhanVienLabel">Tìm nhân khẩu</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
+        <h5 class="modal-title" id="modalThemNhanVienLabel">Tìm công dân</h5>
       </div>
       <div class="modal-body">
         <form action="<?= Route::_('index.php?option=com_vhytgd&task=dichvunhaycam.timkiem_nhankhau') ?>" id="frmmodalThemNhanVien" name="frmmodalThemNhanVien" method="post">
           <div class="d-flex flex-column">
             <div class="d-flex justify-content-between mb-3" style="gap:20px">
               <div class="input-thongtin" style="width: 100%">
-                <strong>Họ và tên nhân khẩu</strong>
-                <input type="text" name="modal_tennhankhau" class="form-control" placeholder="Nhập họ và tên nhân khẩu">
+                <strong>Họ và tên công dân</strong>
+                <input type="text" name="modal_tennhankhau" class="form-control" placeholder="Nhập họ và tên công dân">
               </div>
               <div class="input-thongtin" style="width: 100%">
                 <strong>CMND/CCCD</strong>

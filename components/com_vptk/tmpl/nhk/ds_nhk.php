@@ -18,14 +18,14 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
         <thead>
             <tr class="bg-primary">
-                <th style="vertical-align:middle;" class="text-center">STT</th>
-                <th style="vertical-align:middle;" class="text-center">Số hộ khẩu</th>
-                <th style="vertical-align:middle;" class="text-center">Tên chủ hộ</th>
-                <th style="vertical-align:middle;" class="text-center">Giới tính</th>
-                <th style="vertical-align:middle;" class="text-center">Năm sinh</th>
-                <th style="vertical-align:middle;" class="text-center">Chỗ ở hiện nay</th>
-                <th style="vertical-align:middle;" class="text-center">Số điện thoại</th>
-                <th style="vertical-align:middle;" class="text-center" style="width:131px;">Chức năng</th>
+                <th class="text-center align-middle">STT</th>
+                <th class="text-center align-middle">Số hộ khẩu</th>
+                <th class="text-center align-middle">Tên chủ hộ</th>
+                <th class="text-center align-middle">Giới tính</th>
+                <th class="text-center align-middle">Năm sinh</th>
+                <th class="text-center align-middle">Chỗ ở hiện nay</th>
+                <th class="text-center align-middle">Số điện thoại</th>
+                <th style="min-width: 120px;" class="text-center align-middle">Chức năng</th>
             </tr>
         </thead>
         <tbody id="tbody_danhsach">
@@ -53,16 +53,16 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
                             }
                             ?>
                         </td>
-                        <td style="vertical-align: middle">
+                        <td class="align-middle">
                             <a href="#" class="hoten-link" data-hokhau="<?php echo $item['id']; ?>">
                                 <?php echo htmlspecialchars($item['hotenchuho']); ?>
                             </a>
                         </td>
-                        <td style="vertical-align: middle"><?php echo htmlspecialchars($item['tengioitinh']); ?></td>
-                        <td style="vertical-align: middle"><?php echo htmlspecialchars($item['namsinh'] ?? ''); ?></td>
-                        <td style="vertical-align: middle"><?php echo htmlspecialchars($item['diachi']); ?></td>
-                        <td style="vertical-align: middle"><?php echo htmlspecialchars($item['dienthoai']); ?></td>
-                        <td class="text-center">
+                        <td class="align-middle"><?php echo htmlspecialchars($item['tengioitinh']); ?></td>
+                        <td class="align-middle"><?php echo htmlspecialchars($item['namsinh'] ?? ''); ?></td>
+                        <td class="align-middle"><?php echo htmlspecialchars($item['diachi']); ?></td>
+                        <td class="align-middle"><?php echo htmlspecialchars($item['dienthoai']); ?></td>
+                        <td class="text-center align-middle">
                             <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-hokhau="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
@@ -146,9 +146,6 @@ $endRecord = min($startRecord + $perPage - 1, $totalRecords);
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="detailModalLabel">Thông tin chi tiết</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <div id="detailContent">Đang tải...</div>

@@ -165,20 +165,18 @@ $item = $this->item;
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalBanDieuHanhLabel">Thêm thông tin thành viên</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                </button>
+                <h5 class="modal-title" id="modalBanDieuHanhLabel">Thêm thông tin công dân</h5>
             </div>
             <div class="modal-body">
                 <form id="frmModalBanDieuHanh">
                     <input type="hidden" id="modal_edit_index" value="">
                     <div class="mb-3">
-                        <label class="form-label">Tìm kiếm thành viên <input type="checkbox" id="modal_search_toggle" checked></label>
+                        <label class="form-label">Tìm kiếm công dân <input type="checkbox" id="modal_search_toggle" checked></label>
                     </div>
                     <div id="search_fields">
                         <div class="mb-3">
-                            <label class="form-label">Chọn thành viên <span class="text-danger"> * </span></label>
-                            <select id="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn thành viên"></select>
+                            <label class="form-label">Chọn công dân <span class="text-danger">*</span></label>
+                            <select id="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn công dân"></select>
                         </div>
                     </div>
                     <div id="manual_fields">
@@ -261,8 +259,6 @@ $item = $this->item;
                                         <option value="1">Có</option>
                                         <option value="2"> Không</option>
                                     </select>
-
-                                    <!-- <input type="checkbox" id="modal_is_dangvien" name="modal_is_dangvien" value="1"> -->
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -348,8 +344,6 @@ $item = $this->item;
                                 <div class="mb-3">
                                     <label class="form-label">Lý do kết thúc</label>
                                     <input type="text" id="modal_lydoketthuc" name="modal_lydoketthuc" class="form-control" placeholder="Nhập lý do kết thúc">
-
-
                                 </div>
                             </div>
                         </div>
@@ -357,7 +351,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <input type="hidden" id="modal_nhankhau_id" name="modal_nhankhau_id" value="">
 
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>

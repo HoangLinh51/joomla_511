@@ -69,7 +69,6 @@ $item = $item;
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalTreEmLabel">Thêm thông tin trẻ em</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="frmmodalTreEm">
@@ -77,7 +76,7 @@ $item = $item;
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Trẻ em<span class="text-danger">*</span></label>
+                  <label class="form-label">Trẻ em <span class="text-danger">*</span></label>
                   <select id="modal_treem_id" name="modal_treem_id" class="custom-select" data-placeholder="Chọn trẻ em" required>
                     <option value=""></option>
                   </select>
@@ -112,7 +111,7 @@ $item = $item;
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Nhóm hoàn cảnh<span class="text-danger">*</span></label>
+                  <label class="form-label">Nhóm hoàn cảnh <span class="text-danger">*</span></label>
                   <select id="modal_hoancanh" name="modal_hoancanh" class="custom-select" data-placeholder="Chọn nhóm hoàn cảnh" required>
                     <option value=""></option>
                     <?php if (is_array($this->hoancanh) && count($this->hoancanh) > 0) { ?>
@@ -130,7 +129,7 @@ $item = $item;
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Trợ giúp<span class="text-danger">*</span></label>
+                  <label class="form-label">Trợ giúp <span class="text-danger">*</span></label>
                   <select id="modal_trogiup" name="modal_trogiup" class="custom-select" data-placeholder="Chọn trợ giúp" required>
                     <option value=""></option>
                     <?php if (is_array($this->trogiup) && count($this->trogiup) > 0) { ?>
@@ -155,7 +154,7 @@ $item = $item;
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label">Tình trạng<span class="text-danger">*</span></label>
+                  <label class="form-label">Tình trạng <span class="text-danger">*</span></label>
                   <select id="modal_tinhtrang" name="modal_tinhtrang" class="custom-select" data-placeholder="Chọn tình trạng" required>
                     <option value=""></option>
                     <option value="1">Đã hỗ trợ</option>
@@ -174,7 +173,7 @@ $item = $item;
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
         <button type="button" class="btn btn-primary" id="btn_luu_baoluc"><i class="fas fa-save"></i> Lưu</button>
       </div>
     </div>

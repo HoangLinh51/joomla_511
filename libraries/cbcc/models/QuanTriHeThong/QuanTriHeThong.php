@@ -100,12 +100,12 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
-    $query->select('a.*,b.tenkhuvuc AS cha')
-      ->from('danhmuc_khuvuc AS a')
-      ->innerJoin('danhmuc_khuvuc AS b ON a.cha_id = b.id')
-      ->where('a.daxoa = 0')
-      ->where('a.level > 1 ')
-      ->order('a.level,b.tenkhuvuc ASC, a.tenkhuvuc ASC');
+    $query->select('id, tenkhuvuc, level, cha_id')
+      ->from('danhmuc_khuvuc')
+      ->where('daxoa = 0')
+      ->where('level > 1 ')
+      ->where('sudung = 1 ')
+      ->order('level ASC, id ASC');
     try {
       $db->setQuery($query);
       return $db->loadAssocList();
@@ -195,7 +195,8 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     // Get the database object
     $db = Factory::getDbo();
     $formData['chucNang'] = array_map('intval', explode(',', $formData['chucNang']));
-
+    $formData['phuongxa'] =implode(',', $formData['phuongxa']);
+    $formData['thonto'] =implode(',', $formData['thonto']);
     try {
       // New user creation
       if (empty($formData['id'])) {
@@ -224,7 +225,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'password2'    => $formData['password'],
       'block'        => isset($formData['block']) ? (int)$formData['block'] : 0,
       'requireReset' => (int)$formData['requireReset'],
-      'groups'       => $formData['chucNang'],
+      'groups'       => $formData['chucnang'],
       'lastvisitDate' => '0000-00-00 00:00:00',
       'lastResetTime' => '0000-00-00 00:00:00',
     ];
@@ -244,7 +245,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       ];
     }
 
-    $chucNangs = $formData['chucNang'];
+    $chucNangs = $formData['chucnang'];
     // Insert user permissions into core_user_action_donvi
     $query = $db->getQuery(true)
       ->insert($db->quoteName('core_user_action_donvi'))
@@ -297,7 +298,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'password2'    => $formData['password'],
       'block'        => isset($formData['block']) ? (int)$formData['block'] : 0,
       'requireReset' => (int)$formData['requireReset'],
-      'groups'       => $formData['chucNang'],
+      'groups'       => $formData['chucnang'],
     ];
 
     // Bind updated data to user
@@ -329,7 +330,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
     }
 
     // Insert updated permissions
-    $chucNangs = $formData['chucNang'];
+    $chucNangs = $formData['chucnang'];
     $query = $db->getQuery(true)
       ->insert($db->quoteName('core_user_action_donvi'))
       ->columns(['user_id', 'action_id', 'iddonvi', 'group_id']);
@@ -379,8 +380,8 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       ->values(
         (int)$userId . ',' .
           $db->quote(0) . ',' .
-          $db->quote($formData["phuongXa"]) . ',' .
-          $db->quote($formData["thonTo"])
+          $db->quote($formData["phuongxa"]) . ',' .
+          $db->quote($formData["thonto"])
       );
 
     $db->setQuery($query);
