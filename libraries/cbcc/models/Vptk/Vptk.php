@@ -201,16 +201,25 @@ class Vptk_Model_Vptk extends JModelLegacy
         $query->select('a.id,
         a.hokhau_so,
         DATE_FORMAT(a.hokhau_ngaycap,"%d/%m/%Y") AS hokhau_ngaycap,
-        b.hoten AS hotenchuho,
-        IF(b.gioitinh_id = 1, "Nam", IF(b.gioitinh_id = 2, "Nữ", "Không xác định")) as tengioitinh,
+        b.hoten,b.quanhenhanthan_id,qh.tenquanhenhanthan,b.cccd_so, DATE_FORMAT(b.cccd_ngaycap,"%d/%m/%Y") AS cccd_ngaycap,b.cccd_coquancap,
+        IF(b.gioitinh_id = 1, "Nam", IF(b.gioitinh_id = 2, "Nữ", "Không xác định")) as tengioitinh,dt.tendantoc,td.tentongiao, hv.tentrinhdohocvan, nn.tennghenghiep, 
         CONCAT(a.diachi, ", ", d.tenkhuvuc, ", ", c.tenkhuvuc) AS diachi, 
+        CONCAT(b.thuongtrucu_diachi, ", ", d1.tenkhuvuc, ", ", c1.tenkhuvuc) AS diachi1, ld.tenlydo,
+
         b.dienthoai,
         DATE_FORMAT(b.ngaysinh,"%d/%m/%Y") AS namsinh');
         $query->from('vptk_hokhau AS a');
-        $query->innerJoin('vptk_hokhau2nhankhau AS b ON b.quanhenhanthan_id = -1 AND b.daxoa = 0 AND a.id = b.hokhau_id');
+        $query->innerJoin('vptk_hokhau2nhankhau AS b ON  b.daxoa = 0 AND a.id = b.hokhau_id');
         $query->innerJoin('danhmuc_khuvuc AS c ON c.id = a.phuongxa_id');
         $query->innerJoin('danhmuc_khuvuc AS d ON d.id = a.thonto_id');
-
+        $query->innerJoin('danhmuc_quanhenhanthan AS qh ON qh.id = b.quanhenhanthan_id');
+        $query->innerJoin('danhmuc_dantoc AS dt ON dt.id = b.dantoc_id');
+        $query->leftJoin('danhmuc_tongiao AS td ON td.id = b.tongiao_id');
+        $query->leftJoin('danhmuc_trinhdohocvan AS hv ON hv.id = b.trinhdohocvan_id');
+        $query->leftJoin('danhmuc_nghenghiep AS nn ON nn.id = b.nghenghiep_id');
+        $query->leftJoin('danhmuc_khuvuc AS c1 ON c1.id = b.thuongtrucu_phuongxa_id');
+        $query->leftJoin('danhmuc_khuvuc AS d1 ON d1.id = b.thuongtrucu_thonto_id');
+        $query->leftJoin('danhmuc_lydoxoathuongtru AS ld ON ld.id = b.lydoxoathuongtru_id');
         if (!empty($filters['phuongxa_id'])) {
             $query->where('a.phuongxa_id = ' . $db->quote($filters['phuongxa_id']));
         } elseif ($phanquyen['phuongxa_id'] != '-1') {
@@ -238,9 +247,10 @@ class Vptk_Model_Vptk extends JModelLegacy
         if (!empty($filters['diachi'])) {
             $query->where($db->quoteName('a.diachi') . ' LIKE ' . $db->quote('%' . $filters['diachi'] . '%'));
         }
-        $query->order('id ASC');
+        $query->order('id,b.quanhenhanthan_id ASC');
         $query->where('a.daxoa = 0');
-        // echo $query;exit;
+        // echo $query;
+        // exit;
         // $query->setLimit(1000);
         $db->setQuery($query);
         return $db->loadAssocList();
@@ -514,6 +524,7 @@ class Vptk_Model_Vptk extends JModelLegacy
             $query->where('a.id IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
         }
         $query->group('a.id');
+        $query->order('a.id ASC');
         $db->setQuery($query);
         return $db->loadAssocList();
     }

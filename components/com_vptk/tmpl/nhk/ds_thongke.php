@@ -49,10 +49,10 @@ $current_phuongxa_id = null;
             }
             ?>
             <tr>
-                <?php if ($item['nam'] == '0' && $item['nu'] == '0' && $item['thuongtru'] == '0' && $item['tamtru'] == '0' && $item['tren18'] == '0' && $item['level'] == '3') : ?>
+                <?php if ($item['nam'] == '' && $item['nu'] == '' && $item['thuongtru'] == '' && $item['tamtru'] == '' && $item['tren18'] == '' && $item['level'] == '3') : ?>
                     <td style="vertical-align:middle;" class="text-center text-danger"><?php echo htmlspecialchars($stt); ?></td>
                     <td style="vertical-align:middle;" class="text-danger"><?php echo htmlspecialchars($item['tenkhuvuc']); ?></td>
-                    <td style="vertical-align:middle;" class="text-danger" colspan="5">Chưa có dữ liệu></td>
+                    <td style="vertical-align:middle;" class="text-danger" colspan="5">Chưa có dữ liệu </td>
                 <?php else : ?>
                     <td style="vertical-align:middle;" class="text-center"><?php echo htmlspecialchars($stt); ?></td>
                     <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['tenkhuvuc']); ?></td>

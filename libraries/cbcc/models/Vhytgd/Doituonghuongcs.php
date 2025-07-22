@@ -660,4 +660,80 @@ class Vhytgd_Model_Doituonghuongcs extends JModelLegacy
 
         return $results;
     }
+    public function getDanhSachDTBTXHExel($filters)
+{
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+
+    $query->select([
+        'nk.cccd_coquancap',
+        'DATE_FORMAT(nk.cccd_ngaycap, "%d/%m/%Y") AS cccd_ngaycap',
+        'DATE_FORMAT(a.n_namsinh, "%d/%m/%Y") AS ngaysinh',
+        'a.n_dienthoai',
+        'a.madoituong',
+        'CONCAT(COALESCE(tt.tenkhuvuc, ""), IF(tt.tenkhuvuc IS NOT NULL, ", ", ""), px.tenkhuvuc) AS phuongxathonto',
+        'ld.ten AS tentrangthai',
+        'gt.tengioitinh',
+        'GROUP_CONCAT(DISTINCT ldt.ten SEPARATOR ", ") AS tenloaidoituong',
+        'tt.tenkhuvuc',
+        'ld2.ten AS tentrangthaicathuong',
+        'bd.ten AS tenbiendong',
+        'b.maht',
+        'b.sotien',
+        'b.soqdhuong',
+        'DATE_FORMAT(b.ngayky, "%d/%m/%Y") AS ngayky',
+        'DATE_FORMAT(b.huongtungay, "%d/%m/%Y") AS huongtungay',
+        'DATE_FORMAT(a.ngaycat, "%d/%m/%Y") AS ngaycat',
+
+        'a.n_hoten',
+        'a.n_cccd',
+        'b.trangthai_id',
+        'a.lydo',
+
+        'CASE 
+            WHEN a.trangthaich_id IS NULL OR a.trangthaich_id = 0 THEN ld.ten 
+            ELSE NULL 
+        END AS trangthaiten',
+        'ldt.ten AS tenchucdanh'    ]);
+
+    $query->from('vhxhytgd_doituonghbtxh AS a')
+        ->join('LEFT', 'vptk_hokhau2nhankhau AS nk ON nk.id = a.nhankhau_id')
+        ->join('INNER', 'vhxhytgd_huongbtxh2doituong AS b ON a.id = b.doituongbtxh_id AND b.daxoa = 0')
+        ->join('LEFT', 'danhmuc_khuvuc AS px ON px.id = a.phuongxa_id')
+        ->join('LEFT', 'danhmuc_khuvuc AS tt ON tt.id = a.thonto_id')
+        ->join('LEFT', 'dmloaidoituong AS ldt ON ldt.id = b.loaidoituong_id')
+        ->join('LEFT', 'danhmuc_gioitinh AS gt ON gt.id = a.n_gioitinh_id')
+        ->join('LEFT', 'dmlydo AS ld ON ld.id = b.trangthai_id')
+        ->join('LEFT', 'dmlydo AS ld2 ON ld2.id = a.trangthaich_id')
+        ->join('LEFT', 'dmloaibiendong AS bd ON bd.id = b.biendong_id');
+
+    $query->where('a.daxoa = 0');
+
+    // Thêm điều kiện lọc
+    if (!empty($filters['phuongxa_id'])) {
+        $query->where('a.phuongxa_id = ' . $db->quote($filters['phuongxa_id']));
+    }
+    if (!empty($filters['thonto_id'])) {
+        $query->where('a.thonto_id = ' . $db->quote($filters['thonto_id']));
+    }
+
+    $phanquyen = $this->getPhanquyen();
+    if (empty($filters['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
+        $query->where('a.phuongxa_id IN (' . str_replace("'", '', $db->quote($phanquyen['phuongxa_id'])) . ')');
+    }
+    if (!empty($filters['hoten'])) {
+        $query->where('a.n_hoten LIKE ' . $db->quote('%' . $filters['hoten'] . '%'));
+    }
+    if (!empty($filters['cccd'])) {
+        $query->where('a.n_cccd = ' . $db->quote($filters['cccd']));
+    }
+
+    $query->group('a.id, b.id');
+
+    // Để debug query, bạn có thể bật dòng dưới đây
+    // echo $query; exit;
+
+    $db->setQuery($query);
+    return $db->loadAssocList();
+}
 }

@@ -617,4 +617,64 @@ class Vptk_Model_Bdh extends JModelLegacy
         $db->setQuery($query);
         return $db->loadAssocList();
     }
+    public function getDanhSachBanDieuHanhExel($filters)
+    {
+        $db = Factory::getDbo();
+        $phanquyen = $this->getPhanquyen();
+
+        $query = $db->getQuery(true);
+        $query->select('c.tenkhuvuc AS thonto, f.tennhiemky, 
+                    CASE WHEN a.is_ngoai = 1 THEN a.n_hoten ELSE b.hoten END AS hoten,DATE_FORMAT( b.ngaysinh, "%d/%m/%Y" ) as ngaysinh,
+                    a.chucdanh_id, a.id_llct, d.tenchucdanh, b.dienthoai,gt.tengioitinh,b.cccd_so,DATE_FORMAT( b.cccd_ngaycap, "%d/%m/%Y" ) as cccd_ngaycap, b.cccd_coquancap,
+                    	DATE_FORMAT( a.ngaybatdau, "%d/%m/%Y" ) as ngaybatdau, DATE_FORMAT( a.ngayketthuc, "%d/%m/%Y" ) as ngayketthuc,llct.tentrinhdo,tt.tentinhtrang,a.lydoketthuc,
+                         CASE 
+        WHEN a.is_dangvien = 1 THEN "Có" 
+        ELSE "Không" 
+    END AS dangvien,
+                    a.tinhtrang_id, e.tentinhtrang, a.lydoketthuc');
+        $query->from('vptk_bandieuhanh AS a');
+        $query->leftJoin('vptk_hokhau2nhankhau AS b ON a.nhankhau_id = b.id AND b.daxoa = 0');
+        $query->innerJoin('danhmuc_khuvuc AS c ON a.thonto_id = c.id');
+        $query->innerJoin('danhmuc_chucdanh AS d ON a.chucdanh_id = d.id');
+        $query->innerJoin('danhmuc_tinhtrang AS e ON a.tinhtrang_id = e.id');
+        $query->innerJoin('danhmuc_nhiemky AS f ON a.nhiemky_id = f.id AND f.daxoa = 0');
+        $query->leftJoin('danhmuc_gioitinh AS gt ON b.gioitinh_id = gt.id');
+        $query->leftJoin('danhmuc_lyluanchinhtri AS llct ON llct.id = a.id_llct');
+        $query->leftJoin('danhmuc_tinhtrang AS tt ON tt.id = a.tinhtrang_id');
+
+
+
+
+        if ($filters['daxoa'] == '1') {
+            $query->where('a.daxoa = 1');
+        } else {
+            $query->where('a.daxoa = 0');
+        }
+        if (!empty($filters['hoten'])) {
+            $query->where('b.hoten LIKE ' . $db->quote('%' . $filters['hoten'] . '%'));
+        }
+        if (!empty($filters['chucdanh_id'])) {
+            $query->where('a.chucdanh_id = ' . $db->quote($filters['chucdanh_id']));
+        }
+        if (!empty($filters['chucvukn_id'])) {
+            $query->where('a.chucvukn_id = ' . $db->quote($filters['chucvukn_id']));
+        }
+        if (!empty($filters['tinhtrang_id'])) {
+            $query->where('a.tinhtrang_id = ' . $db->quote($filters['tinhtrang_id']));
+        }
+        if (!empty($filters['thonto_id'])) {
+            $query->where('a.thonto_id = ' . $db->quote($filters['thonto_id']));
+        }
+        if (!empty($filters['phuongxa_id'])) {
+            $query->where('a.phuongxa_id = ' . $db->quote($filters['phuongxa_id']));
+        } elseif ($phanquyen['phuongxa_id'] != '-1') {
+            $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
+        }
+
+        $query->order('c.tenkhuvuc ASC, f.tungay DESC, d.sapxep ASC, b.hoten ASC, a.ngaybatdau DESC');
+        // echo $query;
+        // exit;
+        $db->setQuery($query);
+        return $db->loadAssocList();
+    }
 }
