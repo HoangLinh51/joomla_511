@@ -14,6 +14,7 @@ $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugin
 $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/icheck-bootstrap/icheck-bootstrap.min.css');
 $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/jqvmap/jqvmap.min.css');
 $doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/_all-skins.min.css');
+// var_dump(Core::config('core/sso/dcây kia tàu vẫn đjep honomain_sso'));exit;
 
 $userId = Factory::getUser()->id
 ?>
@@ -49,9 +50,17 @@ $userId = Factory::getUser()->id
 						<button class="btn-system" id="button-system">
 							Đăng nhập tài khoản hệ thống
 						</button>
-						<button class="btn-egov" href="https://dangnhap.danang.gov.vn/cas/login?service=http://10.49.45.84">
+						<?php if ($is_sso == 0) {
+							$redirect_uri  = Core::config('core/sso/redirect_uri');
+							$client_secret = Core::config('core/sso/client_secret');
+							$client_id = Core::config('core/sso/client_id');
+							$domain_sso = Core::config('core/sso/domain_sso');
+						?>
+							<a id="ssoLoginButton" style="margin-top: 10px;" class="btn-egov" href="<?php echo $domain_sso ?>/oauth2/authorize?scope=openid profile email&response_type=code&state=fd28d491e6126c2111f111&client_id=<?php echo $client_id ?>&redirect_uri=<?php echo $redirect_uri ?>" class="btn btn-success">Đăng nhập bằng eGov</a>
+						<?php } ?>
+						<!-- <button class="btn-egov" href="https://dangnhap.danang.gov.vn/cas/login?service=http://10.49.45.84:8082">
 							Đăng nhập bằng eGov
-						</button>
+						</button> -->
 					</div>
 				<?php } ?>
 

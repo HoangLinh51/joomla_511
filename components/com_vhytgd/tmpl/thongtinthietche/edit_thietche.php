@@ -282,7 +282,7 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
                                     </td>
                                     <td class="text-center" style="width:15%">
                                         <input type="text"
-                                            value="<?php echo htmlspecialchars(number_format($hd['kinhphi'], 0, ',', '.')); ?>"
+                                            value="<?php echo htmlspecialchars($hd['kinhphi']); ?>"
                                             class="form-control"
                                             name="kinhphi[<?php echo $groupIndexCounter; ?>][]" />
                                     </td>

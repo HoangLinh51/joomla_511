@@ -232,122 +232,122 @@ class BdhController extends BaseController
         echo json_encode($result);
         die;
     }
-public function exportExcel()
-{
-    // Tăng giới hạn bộ nhớ
-    ini_set('memory_limit', '1024M');
+    public function exportExcel()
+    {
+        // Tăng giới hạn bộ nhớ
+        ini_set('memory_limit', '1024M');
 
-    // Kiểm tra CSRF token
-    if (!Session::checkToken('get')) {
-        $this->outputJsonError('Token không hợp lệ');
-    }
-
-    // Kiểm tra người dùng
-    $user = Factory::getUser();
-    if (!$user->id) {
-        $this->outputJsonError('Bạn cần đăng nhập');
-    }
-
-    // Xóa bộ đệm đầu ra
-    while (ob_get_level()) {
-        ob_end_clean();
-    }
-
-    try {
-        // Tải model
-        $model = Core::model('Vptk/Bdh');
-
-        // Lấy tham số tìm kiếm
-        $input = Factory::getApplication()->input;
-        $filters = [
-            'phuongxa_id' => $input->getString('phuongxa_id', ''),
-            'hoten' => $input->getString('hoten', ''),
-            'chucdanh_id' => $input->getString('chucdanh_id', ''),
-            'tinhtrang_id' => $input->getString('tinhtrang_id', ''),
-            'thonto_id' => $input->getString('thonto_id', ''),
-            'hokhau_so' => $input->getString('hokhau_so', ''),
-            'chucvukn_id' => $input->getString('chucvukn_id', ''),
-            'daxoa' => 0
-        ];
-
-        // Lấy dữ liệu từ model
-        $rows = $model->getDanhSachBanDieuHanhExel($filters);
-
-        // Kiểm tra dữ liệu
-        if (empty($rows)) {
-            $this->outputJsonError('Không có dữ liệu để xuất');
+        // Kiểm tra CSRF token
+        if (!Session::checkToken('get')) {
+            $this->outputJsonError('Token không hợp lệ');
         }
 
-        // Tải PhpSpreadsheet qua Composer
-        $autoloadPath = JPATH_ROOT . '/vendor/autoload.php';
-        if (!file_exists($autoloadPath)) {
-            $this->outputJsonError('File autoload.php không được tìm thấy');
-        }
-        require_once $autoloadPath;
-
-        // Tạo spreadsheet
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        // Định dạng tiêu đề
-        $headersRow1 = [
-            'STT',                 // A
-            'Tổ',                  // B
-            'Nhiệm kỳ',            // C
-            'Họ tên thành viên',   // D
-            'Ngày sinh',           // E
-            'Giới tính',           // F
-            'Số điện thoại',       // G
-            'Thông tin CMND/CCCD', // H (spans H, I, J)
-            '',                    // I
-            '',                    // J
-            'Thông tin chức danh', // K (spans K, L, M)
-            '',                    // L
-            '',                    // M
-            'Đảng viên',           // N
-            'Trình độ lý luận chính trị', // O
-            'Tình trạng',          // P
-            'Lý do kết thúc',      // Q
-        ];
-
-        $headersRow2 = [
-            '',                    // A
-            '',                    // B
-            '',                    // C
-            '',                    // D
-            '',                    // E
-            '',                    // F
-            '',                    // G
-            'Số',                 // H
-            'Ngày cấp',           // I
-            'Nơi cấp',            // J
-            'Chức danh',          // K
-            'Từ ngày',            // L
-            'Đến ngày',           // M
-            '',                    // N
-            '',                    // O
-            '',                    // P
-            '',                    // Q
-        ];
-
-        // Ghi tiêu đề vào sheet
-        $sheet->fromArray($headersRow1, null, 'A1');
-        $sheet->fromArray($headersRow2, null, 'A2');
-
-        // Gộp ô cho tiêu đề chính
-        $sheet->mergeCells('H1:J1'); // Thông tin CMND/CCCD
-        $sheet->mergeCells('K1:M1'); // Thông tin chức danh
-
-        // Gộp ô dòng 1 và dòng 2 cho các cột không có tiêu đề phụ
-        $columnsToMerge = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'N', 'O', 'P', 'Q'];
-        foreach ($columnsToMerge as $column) {
-            $sheet->mergeCells("{$column}1:{$column}2");
+        // Kiểm tra người dùng
+        $user = Factory::getUser();
+        if (!$user->id) {
+            $this->outputJsonError('Bạn cần đăng nhập');
         }
 
-        // Bôi đậm tiêu đề
-        $sheet->getStyle('A1:Q2')->getFont()->setBold(true);
-        $sheet->getRowDimension(1)->setRowHeight(30);
-        $sheet->getRowDimension(2)->setRowHeight(20);
+        // Xóa bộ đệm đầu ra
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            // Tải model
+            $model = Core::model('Vptk/Bdh');
+
+            // Lấy tham số tìm kiếm
+            $input = Factory::getApplication()->input;
+            $filters = [
+                'phuongxa_id' => $input->getString('phuongxa_id', ''),
+                'hoten' => $input->getString('hoten', ''),
+                'chucdanh_id' => $input->getString('chucdanh_id', ''),
+                'tinhtrang_id' => $input->getString('tinhtrang_id', ''),
+                'thonto_id' => $input->getString('thonto_id', ''),
+                'hokhau_so' => $input->getString('hokhau_so', ''),
+                'chucvukn_id' => $input->getString('chucvukn_id', ''),
+                'daxoa' => 0
+            ];
+
+            // Lấy dữ liệu từ model
+            $rows = $model->getDanhSachBanDieuHanhExel($filters);
+
+            // Kiểm tra dữ liệu
+            if (empty($rows)) {
+                $this->outputJsonError('Không có dữ liệu để xuất');
+            }
+
+            // Tải PhpSpreadsheet qua Composer
+            $autoloadPath = JPATH_ROOT . '/vendor/autoload.php';
+            if (!file_exists($autoloadPath)) {
+                $this->outputJsonError('File autoload.php không được tìm thấy');
+            }
+            require_once $autoloadPath;
+
+            // Tạo spreadsheet
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Định dạng tiêu đề
+            $headersRow1 = [
+                'STT',                 // A
+                'Tổ',                  // B
+                'Nhiệm kỳ',            // C
+                'Họ tên thành viên',   // D
+                'Ngày sinh',           // E
+                'Giới tính',           // F
+                'Số điện thoại',       // G
+                'Thông tin CMND/CCCD', // H (spans H, I, J)
+                '',                    // I
+                '',                    // J
+                'Thông tin chức danh', // K (spans K, L, M)
+                '',                    // L
+                '',                    // M
+                'Đảng viên',           // N
+                'Trình độ lý luận chính trị', // O
+                'Tình trạng',          // P
+                'Lý do kết thúc',      // Q
+            ];
+
+            $headersRow2 = [
+                '',                    // A
+                '',                    // B
+                '',                    // C
+                '',                    // D
+                '',                    // E
+                '',                    // F
+                '',                    // G
+                'Số',                 // H
+                'Ngày cấp',           // I
+                'Nơi cấp',            // J
+                'Chức danh',          // K
+                'Từ ngày',            // L
+                'Đến ngày',           // M
+                '',                    // N
+                '',                    // O
+                '',                    // P
+                '',                    // Q
+            ];
+
+            // Ghi tiêu đề vào sheet
+            $sheet->fromArray($headersRow1, null, 'A1');
+            $sheet->fromArray($headersRow2, null, 'A2');
+
+            // Gộp ô cho tiêu đề chính
+            $sheet->mergeCells('H1:J1'); // Thông tin CMND/CCCD
+            $sheet->mergeCells('K1:M1'); // Thông tin chức danh
+
+            // Gộp ô dòng 1 và dòng 2 cho các cột không có tiêu đề phụ
+            $columnsToMerge = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'N', 'O', 'P', 'Q'];
+            foreach ($columnsToMerge as $column) {
+                $sheet->mergeCells("{$column}1:{$column}2");
+            }
+
+            // Bôi đậm tiêu đề
+            $sheet->getStyle('A1:Q2')->getFont()->setBold(true);
+            $sheet->getRowDimension(1)->setRowHeight(30);
+            $sheet->getRowDimension(2)->setRowHeight(20);
 
             // Tăng chiều rộng cột
             $columnWidths = [

@@ -192,51 +192,44 @@ class Core
 	}
 
 	public static function config($path = null)
-	{
-		$result = null;
+    {
+        // Nếu $path là null, trả về toàn bộ cấu hình JConfig
+        if ($path === null) {
+            if (!self::isRegistered('JConfig')) {
+                self::register('JConfig', new JConfig());
+            }
+            return static::$registry['JConfig'];
+        }
 
-		if ($path == null) {
-			if (!self::isRegistered('JConfig')) {
-				$instance = new JConfig();
-				self::register('JConfig', $instance);
-			}
-			//var_dump(static::$registry);exit;
-			return static::$registry['JConfig'];
-		} else {
-			if (!self::isRegistered('Config')) {
+        // Nếu Config chưa được đăng ký, lấy từ cơ sở dữ liệu
+        if (!self::isRegistered('Config')) {
+            $db = Factory::getDbo();
+            $query = $db->getQuery(true)
+                ->select('*')
+                ->from($db->quoteName('core_config_value'));
+            $db->setQuery($query);
+            $rows = $db->loadAssocList();
 
+            $result = [];
+            foreach ($rows as $row) {
+                $result[$row['path']] = $row['value'];
+            }
 
-				//$result = null;
-				$db = Factory::getDbo();
-				$query = "SELECT * FROM core_config_value a";
-				$db->setQuery($query);
+            // Lưu vào registry
+            self::register('Config', $result);
 
-				$rows = $db->loadAssocList();
+            // Lưu vào cache (tùy chọn)
+            /** @var \Joomla\CMS\Cache\Controller\CallbackController $cache */
+            $cache = Factory::getCache('core_config', 'output');
+            $cache->store($result, 'config_data');
+        }
 
-				$result = array();
+        // Lấy từ registry
+        $data = static::$registry['Config'];
 
-				for ($i = 0; $i < count($rows); $i++) {
-					$result[$rows[$i]['path']] = $rows[$i]['value'];
-				}
-				return $result;
-
-				/** @var \Joomla\CMS\Cache\Controller\CallbackController $cache */
-				$cache = Factory::getCache();
-				$result = $cache->get($result, [], '', false);
-
-				//$data = self::getCache('Core/Config', 'getAllData');
-				// var_dump($data);exit;
-				self::register('Config', $result);
-			}
-			//var_dump($data);
-			$data = static::$registry['Config'];
-			if (array_key_exists($path, $data)) {
-				$result = $data[$path];
-			}
-			//    		var_dump($result);exit;
-			return $result;
-		}
-	}
+        // Trả về giá trị tương ứng với $path, hoặc null nếu không tồn tại
+        return $data[$path] ?? null;
+    }
 	public static function getCache($path, $methodName, $type = 'Model')
 	{
 		$cache = Factory::getCache();
