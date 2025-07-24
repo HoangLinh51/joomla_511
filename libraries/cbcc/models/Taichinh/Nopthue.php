@@ -394,7 +394,7 @@ class Taichinh_Model_Nopthue extends JModelLegacy
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
-        $query->select('a.thonto_id,dh.tenduong_id,dh.mucdichsudung_id, a.id, dh.dientich_gcn,dh.tinhtrang, dh.ghichu, dh.sotienmiengiam,dh.tongtiennop, dh.dientich_ccn,md.tenmucdich, dh.dientich_sd, dh.sogcn,dh.tobando, dh.thuadat, DATE_FORMAT(dh.ngaycn, "%d/%m/%Y") AS ngaycn, a.nhanhokhau_id,a.masothue,dh.maphinongnghiep, dh.diachi, a.n_diachi,  td.tenduong, dh.id as chitiet_id');
+        $query->select('a.n_hoten,a.n_gioitinh_id, a.n_cccd,a.n_dantoc_id,a.n_dienthoai,a.n_phuongxa_id, a.n_thonto_id,a.n_diachi,DATE_FORMAT(a.n_namsinh, "%d/%m/%Y") AS ngaysinh,   a.thonto_id,dh.tenduong_id,dh.mucdichsudung_id, a.id, dh.dientich_gcn,dh.tinhtrang, dh.ghichu, dh.sotienmiengiam,dh.tongtiennop, dh.dientich_ccn,md.tenmucdich, dh.dientich_sd, dh.sogcn,dh.tobando, dh.thuadat, DATE_FORMAT(dh.ngaycn, "%d/%m/%Y") AS ngaycn, a.nhanhokhau_id,a.masothue,dh.maphinongnghiep, dh.diachi, a.n_diachi,  td.tenduong, dh.id as chitiet_id');
         $query->from('tckt_nopthuedat as a');
         $query->innerJoin('tckt_chitietnopthue as dh on dh.nopthuedat_id = a.id');
         $query->leftJoin('danhmuc_khuvuc AS g ON a.thonto_id = g.id');
