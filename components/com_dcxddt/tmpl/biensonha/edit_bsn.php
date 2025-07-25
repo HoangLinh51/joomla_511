@@ -808,55 +808,55 @@ $item = $this->item;
                 const stt = isEditing ? parseInt($($tbody.find('tr')[editIndex]).find('.stt').text()) : $tbody.find('tr:not(.no-data)').length + 1;
                 const infoText = data.loaisohuu === '2' ?
                     `<a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $tbody.find('tr').length}" style="color: blue;">
-            <strong>Tên tổ chức:</strong> ${data.tentochuc}
-        </a><br>
-        <strong>Điện thoại:</strong> ${data.dienthoai_tochuc}<br>
-        <strong>Địa chỉ:</strong> ${data.diachi_tochuc}` :
-                    `<a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $tbody.find('tr').length}" style="color: blue;">
-            <strong>Họ tên:</strong> ${data.hoten}
-        </a><br>
-        <strong>CCCD:</strong> ${data.cccd_so}<br>
-        <strong>Điện thoại:</strong> ${data.dienthoai}<br>
-        <strong>Giới tính:</strong> ${data.gioitinh_text}<br>
-        <strong>Ngày sinh:</strong> ${data.ngaysinh}`;
+                            <strong>Tên tổ chức:</strong> ${data.tentochuc}
+                        </a><br>
+                        <strong>Điện thoại:</strong> ${data.dienthoai_tochuc}<br>
+                        <strong>Địa chỉ:</strong> ${data.diachi_tochuc}` :
+                                    `<a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $tbody.find('tr').length}" style="color: blue;">
+                            <strong>Họ tên:</strong> ${data.hoten}
+                        </a><br>
+                        <strong>CCCD:</strong> ${data.cccd_so}<br>
+                        <strong>Điện thoại:</strong> ${data.dienthoai}<br>
+                        <strong>Giới tính:</strong> ${data.gioitinh_text}<br>
+                        <strong>Ngày sinh:</strong> ${data.ngaysinh}`;
 
-                const html = `
-    <tr>
-        <td class="align-middle text-center stt">${stt}</td>
-        <td class="align-middle">${infoText}</td>
-        <td class="align-middle">${data.sonha}</td>
-        <td class="align-middle">${data.tobando}</td>
-        <td class="align-middle">${data.thuadat}</td>
-        <td class="align-middle">${data.hinhthuccap_text}</td>
-        <td class="align-middle">${data.lydothaydoi}</td>
-        <td class="align-middle">${data.ghichu}</td>
-        <td class="align-middle">${data.toado1} - ${data.toado2}</td>
-        <td class="align-middle text-center">
-            <input type="hidden" name="id_sonha2[]" value="${data.sonha_id}" />
-            <input type="hidden" name="loaisohuu[]" value="${data.loaisohuu}" />
-            <input type="hidden" name="tentochuc[]" value="${data.tentochuc}" />
-            <input type="hidden" name="dienthoai_tochuc[]" value="${data.dienthoai_tochuc}" />
-            <input type="hidden" name="diachi_tochuc[]" value="${data.diachi_tochuc}" />
-            <input type="hidden" name="nhankhau_id[]" value="${data.nhankhau_id}" />
-            <input type="hidden" name="hoten[]" value="${data.hoten}" />
-            <input type="hidden" name="cccd_so[]" value="${data.cccd_so}" />
-            <input type="hidden" name="dienthoai[]" value="${data.dienthoai}" />
-            <input type="hidden" name="gioitinh_id[]" value="${data.gioitinh_id}" />
-            <input type="hidden" name="ngaysinh[]" value="${data.ngaysinh}" />
-            <input type="hidden" name="diachi[]" value="${data.diachi}" />
-            <input type="hidden" name="phuongxa_id[]" value="${data.phuongxa_id}" />
-            <input type="hidden" name="thonto_id[]" value="${data.thonto_id}" />
-            <input type="hidden" name="sonha[]" value="${data.sonha}" />
-            <input type="hidden" name="tobando[]" value="${data.tobando}" />
-            <input type="hidden" name="thuadat[]" value="${data.thuadat}" />
-            <input type="hidden" name="hinhthuccap[]" value="${data.hinhthuccap}" />
-            <input type="hidden" name="toado1[]" value="${data.toado1}" />
-            <input type="hidden" name="toado2[]" value="${data.toado2}" />
-            <input type="hidden" name="lydothaydoi[]" value="${data.lydothaydoi}" />
-            <input type="hidden" name="ghichu[]" value="${data.ghichu}" />
-            <span class="btn btn-sm btn-danger btn_xoa" data-xuly=""><i class="fas fa-trash-alt"></i></span>
-        </td>
-    </tr>`;
+                                const html = `
+                    <tr>
+                        <td class="align-middle text-center stt">${stt}</td>
+                        <td class="align-middle">${infoText}</td>
+                        <td class="align-middle">${data.sonha}</td>
+                        <td class="align-middle">${data.tobando}</td>
+                        <td class="align-middle">${data.thuadat}</td>
+                        <td class="align-middle">${data.hinhthuccap_text}</td>
+                        <td class="align-middle">${data.lydothaydoi}</td>
+                        <td class="align-middle">${data.ghichu}</td>
+                        <td class="align-middle">${data.toado1} - ${data.toado2}</td>
+                        <td class="align-middle text-center">
+                            <input type="hidden" name="id_sonha2[]" value="${data.sonha_id}" />
+                            <input type="hidden" name="loaisohuu[]" value="${data.loaisohuu}" />
+                            <input type="hidden" name="tentochuc[]" value="${data.tentochuc}" />
+                            <input type="hidden" name="dienthoai_tochuc[]" value="${data.dienthoai_tochuc}" />
+                            <input type="hidden" name="diachi_tochuc[]" value="${data.diachi_tochuc}" />
+                            <input type="hidden" name="nhankhau_id[]" value="${data.nhankhau_id}" />
+                            <input type="hidden" name="hoten[]" value="${data.hoten}" />
+                            <input type="hidden" name="cccd_so[]" value="${data.cccd_so}" />
+                            <input type="hidden" name="dienthoai[]" value="${data.dienthoai}" />
+                            <input type="hidden" name="gioitinh_id[]" value="${data.gioitinh_id}" />
+                            <input type="hidden" name="ngaysinh[]" value="${data.ngaysinh}" />
+                            <input type="hidden" name="diachi[]" value="${data.diachi}" />
+                            <input type="hidden" name="phuongxa_id[]" value="${data.phuongxa_id}" />
+                            <input type="hidden" name="thonto_id[]" value="${data.thonto_id}" />
+                            <input type="hidden" name="sonha[]" value="${data.sonha}" />
+                            <input type="hidden" name="tobando[]" value="${data.tobando}" />
+                            <input type="hidden" name="thuadat[]" value="${data.thuadat}" />
+                            <input type="hidden" name="hinhthuccap[]" value="${data.hinhthuccap}" />
+                            <input type="hidden" name="toado1[]" value="${data.toado1}" />
+                            <input type="hidden" name="toado2[]" value="${data.toado2}" />
+                            <input type="hidden" name="lydothaydoi[]" value="${data.lydothaydoi}" />
+                            <input type="hidden" name="ghichu[]" value="${data.ghichu}" />
+                            <span class="btn btn-sm btn-danger btn_xoa" data-xuly=""><i class="fas fa-trash-alt"></i></span>
+                        </td>
+                    </tr>`;
 
                 // Thêm hoặc cập nhật hàng trong bảng
                 $tbody.find('tr:has(td[colspan])').remove();

@@ -16,6 +16,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Response\JsonResponse;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 defined('_JEXEC') or die;
 
@@ -175,5 +179,142 @@ class GiadinhvanhoaController extends BaseController
 
         echo json_encode($result);
         jexit();
+    }
+
+    public function exportExcel()
+    {
+        ini_set('memory_limit', '1024M');
+
+        if (!Session::checkToken('get')) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Token không hợp lệ']);
+            jexit();
+        }
+
+        $user = Factory::getUser();
+        if (!$user->id) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập']);
+            jexit();
+        }
+
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            $input = Factory::getApplication()->input;
+            $filters = [
+                'phuongxa_id' => $input->getString('phuongxa_id', ''),
+                'thonto_id'   => $input->getString('thonto_id', ''),
+                'tenduong'    => $input->getString('tenduong', ''),
+            ];
+            $model = Core::model('Dcxddt/Biensonha');
+            $phanquyen = $model->getPhanquyen();
+            $phuongxa = [];
+            if ($phanquyen['phuongxa_id'] != '') {
+                $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+            }
+
+            $rows = $model->getDanhSachXuatExcel($filters, $phuongxa);
+
+            if (empty($rows)) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Không có dữ liệu để xuất']);
+                jexit();
+            }
+
+            require_once JPATH_ROOT . '/vendor/autoload.php';
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // ======= Tạo 2 hàng tiêu đề giống mẫu =========
+            // Hàng 1
+            $sheet->setCellValue('A1', 'STT');
+            $sheet->setCellValue('B1', 'Thôn tổ');
+            $sheet->setCellValue('C1', 'Thông tin cá nhân');
+            $sheet->setCellValue('J1', 'Thông tin danh hiệu');
+
+            // Gộp ô hàng 1
+            $sheet->mergeCells('A1:A2');
+            $sheet->mergeCells('B1:B2');
+            $sheet->mergeCells('C1:I1'); // Thông tin cá nhân
+            $sheet->mergeCells('J1:M1'); // Thông tin số nhà
+
+            // Hàng 2 (chỉ các cột con)
+            $sheet->setCellValue('C2', 'Họ và tên');
+            $sheet->setCellValue('D2', 'Ngày sinh');
+            $sheet->setCellValue('E2', 'Giới tính');
+            $sheet->setCellValue('F2', 'CCCD/CMND');
+            $sheet->setCellValue('G2', 'Ngày cấp');
+            $sheet->setCellValue('H2', 'Nơi cấp');
+            $sheet->setCellValue('I2', 'Điện thoại');
+            $sheet->setCellValue('J2', 'Năm');
+            $sheet->setCellValue('K2', 'Đạt/Không');
+            $sheet->setCellValue('L2', 'Gia đình văn hóa tiêu biểu');
+            $sheet->setCellValue('M2', 'Lý do Không đạt');
+
+            // ======= Định dạng header =========
+            $sheet->getStyle('A1:M2')->getFont()->setBold(true);
+            $sheet->getStyle('A1:M2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A1:M2')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+            $sheet->getRowDimension(1)->setRowHeight(25);
+            $sheet->getRowDimension(2)->setRowHeight(25);
+
+            // ======= Set width cột =========
+            $sheet->getColumnDimension('A')->setWidth(6);
+            $sheet->getColumnDimension('B')->setWidth(25);
+            $sheet->getColumnDimension('C')->setWidth(25);
+            $sheet->getColumnDimension('D')->setWidth(15);
+            $sheet->getColumnDimension('E')->setWidth(15);
+            $sheet->getColumnDimension('F')->setWidth(15);
+            $sheet->getColumnDimension('G')->setWidth(15);
+            $sheet->getColumnDimension('H')->setWidth(30);
+            $sheet->getColumnDimension('I')->setWidth(15);
+            $sheet->getColumnDimension('J')->setWidth(15);
+            $sheet->getColumnDimension('K')->setWidth(15);
+            $sheet->getColumnDimension('L')->setWidth(40);
+            $sheet->getColumnDimension('M')->setWidth(40);
+
+            // ======= Ghi dữ liệu bắt đầu từ dòng 3 =========
+            $rowIndex = 3;
+            foreach ($rows as $i => $item) {
+                $sheet->setCellValue('A' . $rowIndex, $i + 1);
+                $sheet->setCellValue('B' . $rowIndex, $item['tenduong'] ?? '');
+                $sheet->setCellValue('C' . $rowIndex, ($item['n_hoten'] ?? $item['tentochuc']) ?? '');
+                $sheet->setCellValue('D' . $rowIndex, $item['n_dienthoai'] ?? '');
+                $sheet->setCellValue('E' . $rowIndex, $item['sonha'] ?? '');
+                $sheet->setCellValue('F' . $rowIndex, $item['tobandoso'] ?? '');
+                $sheet->setCellValue('G' . $rowIndex, $item['thuadatso'] ?? '');
+                $sheet->setCellValue('H' . $rowIndex, $item['tenhinhthuc'] ?? '');
+                $sheet->setCellValue('I' . $rowIndex, $item['lydothaydoi'] ?? '');
+                $rowIndex++;
+            }
+
+            // ======= Thêm border cho toàn bộ bảng =========
+            $lastRow = $rowIndex - 1;
+            $sheet->getStyle('A1:I' . $lastRow)
+                ->getBorders()
+                ->getAllBorders()
+                ->setBorderStyle(Border::BORDER_THIN);
+
+            // Căn giữa STT
+            $sheet->getStyle('A3:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+            // ======= Xuất file =========
+            $writer = new Xlsx($spreadsheet);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Danhsach_SoNha.xlsx"');
+            header('Cache-Control: max-age=0');
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header('Pragma: public');
+            $writer->save('php://output');
+            jexit();
+        } catch (\Exception $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Lỗi khi xuất Excel: ' . $e->getMessage()]);
+            jexit();
+        }
     }
 }

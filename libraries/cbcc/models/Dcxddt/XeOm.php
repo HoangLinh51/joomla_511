@@ -119,7 +119,7 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
   }
 
   //get list danh sách các thành viên đoàn hội đang được phân quyền 
-  public function getListXeOm($filters)
+  public function getListXeOm($filters, $phuongxa)
   {
     // Extract filter parameters
     $page = isset($filters['page']) ? (int)$filters['page'] : 1;
@@ -157,8 +157,20 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
       $query->where($db->quoteName('a.n_cccd') . ' LIKE ' . $db->quote('%' . $db->escape($cccd) . '%'));
     }
 
-    if ($phuongxa_id > 0) {
-      $query->where($db->quoteName('a.n_phuongxa_id') . ' = ' . (int)$phuongxa_id);
+    $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+      ? array_map('intval', array_column($phuongxa, 'id'))
+      : [];
+
+    if (!empty($filters['phuongxa_id'])) {
+      $query->where('a.n_phuongxa_id = ' . $filters['phuongxa_id']);
+    } else {
+      // Không có phường xã filter → dùng danh sách phân quyền
+      if (!empty($phuongxaIds)) {
+        $query->where('a.n_phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+      } else {
+        // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+        $query->where('a.n_phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      }
     }
 
     if ($thonto_id > 0) {
@@ -312,7 +324,9 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     $query = $db->getQuery(true);
     $query->select('COUNT(*)')
       ->from($db->quoteName('dcxddtmt_xeom'))
-      ->where($db->quoteName('nhankhau_id') . ' = ' . (int)$nhankhau_id);
+      ->where($db->quoteName('nhankhau_id') . ' = ' . (int)$nhankhau_id)
+      ->where('daxoa = 0');
+
 
     // Execute query
     $db->setQuery($query);

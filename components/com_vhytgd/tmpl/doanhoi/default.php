@@ -70,6 +70,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       </div>
       <div class="text-center" style="padding-top:10px;">
         <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+        <button class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</button>
       </div>
     </div>
   </div>
@@ -244,7 +245,8 @@ use Joomla\CMS\HTML\HTMLHelper;
 </div>
 
 <script>
-  const phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
+  let phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
+  let doanhoiPhanQuyen = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
   let isEditMode = false
   let isFetchingFromSelect = false;
 
@@ -310,7 +312,6 @@ use Joomla\CMS\HTML\HTMLHelper;
   }
 
   $(document).ready(function() {
-
     $('#select_namsinh').datepicker({
       autoclose: true,
       language: 'vi',
@@ -471,7 +472,6 @@ use Joomla\CMS\HTML\HTMLHelper;
     // Sự kiện chọn từ select2
     $('#select_top').on('select2:select', async function(e) {
       const data = e.params.data;
-      const doanhoiPhanQuyen = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
 
       if (!isEditMode) {
         try {
@@ -506,6 +506,26 @@ use Joomla\CMS\HTML\HTMLHelper;
         thonto_id: data.thonto_id,
         diachi: data.diachi
       });
+    });
+
+    $('#btn_xuatexcel').on('click', function() {
+      let params = {
+        option: 'com_vhytgd',
+        controller: 'doanhoi',
+        task: 'exportExcel',
+        hoten: $('#hoten').val() || '',
+        cccd: $('#cccd').val() || '',
+        phuongxa_id: $('#phuongxa_id').val() || '',
+        thonto_id: $('#thonto_id').val() || '',
+        gioitinh_id: $('#gioitinh_id').val() || 0,
+        doanhoi: doanhoiPhanQuyen,
+        // daxoa: 0,
+        [Joomla.getOptions('csrf.token')]: 1 
+      };
+
+      // Tạo URL đúng
+      let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+      window.location.href = url;
     });
 
     // Sự kiện bấm hiệu chỉnh

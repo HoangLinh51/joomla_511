@@ -12,7 +12,7 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     return "Tie";
   }
 
-  public function getListDktuoi17($filters)
+  public function getListDktuoi17($filters, $phuongxa)
   {
     $db = Factory::getDbo();
     $query = $db->getQuery(true)
@@ -35,29 +35,20 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       ->leftJoin($db->quoteName('danhmuc_gioitinh', 'gt') . ' ON a.n_gioitinh_id = gt.id')
       ->where('a.daxoa = 0');
 
-    $filterPhuongXaId = !empty($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : null;
+    $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+      ? array_map('intval', array_column($phuongxa, 'id'))
+      : [];
 
-    if (!empty($phuongxa) && is_array($phuongxa)) {
-      $phuongxaIds = array_map('intval', array_column($phuongxa, 'id'));
-
-      if (!empty($phuongxaIds)) {
-        if ($filterPhuongXaId !== null) {
-          // Nếu có cả phân quyền và lọc người dùng → lọc giao nhau
-          if (in_array($filterPhuongXaId, $phuongxaIds)) {
-            $query->where('a.n_phuongxa_id = ' . $filterPhuongXaId);
-          } else {
-            // Không có quyền với phường xã được chọn → trả về rỗng
-            $query->where('1 = 0'); // luôn sai
-          }
-        } else {
-          // Chỉ lọc theo danh sách phân quyền
-          $query->where('a.n_phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
-        }
-      }
-    } elseif ($filterPhuongXaId !== null) {
-      $query->where('a.n_phuongxa_id = ' . $filterPhuongXaId);
+    if (!empty($filters['phuongxa_id'])) {
+      $query->where('a.n_phuongxa_id = ' . $filters['phuongxa_id']);
     } else {
-      $query->where('a.n_phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      // Không có phường xã filter → dùng danh sách phân quyền
+      if (!empty($phuongxaIds)) {
+        $query->where('a.n_phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+      } else {
+        // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+        $query->where('a.n_phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      }
     }
 
     if (!empty($filters['hoten'])) {

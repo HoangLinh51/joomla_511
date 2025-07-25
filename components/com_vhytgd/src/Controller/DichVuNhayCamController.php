@@ -143,7 +143,6 @@ class DichVuNhayCamController extends BaseController
             }
             $formData["nhanvien"] = $nhanvien;
         }
-
         try {
             $model = Core::model('Vhytgd/DichVuNhayCam');
             $result = $model->saveDichVuNhayCam($formData, $user->id);
@@ -193,13 +192,17 @@ class DichVuNhayCamController extends BaseController
 
         // Kiểm tra CSRF token
         if (!Session::checkToken('get')) {
-            $this->outputJsonError('Token không hợp lệ');
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Token không hợp lệ']);
+            jexit();
         }
 
         // Kiểm tra người dùng
         $user = Factory::getUser();
         if (!$user->id) {
-            $this->outputJsonError('Bạn cần đăng nhập');
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập']);
+            jexit();
         }
 
         // Xóa bộ đệm đầu ra
@@ -208,10 +211,6 @@ class DichVuNhayCamController extends BaseController
         }
 
         try {
-            // Tải model
-            $model = Core::model('Vhytgd/DichVuNhayCam');
-
-            // Lấy tham số tìm kiếm
             $input = Factory::getApplication()->input;
             $filters = [
                 'tenchucoso' => $input->getString('tenchucoso',''),
@@ -224,18 +223,28 @@ class DichVuNhayCamController extends BaseController
 				'daxoa' => 0
             ];
 
+            $model = Core::model('Vhytgd/DichVuNhayCam');
+            $phanquyen = $model->getPhanquyen();
+            $phuongxa = array();
+            if ($phanquyen['phuongxa_id'] != '') {
+                $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+            }
             // Lấy dữ liệu từ model
-            $rows = $model->getDataExportExcel($filters);
-            
+            $rows = $model->getDataExportExcel($filters, $phuongxa);
+
             // Kiểm tra dữ liệu
             if (empty($rows)) {
-                $this->outputJsonError('Không có dữ liệu để xuất');
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Không có dữ liệu để xuất']);
+                jexit();
             }
 
             // Tải PhpSpreadsheet qua Composer
             $autoloadPath = JPATH_ROOT . '/vendor/autoload.php';
             if (!file_exists($autoloadPath)) {
-                $this->outputJsonError('File autoload.php không được tìm thấy');
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'File autoload.php không được tìm thấy']);
+                jexit();
             }
             require_once $autoloadPath;
 
@@ -244,37 +253,42 @@ class DichVuNhayCamController extends BaseController
             $sheet = $spreadsheet->getActiveSheet();
 
             // Định dạng tiêu đề
-            $headers = ['STT', 'Tên cơ sở', 'Địa chỉ',  'Tên chủ chủ cơ sở', 'CMND/CCCD', 'Số điện thoại', 'Trạng thái'];
+            $headers = ['STT', 'Tên cơ sở', 'Địa chỉ', 'Tình trạng', 'Học tên chủ cơ sở', 'CMND/CCCD', 'Số điện thoại'];
+
             $sheet->fromArray($headers, null, 'A1');
 
             // Bôi đậm tiêu đề
             $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+            $sheet->getRowDimension(1)->setRowHeight(30);
 
             // Tăng chiều rộng cột
             $columnWidths = [
                 'A' => 8,  // stt
                 'B' => 30,  // tên cơ sở 
                 'C' => 50,  // địa chỉ
-                'D' => 25,  // Tên chủ cơ sở
-                'E' => 15,  // cccd
-                'F' => 15,  // số điện thoại 
-                'G' => 20,  // trạng thái 
+                'D' => 20,  // tình trạng 
+                'E' => 30,  // Tên chủ cơ sở
+                'F' => 15,  // cccd
+                'G' => 15,  // số điện thoại 
             ];
             foreach ($columnWidths as $column => $width) {
                 $sheet->getColumnDimension($column)->setWidth($width);
             }
+            $sheet->getStyle('G')->getNumberFormat()->setFormatCode('0');
 
             // Thêm dữ liệu
             $rowData = [];
             foreach ($rows as $index => $item) {
+                $diachi = $item->coso_diachi . ' - ' . $item->thonto . ' - ' . $item->phuongxa;
+
                 $rowData[] = [
                     $index + 1,
                     $item->coso_ten ?? '',
-                    $item->coso_diachi ?? '',
+                    $diachi ?? '',
+                    $item->trangthai ?? '',
                     $item->chucoso_ten ?? '',
                     $item->chucoso_cccd ?? '',
                     $item->chucoso_dienthoai ?? '',
-                    $item->tentrangthaihoatdong ?? '',
                 ];
             }
             $sheet->fromArray($rowData, null, 'A2');
@@ -287,12 +301,12 @@ class DichVuNhayCamController extends BaseController
             $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
             // Thêm đường viền cho tất cả các ô (A1:G$lastRow)
-            $sheet->getStyle('A1:g' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+            $sheet->getStyle('A1:G' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
             // Xuất file
             $writer = new Xlsx($spreadsheet);
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="DanhSachCoSoNhayCam.xlsx"');
+            header('Content-Disposition: attachment;filename="DanhSach_CoSoNhaycam.xlsx"');
             header('Cache-Control: max-age=0');
             header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
             header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -301,14 +315,9 @@ class DichVuNhayCamController extends BaseController
             $writer->save('php://output');
             jexit();
         } catch (Exception $e) {
-            $this->outputJsonError('Lỗi khi xuất Excel: ' . $e->getMessage());
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Lỗi khi xuất Excel: ' . $e->getMessage()]);
+            jexit();
         }
-    }
-
-    private function outputJsonError($message)
-    {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => $message]);
-        jexit();
     }
 }

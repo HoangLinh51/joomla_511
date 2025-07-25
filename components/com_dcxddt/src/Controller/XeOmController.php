@@ -54,9 +54,15 @@ class XeOmController extends BaseController
         $formData = $json ?? $formData;
 
         $model = Core::model('Dcxddt/XeOm');
+        $phanquyen = $model->getPhanquyen();
+        $phuongxa = array();
+
+        if ($phanquyen['phuongxa_id'] != '') {
+            $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+        }
 
         try {
-            $result =  $model->getListXeOm($formData);
+            $result =  $model->getListXeOm($formData, $phuongxa);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }

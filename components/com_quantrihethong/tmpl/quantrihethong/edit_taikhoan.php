@@ -22,7 +22,7 @@ $user = $this->user;
         <div class="button-action">
           <button id="btn_luu_themmoi" type="submit" class="btn btn-small btn-success"><i class="fa fa-save"></i> Lưu và thêm mới</button>
           <button id="btn_luu_quaylai" type="submit" class="btn btn-small btn-primary"><i class="fa fa-save"></i> Lưu và quay lại</button>
-          <button id="btn_quaylai" type="button" class="btn btn-small btn-secondary"><i class="fa fa-arrow-left"></i> Quay lại</button>
+          <a id="btn_quaylai" href="/index.php/component/quantrihethong/?view=quantrihethong&task=ds_taikhoan" class="btn btn-small btn-secondary"><i class="fa fa-arrow-left"></i> Quay lại</a>
         </div>
       </div>
       <input type="hidden" name="id" id="id" value="<?php echo $user['id']; ?>" require>
@@ -566,15 +566,15 @@ $user = $this->user;
           const isSuccess = response.success ?? true;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
-            // setTimeout(() => {
-            //   if (redirectAfterSave === 'new') {
-            //     // Lưu và thêm mới
-            //     window.location.href = '/index.php?option=com_quantrihethong&view=quantrihethong&task=edit_user';
-            //   } else {
-            //     // Lưu và quay lại
-            //     window.location.href = '/index.php/component/quantrihethong/?view=quantrihethong&task=default';
-            //   }
-            // }, 500);
+            setTimeout(() => {
+              if (redirectAfterSave === 'new') {
+                // Lưu và thêm mới
+                window.location.href = '/index.php/component/quantrihethong/?view=quantrihethong&task=edit_user';
+              } else {
+                // Lưu và quay lại
+                window.location.href = '/index.php/component/quantrihethong/?view=quantrihethong&task=default';
+              }
+            }, 500);
           }
         },
         error(xhr) {

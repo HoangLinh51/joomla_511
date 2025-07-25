@@ -73,7 +73,6 @@ class RawView extends BaseHtmlView
             'phuongxa_id' => $app->getInt('phuongxa_id', ''),
             'thonto_id' => $app->getInt('thonto_id', ''),
             'tenduong' => $app->getInt('tenduong', ''),
-
         ];
 
         $perPage = 20;
