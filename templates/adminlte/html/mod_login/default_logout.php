@@ -68,7 +68,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 </div>
 
 <li class="dropdown user user-menu open">
-	<button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+	<button class="btn dropdown-toggle profile" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 		<img src="<?php echo $coreTemplate->getAvatarUrl($user) ?>"
 			alt="Avatar" class="" style="width: 45px; height: 45px;">
 
@@ -233,7 +233,7 @@ $submitThongbao = $modelThongbao->submitTrangThaiThongBao();
 		color: #fff
 	}
 
-	button.dropdown-toggle {
+	button.dropdown-toggle.profile {
 		border: none;
 		background-color: #fff;
 	}

@@ -168,17 +168,12 @@ $idUser = JFactory::getUser()->id;
 		$('#btn_xuatexcel').on('click', function() {
 			let params = {
 				option: 'com_vhytgd',
-				controller: 'vptk',
+				controller: 'dongbaodantoc',
 				task: 'exportExcel',
-				phuongxa_id: $('#phuongxa_id').val() || '',
 				hoten: $('#hoten').val() || '',
-				gioitinh_id: $('#gioitinh_id').val() || '',
-				is_tamtru: $('#is_tamtru').val() || '',
-				thonto_id: $('#thonto_id').val() || '',
-				hokhau_so: $('#hokhau_so').val() || '',
 				cccd: $('#cccd').val() || '',
-				hoten: $('#hoten').val() || '',
-				daxoa: 0,
+				phuongxa_id: $('#phuongxa_id').val() || '',
+				thonto_id: $('#thonto_id').val() || '',
 				[Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
 			};
 

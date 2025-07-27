@@ -152,49 +152,7 @@ $trangthai = Core::loadAssocList('dmlydo', 'ten, id', 'trangthai = 1 AND daxoa =
                 <div id="detailContent">Đang tải...</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="cutModal" tabindex="-1" role="dialog" aria-labelledby="cutModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cutModalLabel">Cắt hưởng trợ cấp</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="frmCutThongtinhuongcs">
-                    <input type="hidden" name="trocap_id" id="cut_trocap_id">
-                    <div class="form-group">
-                        <label for="cut_trangthaich_id" class="form-label fw-bold">Trạng thái <span class="text-danger">*</span></label>
-                        <select class="custom-select" name="trangthaich_id" id="cut_trangthaich_id" required>
-                            <option value="">--Chọn trạng thái cắt hưởng--</option>
-                            <?php foreach ($trangthai as $tt) { ?>
-                                <option value="<?php echo $tt['id']; ?>"><?php echo htmlspecialchars($tt['ten']); ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="cut_ngaycat" class="form-label fw-bold">Thời điểm cắt hưởng <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <input type="text" class="form-control datepicker" name="ngaycat" id="cut_ngaycat" placeholder="dd/mm/yyyy" required>
-                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="cut_lydo" class="form-label fw-bold">Lý do cắt hưởng <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="lydo" id="cut_lydo" rows="4" placeholder="Vui lòng nhập lý do cắt hưởng của đối tượng" required></textarea>
-                    </div>
-                    <input type="hidden" name="is_update" id="cut_is_update" value="0">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
-                <button type="button" class="btn btn-primary" id="btn_save_cathuong">Lưu</button>
+                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
             </div>
         </div>
     </div>

@@ -409,6 +409,7 @@ class NguoicocongController extends BaseController
                 } else  if($item['is_hinhthuc'] == 2){
                     $hinhthuchuong = 'Một lần';
                 }
+                // var_dump($item['tinhtrang']);
                 $sheet->setCellValue('A' . $rowIndex, $i + 1);
                 $sheet->setCellValue('B' . $rowIndex, $item['n_hoten'] ?? '');
                 $sheet->setCellValue('C' . $rowIndex, $item['ngaysinh'] ?? '');
@@ -426,7 +427,7 @@ class NguoicocongController extends BaseController
                 $sheet->setCellValue('O' . $rowIndex, $item['trocap'] ?? '');
                 $sheet->setCellValue('P' . $rowIndex, $item['phucap'] ?? '');
                 $sheet->setCellValue('Q' . $rowIndex, $item['ngayhuong'] ?? '');
-                $sheet->setCellValue('R' . $rowIndex, $item['tinhtrang'] ?? '');
+                $sheet->setCellValue('R' . $rowIndex, $item['tinhtranghuong'] ?? '');
                 $sheet->setCellValue('S' . $rowIndex, $item['loaiuudai'] ?? '');
                 $sheet->setCellValue('T' . $rowIndex, $item['noidunguudai'] ?? '');
                 $sheet->setCellValue('U' . $rowIndex, $item['ngayuudai'] ?? '');

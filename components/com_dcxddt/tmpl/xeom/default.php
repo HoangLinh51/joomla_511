@@ -72,6 +72,7 @@ use Joomla\CMS\HTML\HTMLHelper;
       </div>
       <div class="text-center" style="padding-top:10px;">
         <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+        <button type="button" class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</button>
       </div>
     </div>
   </div>
@@ -612,6 +613,23 @@ use Joomla\CMS\HTML\HTMLHelper;
           showToast('Đã xảy ra lỗi khi gửi dữ liệu', false);
         }
       });
+    });
+    $('#btn_xuatexcel').on('click', function() {
+      let params = {
+        option: 'com_dcxddt',
+        controller: 'xeom',
+        task: 'exportExcel',
+        phuongxa_id: $('#phuongxa_id').val(),
+        thonto_id: $('#thonto_id').val(),
+        hoten: $('#hoten').val(),
+        cccd: $('#cccd').val(),
+        gioitinh_id: $('#gioitinh_id').val(),
+        [Joomla.getOptions('csrf.token')]: 1
+      };
+
+      // Tạo URL đúng      
+      let url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
+      window.location.href = url;
     });
   });
   const formatDate = dateStr => {

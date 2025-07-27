@@ -331,7 +331,7 @@ $item = $item ?? (object)[
       <input type="hidden" id="modal_edit_index" name="modal_edit_index" value="">
       </form>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
         <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
 
         <button type="button" class="btn btn-primary" id="btn_luu_trocap"><i class="fas fa-save"></i> Lưu</button>

@@ -407,7 +407,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" id="btn_dong" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
                 <input type="hidden" id="modal_id_uudai" name="modal_id_uudai" value="">
 
@@ -482,6 +482,9 @@ $item = $this->item;
             }
             return str;
         }
+        $('#btn_dong').on('click', function() {
+            $('div.modal-backdrop').css('display', 'none');
+        });
 
         $hinhThucHuong.change(function() {
             const hinhThucHuong = $(this).val();
@@ -962,6 +965,7 @@ $item = $this->item;
             }).always(() => {
                 $('#modal_hinhthuchuong').val(data.is_hinhthuc).trigger('change.select2');
                 $('#modalTroCap').modal('show');
+                $('div.modal-backdrop').css('display', 'block');
             });
         });
 
@@ -1051,6 +1055,7 @@ $item = $this->item;
                 $('#modal_edit_index').val('');
                 updateTroCapSTT();
                 $('#modalTroCap').modal('hide');
+                $('div.modal-backdrop').css('display', 'none');
             } else {
                 showToast('Vui lòng điền đầy đủ các trường bắt buộc', false);
             }
@@ -1119,6 +1124,7 @@ $item = $this->item;
             resetInputFields();
             initializeModalSelect2();
             $('#modalTroCap').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
     });
 </script>

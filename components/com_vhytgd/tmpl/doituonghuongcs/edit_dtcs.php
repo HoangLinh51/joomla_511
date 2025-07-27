@@ -375,7 +375,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" id="btn_dong" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
                 <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
                 <button type="button" class="btn btn-primary" id="btn_luu_trocap"><i class="fas fa-save"></i> Lưu</button>
             </div>
@@ -386,6 +386,10 @@ $item = $this->item;
 <script>
     jQuery(document).ready(function($) {
         // Hàm hiển thị thông báo
+        $('#btn_dong').on('click', function() {
+            $('div.modal-backdrop').css('display', 'none');
+        });
+
         function showToast(message, isSuccess = true) {
             const toast = $('<div></div>').text(message).css({
                 position: 'fixed',
@@ -1173,25 +1177,6 @@ $item = $this->item;
                 }
             });
         });
-
-        const showToast = (message, isSuccess = true) => {
-            const toast = $('<div></div>')
-                .text(message)
-                .css({
-                    position: 'fixed',
-                    top: '20px',
-                    right: '20px',
-                    background: isSuccess ? '#28a745' : '#dc3545',
-                    color: '#fff',
-                    padding: '10px 20px',
-                    borderRadius: '5px',
-                    boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-                    zIndex: 9999,
-                    transition: 'opacity 0.5s'
-                })
-                .appendTo('body');
-            setTimeout(() => toast.fadeOut(500, () => toast.remove()), 3000);
-        };
     });
 </script>
 

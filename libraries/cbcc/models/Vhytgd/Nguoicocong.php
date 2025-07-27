@@ -819,7 +819,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             'b.trocap',
             'b.phucap',
             'DATE_FORMAT(b.ngayhuong, "%d/%m/%Y") AS ngayhuong',
-            'ch.ten as tinhtrang',
+            'ch.ten as tinhtranghuong',
             'ud.ten as loaiuudai',
             'c.noidunguudai',
             'DATE_FORMAT(c.ngayuudai, "%d/%m/%Y") AS ngayuudai',
@@ -836,7 +836,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             ->leftJoin($db->quoteName('dmnguoicocong', 'ncc') . ' ON ncc.id = b.dmnguoicocong_id')
             ->leftJoin($db->quoteName('danhmuc_khuvuc', 'px') . ' ON px.id = a.phuongxa_id')
             ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON tt.id = a.thonto_id')
-            ->leftJoin($db->quoteName('dmlydo', 'ch') . ' ON ch.id = a.trangthaich_id AND ch.is_loai = 1')
+            ->leftJoin($db->quoteName('dmlydo', 'ch') . ' ON ch.id = b.trangthai_id')
             ->leftJoin($db->quoteName('vhxhytgd_uudai2nguoicocong', 'c') . ' ON b.id = c.huongncc_id')
             ->leftJoin($db->quoteName('dmuudai', 'ud') . ' ON ud.id = c.uudai_id')
             ->leftJoin($db->quoteName('dmdungcu', 'dc') . ' ON dc.id = c.loaidungcu_id');
@@ -844,7 +844,6 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
         $query->where([
             $db->quoteName('a.daxoa') . ' = 0',
             $db->quoteName('b.daxoa') . ' = 0',
-            $db->quoteName('c.daxoa') . ' = 0',
         ]);
 
 

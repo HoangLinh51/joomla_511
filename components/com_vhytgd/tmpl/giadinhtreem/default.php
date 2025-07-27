@@ -65,7 +65,16 @@ $idUser = JFactory::getUser()->id;
 						<tr>
 							<td colspan="4" class="text-center" style="padding-top:10px;">
 								<button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
-								<!-- <span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span> -->
+								<!-- <button class="btn btn-success"><i class="fas fa-file-excel"></i> Xuất excel</button> -->
+								<button class="btn btn-success dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="fas fa-file-excel"></i> Xuất excel
+								</button>
+
+								<!-- Menu xổ xuống -->
+								<ul class="dropdown-menu" aria-labelledby="exportDropdown">
+									<li><span style="cursor: pointer" class="dropdown-item mb-3 excel_baoluc">Xuất thông tin bạo lực</span></li>
+									<li><span style="cursor: pointer" class="dropdown-item excel_treem">Xuất thông tin hỗ trợ trẻ em</span></li>
+								</ul>
 							</td>
 						</tr>
 					</table>
@@ -170,20 +179,31 @@ $idUser = JFactory::getUser()->id;
 		$('body').delegate('.btn_treem', 'click', function() {
 			window.location.href = 'index.php?option=com_vhytgd&view=giadinhtreem&task=treem_gdte&gdte_id=' + $(this).data('id');
 		});
-		$('#btn_xuatexcel').on('click', function() {
+		$('.excel_baoluc').on('click', function() {
 			let params = {
 				option: 'com_vhytgd',
-				controller: 'vptk',
-				task: 'exportExcel',
+				controller: 'giadinhtreem',
+				task: 'exportExcelBaoLuc',
+				hoten: $('#hoten').val() || '',
+				mahogiadinh: $('#mahogiadinh').val() || '',
 				phuongxa_id: $('#phuongxa_id').val() || '',
-				hoten: $('#hoten').val() || '',
-				gioitinh_id: $('#gioitinh_id').val() || '',
-				is_tamtru: $('#is_tamtru').val() || '',
 				thonto_id: $('#thonto_id').val() || '',
-				hokhau_so: $('#hokhau_so').val() || '',
-				cccd: $('#cccd').val() || '',
+				[Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
+			};
+
+			// Tạo URL đúng
+			let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+			window.location.href = url;
+		});
+		$('.excel_treem').on('click', function() {
+			let params = {
+				option: 'com_vhytgd',
+				controller: 'giadinhtreem',
+				task: 'exportExcelTreem',
 				hoten: $('#hoten').val() || '',
-				daxoa: 0,
+				mahogiadinh: $('#mahogiadinh').val() || '',
+				phuongxa_id: $('#phuongxa_id').val() || '',
+				thonto_id: $('#thonto_id').val() || '',
 				[Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
 			};
 
@@ -195,6 +215,12 @@ $idUser = JFactory::getUser()->id;
 </script>
 
 <style>
+	.dropdown:hover .dropdown-menu {
+		display: block;
+		margin-top: 0;
+		/* giữ vị trí chuẩn */
+	}
+
 	.card.collapsed-card .card-body {
 		display: none;
 	}

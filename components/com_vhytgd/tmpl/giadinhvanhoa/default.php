@@ -110,6 +110,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top: 10px;">
                                 <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
                             </td>
                         </tr>
                     </table>
@@ -225,7 +226,22 @@ $messages = JFactory::getApplication()->getMessageQueue();
             window.location.href = 'index.php?option=com_vhytgd&view=giadinhvanhoa&task=edit_gdvanhoa&giadinh_id=' + $(this).data('id');
         });
 
-        // Xử lý nút Xuất Excel
+        // Xử lý nút Xuất Excel		
+        $('#btn_xuatexcel').on('click', function() {
+            let params = {
+                option: 'com_vhytgd',
+                controller: 'giadinhvanhoa',
+                task: 'exportExcel',
+                nam: $('#nam').val() || '',
+                phuongxa_id: $('#phuongxa_id').val() || '',
+                thonto_id: $('#thonto_id').val() || '',
+                [Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
+            };
+
+            // Tạo URL đúng
+            let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+            window.location.href = url;
+        });
 
     });
 </script>

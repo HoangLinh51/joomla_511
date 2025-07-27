@@ -207,9 +207,9 @@ class GiadinhvanhoaController extends BaseController
             $filters = [
                 'phuongxa_id' => $input->getString('phuongxa_id', ''),
                 'thonto_id'   => $input->getString('thonto_id', ''),
-                'tenduong'    => $input->getString('tenduong', ''),
+                'nam'    => $input->getString('nam', ''),
             ];
-            $model = Core::model('Dcxddt/Biensonha');
+            $model = Core::model('Vhytgd/Giadinhvanhoa');
             $phanquyen = $model->getPhanquyen();
             $phuongxa = [];
             if ($phanquyen['phuongxa_id'] != '') {
@@ -263,7 +263,7 @@ class GiadinhvanhoaController extends BaseController
 
             // ======= Set width cột =========
             $sheet->getColumnDimension('A')->setWidth(6);
-            $sheet->getColumnDimension('B')->setWidth(25);
+            $sheet->getColumnDimension('B')->setWidth(20);
             $sheet->getColumnDimension('C')->setWidth(25);
             $sheet->getColumnDimension('D')->setWidth(15);
             $sheet->getColumnDimension('E')->setWidth(15);
@@ -271,29 +271,45 @@ class GiadinhvanhoaController extends BaseController
             $sheet->getColumnDimension('G')->setWidth(15);
             $sheet->getColumnDimension('H')->setWidth(30);
             $sheet->getColumnDimension('I')->setWidth(15);
-            $sheet->getColumnDimension('J')->setWidth(15);
+            $sheet->getColumnDimension('J')->setWidth(10);
             $sheet->getColumnDimension('K')->setWidth(15);
-            $sheet->getColumnDimension('L')->setWidth(40);
+            $sheet->getColumnDimension('L')->setWidth(25);
             $sheet->getColumnDimension('M')->setWidth(40);
 
             // ======= Ghi dữ liệu bắt đầu từ dòng 3 =========
             $rowIndex = 3;
             foreach ($rows as $i => $item) {
+                $isDat = 'Không xác định';
+                if($item['is_dat'] == 1){
+                    $isDat = 'Đạt';
+                } else if($item['is_dat'] == 0){
+                    $isDat = 'Không đạt';
+                }
+                $giadinhvanhoatieubieu = '';
+                if ($item['is_giadinhvanhoatieubieu'] == 1) {
+                    $giadinhvanhoatieubieu = 'Đạt';
+                } else if ($item['is_giadinhvanhoatieubieu'] == 0) {
+                    $giadinhvanhoatieubieu = 'Không đạt';
+                }
                 $sheet->setCellValue('A' . $rowIndex, $i + 1);
-                $sheet->setCellValue('B' . $rowIndex, $item['tenduong'] ?? '');
-                $sheet->setCellValue('C' . $rowIndex, ($item['n_hoten'] ?? $item['tentochuc']) ?? '');
-                $sheet->setCellValue('D' . $rowIndex, $item['n_dienthoai'] ?? '');
-                $sheet->setCellValue('E' . $rowIndex, $item['sonha'] ?? '');
-                $sheet->setCellValue('F' . $rowIndex, $item['tobandoso'] ?? '');
-                $sheet->setCellValue('G' . $rowIndex, $item['thuadatso'] ?? '');
-                $sheet->setCellValue('H' . $rowIndex, $item['tenhinhthuc'] ?? '');
-                $sheet->setCellValue('I' . $rowIndex, $item['lydothaydoi'] ?? '');
+                $sheet->setCellValue('B' . $rowIndex, $item['thonto'] ?? '');
+                $sheet->setCellValue('C' . $rowIndex, $item['n_hoten']  ?? '');
+                $sheet->setCellValue('D' . $rowIndex, $item['namsinh'] ?? '');
+                $sheet->setCellValue('E' . $rowIndex, $item['tengioitinh'] ?? '');
+                $sheet->setCellValue('F' . $rowIndex, $item['n_cccd'] ?? '');
+                $sheet->setCellValue('G' . $rowIndex, $item['cccd_ngaycap'] ?? '');
+                $sheet->setCellValue('H' . $rowIndex, $item['cccd_coquancap'] ?? '');
+                $sheet->setCellValue('I' . $rowIndex, $item['n_dienthoai'] ?? '');
+                $sheet->setCellValue('J' . $rowIndex, $item['nam'] ?? '');
+                $sheet->setCellValue('K' . $rowIndex, $isDat);
+                $sheet->setCellValue('L' . $rowIndex, $giadinhvanhoatieubieu);
+                $sheet->setCellValue('M' . $rowIndex, $item['lydokhongdat'] ?? '');
                 $rowIndex++;
             }
 
             // ======= Thêm border cho toàn bộ bảng =========
             $lastRow = $rowIndex - 1;
-            $sheet->getStyle('A1:I' . $lastRow)
+            $sheet->getStyle('A1:M' . $lastRow)
                 ->getBorders()
                 ->getAllBorders()
                 ->setBorderStyle(Border::BORDER_THIN);
@@ -304,7 +320,7 @@ class GiadinhvanhoaController extends BaseController
             // ======= Xuất file =========
             $writer = new Xlsx($spreadsheet);
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            header('Content-Disposition: attachment;filename="Danhsach_SoNha.xlsx"');
+            header('Content-Disposition: attachment;filename="Danhsach_GiaDinhVanHoa.xlsx"');
             header('Cache-Control: max-age=0');
             header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
             header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');

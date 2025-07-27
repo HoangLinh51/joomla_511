@@ -303,7 +303,7 @@ $item = $this->item;
             <input type="hidden" id="modal_edit_index" name="modal_edit_index" value="">
             </form>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" id="btn_dong" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
                 <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
 
                 <button type="button" class="btn btn-primary" id="btn_luu_trocap"><i class="fas fa-save"></i> Lưu</button>
@@ -415,6 +415,10 @@ $item = $this->item;
             autoclose: true,
             language: 'vi',
             format: 'dd/mm/yyyy'
+        });
+
+        $('#btn_dong').on('click', function() {
+            $('div.modal-backdrop').css('display', 'none');
         });
 
         if ($.fn.validate) {
@@ -546,6 +550,7 @@ $item = $this->item;
         $('.dsThongtintrocap').on('click', '.btn_edit_trocap', function() {
             const $row = $(this).closest('tr');
 
+            $('div.modal-backdrop').css('display', 'block');
             // Lấy dữ liệu từ hàng được chọn
             const data = {
                 dongbao_id: $row.find('[name="dongbao_id[]"]').val() || '',
@@ -578,6 +583,8 @@ $item = $this->item;
 
             // Hiển thị modal
             $('#modalTroCap').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
+
         });
 
         $('#btn_luu_trocap').on('click', function() {
@@ -650,6 +657,7 @@ $item = $this->item;
                 }
                 $('#modal_edit_index').val('');
                 $('#modalTroCap').modal('hide');
+                $('div.modal-backdrop').css('display', 'none');
             } else {
                 showToast('Vui lòng điền đầy đủ các trường bắt buộc', false);
             }
@@ -698,6 +706,7 @@ $item = $this->item;
             resetInputFields();
             initializeModalSelect2();
             $('#modalTroCap').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
     });
 </script>

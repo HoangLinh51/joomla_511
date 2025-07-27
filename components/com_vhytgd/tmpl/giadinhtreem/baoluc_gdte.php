@@ -217,7 +217,7 @@ $item = $item ?? (object)[
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
         <button type="button" class="btn btn-primary" id="btn_luu_baoluc"><i class="fas fa-save"></i> Lưu</button>
       </div>
     </div>

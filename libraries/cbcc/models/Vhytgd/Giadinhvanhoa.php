@@ -39,6 +39,22 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
             return $result;
         }
     }
+    public function getPhuongXaById($id)
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('a.id,a.tenkhuvuc,a.cha_id AS quanhuyen_id,b.cha_id AS tinhthanh_id,a.level');
+        $query->from('danhmuc_khuvuc AS a');
+        $query->innerJoin('danhmuc_khuvuc AS b ON a.cha_id = b.id');
+        if ($id == '-1') {
+            $query->where('a.level = 2 AND a.daxoa = 0');
+        } else {
+            $query->where('a.level = 2 AND a.daxoa = 0 AND a.id IN (' . $id . ')');
+        }
+        $query->order('tenkhuvuc ASC');
+        $db->setQuery($query);
+        return $db->loadAssocList();
+    }
     public function getThanhVienGiaDinhVanHoa($thonto_id, $nam, $search = '')
     {
         $db = Factory::getDbo();
@@ -315,7 +331,7 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
             }
         }
 
-         if (empty($params['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
+        if (empty($params['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
             $query->where('a.phuongxa_id IN (' . str_replace("'", '', $db->quote($phanquyen['phuongxa_id'])) . ')');
         }
         if (!empty($params['thonto_id'])) {
@@ -370,7 +386,7 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
             }
         }
 
-         if (empty($params['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
+        if (empty($params['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
             $query->where('a.phuongxa_id IN (' . str_replace("'", '', $db->quote($phanquyen['phuongxa_id'])) . ')');
         }
         if (!empty($params['thonto_id'])) {
@@ -437,7 +453,7 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         $db->setQuery($query);
         return $db->execute();
     }
-  
+
     public function removeGiaDinhVanHoa($giadinh_id)
     {
         $db = Factory::getDbo();
@@ -504,13 +520,13 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
             );
         }
     }
-     public function getThongKeGiadinhvanhoa($params = array())
+    public function getThongKeGiadinhvanhoa($params = array())
     {
         $db = Factory::getDbo();
 
         // Subquery
         $query_left = $db->getQuery(true);
-      $query_left->select('
+        $query_left->select('
         IF(cs.is_dat = 1,1,0) as dat,
         IF(cs.is_dat = 0,1,0) as khongdat,
         cs.nhankhau_id as nhankhau_id, a.phuongxa_id,d.tenkhuvuc AS tenphuongxa,a.thonto_id,c.tenkhuvuc AS tenthonto');
@@ -527,7 +543,7 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
             $query_left->where($db->quoteName('a.thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
         }
-        if (!empty($params['nam'] )) {
+        if (!empty($params['nam'])) {
             $query_left->where('a.nam = ' . $db->quote($params['nam']));
         }
 
@@ -551,9 +567,69 @@ class Vhytgd_Model_Giadinhvanhoa extends JModelLegacy
         // echo $query;
         $db->setQuery($query);
         $results = $db->loadAssocList();
-
-
-
         return $results;
+    }
+
+    public function getDanhSachXuatExcel($filters, $phuongxa)
+    {
+        $nam = isset($filters['nam']) ? trim($filters['nam']) : '';
+        $phuongxa_id = isset($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : 0;
+        $thonto_id = isset($filters['thonto_id']) ? (int)$filters['thonto_id'] : 0;
+
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        // Select fields
+        $query->select([
+            'tt.tenkhuvuc as thonto',
+            'dh.n_hoten',
+            'DATE_FORMAT(dh.n_namsinh, "%d/%m/%Y") AS namsinh',
+            'gt.tengioitinh',
+            'dh.n_cccd',
+            'DATE_FORMAT(hk.cccd_ngaycap, "%d/%m/%Y") AS cccd_ngaycap',
+            'hk.cccd_coquancap',
+            'dh.n_dienthoai',
+            'a.nam',
+            'dh.is_dat',
+            'dh.is_giadinhvanhoatieubieu',
+            'dh.lydokhongdat',
+        ]);
+
+
+        $query->from('vhxhytgd_giadinhvanhoa as a')
+            ->leftJoin('vhxhytgd_giadinhvanhoa2danhhieu as dh on dh.giadinhvanhoa_id = a.id')
+            ->leftJoin($db->quoteName('vptk_hokhau2nhankhau', 'hk') . ' ON hk.id = dh.nhankhau_id AND dh.is_ngoai = 0 AND hk.daxoa = 0')
+            ->leftJoin('danhmuc_khuvuc AS tt ON a.thonto_id = tt.id')
+            ->leftJoin('danhmuc_gioitinh AS gt ON dh.n_gioitinh_id = gt.id')
+            ->where('a.daxoa = 0')
+            ->where('dh.daxoa = 0');
+
+        // Apply filters
+        $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+            ? array_map('intval', array_column($phuongxa, 'id'))
+            : [];
+
+        if (!empty($phuongxa_id)) {
+            $query->where('a.phuongxa_id = ' . (int)$phuongxa_id);
+        } else {
+            // Không có phường xã filter → dùng danh sách phân quyền
+            if (!empty($phuongxaIds)) {
+                $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+            } else {
+                // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+                $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+            }
+        }
+
+        if ($thonto_id > 0) {
+            $query->where($db->quoteName('a.thonto_id') . ' = ' . (int)$thonto_id);
+        }
+
+        if (!empty($nam)) {
+            $query->where($db->quoteName('a.nam') . ' LIKE ' . $db->quote('%' . $db->escape($nam) . '%'));
+        }
+
+        $query->order($db->quoteName('a.id') . ' DESC');
+        $db->setQuery($query);
+        return $db->loadAssocList();
     }
 }

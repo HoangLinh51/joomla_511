@@ -250,7 +250,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" id="bnt_dong" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
                 <input type="hidden" id="modal_nhankhau_id" name="modal_nhankhau_id" value="">
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
             </div>
@@ -283,6 +283,9 @@ $item = $this->item;
             }
         });
 
+        $('#btn_dong').on('click', function() {
+            $('div.modal-backdrop').css('display', 'none');
+        });
 
         $('select.custom-select').on('change.select2 blur', function() {
             $(this).closest('form').validate().element(this);

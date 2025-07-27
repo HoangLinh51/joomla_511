@@ -389,7 +389,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" id="btn_dong" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
                 <input type="hidden" id="modal_sonha_id" name="modal_sonha_id" value="">
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
             </div>
@@ -812,7 +812,7 @@ $item = $this->item;
                         </a><br>
                         <strong>Điện thoại:</strong> ${data.dienthoai_tochuc}<br>
                         <strong>Địa chỉ:</strong> ${data.diachi_tochuc}` :
-                                    `<a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $tbody.find('tr').length}" style="color: blue;">
+                    `<a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $tbody.find('tr').length}" style="color: blue;">
                             <strong>Họ tên:</strong> ${data.hoten}
                         </a><br>
                         <strong>CCCD:</strong> ${data.cccd_so}<br>
@@ -820,7 +820,7 @@ $item = $this->item;
                         <strong>Giới tính:</strong> ${data.gioitinh_text}<br>
                         <strong>Ngày sinh:</strong> ${data.ngaysinh}`;
 
-                                const html = `
+                const html = `
                     <tr>
                         <td class="align-middle text-center stt">${stt}</td>
                         <td class="align-middle">${infoText}</td>
@@ -1317,6 +1317,9 @@ $item = $this->item;
 
         $('#btn_quaylai').on('click', function() {
             window.location.href = '/index.php/component/dcxddt/?view=biensonha&task=default';
+        });
+        $('#btn_dong').on('click', function() {
+            $('div.modal-backdrop').css('display', 'none');
         });
 
         $('#phuongxa_id').trigger('change');

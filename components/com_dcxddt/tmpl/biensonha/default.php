@@ -248,9 +248,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
             };
 
             // Tạo URL đúng      
-            console.log(Joomla.getOptions('system.paths').baseFull)
             let url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
-            console.log(url)
             window.location.href = url;
         });
 
