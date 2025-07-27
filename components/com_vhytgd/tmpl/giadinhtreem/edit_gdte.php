@@ -51,13 +51,13 @@ $item = $item ?? (object)[
       <h5 style="margin: 0">Thông tin cá nhân</h5>
       <div class="d-flex align-items-center" style="gap:5px">
         <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo $item->nhankhau_id ? 'checked' : ''; ?>>
-        <small>Chọn người lao động từ danh sách nhân khẩu</small>
+        <small>Chọn công dân từ danh sách nhân khẩu</small>
       </div>
     </div>
     <div id="select-container" style="display: <?php echo $item->nhankhau_id ? 'block' : 'none'; ?>;" class="mb-3">
-      <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+      <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
       <select id="select_top" name="select_top" class="custom-select">
-        <option value="">-- Chọn --</option>
+        <option value="">Chọn công dân</option>
         <?php if (!empty($this->danhsach_thanhvien) && is_array($this->danhsach_thanhvien)) { ?>
           <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
             <option value="<?php echo htmlspecialchars($tv['id']); ?>" <?php echo $item->nhankhau_id == $tv['id'] ? 'selected' : ''; ?>>
@@ -183,9 +183,6 @@ $item = $item ?? (object)[
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalTroCapLabel">Thêm thông vay vốn</h5>
-        <button type="button" class="btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
       </div>
       <div class="modal-body">
         <form id="frmModalTroCap">
@@ -334,7 +331,7 @@ $item = $item ?? (object)[
       <input type="hidden" id="modal_edit_index" name="modal_edit_index" value="">
       </form>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
         <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
 
         <button type="button" class="btn btn-primary" id="btn_luu_trocap"><i class="fas fa-save"></i> Lưu</button>
@@ -1231,7 +1228,7 @@ $item = $item ?? (object)[
         }
       },
       messages: {
-        select_top: 'Vui lòng chọn nhân khẩu',
+        select_top: 'Vui lòng chọn công dân',
         hoten: 'Vui lòng nhập họ và tên',
         cccd: 'Vui lòng nhập CCCD/CMND',
         select_namsinh: 'Vui lòng chọn năm sinh',

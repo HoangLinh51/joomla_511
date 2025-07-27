@@ -8,14 +8,14 @@ defined('_JEXEC') or die('Restricted access');
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
   <thead>
     <tr class="bg-primary">
-      <th style="vertical-align: middle" class="text-center">STT</th>
-      <th style="vertical-align: middle" class="text-center">Họ và tên</th>
-      <th style="vertical-align: middle" class="text-center">Địa chỉ</th>
-      <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center">Giới tính</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">CCCD/CMND</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Số điện thoại</th>
-      <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Tình trạng thẻ</th>
-      <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center">Chức năng</th>
+      <th class="text-center align-middle">STT</th>
+      <th class="text-center align-middle">Họ và tên</th>
+      <th class="text-center align-middle">Địa chỉ</th>
+      <th style="min-width: 185px; max-width: 195px" class="text-center align-middle">Giới tính</th>
+      <th style="min-width: 140px; max-width: 150px" class="text-center align-middle">CCCD/CMND</th>
+      <th style="min-width: 140px; max-width: 150px" class="text-center align-middle">Số điện thoại</th>
+      <th style="min-width: 140px; max-width: 150px" class="text-center align-middle">Tình trạng thẻ</th>
+      <th style="min-width: 125px; max-width: 135px" class="text-center align-middle">Chức năng</th>
     </tr>
   </thead>
   <tbody id="tbody_danhsach">
@@ -40,14 +40,14 @@ defined('_JEXEC') or die('Restricted access');
     }
     return items.map((item, index) => `
     <tr>
-      <td class="text-center" style="vertical-align: middle">${startIndex + index}</td>
-      <td style="vertical-align: middle">${item.n_hoten || ''}</td>
-      <td style="vertical-align: middle">${item.n_diachi || ''}</td>
-      <td style="vertical-align: middle">${item.tengioitinh || ''}</td>
-      <td style="vertical-align: middle">${item.n_cccd || ''}</td>
-      <td style="vertical-align: middle">${item.n_dienthoai || ''}</td>
-      <td style="vertical-align: middle; text-align:center">${renderTextTinhTrang(item.tinhtrangthe_id, item.tentinhtrang)}</td>
-      <td class="text-center" style="vertical-align: middle">
+      <td class="text-center" class="align-middle">${startIndex + index}</td>
+      <td class="align-middle">${item.n_hoten || ''}</td>
+      <td class="align-middle">${item.n_diachi || ''}</td>
+      <td class="align-middle">${item.tengioitinh || ''}</td>
+      <td class="align-middle">${item.n_cccd || ''}</td>
+      <td class="align-middle">${item.n_dienthoai || ''}</td>
+      <td class="align-middle text-center">${renderTextTinhTrang(item.tinhtrangthe_id, item.tentinhtrang)}</td>
+      <td class="text-center" class="align-middle">
         <span class="btn btn-sm btn_hieuchinh" data-bs-toggle="modal" data-bs-target="#modalThemXeOm" style="font-size:18px;padding:10px; cursor: pointer;" data-xeom="${item.id}" data-title="Hiệu chỉnh">
           <i class="fas fa-pencil-alt"></i>
         </span>
@@ -236,55 +236,18 @@ defined('_JEXEC') or die('Restricted access');
             });
 
             const data = await response.json();
+            showToastDS(data.message || 'Xóa thành công', data.success !== false);
 
-            // Tùy theo kết quả trả về
-            const message = data.message || (data.success !== false ? 'Xóa thành công' : 'Xóa thất bại!');
-            const icon = data.success !== false ?
-              '<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
-              '';
-
-            bootbox.alert({
-              title: icon + '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
-              message: '<span style="font-size:20px;">' + message + '</span>',
-              backdrop: true,
-              className: 'small-alert',
-              buttons: {
-                ok: {
-                  label: 'OK',
-                  className: 'hidden' // Ẩn nút OK
-                }
-              },
-              onShown: function() {
-                setTimeout(function() {
-                  bootbox.hideAll();
-                  if (data.success !== false) {
-                    window.location.reload();
-                  }
-                }, 2000);
-              }
-            });
-
+            if (data.success !== false) {
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }
           } catch (error) {
             console.error('Error deleting:', error);
-            bootbox.alert({
-              title: "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-              message: '<span style="font-size:20px;">Đã xảy ra lỗi khi xóa dữ liệu</span>',
-              className: 'small-alert',
-              buttons: {
-                ok: {
-                  label: 'OK',
-                  className: 'hidden'
-                }
-              },
-              onShown: function() {
-                setTimeout(function() {
-                  bootbox.hideAll();
-                }, 2000);
-              }
-            });
+            showToastDS(error, data.success)
           }
         },
-        className: 'custom-bootbox'
       });
     });
   });

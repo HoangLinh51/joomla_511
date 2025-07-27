@@ -39,6 +39,24 @@ class Vhytgd_Model_Vayvon extends JModelLegacy
             return $result;
         }
     }
+
+    //get list phường xã theo quyền user 
+    public function getPhuongXaById($id)
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('a.id,a.tenkhuvuc,a.cha_id AS quanhuyen_id,b.cha_id AS tinhthanh_id,a.level');
+        $query->from('danhmuc_khuvuc AS a');
+        $query->innerJoin('danhmuc_khuvuc AS b ON a.cha_id = b.id');
+        if ($id == '-1') {
+            $query->where('a.level = 2 AND a.daxoa = 0');
+        } else {
+            $query->where('a.level = 2 AND a.daxoa = 0 AND a.id IN (' . $id . ')');
+        }
+        $query->order('tenkhuvuc ASC');
+        $db->setQuery($query);
+        return $db->loadAssocList();
+    }
     public function checkVayVon($nhankhau_id, $table)
     {
         // Get database object
@@ -551,9 +569,84 @@ class Vhytgd_Model_Vayvon extends JModelLegacy
         // echo $query;
         $db->setQuery($query);
         $results = $db->loadAssocList();
-
-
-
         return $results;
+    }
+
+    public function getDanhSachXuatExcel($filters, $phuongxa)
+    {
+        $hoten = isset($filters['hoten']) ? trim($filters['hoten']) : '';
+        $makhachhang = isset($filters['makhachhang']) ? trim($filters['makhachhang']) : '';
+        $phuongxa_id = isset($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : 0;
+        $thonto_id = isset($filters['thonto_id']) ? (int)$filters['thonto_id'] : 0;
+
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        // Select fields
+        $query->select([
+            'a.makh',
+            'a.n_hoten',
+            'DATE_FORMAT(a.n_namsinh, "%d/%m/%Y") AS namsinh',
+            'a.n_dienthoai',
+            'a.n_cccd',
+            'DATE_FORMAT(hk.cccd_ngaycap, "%d/%m/%Y") AS cccd_ngaycap',
+            'hk.cccd_coquancap',
+            'a.n_diachi',
+            'px.tenkhuvuc AS phuongxa',
+            'tt.tenkhuvuc AS thonto',
+            'b.somonvay',
+            'DATE_FORMAT(b.ngaygiaingan, "%d/%m/%Y") AS ngaygiaingan',
+            'DATE_FORMAT(b.ngaydenhan, "%d/%m/%Y") AS ngaydenhan',
+            'cs.tenchuongtrinhvay',
+            'b.nguoitochuc',
+            'dh.tendoanhoi',
+            'nv.tennguonvon',
+            'b.laisuatvay',
+            'b.tiengiaingan',
+            'b.tongduno',
+        ]);
+
+        $query->from('vhxhytgd_nguoivayvon AS a')
+            ->leftJoin($db->quoteName('vptk_hokhau2nhankhau', 'hk') .' ON hk.id = a.nhankhau_id AND a.is_ngoai = 0 AND hk.daxoa = 0')
+            ->leftJoin($db->quoteName('danhmuc_khuvuc', 'px') . ' ON px.id = a.n_phuongxa_id AND px.daxoa = 0')
+            ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON tt.id = a.n_thonto_id AND tt.daxoa = 0')
+            ->leftJoin('vhxhytgd_nguoivayvon2chuongtrinh AS b ON a.id = b.nguoivayvon_id')
+            ->leftJoin('danhmuc_chuongtrinhvay AS cs ON cs.id = b.chuongtrinhvay_id')
+            ->leftJoin('danhmuc_nguonvon AS nv ON nv.id = b.nguonvon_id')
+            ->leftJoin('danhmuc_doanhoi AS dh ON dh.id = b.doanhoi_id')
+            ->where('a.daxoa = 0 AND b.daxoa = 0');
+
+        // Apply filters
+        $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+            ? array_map('intval', array_column($phuongxa, 'id'))
+            : [];
+
+        if (!empty($phuongxa_id)) {
+            $query->where('a.n_phuongxa_id = ' . (int)$phuongxa_id);
+        } else {
+            // Không có phường xã filter → dùng danh sách phân quyền
+            if (!empty($phuongxaIds)) {
+                $query->where('a.n_phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+            } else {
+                // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+                $query->where('a.n_phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+            }
+        }
+
+        if ($thonto_id > 0) {
+            $query->where($db->quoteName('a.n_thonto_id') . ' = ' . (int)$thonto_id);
+        }
+
+        if (!empty($hoten)) {
+            $query->where($db->quoteName('a.n_hoten') . ' LIKE ' . $db->quote('%' . $db->escape($hoten) . '%'));
+        }
+
+        if (!empty($makhachhang)) {
+            // Có thể lọc cả trên a.n_cccd hoặc hk.cccd_so
+            $query->where($db->quoteName('a.makh') . ' LIKE ' . $db->quote('%' . $db->escape($makhachhang) . '%'));
+        }
+
+        $query->order($db->quoteName('a.id') . ' DESC');
+        $db->setQuery($query);
+        return $db->loadAssocList();
     }
 }

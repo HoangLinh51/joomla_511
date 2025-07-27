@@ -26,7 +26,6 @@ defined('_JEXEC') or die('Restricted access');
     <div class="card-header" data-card-widget="collapse">
       <h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
       <div class="card-tools">
-        <button type="button" class="btn btn-tool un-collapsed-card" data-action="reload"><i class="fas fa-sync-alt"></i></button>
         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
       </div>
     </div>

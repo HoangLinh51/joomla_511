@@ -29,12 +29,12 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
             <?php if (!empty($this->items)): ?>
                 <?php foreach ($this->items as $i => $item): ?>
                     <tr>
-                        <td style="vertical-align:middle;text-align: center;"><?php echo $startRecord + $i; ?></td>
-                        <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['thietche_ten']); ?></td>
-                        <td style="vertical-align:middle;text-align: center;"><?php echo htmlspecialchars($item['tenloaihinhthietche']); ?></td>
-                        <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['thietche_vitri']); ?></td>
-                        <td style="vertical-align:middle;text-align: center;"><?php echo htmlspecialchars($item['thietche_dientich']); ?></td>
-                        <td style="vertical-align:middle;text-align: center;">
+                        <td class="text-center align-middle"><?php echo $startRecord + $i; ?></td>
+                        <td class="align-middle"><?php echo htmlspecialchars($item['thietche_ten']); ?></td>
+                        <td class="text-center align-middle"><?php echo htmlspecialchars($item['tenloaihinhthietche']); ?></td>
+                        <td class="align-middle"><?php echo htmlspecialchars($item['thietche_vitri']); ?></td>
+                        <td class="text-center align-middle"><?php echo htmlspecialchars($item['thietche_dientich']); ?></td>
+                        <td class="text-center align-middle">
                             <?php
                             if ($item['trangthaihoatdong_id'] == '1') {
                                 echo '<span class="badge bg-secondary">Đang xây dựng</span>';
@@ -46,7 +46,7 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
                             ?>
                         </td>
 
-                        <td style="vertical-align:middle;text-align: center;">
+                        <td class="text-center align-middle">
                             <div class="btn-group" role="group">
                                 <span class="btn btn-sm btn_hieuchinh" data-id="<?php echo $item['id']; ?>" data-title="Hiệu chỉnh" style="cursor: pointer;">
                                     <i class="fas fa-pencil-alt"></i>

@@ -102,7 +102,7 @@ class Vhytgd_Model_DichVuNhayCam extends BaseDatabaseModel
           $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
         }
       }
-    } elseif ($filterPhuongXaId !== null) {
+    } else if ($filterPhuongXaId !== null) {
       $query->where('a.phuongxa_id = ' . $filterPhuongXaId);
     } else {
       $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
@@ -436,81 +436,97 @@ class Vhytgd_Model_DichVuNhayCam extends BaseDatabaseModel
   }
 
   //get danh sách cơ sở dv nhạy cảm để xuất excel
-  public function getDataExportExcel($filters)
+  public function getDataExportExcel($filters, $phuongxa)
   {
-    $db = Factory::getDbo();
-    $query = $db->getQuery(true)
-      ->select([
-        'a.id',
-        'a.coso_ten',
-        'a.coso_diachi',
-        'a.chucoso_ten',
-        'a.chucoso_cccd',
-        'a.chucoso_dienthoai',
-        'tt.tentrangthaihoatdong',
-      ])
+    $db    = Factory::getDbo();
+    $query = $db->getQuery(true);
+
+    // --- SELECT
+    $query->select([
+      'a.id',
+      'a.coso_ten',
+      'a.coso_diachi',
+      'px.tenkhuvuc AS phuongxa',
+      'tt.tenkhuvuc AS thonto',
+      'a.chucoso_ten',
+      'a.chucoso_cccd',
+      'a.chucoso_dienthoai',
+      'trt.tentrangthaihoatdong AS trangthai'
+    ])
       ->from($db->quoteName('vhxhytgd_cosonhaycam', 'a'))
-      ->leftJoin($db->quoteName('danhmuc_trangthaihoatdong', 'tt') . ' ON a.trangthaihoatdong_id = tt.id')
-      ->leftJoin($db->quoteName('danhmuc_phuongxa', 'px') . ' ON a.phuongxa_id = px.id')
-      ->leftJoin($db->quoteName('danhmuc_khuvuc', 'kv') . ' ON a.thonto_id = kv.id')
+      ->leftJoin($db->quoteName('danhmuc_khuvuc', 'px') . ' ON a.phuongxa_id = px.id')
+      ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON a.thonto_id = tt.id')
+      ->leftJoin($db->quoteName('danhmuc_trangthaihoatdong', 'trt') . ' ON a.trangthaihoatdong_id = trt.id')
       ->where('a.daxoa = 0');
 
+    // --- Xử lý danh sách phân quyền
+    $phuongxaIds = (!empty($phuongxa) && is_array($phuongxa))
+      ? array_map('intval', array_column($phuongxa, 'id'))
+      : [];
+
+    // --- Lấy filter phường xã từ bộ lọc
     $filterPhuongXaId = !empty($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : null;
 
-    if (!empty($phuongxa) && is_array($phuongxa)) {
-      $phuongxaIds = array_map('intval', array_column($phuongxa, 'id'));
-
+    // --- Áp dụng điều kiện phường xã
+    if ($filterPhuongXaId !== null) {
+      // Người dùng chọn filter phường xã
       if (!empty($phuongxaIds)) {
-        if ($filterPhuongXaId !== null) {
-          // Nếu có cả phân quyền và lọc người dùng → lọc giao nhau
-          if (in_array($filterPhuongXaId, $phuongxaIds)) {
-            $query->where('a.phuongxa_id = ' . $filterPhuongXaId);
-          } else {
-            // Không có quyền với phường xã được chọn → trả về rỗng
-            $query->where('1 = 0'); // luôn sai
-          }
+        // Có danh sách phân quyền → kiểm tra giao nhau
+        if (in_array($filterPhuongXaId, $phuongxaIds)) {
+          $query->where('a.phuongxa_id = ' . $filterPhuongXaId);
         } else {
-          // Chỉ lọc theo danh sách phân quyền
-          $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+          // Không có quyền
+          $query->where('1 = 0');
         }
+      } else {
+        // Không có danh sách phân quyền → cho lọc trực tiếp
+        $query->where('a.phuongxa_id = ' . $filterPhuongXaId);
       }
-    } elseif ($filterPhuongXaId !== null) {
-      $query->where('a.phuongxa_id = ' . $filterPhuongXaId);
     } else {
-      $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      // Không truyền filter phường xã → lấy theo phân quyền
+      if (!empty($phuongxaIds)) {
+        $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+      } else {
+        // Không phân quyền → lấy tất cả
+        $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      }
     }
 
+    // --- Các filter khác
     if (!empty($filters['tencoso'])) {
-      $query->where('a.coso_ten COLLATE utf8_general_ci LIKE ' . $db->quote('%' . $filters['tencoso'] . '%'));
+      $query->where('a.coso_ten LIKE ' . $db->quote('%' . $db->escape($filters['tencoso'], true) . '%', false));
     }
 
     if (!empty($filters['tenchucoso'])) {
-      $query->where('a.chucoso_ten COLLATE utf8mb4_unicode_ci LIKE ' . $db->quote('%' . $filters['tenchucoso'] . '%'));
+      $query->where('a.chucoso_ten LIKE ' . $db->quote('%' . $db->escape($filters['tenchucoso'], true) . '%', false));
     }
 
     if (!empty($filters['thonto_id'])) {
-      $query->where('a.thonto_id = ' . (int) $filters['thonto_id']);
+      $query->where('a.thonto_id = ' . (int)$filters['thonto_id']);
     }
 
     if (!empty($filters['trangthai_id'])) {
-      $query->where('a.trangthaihoatdong_id = ' . (int) $filters['trangthai_id']);
+      $query->where('a.trangthaihoatdong_id = ' . (int)$filters['trangthai_id']);
     }
 
-    // Lọc theo ngày khảo sát
+    // --- Lọc theo ngày
     if (!empty($filters['ngaybatdau']) && !empty($filters['ngayketthuc'])) {
-      $batdau = $db->quote($filters['ngaybatdau']);
+      $batdau  = $db->quote($filters['ngaybatdau']);
       $ketthuc = $db->quote($filters['ngayketthuc']);
       $query->where("a.ngaykhaosat BETWEEN $batdau AND $ketthuc");
-    } elseif (!empty($filters['batdau'])) {
-      $query->where('a.ngaykhaosat >= ' . $db->quote($filters['batdau']));
+    } elseif (!empty($filters['ngaybatdau'])) {
+      $query->where('a.ngaykhaosat >= ' . $db->quote($filters['ngaybatdau']));
     } elseif (!empty($filters['ngayketthuc'])) {
       $query->where('a.ngaykhaosat <= ' . $db->quote($filters['ngayketthuc']));
     }
 
+    // --- Sắp xếp
     $query->order('a.ngaytao DESC');
+
     $db->setQuery($query);
     return $db->loadObjectList();
   }
+
   public function getThongKeDichVuNhayCam($params = array())
   {
     $db = Factory::getDbo();

@@ -16,7 +16,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 use DateTime;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 defined('_JEXEC') or die;
 
@@ -53,11 +56,14 @@ class DoanHoiController extends BaseController
         $formData = $input->post->getArray();
         $json = json_decode(file_get_contents('php://input'), true);
         $formData = $json ?? $formData;
-
         $model = Core::model('Vhytgd/DoanHoi');
-
+        $phanquyen = $model->getPhanquyen();
+        $phuongxa = array();
+        if ($phanquyen['phuongxa_id'] != '') {
+            $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+        }
         try {
-            $result =  $model->getListDoanHoi($formData);
+            $result =  $model->getListDoanHoi($formData, $phuongxa);
         } catch (Exception $e) {
             $result = $e->getMessage();
         }
@@ -182,7 +188,7 @@ class DoanHoiController extends BaseController
         $formData['thonto_id'] = $formData['modal_thonto_id'] ?? $formData['input_thonto_id'];
 
 
-        $formData['namsinh'] = $formData['modal_namsinh'] ?? '';
+        $formData['namsinh'] = $formData['select_namsinh'] ?? $formData['input_namsinh'];
         $formData['namsinh'] = !empty($formData['namsinh']) ? $this->formatDate($formData['namsinh']) : '';
         $formData['thoidiem_batdau'] = $formData['form_thoidiem_batdau'] ?? '';
         $formData['thoidiem_batdau'] = !empty($formData['thoidiem_batdau']) ? $this->formatDate($formData['thoidiem_batdau']) : '';
@@ -219,7 +225,6 @@ class DoanHoiController extends BaseController
         return $date->format('Y-m-d');
     }
 
-
     public function xoa_doanhoi()
     {
         $input = Factory::getApplication()->input;
@@ -242,5 +247,159 @@ class DoanHoiController extends BaseController
         header('Content-Type: application/json');
         echo json_encode($response);
         jexit();
+    }
+
+    public function exportExcel()
+    {
+        // Tăng giới hạn bộ nhớ
+        ini_set('memory_limit', '1024M');
+
+        // Kiểm tra CSRF token
+        if (!Session::checkToken('get')) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Token không hợp lệ']);
+            jexit();
+        }
+
+        // Kiểm tra người dùng
+        $user = Factory::getUser();
+        if (!$user->id) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập']);
+            jexit();
+        }
+
+        // Xóa bộ đệm đầu ra
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            $input = Factory::getApplication()->input;
+            $filters = [
+                'hoten' => $input->getString('hoten', ''),
+                'cccd' => $input->getString('cccd', ''),
+                'phuongxa_id' => $input->getString('phuongxa_id', ''),
+                'thonto_id' => $input->getString('thonto_id', ''),
+                'doanhoi' => $input->getString('doanhoi', ''),
+                'gioitinh' => $input->getInt('gioitinh_id', 0),
+            ];
+            $model = Core::model('Vhytgd/DoanHoi');
+            $phanquyen = $model->getPhanquyen();
+            $phuongxa = array();
+            if ($phanquyen['phuongxa_id'] != '') {
+                $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+            }
+
+            $rows = $model->getDanhSachXuatExcel($filters, $phuongxa);
+
+            // Kiểm tra dữ liệu
+            if (empty($rows)) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Không có dữ liệu để xuất']);
+                jexit();
+            }
+
+
+            // Tải PhpSpreadsheet qua Composer
+            $autoloadPath = JPATH_ROOT . '/vendor/autoload.php';
+            if (!file_exists($autoloadPath)) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'File autoload.php không được tìm thấy']);
+                jexit();
+            }
+            require_once $autoloadPath;
+
+            // Tạo spreadsheet
+                    $spreadsheet = new Spreadsheet();
+                    $sheet = $spreadsheet->getActiveSheet();
+
+            $headers = [
+                'STT',
+                'Họ và tên',
+                'Ngày sinh',
+                'Giới tính',
+                'Số CMND/CCCD',
+                'Ngày cấp',
+                'Nơi cấp',
+                'Địa chỉ',
+                'Đoàn hội',
+                'Chức vụ',
+                'Thời gian bắt đầu',
+                'Thời gian kết thúc',
+            ];
+            $sheet->fromArray($headers, null, 'A1');
+
+            // Bôi đậm tiêu đề
+            $sheet->getStyle('A1:L1')->getFont()->setBold(true);
+            $sheet->getRowDimension(1)->setRowHeight(30);
+
+            // Tăng chiều rộng cột
+            $columnWidths = [
+                'A' => 10,  // STT
+                'B' => 25,  // Họ và tên
+                'C' => 13,  // Ngày sinh
+                'D' => 10,  // Giới tính
+                'E' => 15,  // CMND/CCCD 
+                'F' => 13,  // Ngày cấp
+                'G' => 45,  // Nơi cấp
+                'H' => 45,  // Địa chỉ 
+                'I' => 20,  // Đoàn hội 
+                'J' => 20,  // Chức vụ
+                'K' => 17,  // Thời gian bắt đầu
+                'L' => 17,  // Thời gian kết thúc
+            ];
+            foreach ($columnWidths as $column => $width) {
+                $sheet->getColumnDimension($column)->setWidth($width);
+            }
+            $sheet->getStyle('L')->getNumberFormat()->setFormatCode('0');
+
+            // Thêm dữ liệu
+            $rowData = [];
+            foreach ($rows as $index => $item) {
+                $diachi = $item['n_diachi'] . ' - ' . $item['thonto'] . ' - ' . $item['phuongxa'];
+                $rowData[] = [
+                    $index + 1,
+                    $item['n_hoten'] ?? '',
+                    $item['ngaysinh'] ?? '',
+                    $item['tengioitinh'] ?? '',
+                    $item['n_cccd'] ?? '',
+                    $item['cccd_ngaycap'] ?? '',
+                    $item['cccd_coquancap'] ?? '',
+                    $diachi ?? '',
+                    $item['tendoanhoi'] ?? '',
+                    $item['tenchucdanh'] ?? '',
+                    $item['thoidiem_batdau'] ?? '',
+                    $item['thoidiem_ketthuc'] ?? '',
+                ];
+            }
+            $sheet->fromArray($rowData, null, 'A2');
+
+            // Bật wrapText cho cột Số hộ khẩu (cột B)
+            $lastRow = count($rowData) + 1; // Tính dòng cuối cùng
+            $sheet->getStyle('B2:B' . $lastRow)->getAlignment()->setWrapText(true);
+
+            // Căn lề giữa cho cột STT (cột A)
+            $sheet->getStyle('A1:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+            // Thêm đường viền cho tất cả các ô (A1:G$lastRow)
+            $sheet->getStyle('A1:L' . $lastRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+            // Xuất file
+            $writer = new Xlsx($spreadsheet);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="DanhSach_DoanHoi.xlsx"');
+            header('Cache-Control: max-age=0');
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header('Pragma: public');
+
+            $writer->save('php://output');
+            jexit();
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Lỗi khi xuất Excel: ' . $e->getMessage()]);
+            jexit();
+        }
     }
 }

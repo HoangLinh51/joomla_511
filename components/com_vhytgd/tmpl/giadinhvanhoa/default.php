@@ -75,7 +75,6 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 <div class="card-header">
                     <h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-action="reload"><i class="fas fa-sync-alt"></i></button>
                         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
                     </div>
                 </div>
@@ -233,10 +232,9 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 option: 'com_vhytgd',
                 controller: 'giadinhvanhoa',
                 task: 'exportExcel',
-                phuongxa_id: $('#phuongxa_id').val(),
-                thonto_id: $('#thonto_id').val(),
-                nam: $('#nam').val(),
-                daxoa: 0,
+                nam: $('#nam').val() || '',
+                phuongxa_id: $('#phuongxa_id').val() || '',
+                thonto_id: $('#thonto_id').val() || '',
                 [Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
             };
 

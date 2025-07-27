@@ -31,11 +31,11 @@ defined('_JEXEC') or die('Restricted access');
       </div>
       <div>
         <button class="btn btn-primary btn-sm btn-xemfile" data-code="<?php echo $hdsd->code ?>" data-folder="<?php echo $hdsd->folder ?>">
-          <i class=" fas fa-eye"></i>
-          Xem trực tiếp  
+          <i class=" fas fa-eye align-middle" style="font-size: 20px;"></i>
+          Xem trực tiếp
         </button>
         <button class="btn btn-primary btn-sm btn-taifile" data-code="<?php echo $hdsd->code ?>" data-folder="<?php echo $hdsd->folder ?>">
-          <i class="fas fa-download"></i> Tải file
+          <i class="fas fa-download align-middle" style="font-size: 20px;"></i> Tải file
         </button>
       </div>
     </div>

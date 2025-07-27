@@ -16,6 +16,10 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Response\JsonResponse;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 defined('_JEXEC') or die;
 
@@ -84,7 +88,7 @@ class DongbaodantocController extends BaseController
         echo json_encode($result);
         jexit();
     }
-   
+
     function saveDongbaodantoc()
     {
         Session::checkToken() or die('Invalid Token');
@@ -163,9 +167,9 @@ class DongbaodantocController extends BaseController
         echo json_encode($response);
         exit;
     }
-   
-  
-     public function checkNhankhauInDanQuan()
+
+
+    public function checkNhankhauInDanQuan()
     {
         $input = Factory::getApplication()->input;
         $nhankhau_id = $input->getInt('nhankhau_id', 0);
@@ -199,5 +203,162 @@ class DongbaodantocController extends BaseController
 
         echo json_encode($response);
         Factory::getApplication()->close();
+    }
+
+    public function exportExcel()
+    {
+        ini_set('memory_limit', '1024M');
+
+        if (!Session::checkToken('get')) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Token không hợp lệ']);
+            jexit();
+        }
+
+        $user = Factory::getUser();
+        if (!$user->id) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập']);
+            jexit();
+        }
+
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        try {
+            $input = Factory::getApplication()->input;
+            $filters = [
+                'phuongxa_id' => $input->getString('phuongxa_id', ''),
+                'thonto_id'   => $input->getString('thonto_id', ''),
+                'hoten'    => $input->getString('hoten', ''),
+                'cccd'    => $input->getString('cccd', ''),
+            ];
+            $model = Core::model('Vhytgd/Dongbaodantoc');
+            $phanquyen = $model->getPhanquyen();
+            $phuongxa = [];
+            if ($phanquyen['phuongxa_id'] != '') {
+                $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+            }
+
+            $rows = $model->getDanhSachXuatExcel($filters, $phuongxa);
+            // var_dump($rows);
+
+            if (empty($rows)) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Không có dữ liệu để xuất']);
+                jexit();
+            }
+
+            require_once JPATH_ROOT . '/vendor/autoload.php';
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // ======= Tạo 2 hàng tiêu đề giống mẫu =========
+            // Hàng 1
+            $sheet->setCellValue('A1', 'STT');
+            $sheet->setCellValue('B1', 'Thông tin cá nhân');
+            $sheet->setCellValue('J1', 'Thông tin người nhận');
+            $sheet->setCellValue('M1', 'Thông tin hỗ trợ');
+
+            // Gộp ô hàng 1
+            $sheet->mergeCells('A1:A2');
+            $sheet->mergeCells('B1:I1');
+            $sheet->mergeCells('J1:L1'); // Thông tin cá nhân
+            $sheet->mergeCells('M1:Q1'); // Thông tin số nhà
+
+            // Hàng 2 (chỉ các cột con)
+            $sheet->setCellValue('B2', 'Họ và tên');
+            $sheet->setCellValue('C2', 'Ngày sinh');
+            $sheet->setCellValue('D2', 'CCCD/CMND');
+            $sheet->setCellValue('E2', 'Ngày cấp');
+            $sheet->setCellValue('F2', 'Nơi cấp');
+            $sheet->setCellValue('G2', 'Giới tính');
+            $sheet->setCellValue('H2', 'Điện thoại');
+            $sheet->setCellValue('I2', 'Địa chỉ');
+            $sheet->setCellValue('J2', 'Tên người nhận');
+            $sheet->setCellValue('K2', 'Số tài khoản');
+            $sheet->setCellValue('L2', 'Ngân hàng');
+            $sheet->setCellValue('M2', 'Chính sách');
+            $sheet->setCellValue('N2', 'Loại hỗ trợ');
+            $sheet->setCellValue('O2', 'Nội dung');
+            $sheet->setCellValue('P2', 'Ngày hỗ trợ');
+            $sheet->setCellValue('Q2', 'Tình trạng');
+
+            // ======= Định dạng header =========
+            $sheet->getStyle('A1:Q2')->getFont()->setBold(true);
+            $sheet->getStyle('A1:Q2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A1:Q2')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+            $sheet->getRowDimension(1)->setRowHeight(25);
+            $sheet->getRowDimension(2)->setRowHeight(25);
+
+            // ======= Set width cột =========
+            $sheet->getColumnDimension('A')->setWidth(6);
+            $sheet->getColumnDimension('B')->setWidth(25);
+            $sheet->getColumnDimension('C')->setWidth(15);
+            $sheet->getColumnDimension('D')->setWidth(15);
+            $sheet->getColumnDimension('E')->setWidth(15);
+            $sheet->getColumnDimension('F')->setWidth(30);
+            $sheet->getColumnDimension('G')->setWidth(15);
+            $sheet->getColumnDimension('H')->setWidth(15);
+            $sheet->getColumnDimension('I')->setWidth(50);
+            $sheet->getColumnDimension('J')->setWidth(25);
+            $sheet->getColumnDimension('K')->setWidth(15);
+            $sheet->getColumnDimension('L')->setWidth(35);
+            $sheet->getColumnDimension('M')->setWidth(35);
+            $sheet->getColumnDimension('N')->setWidth(20);
+            $sheet->getColumnDimension('O')->setWidth(40);
+            $sheet->getColumnDimension('P')->setWidth(15);
+            $sheet->getColumnDimension('Q')->setWidth(15);
+
+            // ======= Ghi dữ liệu bắt đầu từ dòng 3 =========
+            $rowIndex = 3;
+            foreach ($rows as $i => $item) {                
+                $diachi = $item['n_diachi'] . ' - ' . $item['thonto'] . ' - ' . $item['phuongxa'];
+                $sheet->setCellValue('A' . $rowIndex, $i + 1);
+                $sheet->setCellValue('B' . $rowIndex, $item['n_hoten'] ?? '');      //Họ và tên
+                $sheet->setCellValue('C' . $rowIndex, $item['namsinh']  ?? '');   //Ngày sinh
+                $sheet->setCellValue('D' . $rowIndex, $item['n_cccd'] ?? '');   //CCCD/CMND
+                $sheet->setCellValue('E' . $rowIndex, $item['cccd_ngaycap'] ?? '');         //Ngày cấp
+                $sheet->setCellValue('F' . $rowIndex, $item['cccd_coquancap'] ?? '');     //Nơi cấp
+                $sheet->setCellValue('G' . $rowIndex, $item['tengioitinh'] ?? '');     //Giới tính
+                $sheet->setCellValue('H' . $rowIndex, $item['n_dienthoai'] ?? '');   //Điện thoại
+                $sheet->setCellValue('I' . $rowIndex, $diachi ?? '');   //Địa chỉ
+                $sheet->setCellValue('J' . $rowIndex, $item['tennguoinhan'] ?? '');   //Tên người nhận
+                $sheet->setCellValue('K' . $rowIndex, $item['sotaikhoan'] ?? '');   //Số tài khoản
+                $sheet->setCellValue('L' . $rowIndex, $item['nganhang'] ?? '');   //Ngân hàng
+                $sheet->setCellValue('M' . $rowIndex, $item['tenchinhsach'] ?? '');   //Chính sách
+                $sheet->setCellValue('N' . $rowIndex, $item['loaihotro'] ?? '');   //Loại hỗ trợ
+                $sheet->setCellValue('O' . $rowIndex, $item['noidung'] ?? '');   //Nội dung
+                $sheet->setCellValue('P' . $rowIndex, $item['ngayhotro'] ?? '');   //Ngày hỗ trợ
+                $sheet->setCellValue('Q' . $rowIndex, $item['trangthai'] ?? '');   //Tình trạng
+                $rowIndex++;
+            }
+
+            // ======= Thêm border cho toàn bộ bảng =========
+            $lastRow = $rowIndex - 1;
+            $sheet->getStyle('A1:Q' . $lastRow)
+                ->getBorders()
+                ->getAllBorders()
+                ->setBorderStyle(Border::BORDER_THIN);
+
+            // Căn giữa STT
+            $sheet->getStyle('A3:A' . $lastRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+            // ======= Xuất file =========
+            $writer = new Xlsx($spreadsheet);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Danhsach_DongBaoDanToc.xlsx"');
+            header('Cache-Control: max-age=0');
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header('Pragma: public');
+            $writer->save('php://output');
+            jexit();
+        } catch (\Exception $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Lỗi khi xuất Excel: ' . $e->getMessage()]);
+            jexit();
+        }
     }
 }

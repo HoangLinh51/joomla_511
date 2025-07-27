@@ -31,13 +31,13 @@ $detailDanQuan = $this->detailDanQuan;
       <h5 style="margin: 0">Thông tin cá nhân</h5>
       <div class="d-flex align-items-center" style="gap:5px">
         <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) ? 'checked' : ''; ?>>
-        <small>Chọn người quân nhân từ danh sách nhân khẩu</small>
+        <small>Chọn công dân danh sách nhân khẩu</small>
       </div>
     </div>
     <div id="select-container" style="display: <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">
-      <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+      <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
       <select id="select_top" name="select_top" class="form-control">
-        <option value="">-- Chọn --</option>
+        <option value="">Chọn công dân</option>
         <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
           <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($detailDanQuan->nhankhau_id) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
         <?php } ?>
@@ -136,7 +136,7 @@ $detailDanQuan = $this->detailDanQuan;
 
     <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
       <h5 class="">Thông tin nhân thân</h5>
-      <button type="button" class="btn btn-success btn-themnhanthan">Thêm nhân thân</button>
+      <button type="button" class="btn btn-primary btn-themnhanthan">Thêm nhân thân</button>
     </div>
     <div class="row g-3 mb-4" style="height: 200px; overflow-y: auto; border: 1px solid #d9d9d9; border-radius: 4px;">
       <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px">
@@ -415,7 +415,7 @@ $detailDanQuan = $this->detailDanQuan;
         },
         minimumInputLength: 0,
         templateResult: data => data.loading ? data.text : $('<div>' + data.text + '</div>'),
-        templateSelection: data => data.text || 'Chọn thành viên'
+        templateSelection: data => data.text || 'Chọn chọn công dân'
       });
     }
 
@@ -639,7 +639,7 @@ $detailDanQuan = $this->detailDanQuan;
       var selector = '.vanban_' + id;
 
       bootbox.confirm({
-        title: `<span class='text-danger' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
+        title: `<span class='text-primary' style='font-weight:bold;font-size:20px;'>Xác nhận xóa</span>`,
         message: `<span style="font-size:20px;">Bạn có chắc chắn muốn xóa văn bản này không?</span>`,
         buttons: {
           confirm: {
@@ -947,7 +947,7 @@ $detailDanQuan = $this->detailDanQuan;
         }
       },
       messages: {
-        select_top: 'Vui lòng chọn nhân khẩu',
+        select_top: 'Vui lòng chọn công dân',
         hoten: 'Vui lòng nhập họ và tên',
         cccd: 'Vui lòng nhập CCCD/CMND',
         select_namsinh: {

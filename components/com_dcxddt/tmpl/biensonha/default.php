@@ -75,7 +75,6 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 <div class="card-header">
                     <h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
                     <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-action="reload"><i class="fas fa-sync-alt"></i></button>
                         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
                     </div>
                 </div>
@@ -116,6 +115,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top: 10px;">
                                 <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <button type="button" class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</button>
                             </td>
                         </tr>
                     </table>
@@ -143,7 +143,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
 </form>
 
 <script>
-    jQuery(document).ready(function($) {
+    $(document).ready(function($) {
         // Kiểm tra và hiển thị thông báo từ session
         function showToast(message, isSuccess = true) {
             const toast = $('<div></div>').text(message).css({
@@ -234,6 +234,24 @@ $messages = JFactory::getApplication()->getMessageQueue();
         // Load danh sách khi trang được tải
         loadDanhSach();
 
+        $('#btn_xuatexcel').on('click', function() {
+            debugger
+            let params = {
+                option: 'com_dcxddt',
+                controller: 'biensonha',
+                task: 'exportExcel',
+                phuongxa_id: $('#phuongxa_id').val(),
+                thonto_id: $('#thonto_id').val(),
+                tenduong: $('#tenduong').val(),
+                // daxoa: 0,
+                [Joomla.getOptions('csrf.token')]: 1
+            };
+
+            // Tạo URL đúng      
+            let url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
+            window.location.href = url;
+        });
+
         // Xử lý nút Tìm kiếm
         $('#btn_filter').on('click', function(e) {
             e.preventDefault();
@@ -244,9 +262,6 @@ $messages = JFactory::getApplication()->getMessageQueue();
         $('body').delegate('.btn_hieuchinh', 'click', function() {
             window.location.href = 'index.php?option=com_dcxddt&view=biensonha&task=edit_bsn&bsn_id=' + $(this).data('id');
         });
-
-        // Xử lý nút Xuất Excel
-
     });
 </script>
 
