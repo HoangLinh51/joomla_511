@@ -591,4 +591,74 @@ class Vhytgd_Model_LaoDong extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
+  public function getDanhSachLaoDongExel($filters)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true)
+      ->select([
+        'a.n_hoten',
+        'a.n_cccd',
+        'nk.cccd_coquancap',
+        'DATE_FORMAT(nk.cccd_ngaycap, "%d/%m/%Y") AS cccd_ngaycap',
+        'DATE_FORMAT(a.thoigianlamviec, "%d/%m/%Y") AS thoigianlamviec',
+        'a.n_dienthoai',
+        'dt.tendoituong',
+        'px.tenkhuvuc as phuongxa',
+        'tt.tenkhuvuc as thonto,a.diachinoilamviec, a.is_hopdonglaodong, a.is_dalamviec,a.lydokhonglaodong,a.thoigian_lamviec',
+        'gt.tengioitinh, a.bhxh',
+        'ut.tendoituong as doituonguutien, nn.tennghenghiep',
+        'DATE_FORMAT(a.n_namsinh, "%d/%m/%Y") AS ngaysinh'
+      ])
+      ->from($db->quoteName('vhxhytgd_laodong', 'a'))
+      ->leftJoin($db->quoteName('vptk_hokhau2nhankhau', 'nk') . ' ON a.nhankhau_id = nk.id')
+      ->leftJoin($db->quoteName('danhmuc_doituong', 'dt') . ' ON a.doituonglaodong_id = dt.id')
+      ->leftJoin($db->quoteName('danhmuc_khuvuc', 'px') . ' ON a.n_phuongxa_id = px.id')
+      ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON a.n_thonto_id = tt.id')
+      ->leftJoin($db->quoteName('danhmuc_gioitinh', 'gt') . ' ON a.n_gioitinh_id = gt.id')
+      ->leftJoin($db->quoteName('danhmuc_doituong', 'ut') . ' ON a.doituonguutien = ut.id')
+      ->leftJoin($db->quoteName('danhmuc_nghenghiep', 'nn') . ' ON a.nghenghiep_id = nn.id')
+
+
+      ->where('a.daxoa = 0');
+    // var_dump($filters);
+    // exit;
+
+
+    if (!empty($filters['phuongxa_id'])) {
+      $query->where('a.n_phuongxa_id = ' . $db->quote($filters['phuongxa_id']));
+    }
+    $phanquyen = $this->getPhanquyen();
+    if (empty($filters['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
+      $query->where('a.n_phuongxa_id IN (' . str_replace("'", '', $db->quote($phanquyen['phuongxa_id'])) . ')');
+    }
+
+    if (!empty($filters['hoten'])) {
+      $query->where('a.n_hoten COLLATE utf8mb4_unicode_ci LIKE ' . $db->quote('%' . $filters['hoten'] . '%'));
+    }
+
+    if (!empty($filters['cccd'])) {
+      $query->where('a.n_cccd LIKE ' . $db->quote('%' . $filters['cccd'] . '%'));
+    }
+
+    if (!empty($filters['gioitinh_id'])) {
+      $query->where('a.n_gioitinh_id = ' . (int) $filters['gioitinh_id']);
+    }
+
+    if (!empty($filters['doituong_id'])) {
+      $query->where('a.doituonglaodong_id = ' . (int) $filters['doituong_id']);
+    }
+
+    if (!empty($filters['thonto_id'])) {
+      $query->where('a.n_thonto_id = ' . (int) $filters['thonto_id']);
+    }
+
+    // Lọc theo ngày khảo sát
+
+    // Đếm tổng bản ghi
+   
+    // echo $query;exit;
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
+   
 }

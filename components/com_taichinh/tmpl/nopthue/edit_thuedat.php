@@ -7,6 +7,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 
 $item = $this->item;
+// var_dump($item);exit;
 ?>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
@@ -82,7 +83,7 @@ $item = $this->item;
                 <select id="select_dantoc_id" name="select_dantoc_id" class="custom-select" data-placeholder="Chọn dân tộc">
                     <option value=""></option>
                     <?php foreach ($this->dantoc as $dt) { ?>
-                        <option value="<?php echo $dt['id']; ?>" <?php echo $item['n_dantoc_id'] == $dt['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($dt['tendantoc']); ?></option>
+                        <option value="<?php echo $dt['id']; ?>" <?php echo $item[0]['n_dantoc_id'] == $dt['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($dt['tendantoc']); ?></option>
                     <?php } ?>
                 </select>
             </div>
@@ -1201,7 +1202,7 @@ $item = $this->item;
                         if (nhankhau) {
                             const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
                             const newOption = new Option(optionText, nhankhau.id, true, true);
-                            $('#select_top').append(newOption).trigger('change');
+                             $('#select_top').append(newOption).trigger('change');
 
                             $('#select_top').trigger({
                                 type: 'select2:select',

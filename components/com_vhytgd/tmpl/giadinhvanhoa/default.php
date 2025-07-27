@@ -226,7 +226,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
             window.location.href = 'index.php?option=com_vhytgd&view=giadinhvanhoa&task=edit_gdvanhoa&giadinh_id=' + $(this).data('id');
         });
 
-        // Xử lý nút Xuất Excel		
+        // Xử lý nút Xuất Excel
         $('#btn_xuatexcel').on('click', function() {
             let params = {
                 option: 'com_vhytgd',

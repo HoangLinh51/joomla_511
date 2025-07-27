@@ -110,6 +110,8 @@ $messages = JFactory::getApplication()->getMessageQueue();
                         <tr>
                             <td colspan="4" class="text-center" style="padding-top: 10px;">
                                 <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+                                <span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
+
                             </td>
                         </tr>
                     </table>
@@ -235,7 +237,24 @@ $messages = JFactory::getApplication()->getMessageQueue();
         $('body').delegate('.btn_hieuchinh', 'click', function() {
             window.location.href = 'index.php?option=com_vhytgd&view=thongtinthietche&task=edit_thietche&thietche_id=' + $(this).data('id');
         });
+        $('#btn_xuatexcel').on('click', function() {
+            let params = {
+                option: 'com_vhytgd',
+                controller: 'thietche',
+                task: 'exportExcel',
+                phuongxa_id: $('#phuongxa_id').val(),
+                tenthietche: $('#tenthietche').val(),
+                loaihinhthietche_id: $('#loaihinhthietche_id').val(),
+                tinhtrang_id: $('#tinhtrang_id').val(),
 
+                daxoa: 0,
+                [Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
+            };
+
+            // Tạo URL đúng
+            let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+            window.location.href = url;
+        });
         // Xử lý nút Xuất Excel
 
     });

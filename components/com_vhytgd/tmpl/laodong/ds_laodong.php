@@ -82,6 +82,7 @@ defined('_JEXEC') or die('Restricted access');
         <tr>
           <td colspan="4" class="text-center" style="padding-top:10px;">
             <button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
           </td>
         </tr>
       </table>
@@ -290,7 +291,26 @@ defined('_JEXEC') or die('Restricted access');
     $('body').delegate('.btn_hieuchinh', 'click', function() {
       window.location.href = '/index.php?option=com_vhytgd&view=laodong&task=edit_laodong&id=' + $(this).data('idlaodong');
     });
+    $('#btn_xuatexcel').on('click', function() {
+      let params = {
+        option: 'com_vhytgd',
+        controller: 'laodong',
+        task: 'exportExcel',
+        phuongxa_id: $('#phuongxa_id').val(),
+        thonto_id: $('#thonto_id').val(),
+        doituong_id: $('#doituong_id').val(),
+        hoten: $('#hoten').val(),
+        cccd: $('#cccd').val(),
+        gioitinh_id: $('#gioitinh_id').val(),
 
+        daxoa: 0,
+        [Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
+      };
+
+      // Tạo URL đúng
+      let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+      window.location.href = url;
+    });
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
       loadData(1, getFilterParams());

@@ -481,4 +481,78 @@ class Vhytgd_Model_Thietche extends JModelLegacy
         $db->setQuery($query);
         return  $db->loadAssocList();
     }
+    public function getThongTinThietCheExcel($filters)
+{
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    $phanquyen = $this->getPhanquyen();
+
+    // Phần SELECT
+    $query->select('
+        a.id,
+        a.phuongxa_id,
+        a.thietche_ten,
+        a.thietche_dientich,
+        a.thietche_vitri,
+        a.bql_ten,
+        b.tenloaihinhthietche,
+        a.trangthaihoatdong_id,
+        GROUP_CONCAT(DISTINCT CONCAT(ltb.ten, ":", tb2.tenthietbi, ":", tb2.donvitinh, ":", tb.soluong) SEPARATOR " | ") AS thongtinthietbi,
+       GROUP_CONCAT(
+        DISTINCT CONCAT(
+            "Năm:", tc2.nam,
+            ":",
+            "Nội dung hoạt động:", tc2.noidunghoatdong,
+            ":",
+            "Ngày bắt đầu:", DATE_FORMAT(tc2.thoigianhoatdong_tungay, "%d/%m/%Y"),
+            ":",
+            "Ngày kết thúc:", DATE_FORMAT(tc2.thoigianhoatdong_denngay, "%d/%m/%Y"),
+            ":",
+            "Nguồn kinh phí:", tc2.nguonkinhphi_id,
+            ":",
+            "Kinh phí:", tc2.kinhphi
+        ) SEPARATOR " | "
+    ) AS hoatdong
+    ');
+
+    // Phần FROM và JOIN
+    $query->from('vhxhytgd_thietche AS a');
+    $query->leftJoin('danhmuc_loaihinhthietche AS b ON b.id = a.loaihinhthietche_id');
+    $query->leftJoin('vhxhytgd_thongtinthietbi AS tb ON tb.id_thietche = a.id AND tb.daxoa = 0');
+    $query->leftJoin('danhmuc_loaithietbi AS ltb ON ltb.id = tb.id_loaithietbi');
+    $query->leftJoin('danhmuc_thietbi AS tb2 ON tb2.id = tb.id_thietbi');
+    $query->leftJoin('vhxhytgd_thietche2hoatdong AS tc2 ON tc2.thietche_id = a.id AND tc2.daxoa = 0');
+
+    // Phần WHERE
+    if (isset($phanquyen['phuongxa_id']) && $phanquyen['phuongxa_id'] != '-1') {
+        $query->where('a.phuongxa_id IN (' . $phanquyen['phuongxa_id'] . ')');
+    }
+
+    if (!empty($filters['phuongxa_id'])) {
+        $query->where('a.phuongxa_id = ' . $db->quote($filters['phuongxa_id']));
+    }
+
+    if (!empty($filters['tenthietche'])) {
+        $query->where('a.thietche_ten LIKE ' . $db->quote('%' . $filters['tenthietche'] . '%'));
+    }
+
+    if (!empty($filters['tinhtrang_id'])) {
+        $query->where('a.trangthaihoatdong_id = ' . $db->quote($filters['tinhtrang_id']));
+    }
+
+    if (!empty($filters['loaihinhthietche_id'])) {
+        $query->where('a.loaihinhthietche_id = ' . $db->quote($filters['loaihinhthietche_id']));
+    }
+
+    $query->where('a.daxoa = 0');
+
+    // Phần GROUP BY
+    $query->group('a.id, a.phuongxa_id, a.thietche_ten, a.thietche_dientich, a.thietche_vitri, a.bql_ten, b.tenloaihinhthietche, a.trangthaihoatdong_id');
+
+    // Phần ORDER BY
+    $query->order('a.thietche_ten');
+    // echo $query;exit;
+    $db->setQuery($query);
+    return $db->loadAssocList();
+}
 }
