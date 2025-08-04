@@ -29,7 +29,7 @@ class HtmlView extends BaseHtmlView
     {
         $user = Factory::getUser();
         $input = Factory::getApplication()->input;
-        $component = 'com_dcxddtmt';
+        $component = 'com_dcxddt';
         $controller = $input->getCmd('view', 'viahe');
         $task = strtoupper($input->getCmd('task', 'default'));
 
@@ -38,23 +38,23 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        if ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE' || $task === 'XEMCHITIET') {
+        if ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE' || $task === 'XEMCHITIET' ) {
             $checkTask = 'default';
         } else {
             $checkTask = $task;
         }
 
-        // if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
-        //     echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-        //         <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
-        //         <a href="/index.php" style="text-decoration: none;">
-        //         <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
-        //             Trang chủ
-        //         </button>
-        //         </a>
-        //       </div>';
-        //     exit;
-        // }
+        if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
+            echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h2 style="color: #dc3545">Bạn không có quyền truy cập vào trang này!</h2>
+                <a href="/index.php" style="text-decoration: none;">
+                <button style="padding: 12px 8px; border:1px solid #fff; border-radius: 4px; background-color:#007bff; color: #fff; font-size:14px;cursor: pointer">
+                    Trang chủ
+                </button>
+                </a>
+              </div>';
+            exit;
+        }
 
         switch ($task) {
             case 'ADDVIAHE':
@@ -82,27 +82,6 @@ class HtmlView extends BaseHtmlView
     private function _initDefaultPage()
     {
         $this->import();
-        // $input = Factory::getApplication()->input;
-        // $model = Core::model('Dcxddt/Viahe');
-        // $diachi = $input->getString('diachi', '');
-        
-        // $user = Factory::getUser();
-        // $phanquyen = $model->getPhanquyen();
-
-        // $phuongxa = [];
-        // if ($phanquyen['phuongxa_id'] === '-1') {
-        //     $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0', 'tenkhuvuc ASC');
-        // } elseif ($phanquyen['phuongxa_id'] !== '') {
-        //     $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc,cha_id,level', 'level = 2 AND daxoa = 0 AND id IN (' . $phanquyen['phuongxa_id'] . ')', 'tenkhuvuc ASC');
-        // }
-
-        // var_dump($phuongxa);
-        // exit;
-        // $items = $model->getDanhSachViaHe($diachi, $phuongxa);
-
-        // $this->items = $items;
-        // $this->phuongxa = $phuongxa;
-        // $this->items = $items;
     }
 
     private function _getEditViahe()

@@ -167,8 +167,9 @@ $idUser = Factory::getUser()->id;
 		$('body').delegate('.btn_hieuchinh', 'click', function() {
 			window.location.href = 'index.php?option=com_vhytgd&view=doituonghuongcs&task=edit_dtcs&doituong_id=' + $(this).data('id');
 		});
+
 		$('#btn_xuatexcel').on('click', function() {
-			let params = {
+			const params = {
 				option: 'com_vhytgd',
 				controller: 'doituonghuongcs',
 				task: 'exportExcel',
@@ -180,9 +181,27 @@ $idUser = Factory::getUser()->id;
 				[Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
 			};
 
-			// Tạo URL đúng
-			let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
-			window.location.href = url;
+			const url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+
+			// Gọi thử trước bằng AJAX để kiểm tra lỗi
+			$.ajax({
+				url: url,
+				method: 'GET',
+				success: function(data, status, xhr) {
+					const disposition = xhr.getResponseHeader('Content-Disposition');
+
+					// Nếu có header file download thì tiến hành tải
+					if (disposition && disposition.indexOf('attachment') !== -1) {
+						window.location.href = url;
+					} else {
+						showToast('Không có dữ liệu để xuất file.', false);
+					}
+				},
+				error: function(xhr) {
+					console.error('Lỗi khi gọi export:', xhr);
+					showToast('Xuất Excel thất bại. Vui lòng thử lại sau.', false);
+				}
+			});
 		});
 	});
 </script>

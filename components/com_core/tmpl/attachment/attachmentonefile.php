@@ -107,17 +107,14 @@ if (count($this->data) > $maxFiles) {
 							<span data-dz-name class="linkFile">
 								<?php if ($item['mime'] == "application/pdf") { ?>
 									<a target="_blank" href="<?php echo Uri::root(true) ?>/index.php?option=com_dungchung&view=hdsd&format=raw&task=viewpdf&file=<?php echo $item['code'] ?>&folder=<?php echo $item['folder'] ?>">
-										<?php echo "pdf" ?>
 										<?php echo $item['filename']; ?>
 									</a>
 								<?php } else if ($item['mime'] == "image/jpeg" || $item['mime'] == "image/png") { ?>
 									<a target="_blank" href="<?php echo Uri::root(true) ?>/uploader/get_image.php/<?php echo $item['folder'] ?>?code=<?php echo $item['code'] ?>">
-										<?php echo "image" ?>
 										<?php echo $item['filename']; ?>
 									</a>
 								<?php } else { ?>
 									<a target="_blank" href="<?php echo Uri::root(true) ?>/index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>">
-										<?php echo "other" ?>
 										<?php echo $item['filename']; ?>
 									</a>
 								<?php } ?>

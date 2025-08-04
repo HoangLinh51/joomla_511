@@ -614,8 +614,9 @@ use Joomla\CMS\HTML\HTMLHelper;
         }
       });
     });
+
     $('#btn_xuatexcel').on('click', function() {
-      let params = {
+      const params = {
         option: 'com_dcxddt',
         controller: 'xeom',
         task: 'exportExcel',
@@ -627,11 +628,30 @@ use Joomla\CMS\HTML\HTMLHelper;
         [Joomla.getOptions('csrf.token')]: 1
       };
 
-      // Tạo URL đúng      
-      let url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
-      window.location.href = url;
+      const url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
+
+      // Gọi thử trước bằng AJAX để kiểm tra lỗi
+      $.ajax({
+        url: url,
+        method: 'GET',
+        success: function(data, status, xhr) {
+          const disposition = xhr.getResponseHeader('Content-Disposition');
+
+          // Nếu có header file download thì tiến hành tải
+          if (disposition && disposition.indexOf('attachment') !== -1) {
+            window.location.href = url;
+          } else {
+            showToast('Không có dữ liệu để xuất file.', false);
+          }
+        },
+        error: function(xhr) {
+          console.error('Lỗi khi gọi export:', xhr);
+          showToast('Xuất Excel thất bại. Vui lòng thử lại sau.', false);
+        }
+      });
     });
   });
+
   const formatDate = dateStr => {
     if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return '';
     const date = new Date(dateStr);

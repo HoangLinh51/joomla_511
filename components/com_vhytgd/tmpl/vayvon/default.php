@@ -1,8 +1,8 @@
 <?php
+
+use Joomla\CMS\HTML\HTMLHelper;
+
 defined('_JEXEC') or die('Restricted access');
-$idUser = JFactory::getUser()->id;
-
-
 ?>
 
 <form action="index.php" method="post" id="frmDoituonghuongcs" name="frmDoituonghuongcs" class="form-horizontal" style="font-size:16px;background:white">
@@ -89,7 +89,7 @@ $idUser = JFactory::getUser()->id;
 			</div>
 		</div>
 	</div>
-	<?php echo JHTML::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <script>
@@ -165,7 +165,7 @@ $idUser = JFactory::getUser()->id;
 			window.location.href = 'index.php?option=com_vhytgd&view=vayvon&task=edit_vayvon&vayvon_id=' + $(this).data('id');
 		});
 		$('#btn_xuatexcel').on('click', function() {
-			let params = {
+			const params = {
 				option: 'com_vhytgd',
 				controller: 'vayvon',
 				task: 'exportExcel',
@@ -178,7 +178,26 @@ $idUser = JFactory::getUser()->id;
 
 			// Tạo URL đúng
 			let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
-			window.location.href = url;
+
+			// Gọi thử trước bằng AJAX để kiểm tra lỗi
+			$.ajax({
+				url: url,
+				method: 'GET',
+				success: function(data, status, xhr) {
+					const disposition = xhr.getResponseHeader('Content-Disposition');
+
+					// Nếu có header file download thì tiến hành tải
+					if (disposition && disposition.indexOf('attachment') !== -1) {
+						window.location.href = url;
+					} else {
+						showToast('Không có dữ liệu để xuất file.', false);
+					}
+				},
+				error: function(xhr) {
+					console.error('Lỗi khi gọi export:', xhr);
+					showToast('Xuất Excel thất bại. Vui lòng thử lại sau.', false);
+				}
+			});
 		});
 	});
 </script>

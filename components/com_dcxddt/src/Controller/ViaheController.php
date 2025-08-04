@@ -138,30 +138,6 @@ class ViaheController extends BaseController
     $this->sendJsonResponse($response);
   }
 
-  public function checkDiaChi()
-  {
-    $input = Factory::getApplication()->input;
-    $diachi = trim($input->getString('diachi', ''));
-
-    $model = Core::model('Dcxddt/Viahe');
-    $phanquyen = $model->getPhanQuyen();
-
-    try {
-      // 👈 Gửi formData đã xử lý vào đây
-      $idViahe = $model->checkDiaChi($diachi, $phanquyen['phuongxa_id']);
-
-      if ($idViahe) {
-        $response = ['success' => true, 'idViahe' => $idViahe];
-      } else {
-        $response = ['success' => false];
-      }
-    } catch (Exception $e) {
-      $response = ['success' => false, 'message' => 'Lỗi khi lấy dữ liệu: ' . $e->getMessage()];
-    }
-
-    $this->sendJsonResponse($response);
-  }
-
   function formatDate($dateString)
   {
     $date = DateTime::createFromFormat('d/m/Y', $dateString);
@@ -219,7 +195,29 @@ class ViaheController extends BaseController
     echo json_encode($response);
     $app->close();
   }
+    public function xoa_viahe()
+  {
+    $app = Factory::getApplication();
+    $body = json_decode(file_get_contents('php://input'), true);
 
+    $idviahe = (int)($body['idviahe'] ?? 0);
+
+    if (!$idviahe) {
+      echo json_encode(['success' => false, 'message' => 'Thiếu thông tin đầu vào']);
+      return;
+    }
+
+    $model = Core::model('Dcxddt/Viahe');
+    try {
+      $result = $model->xoaViahe($idviahe);
+      $response = ['success' => (bool)$result, 'message' => $result ? 'Xóa thành công' : 'Không thể xóa'];
+    } catch (Exception $e) {
+      $response = ['success' => false, 'message' => 'Lỗi khi xóa dữ liệu: ' . $e->getMessage()];
+    }
+
+    echo json_encode($response);
+    $app->close();
+  }
   protected function sendJsonResponse($data, $statusCode = 200)
   {
     header('Content-Type: application/json; charset=utf-8');

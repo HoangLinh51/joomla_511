@@ -83,7 +83,7 @@ class HtmlView extends BaseHtmlView
         $dantoc = $model->getDanToc();
         $tongiao = $model->getTonGiao();
         // var_dump($phuongxa);
-
+        
         $this->gioitinh = $danhMucGioiTinh;
         $this->doanhoiPhanQuyen = $doanhoiPhanQuyen;
         $this->doanhoi = $dmdoanhoi;

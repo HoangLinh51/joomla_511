@@ -51,7 +51,7 @@ class Vhytgd_Model_DoanHoi extends BaseDatabaseModel
       ->from('jos_users')
       ->where('id = ' . $db->quote($userId));
     $db->setQuery($query);
-    return $db->loadAssocList();
+    return $db->loadAssoc();
   }
 
   //get list phường xã theo quyền user 
@@ -403,7 +403,9 @@ class Vhytgd_Model_DoanHoi extends BaseDatabaseModel
       'n_dantoc_id' => (int)$formdata['dantoc_id'],
       'n_tongiao_id' => (int)$formdata['tongiao_id'],
       'n_phuongxa_id' => (int)$formdata['phuongxa_id'],
+      'phuongxa_id' => (int)$formdata['phuongxa_id'],
       'n_thonto_id' => (int)$formdata['thonto_id'],
+      'thonto_id' => (int)$formdata['thonto_id'],
       'n_diachi' => $formdata['modal_diachi'],
       'daxoa' => 0
     ];

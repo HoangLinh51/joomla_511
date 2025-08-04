@@ -189,7 +189,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             'id' => $formData['id_nguoicocong'] ?? 0,
             'nhankhau_id' => !empty($formData['nhankhau_id'][0]) ? $formData['nhankhau_id'][0] : 0,
             'phuongxa_id' => !empty($formData['input_phuongxa_id']) ? $formData['input_phuongxa_id'] : $formData['select_phuongxa_id'] ?? null,
-            'thonto_id' => !empty($formData['input_thonto_id']) ? $formData['input_thonto_id'] : $formData['select_thonto_id'] ?? null,
+            // 'thonto_id' => !empty($formData['input_thonto_id']) ? $formData['input_thonto_id'] : $formData['select_thonto_id'] ?? null,
             'n_hoten' => $formData['hoten'] ?? null,
             'n_gioitinh_id' => !empty($formData['input_gioitinh_id']) ? $formData['input_gioitinh_id'] : $formData['select_gioitinh_id'] ?? null,
             'n_dantoc_id' => !empty($formData['input_dantoc_id']) ? $formData['input_dantoc_id'] : $formData['select_dantoc_id'] ?? null,
@@ -446,7 +446,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
         ) AS latest_status ON a.id = latest_status.nguoicocong_id')
             ->leftJoin('vhxhytgd_huongncc2doituong AS b ON a.id = b.nguoicocong_id AND b.daxoa = 0')
             ->leftJoin('danhmuc_khuvuc AS px ON px.id = a.phuongxa_id')
-            ->leftJoin('danhmuc_khuvuc AS tt ON tt.id = a.thonto_id')
+            ->leftJoin('danhmuc_khuvuc AS tt ON tt.id = a.n_thonto_id')
             ->leftJoin('dmloaidoituong AS ldt ON ldt.id = b.is_hinhthuc')
             ->leftJoin('danhmuc_gioitinh AS gt ON gt.id = a.n_gioitinh_id')
             ->leftJoin('dmlydo AS ch ON ch.id = a.trangthaich_id')
@@ -469,7 +469,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             $query->where('a.phuongxa_id in (' . $db->quote($params['phuongxa_id']). ')');
         }
         if (!empty($params['thonto_id'])) {
-            $query->where('a.thonto_id = ' . $db->quote($params['thonto_id']));
+            $query->where('a.n_thonto_id = ' . $db->quote($params['thonto_id']));
         }
 
         $phanquyen = $this->getPhanquyen();
@@ -515,7 +515,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
         $query->leftJoin('vhxhytgd_uudai2nguoicocong AS c ON b.id = c.huongncc_id');
 
         $query->leftJoin('danhmuc_khuvuc AS px ON px.id = a.phuongxa_id');
-        $query->leftJoin('danhmuc_khuvuc AS tt ON tt.id = a.thonto_id');
+        $query->leftJoin('danhmuc_khuvuc AS tt ON tt.id = a.n_thonto_id');
         $query->leftJoin('danhmuc_gioitinh AS gt ON gt.id = a.n_gioitinh_id');
 
         $query->where('a.daxoa = 0 AND b.daxoa = 0');
@@ -524,7 +524,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             $query->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
         }
         if (!empty($params['thonto_id'])) {
-            $query->where('a.thonto_id = ' . $db->quote($params['thonto_id']));
+            $query->where('a.n_thonto_id = ' . $db->quote($params['thonto_id']));
         }
 
         $phanquyen = $this->getPhanquyen();
@@ -567,7 +567,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
         $query->innerJoin('dmnguoicocong AS ncc ON ncc.id = b.dmnguoicocong_id');
 
         $query->leftJoin('danhmuc_khuvuc AS px ON px.id = a.phuongxa_id');
-        $query->leftJoin('danhmuc_khuvuc AS tt ON tt.id = a.thonto_id');
+        $query->leftJoin('danhmuc_khuvuc AS tt ON tt.id = a.n_thonto_id');
         $query->leftJoin('danhmuc_gioitinh AS gt ON gt.id = a.n_gioitinh_id');
         $query->leftJoin('dmlydo AS ld ON ld.id = b.trangthai_id');
         $query->leftJoin('dmuudai AS ud ON ud.id = c.uudai_id');
@@ -744,12 +744,12 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
 
         // Subquery
         $query_left = $db->getQuery(true);
-        $query_left->select('a.phuongxa_id, d.tenkhuvuc AS phuongxa, a.thonto_id, c.tenkhuvuc AS thonto, 
+        $query_left->select('a.phuongxa_id, d.tenkhuvuc AS phuongxa, a.n_thonto_id, c.tenkhuvuc AS thonto, 
                          COUNT(DISTINCT a.nhankhau_id) AS tong_nhankhau,COUNT(  a.trangthaich_id) as catgiam, b.trocap');
         $query_left->from('vhxhytgd_nguoicocong AS a');
         $query_left->leftJoin('vhxhytgd_huongncc2doituong AS b ON a.id = b.nguoicocong_id');
         $query_left->leftJoin('vhxhytgd_uudai2nguoicocong AS e ON b.id = e.huongncc_id');
-        $query_left->innerJoin('danhmuc_khuvuc AS c ON a.thonto_id = c.id');
+        $query_left->innerJoin('danhmuc_khuvuc AS c ON a.n_thonto_id = c.id');
         $query_left->innerJoin('danhmuc_khuvuc AS d ON a.phuongxa_id = d.id');
         $query_left->where('a.daxoa = 0 AND b.daxoa = 0');
         // Điều kiện WHERE cho subquery
@@ -758,7 +758,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
         }
 
         if (!empty($params['thonto_id']) && is_array($params['thonto_id'])) {
-            $query_left->where($db->quoteName('a.thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
+            $query_left->where($db->quoteName('a.n_thonto_id') . ' IN (' . implode(',', array_map([$db, 'quote'], $params['thonto_id'])) . ')');
         }
         if (!empty($params['hinhthuc_id'])) {
             $query_left->where('b.is_hinhthuc = ' . $db->quote($params['hinhthuc_id']));
@@ -835,7 +835,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             ->leftJoin($db->quoteName('vhxhytgd_huongncc2doituong', 'b') . ' ON a.id = b.nguoicocong_id')
             ->leftJoin($db->quoteName('dmnguoicocong', 'ncc') . ' ON ncc.id = b.dmnguoicocong_id')
             ->leftJoin($db->quoteName('danhmuc_khuvuc', 'px') . ' ON px.id = a.phuongxa_id')
-            ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON tt.id = a.thonto_id')
+            ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON tt.id = a.n_thonto_id')
             ->leftJoin($db->quoteName('dmlydo', 'ch') . ' ON ch.id = b.trangthai_id')
             ->leftJoin($db->quoteName('vhxhytgd_uudai2nguoicocong', 'c') . ' ON b.id = c.huongncc_id')
             ->leftJoin($db->quoteName('dmuudai', 'ud') . ' ON ud.id = c.uudai_id')

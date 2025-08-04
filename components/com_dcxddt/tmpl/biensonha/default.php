@@ -1,11 +1,13 @@
 <?php
 defined('_JEXEC') or die('Restricted access');
-$idUser = JFactory::getUser()->id;
-
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
+        use Joomla\CMS\Factory;
+
+$idUser = Factory::getUser()->id;
 
 // Lấy giá trị is_quyen từ bảng jos_users
-$db = JFactory::getDbo();
+$db = Factory::getDbo();
 $query = $db->getQuery(true)
     ->select('is_quyen')
     ->from($db->quoteName('jos_users'))
@@ -14,7 +16,7 @@ $db->setQuery($query);
 $is_quyen = $db->loadResult();
 
 // Lấy thông báo từ session
-$session = JFactory::getSession();
+$session = Factory::getSession();
 $messageBootbox = $session->get('message_bootbox', '');
 
 // Xóa session sau khi lấy để tránh hiển thị lại
@@ -23,7 +25,7 @@ if ($messageBootbox) {
 }
 
 // Lấy thông báo từ hàng đợi Joomla
-$messages = JFactory::getApplication()->getMessageQueue();
+$messages = Factory::getApplication()->getMessageQueue();
 ?>
 <meta>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -138,7 +140,7 @@ $messages = JFactory::getApplication()->getMessageQueue();
                 </div>
             </div>
         </div>
-        <?php echo JHtml::_('form.token'); ?>
+        <?php echo HTMLHelper::_('form.token'); ?>
     </div>
 </form>
 
@@ -235,21 +237,37 @@ $messages = JFactory::getApplication()->getMessageQueue();
         loadDanhSach();
 
         $('#btn_xuatexcel').on('click', function() {
-            debugger
-            let params = {
+            const params = {
                 option: 'com_dcxddt',
                 controller: 'biensonha',
                 task: 'exportExcel',
                 phuongxa_id: $('#phuongxa_id').val(),
                 thonto_id: $('#thonto_id').val(),
                 tenduong: $('#tenduong').val(),
-                // daxoa: 0,
                 [Joomla.getOptions('csrf.token')]: 1
             };
 
-            // Tạo URL đúng      
-            let url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
-            window.location.href = url;
+            const url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
+
+            // Gọi thử trước bằng AJAX để kiểm tra lỗi
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(data, status, xhr) {
+                    const disposition = xhr.getResponseHeader('Content-Disposition');
+
+                    // Nếu có header file download thì tiến hành tải
+                    if (disposition && disposition.indexOf('attachment') !== -1) {
+                        window.location.href = url;
+                    } else {
+                        showToast('Không có dữ liệu để xuất file.', false);
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Lỗi khi gọi export:', xhr);
+                    showToast('Xuất Excel thất bại. Vui lòng thử lại sau.', false);
+                }
+            });
         });
 
         // Xử lý nút Tìm kiếm

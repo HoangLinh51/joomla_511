@@ -20,7 +20,7 @@ defined('_JEXEC') or die('Restricted access');
   </thead>
   <tbody id="tbody_danhsach">
     <tr>
-      <td colspan="8" class="text-center">Đang tải dữ liệu...</td>
+      <td colspan="8" class="text-center">Không có dữ liệu</td>
     </tr>
   </tbody>
 </table>
@@ -31,9 +31,8 @@ defined('_JEXEC') or die('Restricted access');
 
 <script>
   const idUser = <?= (int)Factory::getUser()->id ?>;
-  const doanhoi = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
+  const doanhoi = <?= json_encode($this->doanhoiPhanQuyen['is_doanvien'] ?? 0) ?>;
   const csrfToken = Joomla.getOptions('csrf.token', '');
-
   // hàm render tbody 
   function renderTableRows(items, startIndex) {
     if (!items || items.length === 0) {
@@ -128,6 +127,10 @@ defined('_JEXEC') or die('Restricted access');
 
   // hàm get list đoàn hôi
   async function loadMemberList(page = 1, filters, itemsPerPage = 20) {
+    if (filters.doanhoi == 0 || filters.doanhoi == null) {
+      showToast('Bạn không được phân quyền cho đoàn hội nào', false)
+      return
+    }
     try {
       $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
       const response = await $.ajax({
@@ -181,7 +184,7 @@ defined('_JEXEC') or die('Restricted access');
       phuongxa_id: $('#phuongxa_id').val() || '',
       thonto_id: $('#thonto_id').val() || '',
       gioitinh_id: $('#gioitinh_id').val() || 0,
-      doanhoi: doanhoi
+      doanhoi: doanhoi || 0
     };
   }
 

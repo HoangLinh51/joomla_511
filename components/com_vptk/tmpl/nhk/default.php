@@ -1,9 +1,13 @@
 <?php
+
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Factory;
+
 defined('_JEXEC') or die('Restricted access');
-$idUser = JFactory::getUser()->id;
+$idUser = Factory::getUser()->id;
 
 // Lấy giá trị is_quyen từ bảng jos_users
-$db = JFactory::getDbo();
+$db = Factory::getDbo();
 $query = $db->getQuery(true)
 	->select('is_quyen')
 	->from($db->quoteName('jos_users'))
@@ -129,7 +133,7 @@ $is_quyen = $db->loadResult();
 			</div>
 		</div>
 	</div>
-	<?php echo JHTML::_('form.token'); ?>
+	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
 <script>
@@ -209,7 +213,7 @@ $is_quyen = $db->loadResult();
 			window.location.href = 'index.php?option=com_vptk&view=nhk&task=edit_nhk&id=' + $(this).data('hokhau');
 		});
 		$('#btn_xuatexcel').on('click', function() {
-			let params = {
+			const params = {
 				option: 'com_vptk',
 				controller: 'vptk',
 				task: 'exportExcel',
@@ -226,8 +230,27 @@ $is_quyen = $db->loadResult();
 			};
 
 			// Tạo URL đúng
-			let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
-			window.location.href = url;
+			const url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+
+			// Gọi thử trước bằng AJAX để kiểm tra lỗi
+			$.ajax({
+				url: url,
+				method: 'GET',
+				success: function(data, status, xhr) {
+					const disposition = xhr.getResponseHeader('Content-Disposition');
+
+					// Nếu có header file download thì tiến hành tải
+					if (disposition && disposition.indexOf('attachment') !== -1) {
+						window.location.href = url;
+					} else {
+						showToast('Không có dữ liệu để xuất file.', false);
+					}
+				},
+				error: function(xhr) {
+					console.error('Lỗi khi gọi export:', xhr);
+					showToast('Xuất Excel thất bại. Vui lòng thử lại sau.', false);
+				}
+			});
 		});
 	});
 </script>

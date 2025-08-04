@@ -73,7 +73,7 @@ $detailViaHe = $this->item;
         <input id="diachiviahe" type="text" name="diachiviahe" class="form-control" placeholder="Nhập địa chỉ vỉa hè" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['diachi']); ?>">
       </div>
       <div class="col-md-4 mb-2">
-        <label for="dientichtamthoi" class="form-label fw-bold">Diện tích được sử dụng tạm thời</label>
+        <label for="dientichtamthoi" class="form-label fw-bold">Diện tích sử dụng tạm thời</label>
         <input id="dientichtamthoi" type="text" name="dientichtamthoi" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['dientichtamthoi']); ?>" placeholder="Nhập diện tích">
       </div>
       <div class="col-md-4 mb-2">
@@ -120,8 +120,8 @@ $detailViaHe = $this->item;
               <span id="xoatepdinhkem" class="btn btn-small" data-idviahe="<?php echo htmlspecialchars($detailViaHe['thongtin']['thongtinviahe_id']); ?>" data-idvanban="<?php echo htmlspecialchars($item['id']); ?>">
                 <i class="fa fa-trash"></i>
               </span>
+              <input type="hidden" name="idFile-uploadImageHopDong[]" value="<?php echo $item['id'] ?>">
             </div>
-            <input type="hidden" name="idFile-uploadImageHopDong[]" value="<?php echo $item['id'] ?>">
           <?php endforeach; ?>
         <?php endif; ?>
       </div>
@@ -215,15 +215,23 @@ $detailViaHe = $this->item;
 </div>
 
 <script>
-  let phuongxa_id = <?php echo json_encode($this->phuongxa ?? []); ?>;
   let detailViaHe = <?php echo json_encode($detailViaHe ?? []); ?>;
   let timeout = null;
   let params = new URLSearchParams(window.location.search);
   let task = params.get('task');
+  let isEditHopDong = false;
+  let isGiaHan = false;
+  let giaHanParentRowIndex = null;
   $(document).ready(function() {
     renderDanhSachHopDong()
     $('#btn_quaylai').click(() => {
       window.location.href = '<?php echo Route::_('/index.php/component/dcxddt/?view=viahe&task=default'); ?>';
+    });
+    $('button[data-bs-target="#modalThemHopDong"]').on('click', function() {
+      const $form = $('#formThongtinHopDong');
+      $form[0].reset();
+      $form.find('#modal_sogiayphep').prop('readonly', false);
+      $form.find('input[type="hidden"]').val('');
     });
     // Khởi tạo datepicker cho các trường ngày tháng
     const datepickerFields = [
@@ -258,7 +266,6 @@ $detailViaHe = $this->item;
       const ngayHetHanStr = $('#modal_ngayhethan').val().trim();
       const thoigian = $('#modal_thoigian').val().trim();
 
-      // Kiểm tra các trường bắt buộc
       if (!sogiayphep || !solan || !ngayKyStr || !ngayHetHanStr || !thoigian) {
         showToast('Vui lòng nhập đầy đủ: số giấy phép, số lần, ngày ký, ngày hết hạn', false);
         return;
@@ -266,7 +273,6 @@ $detailViaHe = $this->item;
 
       const ngayKy = convertToDate(ngayKyStr);
       const ngayHetHan = convertToDate(ngayHetHanStr);
-
       if (ngayKy > ngayHetHan) {
         showToast('Ngày ký không được lớn hơn ngày hết hạn!', false);
         return;
@@ -274,11 +280,9 @@ $detailViaHe = $this->item;
 
       const sotien = $('#modal_sotien').val().trim();
       const ghichu = $('#modal_ghichu').val().trim();
-
       const editIndex = $('#formThongtinHopDong').attr('data-edit-index');
 
-      if (isEditHopDong == true) {
-        // === CẬP NHẬT DÒNG CŨ ===
+      if (isEditHopDong === true) {
         const $row = $(`.dsHopDong tr[data-row="${editIndex}"]`);
         $row.find('td:eq(1) input').val(sogiayphep);
         $row.find('td:eq(2) input').val(solan);
@@ -287,48 +291,76 @@ $detailViaHe = $this->item;
         $row.find('td:eq(5) input').val(thoigian);
         $row.find('td:eq(6) input').val(sotien);
         $row.find('td:eq(7) input').val(ghichu);
-        isEditHopDong = false
-
+        isEditHopDong = false;
         showToast('Cập nhật hợp đồng thành công!');
       } else {
         // === THÊM MỚI ===
-        const rowCount = $('#table-thannhan tbody tr').length + 1;
 
+        // Tính STT mới
+        let rowSTT = '';
+        if (isGiaHan && giaHanParentRowIndex) {
+          const parentSTT = $(`.dsHopDong tr[data-row="${giaHanParentRowIndex}"]`).find('td:first').text().trim();
+          const childCount = $(`.dsHopDong tr`).filter(function() {
+            return $(this).find('td:first').text().startsWith(parentSTT + '.');
+          }).length;
+          rowSTT = `${parentSTT}.${childCount + 1}`;
+        } else {
+          let maxSTT = 0;
+          $('.dsHopDong tr').each(function() {
+            const sttText = $(this).find('td:first').text().trim();
+            if (/^\d+$/.test(sttText)) {
+              const stt = parseInt(sttText);
+              if (stt > maxSTT) maxSTT = stt;
+            }
+          });
+          rowSTT = maxSTT + 1;
+        }
+
+        // Nếu là dòng gốc (không có dấu '.'), hiển thị nút gia hạn
+        let giaHanBtn = '';
+        if (!rowSTT.toString().includes('.')) {
+          giaHanBtn = `
+        <span class="btn btn-sm btn_giahan" style="font-size:18px;padding:5px 7px; cursor: pointer; border-right: 2px solid #9b9b9b; border-radius: 0px" data-title="Gia hạn">
+          <i class="fas fa-plus"></i>
+        </span>`;
+        }
+
+        const rowCount = $('.dsHopDong tr').length + 1;
         const newRow = `
-            <tr data-row="${rowCount}">
-                <td class="text-center">${rowCount}</td>
-                <input type="hidden" name="id_hopdong[]" value="">
-                <td class="text-center"><input type="text" class="form-control" name="sogiayphep[]" value="${sogiayphep}" readonly></td>
-                <td class="text-center"><input type="text" class="form-control" name="solan[]" value="${solan}" readonly></td>
-                <td class="text-center"><input type="text" class="form-control" name="ngayKyStr[]" value="${ngayKyStr}" readonly></td>
-                <td class="text-center"><input type="text" class="form-control" name="ngayHetHanStr[]" value="${ngayHetHanStr}" readonly></td>
-                <td class="text-center"><input type="text" class="form-control" name="thoigian[]" value="${thoigian}" readonly></td>
-                <td class="text-center"><input type="text" class="form-control" name="sotien[]" value="${sotien}" readonly></td>
-                <td class="text-center"><input type="text" class="form-control" name="ghichu[]" value="${ghichu}" readonly></td>
-                <td class="text-center">
-                    <span class="btn btn-sm btn_giahan" style="font-size:18px;padding:5px; cursor: pointer;" data-title="Gia hạn">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                    <span class="btn btn-sm btn_edithopdong" style="font-size:18px;padding:5px 7px; cursor: pointer; border-left: 2px solid #9b9b9b; border-right: 2px solid #9b9b9b; border-radius: 0px" data-title="Hiệu chỉnh">
-                        <i class="fas fa-pencil-alt"></i>
-                    </span>
-                    <span class="btn btn-sm btn_xoahopdong" style="font-size:18px;padding:5px; cursor: pointer;"data-idhopdong="0" data-title="Xóa">
-                        <i class="fas fa-trash-alt"></i>
-                    </span>
-                </td>
-            </tr>
-        `;
+        <tr data-row="${rowCount}">
+          <td class="text-center">${rowSTT}</td>
+          <input type="hidden" name="id_hopdong[]" value="">
+          <td class="text-center"><input type="text" class="form-control" name="sogiayphep[]" value="${sogiayphep}" readonly></td>
+          <td class="text-center"><input type="text" class="form-control" name="solan[]" value="${solan}" readonly></td>
+          <td class="text-center"><input type="text" class="form-control" name="ngayKyStr[]" value="${ngayKyStr}" readonly></td>
+          <td class="text-center"><input type="text" class="form-control" name="ngayHetHanStr[]" value="${ngayHetHanStr}" readonly></td>
+          <td class="text-center"><input type="text" class="form-control" name="thoigian[]" value="${thoigian}" readonly></td>
+          <td class="text-center"><input type="text" class="form-control" name="sotien[]" value="${sotien}" readonly></td>
+          <td class="text-center"><input type="text" class="form-control" name="ghichu[]" value="${ghichu}" readonly></td>
+          <td class="text-center">
+            ${giaHanBtn}
+            <span class="btn btn-sm btn_edithopdong" style="font-size:18px;padding:5px 7px; cursor: pointer; border-right: 2px solid #9b9b9b; border-radius: 0px" data-title="Hiệu chỉnh">
+                <i class="fas fa-pencil-alt"></i>
+            </span>
+            <span class="btn btn-sm btn_xoahopdong" style="font-size:18px;padding:5px; cursor: pointer;" data-idhopdong="0" data-title="Xóa">
+                <i class="fas fa-trash-alt"></i>
+            </span>
+          </td>
+        </tr>`;
+
         $('.dsHopDong').append(newRow);
+        isGiaHan = false;
+        giaHanParentRowIndex = null;
         showToast('Thêm hợp đồng thành công!');
       }
 
-      // Reset form và đóng modal
+      // Reset modal
       $('#formThongtinHopDong')[0].reset();
       $('#modal_thoigian').val('');
-      $('#formThongtinHopDong').removeAttr('data-edit-index'); // quan trọng
+      $('#formThongtinHopDong').removeAttr('data-edit-index');
 
-      let modal = $('#formThongtinHopDong').closest('.modal');
-      let modalInstance = bootstrap.Modal.getInstance(modal[0]);
+      const modal = $('#formThongtinHopDong').closest('.modal');
+      const modalInstance = bootstrap.Modal.getInstance(modal[0]);
       if (modalInstance) modalInstance.hide();
     });
 
@@ -437,12 +469,12 @@ $detailViaHe = $this->item;
       });
     });
 
-
     // Sửa dòng (hiển thị lại vào form)
     $('#table-thannhan').on('click', '.btn_edithopdong', function() {
       let $row = $(this).closest('tr');
       let index = $row.data('row');
       isEditHopDong = true
+      $('#formThongtinHopDong #modal_sogiayphep').prop('readonly', true);
 
       // Lấy giá trị từ input trong từng ô
       $('#modal_sogiayphep').val($row.find('td:eq(1) input').val());
@@ -462,29 +494,46 @@ $detailViaHe = $this->item;
       modalInstance.show();
     });
 
+    function laysolangiahan(sogiayphep) {
+      let max = 0;
+      $('.dsHopDong tr').each(function() {
+        const currentSP = $(this).find('td:eq(1) input').val();
+        const currentSolan = parseInt($(this).find('td:eq(2) input').val());
+        if (currentSP === sogiayphep && !isNaN(currentSolan)) {
+          if (currentSolan > max) max = currentSolan;
+        }
+      });
+      return max;
+    }
+
     $('#table-thannhan').on('click', '.btn_giahan', function() {
-      let $row = $(this).closest('tr');
-      let index = $row.data('row');
+      const $row = $(this).closest('tr');
+      const rowIndex = $row.data('row');
+      const sogiayphep = $row.find('td:eq(1) input').val();
 
-      // Gán giá trị từ input
-      $('#modal_sogiayphep').val($row.find('td:eq(1) input').val());
+      // Set lại giá trị vào modal
+      $('#modal_sogiayphep').val(sogiayphep).prop('readonly', true);
 
-      // Tăng số lần gia hạn
-      let solanOld = parseInt($row.find('td:eq(2) input').val()) || 0;
-      $('#modal_solan').val(solanOld + 1);
+      // Tính số lần mới bằng cách lấy số lớn nhất + 1
+      const newSolan = laysolangiahan(sogiayphep) + 1;
+      $('#modal_solan').val(newSolan);
 
-      // Reset lại các trường ngày/thời gian/số tiền/ghi chú để người dùng nhập mới
+      // Reset các trường còn lại
       $('#modal_ngayky').val('');
       $('#modal_ngayhethan').val('');
       $('#modal_thoigian').val('');
       $('#modal_sotien').val('');
       $('#modal_ghichu').val('');
 
-      $('#formThongtinHopDong').attr('data-edit-index', index);
+      // Reset trạng thái modal
+      $('#formThongtinHopDong').removeAttr('data-edit-index');
+      isEditHopDong = false;
+      isGiaHan = true;
+      giaHanParentRowIndex = rowIndex;
 
-      // Mở modal
-      let modal = $('#formThongtinHopDong').closest('.modal');
-      let modalInstance = bootstrap.Modal.getOrCreateInstance(modal[0]);
+      // Hiển thị modal
+      const modal = $('#formThongtinHopDong').closest('.modal');
+      const modalInstance = bootstrap.Modal.getOrCreateInstance(modal[0]);
       modalInstance.show();
     });
 
@@ -513,32 +562,6 @@ $detailViaHe = $this->item;
 
     // Gọi lại hàm mỗi khi thay đổi input
     $('#modal_ngayky, #modal_ngayhethan').on('change blur input', tinhSoNgay);
-    if (task === "addviahe") {
-      $('#diachiviahe').on('input', function() {
-        clearTimeout(timeout);
-        const diachi = $(this).val();
-
-        timeout = setTimeout(function() {
-          $.ajax({
-            url: 'index.php?option=com_dcxddt&controller=viahe&task=checkDiaChi',
-            type: 'POST',
-            data: {
-              diachi: diachi
-            },
-            dataType: 'json',
-            success: function(response) {
-              if (response.success === true) {
-                showToast(`Địa chỉ vỉa hè này đã được tạo, đang chuyển trang...`, true)
-                setTimeout(() => window.location.href = `/index.php?option=com_dcxddt&view=viahe&task=editviahe&id=${response.idViahe.id}`, 500);
-              }
-            },
-            error: function() {
-              showToast("Có lỗi khi kiếm tra địa chỉ", false)
-            }
-          });
-        }, 500);
-      });
-    }
 
     // validate form
     $('#formViaHe').validate({
@@ -615,20 +638,40 @@ $detailViaHe = $this->item;
   function renderDanhSachHopDong() {
     if (!detailViaHe || !detailViaHe.giayphep) return;
 
-    let index = 1;
+    let parentIndex = 1;
 
-    // Loop qua từng giấy phép
     Object.entries(detailViaHe.giayphep).forEach(([sogiayphep, danhSachHopDong]) => {
+      let childCount = 0;
+
       danhSachHopDong.forEach((hopdong, idx) => {
+        let rowIndex;
+        if (idx === 0) {
+          // Hợp đồng gốc
+          rowIndex = parentIndex;
+        } else {
+          // Các hợp đồng gia hạn
+          childCount++;
+          rowIndex = `${parentIndex}.${childCount}`;
+        }
+
+        // Nếu là dòng gốc, hiển thị nút gia hạn
+        let giaHanBtn = '';
+        if (idx === 0) {
+          giaHanBtn = `
+          <span class="btn btn-sm btn_giahan" style="font-size:18px;padding:5px 7px; cursor: pointer; border-right: 2px solid #9b9b9b; border-radius: 0px" data-title="Gia hạn">
+            <i class="fas fa-plus"></i>
+          </span>`;
+        }
+
         const newRow = `
-        <tr data-row="${index}">
-          <td class="text-center">${index}</td>
+        <tr data-row="${rowIndex}">
+          <td class="text-center">${rowIndex}</td>
           <input type="hidden" name="id_hopdong[]" value="${hopdong.id_hopdong}">
           <td class="text-center">
             <input type="text" class="form-control" name="sogiayphep[]" value="${sogiayphep}" readonly>
           </td>
           <td class="text-center">
-            <input type="text" class="form-control" name="solan[]" value="${idx + 1}" readonly>
+            <input type="text" class="form-control" name="solan[]" value="${hopdong.solan ?? (idx + 1)}" readonly>
           </td>
           <td class="text-center">
             <input type="text" class="form-control" name="ngayKyStr[]" value="${hopdong.ngayky}" readonly>
@@ -646,21 +689,19 @@ $detailViaHe = $this->item;
             <input type="text" class="form-control" name="ghichu[]" value="${hopdong.ghichu}" readonly>
           </td>
           <td class="text-center">
-            <span class="btn btn-sm btn_giahan" style="font-size:18px;padding:5px; cursor: pointer;" data-title="Gia hạn">
-              <i class="fas fa-plus"></i>
-            </span>
-            <span class="btn btn-sm btn_edithopdong" style="font-size:18px;padding:5px 7px; cursor: pointer; border-left: 2px solid #9b9b9b; border-right: 2px solid #9b9b9b; border-radius: 0px" data-title="Hiệu chỉnh">
+            ${giaHanBtn}
+            <span class="btn btn-sm btn_edithopdong" style="font-size:18px;padding:5px 7px; cursor: pointer; border-right: 2px solid #9b9b9b; border-radius: 0px" data-title="Hiệu chỉnh">
               <i class="fas fa-pencil-alt"></i>
             </span>
-            <span class="btn btn-sm btn_xoahopdong" style="font-size:18px;padding:5px; cursor: pointer;" data-idhopdong="${hopdong.id_hopdong}" data-title="Xóa">
-              <i class="fas fa-trash-alt"></i>
+            <span class="btn btn-sm btn_xoahopdong" style="font-size:18px;padding:5px; cursor: pointer;" data-idhopdong="0" data-title="Xóa">
+                <i class="fas fa-trash-alt"></i>
             </span>
           </td>
         </tr>
       `;
         $('.dsHopDong').append(newRow);
-        index++;
       });
+      parentIndex++;
     });
   }
 
