@@ -1,23 +1,31 @@
 <?php
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die('Restricted access');
+$onlyview = Factory::getUser()->onlyview_viahe
 ?>
 <div class="danhsach" style="background-color:#fff">
 	<div class="content-header">
-		<div class="row mb-2">
-			<div class="col-sm-10">
-				<h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý thông tin cấp phép sử dụng tạm thời một phần vỉa hè</h3>
+		<?php if ($onlyview == 1) { ?>
+			<div class="row mb-2">
+				<div class="col-sm-12">
+					<h3 class="m-0 text-primary"><i class="fas fa-users"></i> Xem chi tiết thông tin cấp phép sử dụng tạm thời một phần vỉa hè</h3>
+				</div>
 			</div>
-			<div class="col-sm-2 text-right" style="padding:0;">
-				<a href="<?php echo Route::_('/index.php?option=com_dcxddt&view=viahe&task=addviahe') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
-					<i class="fas fa-plus"></i> Thêm mới
-				</a>
+		<?php } else { ?>
+			<div class="row mb-2">
+				<div class="col-sm-10">
+					<h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý thông tin cấp phép sử dụng tạm thời một phần vỉa hè</h3>
+				</div>
+				<div class="col-sm-2 text-right" style="padding:0;">
+					<a href="<?php echo Route::_('/index.php?option=com_dcxddt&view=viahe&task=addviahe') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
+						<i class="fas fa-plus"></i> Thêm mới
+					</a>
+				</div>
 			</div>
-		</div>
+		<?php } ?>
 	</div>
 
 	<div class="card card-primary collapsed-card">
@@ -44,7 +52,57 @@ defined('_JEXEC') or die('Restricted access');
 	</div>
 </div>
 <script>
+	function showToast(message, isSuccess = true) {
+		const toast = $('<div></div>')
+			.text(message)
+			.css({
+				position: 'fixed',
+				top: '20px',
+				right: '20px',
+				background: isSuccess ? '#28a745' : '#dc3545',
+				color: 'white',
+				padding: '10px 20px',
+				borderRadius: '5px',
+				boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+				zIndex: 9999
+			})
+			.appendTo('body');
+
+		setTimeout(() => toast.fadeOut(500, () => toast.remove()), 1000);
+	}
+
 	jQuery(document).ready(function($) {
+		$('#btn_xuatexcel').on('click', function() {
+			const params = {
+				option: 'com_dcxddt',
+				controller: 'viahe',
+				task: 'exportExcel',
+				diachi: $('#diachi').val(),
+				[Joomla.getOptions('csrf.token')]: 1
+			};
+
+			const url = Joomla.getOptions('system.paths').baseFull + 'index.php?' + $.param(params);
+
+			// Gọi thử trước bằng AJAX để kiểm tra lỗi
+			$.ajax({
+				url: url,
+				method: 'GET',
+				success: function(data, status, xhr) {
+					const disposition = xhr.getResponseHeader('Content-Disposition');
+
+					// Nếu có header file download thì tiến hành tải
+					if (disposition && disposition.indexOf('attachment') !== -1) {
+						window.location.href = url;
+					} else {
+						showToast('Không có dữ liệu để xuất file.', false);
+					}
+				},
+				error: function(xhr) {
+					console.error('Lỗi khi gọi export:', xhr);
+					showToast('Xuất Excel thất bại. Vui lòng thử lại sau.', false);
+				}
+			});
+		});
 	})
 </script>
 

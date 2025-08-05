@@ -172,7 +172,6 @@ $idUser = Factory::getApplication()->getIdentity()->id;
                 showToast('Vui lòng chọn phường xã!', false);
                 return; // Dừng thực hiện nếu không chọn
             }
-            console.log(phuongxaId);
             $("#overlay").fadeIn(300);
             $('#div_danhsach').load('index.php', {
                 option: 'com_quansu',

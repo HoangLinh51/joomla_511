@@ -27,7 +27,7 @@ $item = $this->item;
         <input type="hidden" name="id_nguoicocong" value="<?php echo htmlspecialchars($item[0]['doituonghuong']); ?>">
 
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($item[0]['id']); ?>">
-        <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($item[0][0]['nhankhau_id']); ?>">
+        <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($item[0]['nhankhau_id']); ?>">
 
         <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
             <h5 style="margin: 0">Thông tin cá nhân</h5>
@@ -263,7 +263,7 @@ $item = $this->item;
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Ngày hỗ trợ<span class="text-danger">*</span></label>
+                                    <label class="form-label">Ngày hỗ trợ <span class="text-danger">*</span></label>
                                     <input type="text" id="modal_ngayhotro" name="modal_ngayhotro" class="form-control date-picker" placeholder="../../....">
                                     <label class="error_modal" for="modal_ngayhotro"></label>
                                 </div>
@@ -879,7 +879,7 @@ $item = $this->item;
                         const nhankhau = nhankhauResponse.items.find(nk => nk.id === item[0].nhankhau_id) || nhankhauResponse.items[0];
 
                         if (nhankhau) {
-                            const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
+                            const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}${nhankhau.canhbao ? ' - ⚠️ ' + nhankhau.canhbao : ''}`;
                             const newOption = new Option(optionText, nhankhau.id, true, true);
                             $('#select_top').append(newOption).trigger('change');
 

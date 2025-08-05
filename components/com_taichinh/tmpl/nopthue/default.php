@@ -200,6 +200,22 @@ defined('_JEXEC') or die('Restricted access');
 			});
 		});
 	});
+
+	function showToast(message, isSuccess = true) {
+		const toast = $('<div></div>').text(message).css({
+			position: 'fixed',
+			top: '20px',
+			right: '20px',
+			background: isSuccess ? '#28a745' : '#dc3545',
+			color: '#fff',
+			padding: '10px 20px',
+			borderRadius: '5px',
+			boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+			zIndex: 9999,
+			transition: 'opacity 0.5s'
+		}).appendTo('body');
+		setTimeout(() => toast.fadeOut(500, () => toast.remove()), 2000);
+	}
 </script>
 
 <style>

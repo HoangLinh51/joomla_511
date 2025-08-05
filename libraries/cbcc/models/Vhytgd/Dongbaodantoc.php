@@ -100,11 +100,15 @@ class Vhytgd_Model_Dongbaodantoc extends JModelLegacy
             ->from($db->quoteName('vptk_hokhau2nhankhau', 'nk'))
             ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
             ->where('nk.daxoa = 0')
-            ->where('hk.daxoa = 0 and nk.dantoc_id != 1');
+            ->where('hk.daxoa = 0');
 
         if ($nhankhau_id > 0) {
             $query->where('nk.id = ' . (int)$nhankhau_id);
+            // Không lọc theo tuổi nếu đang xem chi tiết theo ID
         } else {
+            // Chỉ lọc người ngoài dân tộc kinh khi tìm kiếm
+            $query->where('nk.dantoc_id != 1');
+
             if (!empty($keyword)) {
                 $search = $db->quote('%' . $db->escape($keyword, true) . '%');
                 $query->where("nk.hoten LIKE $search OR nk.cccd_so LIKE $search");
@@ -115,6 +119,7 @@ class Vhytgd_Model_Dongbaodantoc extends JModelLegacy
                 $query->where('hk.phuongxa_id IS NOT NULL AND hk.phuongxa_id IN (' . implode(',', $phuongxa) . ')');
             }
         }
+
         $query->order('nk.hokhau_id DESC');
 
         // Clone query để đếm tổng số
@@ -123,11 +128,20 @@ class Vhytgd_Model_Dongbaodantoc extends JModelLegacy
 
         $db->setQuery($countQuery);
         $total = (int) $db->loadResult();
-        // echo $query;
+
         // Lấy dữ liệu trang hiện tại
         $query->setLimit($limit, $offset);
         $db->setQuery($query);
         $items = $db->loadObjectList();
+
+        // Kiểm tra độ tuổi và thêm cảnh báo nếu không nằm trong 18–46
+        foreach ($items as &$item) {
+            if ($item->dantoc_id === 1) {
+                $item->canhbao = 'Người này thuộc dân tộc kinh';
+            } else {
+                $item->canhbao = '';
+            }
+        }
 
         return [
             'items' => $items,

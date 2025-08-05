@@ -83,38 +83,69 @@ $detailViaHe = $this->item;
         </div>
         <div class="col-md-12 mb-2 vanbancu">
             <?php if (!empty($detailViaHe['filedinhkem'])): ?>
-                <label for="mucdichsudung" class="form-label fw-bold">Tệp đính kèm</label>
-                <?php foreach ($detailViaHe['filedinhkem'] as $item): ?>
-                    <div class="d-flex align-items-center justify-content-between" id="file-<?= $item['id'] ?>">
-                        <span class="d-block mb-1">
+
+                <?php
+                $images = [];
+                $others = [];
+
+                foreach ($detailViaHe['filedinhkem'] as $item) {
+                    if (in_array($item['mime'], ['image/jpeg', 'image/png'])) {
+                        $images[] = $item;
+                    } else {
+                        $others[] = $item;
+                    }
+                }
+                ?>
+
+                <!-- 🖼️ Hiển thị ảnh (1 hàng riêng) -->
+                <?php if (!empty($images)): ?>
+                    <label class="form-label fw-bold">Ảnh đính kèm</label>
+                    <div class="d-flex flex-wrap mb-3" style="gap: 5px">
+                        <?php foreach ($images as $item): ?>
                             <?php
                             $filename = htmlspecialchars($item['filename']);
-                            $url = '';
-                            $type = '';
-
-                            if ($item['mime'] === 'application/pdf') {
-                                $url = "index.php?option=com_dungchung&view=hdsd&format=raw&task=viewpdf&file={$item['code']}&folder={$item['folder']}";
-                                $type = 'pdf';
-                            } elseif (in_array($item['mime'], ['image/jpeg', 'image/png'])) {
-                                $url = "uploader/get_image.php/{$item['folder']}?code={$item['code']}";
-                                $type = 'image';
-                            } else {
-                                $url = "index.php?option=com_core&controller=attachment&format=raw&task=download&year=" . date('Y') . "&code={$item['code']}";
-                                $type = 'download';
-                            }
+                            $url = "uploader/get_image.php/{$item['folder']}?code={$item['code']}";
                             ?>
+                            <img src="<?= $url ?>" alt="<?= $filename ?>" class="preview-link image-preview" data-type="image" data-url="<?= $url ?>">
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
 
+                <!-- 📄 Hiển thị các file khác (1 hàng riêng) -->
+                <?php if (!empty($others)): ?>
+                    <label class="form-label fw-bold">Tệp đính kèm khác</label>
+                    <?php foreach ($others as $item): ?>
+                        <?php
+                        $filename = htmlspecialchars($item['filename']);
+                        $url = '';
+                        $type = '';
+
+                        if ($item['mime'] === 'application/pdf') {
+                            $url = "index.php?option=com_dungchung&view=hdsd&format=raw&task=viewpdf&file={$item['code']}&folder={$item['folder']}";
+                            $type = 'pdf';
+                        } else {
+                            $url = "index.php?option=com_core&controller=attachment&format=raw&task=download&year=" . date('Y') . "&code={$item['code']}";
+                            $type = 'download';
+                        }
+                        ?>
+
+                        <div class="mb-2">
                             <?php if ($type === 'download'): ?>
                                 <a href="<?= $url ?>" download><?= $filename ?></a>
                             <?php else: ?>
-                                <a href="<?= $url ?>" class="preview-link" data-type="<?= $type ?>" data-url="<?= $url ?>">
+                                <a href="<?= $url ?>"
+                                    class="preview-link"
+                                    data-type="<?= $type ?>"
+                                    data-url="<?= $url ?>">
                                     <?= $filename ?>
                                 </a>
                             <?php endif; ?>
-                        </span>
-                    </div>
-                <?php endforeach; ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
             <?php endif; ?>
+
         </div>
     </div>
     <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
@@ -143,7 +174,7 @@ $detailViaHe = $this->item;
 <div id="lightboxOverlay">
     <div id="lightboxContent">
         <button id="lightboxClose">✖</button>
-        <div id="lightboxInner"></div>
+        <div id="lightboxInner" class="d-flex justify-content-center"></div>
         <div style="padding:20px"></div>
     </div>
 </div>
@@ -163,7 +194,7 @@ $detailViaHe = $this->item;
             let content = '';
 
             if (type === 'image') {
-                content = `<img src="/${relativeUrl}" />`;
+                content = `<img src="/${relativeUrl}" style="max-width:90vw; max-height:90vh;">`;
             } else if (type === 'pdf') {
                 content = `<iframe src="/${relativeUrl}" style="width:80vw; height:80vh;" frameborder="0"></iframe>`;
             }
@@ -271,7 +302,6 @@ $detailViaHe = $this->item;
     }
 
     #lightboxContent {
-        max-width: 800px;
         max-height: 90%;
         position: relative;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -314,6 +344,14 @@ $detailViaHe = $this->item;
         text-align: left;
         white-space: nowrap;
         /* giữ chữ trên 1 dòng */
+    }
+
+    .image-preview {
+        border: 1px solid;
+        max-width: 100px;
+        width: 100%;
+        height: 65px;
+        border-radius: 4px;
     }
 
     @media (max-width: 768px) {

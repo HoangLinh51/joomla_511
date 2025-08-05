@@ -3,8 +3,10 @@
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die('Restricted access');
+$onlyview = Factory::getUser()->onlyview_viahe
 ?>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
   <thead>
     <tr class="bg-primary">
@@ -15,7 +17,10 @@ defined('_JEXEC') or die('Restricted access');
       <th class="align-middle text-center">Địa chỉ</th>
       <th class="align-middle text-center">Số ngày còn lại</th>
       <th class="align-middle text-center">Trạng thái</th>
-      <th class="align-middle text-center">Chức năng</th>
+
+      <?php if ($onlyview == 0) { ?>
+        <th class="align-middle text-center">Chức năng</th>
+      <?php } ?>
     </tr>
   </thead>
   <tbody id="tbody_danhsach">
@@ -37,12 +42,9 @@ defined('_JEXEC') or die('Restricted access');
         <h5 class="modal-title" id="qrCodeModalLabel">
           <i class="fas fa-qrcode"></i> QR Code Vỉa Hè
         </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
       </div>
       <div class="modal-body text-center">
-        <div id="qrCodeContainer">
+        <div id="qrCodeContainer" class="d-flex justify-content-center">
           <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Đang tạo QR code...</span>
           </div>
@@ -50,11 +52,10 @@ defined('_JEXEC') or die('Restricted access');
         </div>
         <div id="qrCodeInfo" class="mt-3" style="display: none;">
           <p class="text-muted mb-2">Quét QR code này để xem chi tiết vỉa hè</p>
-          <small class="text-info" id="qrCodeUrl"></small>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X Đóng</button>
         <button type="button" class="btn btn-primary" id="btnDownloadQR" style="display: none;">
           <i class="fas fa-download"></i> Tải xuống
         </button>
@@ -63,10 +64,11 @@ defined('_JEXEC') or die('Restricted access');
   </div>
 </div>
 
+
 <script>
   const idUser = <?= (int)Factory::getUser()->id ?>;
   const csrfToken = Joomla.getOptions('csrf.token', '');
-
+  let qr;
   // hàm render tbody 
   function renderTableRows(items, startIndex) {
     if (!items || items.length === 0) {
@@ -82,14 +84,14 @@ defined('_JEXEC') or die('Restricted access');
       return `
         <tr>
           <td class="text-center align-middle">${startIndex + index}</td>
-          <td class="align-middle">
-            <a href="/index.php?option=com_dcxddt&view=viahe&task=xemchitiet&id=${item.id}">${item.hoten || ''}</a>
-          </td>
+          <td class="align-middle"><a href="/index.php/component/dcxddt/?view=viahe&task=xemchitiet&id=${item.id}">${item.hoten || ''}</a></td>
           <td class="align-middle">${item.dienthoai || ''}</td>
           <td class="align-middle text-center">${item.sogiayphep || ''} (lần ${item.solan})</td>
           <td class="align-middle">${item.diachi || ''}</td>
           <td class="align-middle text-center">${soNgay ?? ''} ngày</td>
           <td class="align-middle text-center">${tinhTrangHTML ?? ''}</td>
+          
+        <?php if ($onlyview == 0) { ?>
           <td class="text-center align-middle">
             <span class="btn btn-sm btn_hieuchinh"style="font-size:18px;padding:10px; cursor: pointer;" data-viahe="${item.id}" data-title="Hiệu chỉnh">
               <i class="fas fa-pencil-alt"></i>
@@ -103,6 +105,7 @@ defined('_JEXEC') or die('Restricted access');
               <i class="fas fa-trash-alt"></i>
             </span>
           </td>
+        <?php } ?>
         </tr>
       `;
     }).join('');
@@ -268,7 +271,56 @@ defined('_JEXEC') or die('Restricted access');
 
     $('body').delegate('.btn_scan', 'click', function() {
       const idviahe = $(this).data('idviahe');
-      generateQRCode(idviahe);
+      // Hiện modal trước để show loading
+      $('#qrCodeModal').modal('show');
+
+      // Reset lại
+      $('#qrCodeContainer').html(`
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Đang tạo QR code...</span>
+        </div>
+        <p class="mt-2">Đang tạo QR code...</p>
+      `);
+      $('#qrCodeInfo').hide();
+      $('#btnDownloadQR').hide();
+
+      // Lấy ID
+      const id = $(this).data('idviahe');
+
+      // Tạo URL cần gen QR (bạn có thể thay đổi theo routing thật)
+      const baseUrl = window.location.origin;
+      const qrUrl = `${baseUrl}/index.php/component/dcxddt/?view=viahe&task=xemchitiet&id=${id}`;
+
+      setTimeout(() => {
+        // Tạo mã QR
+        $('#qrCodeContainer').html('<div id="qrCodeOutput"></div>');
+        qr = new QRCode(document.getElementById("qrCodeOutput"), {
+          text: qrUrl,
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // Hiện thông tin
+        $('#qrCodeInfo').show();
+        $('#btnDownloadQR').show();
+      }, 500); // giả lập thời gian tạo QR
+    });
+
+    // Event handler cho nút tải xuống QR code
+    $('#btnDownloadQR').on('click', function() {
+      try {
+        const canvas = $('#qrCodeOutput canvas')[0];
+        const imgData = canvas.toDataURL("image/png");
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'qr_via_he.png';
+        link.click();
+      } catch (err) {
+        alert('Không thể tải mã QR. Trình duyệt không hỗ trợ.');
+      }
     });
 
     // hành động chuyển trang 
@@ -374,7 +426,7 @@ defined('_JEXEC') or die('Restricted access');
   .btn_scan:hover i {
     color: #007b8bb8;
   }
-  
+
   .btn_hieuchinh::after,
   .btn_xoa::after,
   .btn_scan::after {
@@ -406,11 +458,11 @@ defined('_JEXEC') or die('Restricted access');
   /* QR Code Modal Styles */
   #qrCodeModal .modal-content {
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
   #qrCodeModal .modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #014e58 0%, #048fa17c 100%);
     color: white;
     border-radius: 15px 15px 0 0;
   }
@@ -429,7 +481,7 @@ defined('_JEXEC') or die('Restricted access');
   }
 
   #qrCodeContainer img {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
   }
 

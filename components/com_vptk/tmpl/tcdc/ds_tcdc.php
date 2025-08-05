@@ -32,9 +32,9 @@ use Joomla\CMS\Factory;
                     <td style="vertical-align:middle;text-align: center;" class=""><?php echo $item['dienthoai']; ?></td>
                     <td style="vertical-align:middle;text-align: center;" class=""><?php echo $item['cccd_so']; ?></td>
                     <td style="vertical -align:middle;  text-align: center;display:flex; justify-content: center; align-items: center; " rowspan="" class="rp_<?php //echo $stt; 
-                                                                                                                                                              ?>">
-                        <span class="btn btn-green btn_chitiet" data-id="<?php echo $item['id']; ?>" style="font-size:20px; margin: 0 5px;"><i class="fas fa-eye btn_eye"></i></span>
-                    
+                                                                                                                                                                ?>">
+                        <span class="btn btn-green btn_chitiet" data-id="<?php echo $item['id']; ?>" style="font-size:20px; margin: 0 5px;" data-title="Xem chi tiết"><i class="fas fa-eye btn_eye"></i></span>
+
                     </td>
 
                 </tr>
@@ -49,7 +49,7 @@ use Joomla\CMS\Factory;
 </div>
 
 <script type="text/javascript">
-   
+
 </script>
 
 <style>
@@ -111,5 +111,49 @@ use Joomla\CMS\Factory;
     .text-danger i {
         font-size: 15px;
         vertical-align: middle;
+    }
+
+    span.btn_chitiet {
+        font-size: 18px;
+        padding: 10px;
+        cursor: pointer;
+        position: relative;
+        transition: color 0.3s;
+    }
+
+    .btn_chitiet {
+        cursor: pointer;
+        pointer-events: auto;
+        color: #999;
+        padding: 10px;
+    }
+
+    .btn_chitiet:hover i {
+        color: #007b8bb8;
+    }
+
+    .btn_chitiet::after {
+        content: attr(data-title);
+        position: absolute;
+        bottom: 72%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(79, 89, 102, .08);
+        color: #000000;
+        padding: 6px 10px;
+        font-size: 14px;
+        white-space: nowrap;
+        border-radius: 6px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        border: 1px solid #ccc;
+    }
+
+
+    .btn_chitiet:hover::after {
+        opacity: 1;
+        visibility: visible;
     }
 </style>

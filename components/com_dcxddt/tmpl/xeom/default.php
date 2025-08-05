@@ -566,6 +566,9 @@ use Joomla\CMS\HTML\HTMLHelper;
             return !$('#checkbox_toggle').is(':checked');
           }
         },
+        modal_biensoxe: {
+          required: true
+        }
       },
       messages: {
         select_top: 'Vui lòng chọn công dân',
@@ -573,6 +576,7 @@ use Joomla\CMS\HTML\HTMLHelper;
         modal_cccd: 'Vui lòng nhập CCCD/CMND',
         select_namsinh: 'Vui lòng chọn năm sinh',
         modal_phuongxa_id: 'Vui lòng chọn phường/xã',
+        modal_biensoxe:'Vui lòng nhập biển số xe'
       },
       errorPlacement: function(error, element) {
         if (element.hasClass('select2')) {

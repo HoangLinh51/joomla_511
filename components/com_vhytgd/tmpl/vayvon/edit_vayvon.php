@@ -214,7 +214,7 @@ $item = $this->item;
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Nguồn vốn<span class="text-danger">*</span></label>
+                                    <label class="form-label">Nguồn vốn <span class="text-danger">*</span></label>
                                     <select id="modal_nguonvon" name="modal_nguonvon" class="custom-select" data-placeholder="Chọn nguồn vốn" required>
                                         <option value=""></option>
                                         <?php if (is_array($this->vayvon) && count($this->vayvon) > 0) { ?>
@@ -232,7 +232,7 @@ $item = $this->item;
                             </div>
                             <div class="col-md-6" id="container_tyle">
                                 <div class="mb-3">
-                                    <label class="form-label">Chương trình<span class="text-danger">*</span></label>
+                                    <label class="form-label">Chương trình <span class="text-danger">*</span></label>
                                     <select id="modal_chuongtrinh" name="modal_chuongtrinh" class="custom-select" data-placeholder="Chọn loại hỗ trợ" required>
                                         <option value=""></option>
                                         <?php if (is_array($this->chuongtrinh) && count($this->chuongtrinh) > 0) { ?>
@@ -256,14 +256,14 @@ $item = $this->item;
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Giải ngân<span class="text-danger">*</span></label>
+                                    <label class="form-label">Giải ngân <span class="text-danger">*</span></label>
                                     <input type="text" id="modal_giaingan" name="modal_giaingan" class="form-control" placeholder="Nhập giải ngân">
                                     <label class="error_modal" for="modal_giaingan"></label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Tổng dư nợ<span class="text-danger">*</span></label>
+                                    <label class="form-label">Tổng dư nợ <span class="text-danger">*</span></label>
                                     <input type="text" id="modal_tongduno" name="modal_tongduno" class="form-control" placeholder="Nhập tổng dư nợ">
                                     <label class="error_modal" for="modal_tongduno"></label>
                                 </div>
@@ -284,7 +284,7 @@ $item = $this->item;
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Tình trạng<span class="text-danger">*</span></label>
+                                    <label class="form-label">Tình trạng <span class="text-danger">*</span></label>
                                     <select id="modal_tinhtrang" name="modal_tinhtrang" class="custom-select" data-placeholder="Chọn tình trạng" required>
                                         <option value=""></option>
                                         <?php if (is_array($this->tinhtrang) && count($this->tinhtrang) > 0) { ?>

@@ -330,13 +330,17 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
       ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
       ->where('nk.daxoa = 0')
       ->where('hk.daxoa = 0')
-      ->where('nk.ngaysinh IS NOT NULL')
-      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR)')
-      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 45 YEAR)');
+      ->where('nk.ngaysinh IS NOT NULL');
 
     if ($nhankhau_id > 0) {
       $query->where('nk.id = ' . (int)$nhankhau_id);
+      // Không lọc theo tuổi nếu đang xem chi tiết theo ID
     } else {
+      // Chỉ lọc người từ 18 đến 46 tuổi khi tìm kiếm
+      $query
+        ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR)')
+        ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 45 YEAR)');
+
       if (!empty($keyword)) {
         $search = $db->quote('%' . $db->escape($keyword, true) . '%');
         $query->where('(' . implode(' OR ', [
@@ -353,17 +357,30 @@ class QuanSu_Model_QuanNhanDuBi extends BaseDatabaseModel
     }
 
     $query->order('nk.hokhau_id DESC');
-    // clone query để đếm tổng số
+
+    // Clone query để đếm tổng số
     $countQuery = clone $query;
     $countQuery->clear('select')->select('COUNT(*)');
-
     $db->setQuery($countQuery);
     $total = (int) $db->loadResult();
 
-    // lấy dữ liệu trang hiện tại
+    // Lấy dữ liệu trang hiện tại
     $query->setLimit($limit, $offset);
     $db->setQuery($query);
     $items = $db->loadObjectList();
+
+    // Kiểm tra độ tuổi và thêm cảnh báo nếu không nằm trong 18–46
+    foreach ($items as &$item) {
+      $birthday = new DateTime($item->ngaysinh);
+      $today = new DateTime();
+      $age = $today->diff($birthday)->y;
+
+      if ($age < 18 || $age > 45) {
+        $item->canhbao = 'Người này không thuộc độ tuổi từ 18 đến 45';
+      } else {
+        $item->canhbao = '';
+      }
+    }
 
     return [
       'items' => $items,

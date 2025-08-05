@@ -470,4 +470,50 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
       return false;
     }
   }
+
+  public function getDanhSachXuatExcel($filters, $phuongxa)
+  {
+    $diachi = isset($filters['diachi']) ? trim($filters['diachi']) : '';
+
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    // Select fields
+    $query->select([
+      'a.hoten',
+      'a.dienthoai',
+      'a.diachi',
+      'a.dientichtamthoi',
+      'a.chieudai',
+      'a.chieurong',
+      'a.mucdichsudung',
+      'gp.sogiayphep',
+      'tthd.solan',
+      'tthd.ngayky',
+      'tthd.ngayhethan',
+    ]);
+    $query->from($db->quoteName('dcxddtmt_viahe_thongtinviahe', 'a'))
+      ->leftJoin($db->quoteName('dcxddtmt_viahe_giayphep', 'gp') . ' ON gp.thongtinviahe_id = a.id')
+      ->leftJoin($db->quoteName('dcxddtmt_viahe_thongtinhopdong', 'tthd') . ' ON tthd.giayphep_id = gp.id')
+
+      ->where('a.daxoa = 0')
+      ->where('tthd.daxoa = 0');
+
+    $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+      ? array_map('intval', array_column($phuongxa, 'id'))
+      : [];
+
+    if (!empty($phuongxaIds)) {
+      $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+    } else {
+      // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+      $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+    }
+
+    if (!empty($diachi)) {
+      $query->where($db->quoteName('a.diachi') . ' LIKE ' . $db->quote('%' . $db->escape($diachi) . '%'));
+    }
+    $query->order($db->quoteName('a.id') . ' DESC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
+  }
 }

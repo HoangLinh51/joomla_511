@@ -10,6 +10,7 @@ $chucNang = $this->chucNang;
 
 $khuVuc = $this->dmKhuvuc;
 $user = $this->user;
+var_dump($user)
 ?>
 
 <div class="container my-3">
@@ -57,6 +58,14 @@ $user = $this->user;
           <?php endforeach; ?>
         </select>
         <label for="chucnang" class="error"></label>
+      </div>
+
+      <!-- ⬇ Nơi để hiển thị checkbox nếu chọn ID 54 -->
+      <div id="chiDuocXemWrapper" style="margin-top: 10px; display: none; ">
+        <input type="checkbox" id="chiDuocXem" name="chiDuocXem" style="width: 20px; height: 20px" <?php echo ((int)$user['onlyview_viahe'] > 0) ? 'checked' : ''; ?> />
+        <label>
+          Chỉ được xem
+        </label>
       </div>
 
       <div class="formGroup">
@@ -359,7 +368,6 @@ $user = $this->user;
       phuongxa_id: <?php echo json_encode($user["phuongxa_id"] ?? ''); ?>,
       thonto_id: <?php echo json_encode($user["thonto_id"] ?? ''); ?>
     };
-    console.log(editData)
 
     $('#chucnang').select2({
       placeholder: '--- Hãy chọn chức năng ---',
@@ -421,10 +429,20 @@ $user = $this->user;
       }
     });
 
+    $('#chucnang').on('change', function() {
+      let selectedValues = $(this).val(); // Lấy danh sách các giá trị được chọn
+
+      if (selectedValues && selectedValues.includes("81")) {
+        $('#chiDuocXemWrapper').slideDown();
+      } else {
+        $('#chiDuocXemWrapper').slideUp();
+        $('#chiDuocXem').prop('checked', false); // Bỏ check nếu ẩn đi
+      }
+    });
+
     if (editData.group_id && editData.group_id.length > 0) {
       $('#chucnang').val(editData.group_id).trigger('change');
     }
-
     // Phường/Xã chỉ có 1 giá trị nên mình đưa vào mảng
     if (editData.phuongxa_id) {
       let pxArr = String(editData.phuongxa_id).split(',').map(v => v.trim()).filter(v => v !== '');

@@ -332,14 +332,14 @@ $item = $this->item;
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Ngày quyết định </label>
-                                    <input type="text" id="modal_ngay_quyet_dinh" name="modal_ngay_quyet_dinh" class="form-control date-picker" placeholder="Nhập ngày quyết định">
+                                    <input type="text" id="modal_ngay_quyet_dinh" name="modal_ngay_quyet_dinh" class="form-control date-picker" placeholder="dd/mm/yyyy">
                                     <label class="error_modal" for="modal_ngay_quyet_dinh"></label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Hưởng từ ngày <span class="text-danger">*</span></label>
-                                    <input type="text" id="modal_huong_tu_ngay" name="modal_huong_tu_ngay" class="form-control date-picker" placeholder="Nhập ngày bắt đầu hưởng">
+                                    <input type="text" id="modal_huong_tu_ngay" name="modal_huong_tu_ngay" class="form-control date-picker" placeholder="dd/mm/yyyy">
                                     <label class="error_modal" for="modal_huong_tu_ngay"></label>
                                 </div>
                             </div>
@@ -384,27 +384,27 @@ $item = $this->item;
 </div>
 
 <script>
+    function showToast(message, isSuccess = true) {
+        const toast = $('<div></div>').text(message).css({
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            background: isSuccess ? '#28a745' : '#dc3545',
+            color: '#fff',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+            zIndex: 9999,
+            transition: 'opacity 0.5s'
+        }).appendTo('body').fadeIn();
+        setTimeout(() => toast.fadeOut(500, () => toast.remove()), 2000);
+    }
     jQuery(document).ready(function($) {
         // Hàm hiển thị thông báo
         $('#btn_dong').on('click', function() {
             $('div.modal-backdrop').css('display', 'none');
         });
 
-        function showToast(message, isSuccess = true) {
-            const toast = $('<div></div>').text(message).css({
-                position: 'fixed',
-                top: '20px',
-                right: '20px',
-                background: isSuccess ? '#28a745' : '#dc3545',
-                color: '#fff',
-                padding: '10px 20px',
-                borderRadius: '5px',
-                boxShadow: '0 0 10px rgba(0,0,0,0.3)',
-                zIndex: 9999,
-                transition: 'opacity 0.5s'
-            }).appendTo('body').fadeIn();
-            setTimeout(() => toast.fadeOut(500, () => toast.remove()), 2000);
-        }
 
         // Hàm khởi tạo Select2
         function initSelect2($element, options) {

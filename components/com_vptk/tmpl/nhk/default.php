@@ -42,7 +42,6 @@ $is_quyen = $db->loadResult();
 				<div class="card-header">
 					<h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
 					<div class="card-tools">
-						<button type="button" class="btn btn-tool" data-action="reload"><i class="fas fa-sync-alt"></i></button>
 						<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
 					</div>
 				</div>
@@ -106,6 +105,7 @@ $is_quyen = $db->loadResult();
 						</tr>
 						<tr>
 							<td colspan="4" class="text-center" style="padding-top:10px;">
+								<button class="btn btn-primary" id="btn_filter"><i class="fas fa-search"></i> Tìm kiếm</button>
 								<span class="btn btn-success" id="btn_xuatexcel"><i class="fas fa-file-excel"></i> Xuất excel</span>
 							</td>
 						</tr>

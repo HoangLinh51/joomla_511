@@ -307,16 +307,18 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
       ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
       ->where('nk.daxoa = 0')
       ->where('hk.daxoa = 0')
-      ->where('nk.ngaysinh IS NOT NULL')
-      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 17 YEAR)')
-      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 18 YEAR)');
+      ->where('nk.ngaysinh IS NOT NULL');
 
     if ($nhankhau_id > 0) {
       $query->where('nk.id = ' . (int)$nhankhau_id);
+      // Không lọc theo tuổi trong trường hợp chọn chi tiết
     } else {
+      // Lọc theo tuổi chính xác 17 nếu là tìm kiếm danh sách
+      $query->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 17 YEAR)')
+        ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 18 YEAR)');
+
       if (!empty($keyword)) {
         $search = $db->quote('%' . $db->escape($keyword, true) . '%');
-        // Dùng biểu thức có ngoặc để kết hợp OR đúng cách
         $query->where('(' . implode(' OR ', [
           "nk.hoten LIKE $search",
           "nk.cccd_so LIKE $search"
@@ -342,7 +344,17 @@ class QuanSu_Model_DkTuoi17 extends BaseDatabaseModel
     $query->setLimit($limit, $offset);
     $db->setQuery($query);
     $items = $db->loadObjectList();
+    foreach ($items as &$item) {
+      $birthday = new DateTime($item->ngaysinh);
+      $today = new DateTime();
+      $age = $today->diff($birthday)->y;
 
+      if ($age !== 17) {
+        $item->canhbao = 'Người này hiện không còn đúng 17 tuổi';
+      } else {
+        $item->canhbao = '';
+      }
+    }
     return [
       'items' => $items,
       'has_more' => ($offset + count($items)) < $total

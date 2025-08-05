@@ -156,6 +156,7 @@ defined('_JEXEC') or die('Restricted access');
         hoten: $('#hoten').val(),
         cccd: $('#cccd').val(),
         gioitinh_id: $('#gioitinh_id').val(),
+        tinhtrang_id: $('#tinhtrang_id').val(),
         [Joomla.getOptions('csrf.token')]: 1
       };
 
