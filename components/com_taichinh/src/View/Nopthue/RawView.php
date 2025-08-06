@@ -72,8 +72,8 @@ class RawView extends BaseHtmlView
         $params = [
             'phuongxa_id' => $app->getInt('phuongxa_id', ''),
             'thonto_id' => $app->getInt('thonto_id', ''),
-            'tenduong' => $app->getInt('tenduong', ''),
-
+            'hoten' => $app->getString('hoten', ''),
+            'cccd' => $app->getInt('cccd', ''),
         ];
 
         $perPage = 20;
@@ -94,7 +94,6 @@ class RawView extends BaseHtmlView
             'thonto_id' => $app->getString('thonto_id', ''),
             'chucdanh_id' => $app->getInt('chucdanh_id', 0),
             'nhiemky_id' => $app->getInt('nhiemky_id', 0),
-
         ];
         if (!empty($params['thonto_id'])) {
             $params['thonto_id'] = array_filter(explode(',', $params['thonto_id']), 'is_numeric');
@@ -126,7 +125,7 @@ class RawView extends BaseHtmlView
         echo '<div class="detail-container d-flex" style="font-size:14px">';
         echo '<div class="detail-content" style="width: 100%; padding-left: 10px;">';
         echo '<table class="table table-striped table-bordered">';
-        echo '<thead class="table-primary">';
+        echo '<thead class="table-primary text-white">';
         echo '<tr>';
         echo '<th>Mã PNN</th>';
         echo '<th>Địa chỉ thửa đất</th>';
@@ -163,8 +162,12 @@ class RawView extends BaseHtmlView
             echo '<td class="align-middle">' . htmlspecialchars($detail['tenmucdich'] ?? '') . '</td>';
             echo '<td class="align-middle">' . htmlspecialchars($detail['sotienmiengiam'] ?? '') . '</td>';
             echo '<td class="align-middle">' . htmlspecialchars($formatted_money) . '</td>';
-            echo '<td class="align-middle">';
-            echo $detail['tinhtrang'] == 1 ? 'Chưa nộp' : ($detail['tinhtrang'] == 2 ? 'Đã nộp' : '');
+            echo '<td class="align-middle text-center">';
+            if($detail['tinhtrang'] == 1){
+                echo '<span class="badge bg-danger">Chưa nộp</span>';
+            }else{
+                echo '<span class="badge bg-success">Đã nộp</span>';
+            }
             echo '</td>';
             echo '<td class="align-middle">' . htmlspecialchars($detail['ghichu'] ?? '') . '</td>';
             echo '</tr>';

@@ -112,15 +112,12 @@ $startRecord = $totalRecords > 0 ? (Factory::getApplication()->input->getInt('st
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="detailModalLabel">Thông tin chi tiết</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
             </div>
             <div class="modal-body">
                 <div id="detailContent">Đang tải...</div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
             </div>
         </div>
     </div>

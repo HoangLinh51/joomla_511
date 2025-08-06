@@ -305,6 +305,10 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
 </form>
 
 <style>
+    .table-bordered td {
+        border: 1px solid #c9c9c9;
+    }
+
     .error_modal {
         display: block;
         color: #dc3545;
@@ -328,23 +332,6 @@ $id = $thongtinthietbi[0]['id_thietche'] ?? 0;
     table tbody tr td {
         vertical-align: middle;
         padding: 10px;
-    }
-
-    /* Tùy chọn: Cố định chiều rộng cột cụ thể */
-    td:nth-child(1) {
-        /* Cột Phường/Xã */
-        width: 33.33%;
-        /* Hoặc giá trị cụ thể như 300px */
-    }
-
-    td:nth-child(2) {
-        /* Cột Tên thiết chế */
-        width: 33.33%;
-    }
-
-    td:nth-child(3) {
-        /* Cột Diện tích, Vị trí, Loại hình, Trạng thái */
-        width: 33.33%;
     }
 
     .select2-container--default .select2-selection--single {

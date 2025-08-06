@@ -39,6 +39,22 @@ class Dcxddt_Model_Biensonha extends JModelLegacy
             return $result;
         }
     }
+    public function getPhuongXaById($id)
+    {
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select('a.id,a.tenkhuvuc,a.cha_id AS quanhuyen_id,b.cha_id AS tinhthanh_id,a.level');
+        $query->from('danhmuc_khuvuc AS a');
+        $query->innerJoin('danhmuc_khuvuc AS b ON a.cha_id = b.id');
+        if ($id == '-1') {
+            $query->where('a.level = 2 AND a.daxoa = 0');
+        } else {
+            $query->where('a.level = 2 AND a.daxoa = 0 AND a.id IN (' . $id . ')');
+        }
+        $query->order('tenkhuvuc ASC');
+        $db->setQuery($query);
+        return $db->loadAssocList();
+    }
     public function getThanhVienGiaDinhVanHoa($thonto_id, $nam, $search = '')
     {
         $db = Factory::getDbo();
@@ -311,7 +327,12 @@ class Dcxddt_Model_Biensonha extends JModelLegacy
     {
         $db = Factory::getDbo();
         $query = $db->getQuery(true);
-        $phanquyen = $this->getPhanquyen();
+        $phanquyen = $this->getPhanquyen(); // Tách chuỗi thành mảng
+        $list_id = '';
+        if (!empty($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
+            $mang_id  = array_map('trim', explode(',', $phanquyen['phuongxa_id']));
+            $list_id  = implode(',', array_map([$db, 'quote'], $mang_id));
+        }
 
         $query->select('a.thonto_id, a.id, dh.nhankhau_id, dh.n_diachi, COUNT(dh.id) AS so_nguoi, g.tenkhuvuc, td.tenduong, dh.id as sonha2_id');
         $query->from('dcxddtmt_thongtinsonha as a');
@@ -325,9 +346,10 @@ class Dcxddt_Model_Biensonha extends JModelLegacy
         // Kiểm tra phuongxa_id trong params trước khi sử dụng phanquyen
         if (!empty($params['phuongxa_id'])) {
             $query->where('a.phuongxa_id = ' . $db->quote($params['phuongxa_id']));
-        } elseif (isset($phanquyen['phuongxa_id']) && (string)$phanquyen['phuongxa_id'] !== '-1') {
-            $query->where('a.phuongxa_id = ' . $db->quote($phanquyen['phuongxa_id']));
+        } elseif (!empty($list_id)) {
+            $query->where('a.phuongxa_id IN (' . $list_id . ')');
         }
+
 
         if (!empty($params['tenduong'])) {
             $query->where('a.duong_id = ' . $db->quote($params['tenduong']));
@@ -343,13 +365,13 @@ class Dcxddt_Model_Biensonha extends JModelLegacy
             $query->setLimit($perPage, $startFrom);
         }
         // echo $query;
+        // exit;
 
         // Ghi log truy vấn để debug
 
         $db->setQuery($query);
         return $db->loadAssocList();
     }
-
 
     public function CountDanhSachBienSoNha($params = array())
     {
@@ -553,5 +575,62 @@ class Dcxddt_Model_Biensonha extends JModelLegacy
        
 
         return $results;
+    }
+
+    public function getDanhSachXuatExcel($filters, $phuongxa)
+    {
+        $phuongxa_id = isset($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : 0;
+        $thonto_id = isset($filters['thonto_id']) ? (int)$filters['thonto_id'] : 0;
+        $tenduong = isset($filters['tenduong']) ? trim($filters['tenduong']) : '';
+
+        $db = Factory::getDbo();
+        $query = $db->getQuery(true);
+
+        // Select fields
+        $query->select([
+            'td.tenduong',
+            'sn.n_hoten',
+            'sn.tentochuc',
+            'sn.n_dienthoai',
+            'sn.sonha',
+            'sn.tobandoso',
+            'sn.thuadatso',
+            'ht.tenhinhthuc',
+            'sn.lydothaydoi',
+        ]);
+
+        $query->from($db->quoteName('dcxddtmt_sonha2tenduong', 'sn'))
+            ->leftJoin($db->quoteName('danhmuc_hinhthuccapsonha', 'ht') . ' ON sn.hinhthuccap_id = ht.id')
+            ->leftJoin($db->quoteName('dcxddtmt_thongtinsonha', 'ttn') . ' ON ttn.id = sn.sonha_id')
+            ->leftJoin($db->quoteName('danhmuc_tenduong', 'td') . ' ON td.id = ttn.duong_id')
+            ->where('sn.daxoa = 0')
+            ->where('ttn.daxoa = 0');
+
+        // Apply filters
+        $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+            ? array_map('intval', array_column($phuongxa, 'id'))
+            : [];
+
+        if (!empty($phuongxa_id)) {
+            $query->where('ttn.phuongxa_id = ' . (int)$phuongxa_id);
+        } else {
+            // Không có phường xã filter → dùng danh sách phân quyền
+            if (!empty($phuongxaIds)) {
+                $query->where('ttn.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+            } else {
+                // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+                $query->where('ttn.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+            }
+        }
+
+        if ($thonto_id > 0) {
+            $query->where($db->quoteName('ttn.thonto_id') . ' = ' . (int)$thonto_id);
+        }
+        if (!empty($tenduong)) {
+            $query->where($db->quoteName('td.id') . ' = ' . $tenduong);
+        }
+        $query->order($db->quoteName('sn.id') . ' DESC');
+        $db->setQuery($query);
+        return $db->loadAssocList();
     }
 }

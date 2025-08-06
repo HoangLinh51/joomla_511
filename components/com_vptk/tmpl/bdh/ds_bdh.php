@@ -39,17 +39,17 @@ $actualDisplayedRows = 0;
             ?>
                         <tr>
                             <?php if ($index == 0) { ?>
-                                <td style="vertical-align:middle;" rowspan="<?php echo $rowspan; ?>">
+                                <td class="align-middle" rowspan="<?php echo $rowspan; ?>">
                                     <?php echo htmlspecialchars($thontos); ?>
                                 </td>
-                                <td style="vertical-align:middle;" rowspan="<?php echo $rowspan; ?>">
+                                <td class="align-middle" rowspan="<?php echo $rowspan; ?>">
                                     <?php echo htmlspecialchars($item['tennhiemky']); ?>
                                 </td>
                             <?php } ?>
-                            <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['hoten']); ?></td>
-                            <td style="vertical-align:middle;"><?php echo htmlspecialchars($item['tenchucdanh']); ?></td>
-                            <td style="vertical-align:middle;" class="text-center"><?php echo htmlspecialchars($item['dienthoai']); ?></td>
-                            <td style="vertical-align:middle;" class="text-center">
+                            <td class="align-middle"><?php echo htmlspecialchars($item['hoten']); ?></td>
+                            <td class="align-middle"><?php echo htmlspecialchars($item['tenchucdanh']); ?></td>
+                            <td class="text-center align-middle"><?php echo htmlspecialchars($item['dienthoai']); ?></td>
+                            <td class="text-center align-middle">
                                 <?php if ($item['tinhtrang_id'] == '1') {
                                     echo '<span class="badge bg-success"><i class="fas fa-check"></i> ' . htmlspecialchars($item['tentinhtrang']) . '</span>';
                                 } else {
@@ -57,7 +57,7 @@ $actualDisplayedRows = 0;
                                 } ?>
                             </td>
                             <?php if ($index == 0) { ?>
-                                <td style="vertical-align:middle;" class="text-center" rowspan="<?php echo $rowspan; ?>">
+                                <td class="text-center align-middle" rowspan="<?php echo $rowspan; ?>">
                                     <div class="btn-group" role="group">
 
                                         <span class="btn btn-sm btn_hieuchinh" style="padding:10px; cursor: pointer;" data-todanpho="<?php echo $item['thonto_id']; ?>" data-nhiemky="<?php echo $item['nhiemky_id']; ?>" data-title="Hiệu chỉnh">

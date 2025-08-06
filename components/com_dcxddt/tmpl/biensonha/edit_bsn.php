@@ -179,16 +179,13 @@ $item = $this->item;
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalThongtinsonhaLabel">Thêm thông tin số nhà</h5>
-                <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="frmModalBiensonha">
                     <input type="hidden" id="modal_edit_index" value="">
                     <input type="hidden" id="modal_nhankhau_id" name="modal_nhankhau_id" value="">
                     <div class="mb-3">
-                        <label class="form-label">Loại sở hữu<span class="text-danger">*</span></label>
+                        <label class="form-label">Loại sở hữu <span class="text-danger">*</span></label>
                         <select id="modal_loaisohuu" name="modal_loaisohuu" class="custom-select" data-placeholder="Chọn loại sở hữu" required>
                             <option value=""></option>
 
@@ -225,12 +222,12 @@ $item = $this->item;
                     <!-- Form cá nhân -->
                     <div id="individual_fields" style="display: none;">
                         <div class="mb-3">
-                            <label class="form-label">Tìm kiếm thành viên <input type="checkbox" id="modal_search_toggle" checked></label>
+                            <label class="form-label">Tìm kiếm công dân <input type="checkbox" id="modal_search_toggle" checked></label>
                         </div>
                         <div id="search_fields">
                             <div class="mb-3">
-                                <label class="form-label">Chọn thành viên <span class="text-danger">*</span></label>
-                                <select id="modal_nhankhau_search" name="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn thành viên"></select>
+                                <label class="form-label">Chọn công dân <span class="text-danger">*</span></label>
+                                <select id="modal_nhankhau_search" name="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn công dân"></select>
                                 <label class="error_modal" for="modal_nhankhau_search"></label>
                             </div>
                         </div>
@@ -392,6 +389,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn_dong" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
                 <input type="hidden" id="modal_sonha_id" name="modal_sonha_id" value="">
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
             </div>
@@ -545,7 +543,7 @@ $item = $this->item;
                                     const redirectUrl = `index.php?option=com_dcxddt&view=biensonha&task=edit_bsn&bsn_id=${bsn_id}`;
                                     window.location.assign(redirectUrl);
                                 }, 2000);
-                            } 
+                            }
                         },
                         error: function(xhr, status, error) {
                             console.error('AJAX error:', status, error);
@@ -559,7 +557,7 @@ $item = $this->item;
                             showToast(errorMessage, false);
                         }
                     });
-                } 
+                }
             }
 
             // Ngăn sự kiện change trùng lặp
@@ -598,7 +596,7 @@ $item = $this->item;
                 return false;
             }
 
-            $('#modalThongtinsonhaLabel').text('Thêm danh hiệu');
+            $('#modalThongtinsonhaLabel').text('Thêm số nhà');
             $('#modal_edit_index').val('');
             $('#frmModalBiensonha')[0].reset();
             initializeModalSelect2();
@@ -620,6 +618,8 @@ $item = $this->item;
 
             $('#modal_search_toggle').prop('checked', true).trigger('change');
             $('#modalThongTinSoNha').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
+
         });
         $('#modal_search_toggle').on('change', function() {
             const isChecked = $(this).is(':checked');
@@ -808,55 +808,55 @@ $item = $this->item;
                 const stt = isEditing ? parseInt($($tbody.find('tr')[editIndex]).find('.stt').text()) : $tbody.find('tr:not(.no-data)').length + 1;
                 const infoText = data.loaisohuu === '2' ?
                     `<a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $tbody.find('tr').length}" style="color: blue;">
-            <strong>Tên tổ chức:</strong> ${data.tentochuc}
-        </a><br>
-        <strong>Điện thoại:</strong> ${data.dienthoai_tochuc}<br>
-        <strong>Địa chỉ:</strong> ${data.diachi_tochuc}` :
+                            <strong>Tên tổ chức:</strong> ${data.tentochuc}
+                        </a><br>
+                        <strong>Điện thoại:</strong> ${data.dienthoai_tochuc}<br>
+                        <strong>Địa chỉ:</strong> ${data.diachi_tochuc}` :
                     `<a href="#" class="edit-nhankhau" data-index="${isEditing ? editIndex : $tbody.find('tr').length}" style="color: blue;">
-            <strong>Họ tên:</strong> ${data.hoten}
-        </a><br>
-        <strong>CCCD:</strong> ${data.cccd_so}<br>
-        <strong>Điện thoại:</strong> ${data.dienthoai}<br>
-        <strong>Giới tính:</strong> ${data.gioitinh_text}<br>
-        <strong>Ngày sinh:</strong> ${data.ngaysinh}`;
+                            <strong>Họ tên:</strong> ${data.hoten}
+                        </a><br>
+                        <strong>CCCD:</strong> ${data.cccd_so}<br>
+                        <strong>Điện thoại:</strong> ${data.dienthoai}<br>
+                        <strong>Giới tính:</strong> ${data.gioitinh_text}<br>
+                        <strong>Ngày sinh:</strong> ${data.ngaysinh}`;
 
                 const html = `
-    <tr>
-        <td class="align-middle text-center stt">${stt}</td>
-        <td class="align-middle">${infoText}</td>
-        <td class="align-middle">${data.sonha}</td>
-        <td class="align-middle">${data.tobando}</td>
-        <td class="align-middle">${data.thuadat}</td>
-        <td class="align-middle">${data.hinhthuccap_text}</td>
-        <td class="align-middle">${data.lydothaydoi}</td>
-        <td class="align-middle">${data.ghichu}</td>
-        <td class="align-middle">${data.toado1} - ${data.toado2}</td>
-        <td class="align-middle text-center">
-            <input type="hidden" name="id_sonha2[]" value="${data.sonha_id}" />
-            <input type="hidden" name="loaisohuu[]" value="${data.loaisohuu}" />
-            <input type="hidden" name="tentochuc[]" value="${data.tentochuc}" />
-            <input type="hidden" name="dienthoai_tochuc[]" value="${data.dienthoai_tochuc}" />
-            <input type="hidden" name="diachi_tochuc[]" value="${data.diachi_tochuc}" />
-            <input type="hidden" name="nhankhau_id[]" value="${data.nhankhau_id}" />
-            <input type="hidden" name="hoten[]" value="${data.hoten}" />
-            <input type="hidden" name="cccd_so[]" value="${data.cccd_so}" />
-            <input type="hidden" name="dienthoai[]" value="${data.dienthoai}" />
-            <input type="hidden" name="gioitinh_id[]" value="${data.gioitinh_id}" />
-            <input type="hidden" name="ngaysinh[]" value="${data.ngaysinh}" />
-            <input type="hidden" name="diachi[]" value="${data.diachi}" />
-            <input type="hidden" name="phuongxa_id[]" value="${data.phuongxa_id}" />
-            <input type="hidden" name="thonto_id[]" value="${data.thonto_id}" />
-            <input type="hidden" name="sonha[]" value="${data.sonha}" />
-            <input type="hidden" name="tobando[]" value="${data.tobando}" />
-            <input type="hidden" name="thuadat[]" value="${data.thuadat}" />
-            <input type="hidden" name="hinhthuccap[]" value="${data.hinhthuccap}" />
-            <input type="hidden" name="toado1[]" value="${data.toado1}" />
-            <input type="hidden" name="toado2[]" value="${data.toado2}" />
-            <input type="hidden" name="lydothaydoi[]" value="${data.lydothaydoi}" />
-            <input type="hidden" name="ghichu[]" value="${data.ghichu}" />
-            <span class="btn btn-sm btn-danger btn_xoa" data-xuly=""><i class="fas fa-trash-alt"></i></span>
-        </td>
-    </tr>`;
+                    <tr>
+                        <td class="align-middle text-center stt">${stt}</td>
+                        <td class="align-middle">${infoText}</td>
+                        <td class="align-middle">${data.sonha}</td>
+                        <td class="align-middle">${data.tobando}</td>
+                        <td class="align-middle">${data.thuadat}</td>
+                        <td class="align-middle">${data.hinhthuccap_text}</td>
+                        <td class="align-middle">${data.lydothaydoi}</td>
+                        <td class="align-middle">${data.ghichu}</td>
+                        <td class="align-middle">${data.toado1} - ${data.toado2}</td>
+                        <td class="align-middle text-center">
+                            <input type="hidden" name="id_sonha2[]" value="${data.sonha_id}" />
+                            <input type="hidden" name="loaisohuu[]" value="${data.loaisohuu}" />
+                            <input type="hidden" name="tentochuc[]" value="${data.tentochuc}" />
+                            <input type="hidden" name="dienthoai_tochuc[]" value="${data.dienthoai_tochuc}" />
+                            <input type="hidden" name="diachi_tochuc[]" value="${data.diachi_tochuc}" />
+                            <input type="hidden" name="nhankhau_id[]" value="${data.nhankhau_id}" />
+                            <input type="hidden" name="hoten[]" value="${data.hoten}" />
+                            <input type="hidden" name="cccd_so[]" value="${data.cccd_so}" />
+                            <input type="hidden" name="dienthoai[]" value="${data.dienthoai}" />
+                            <input type="hidden" name="gioitinh_id[]" value="${data.gioitinh_id}" />
+                            <input type="hidden" name="ngaysinh[]" value="${data.ngaysinh}" />
+                            <input type="hidden" name="diachi[]" value="${data.diachi}" />
+                            <input type="hidden" name="phuongxa_id[]" value="${data.phuongxa_id}" />
+                            <input type="hidden" name="thonto_id[]" value="${data.thonto_id}" />
+                            <input type="hidden" name="sonha[]" value="${data.sonha}" />
+                            <input type="hidden" name="tobando[]" value="${data.tobando}" />
+                            <input type="hidden" name="thuadat[]" value="${data.thuadat}" />
+                            <input type="hidden" name="hinhthuccap[]" value="${data.hinhthuccap}" />
+                            <input type="hidden" name="toado1[]" value="${data.toado1}" />
+                            <input type="hidden" name="toado2[]" value="${data.toado2}" />
+                            <input type="hidden" name="lydothaydoi[]" value="${data.lydothaydoi}" />
+                            <input type="hidden" name="ghichu[]" value="${data.ghichu}" />
+                            <span class="btn btn-sm btn-danger btn_xoa" data-xuly=""><i class="fas fa-trash-alt"></i></span>
+                        </td>
+                    </tr>`;
 
                 // Thêm hoặc cập nhật hàng trong bảng
                 $tbody.find('tr:has(td[colspan])').remove();
@@ -874,6 +874,7 @@ $item = $this->item;
                     updateSTT();
                 }
                 $('#modalThongTinSoNha').modal('hide');
+                $('div.modal-backdrop').css('display', 'none');
                 $('#frmModalBiensonha')[0].reset();
                 resetModal();
             } else {
@@ -969,6 +970,7 @@ $item = $this->item;
             $('#modal_lydothaydoi').prop('required', data.hinhthuccap === '5');
 
             $('#modalThongTinSoNha').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
 
         // Xử lý hiển thị lý do thay đổi khi chọn hình thức cấp
@@ -1075,13 +1077,16 @@ $item = $this->item;
                     modal_hinhthuccap: {
                         required: true
                     },
+                    modal_loaisohuu: {
+                        required: true
+                    },
                     // modal_lydothaydoi: {
                     //     required: true
                     // }
                 },
                 messages: {
-                    // modal_loaisohuu: 'Chọn loại sở hữu',
-                    modal_nhankhau_search: 'Chọn thành viên',
+                    modal_loaisohuu: 'Chọn loại sở hữu',
+                    modal_nhankhau_search: 'Chọn công dân',
                     modal_hoten: {
                         required: 'Nhập họ tên',
                         regex: 'Họ tên không được chứa ký tự đặc biệt'
@@ -1094,7 +1099,6 @@ $item = $this->item;
                     modal_tobando: 'Nhập Tờ bản đồ',
                     modal_hinhthuccap: 'Chọn hình thức cấp',
                     // modal_lydothaydoi: 'Nhập lý do',
-
                 }
             });
 
@@ -1122,17 +1126,13 @@ $item = $this->item;
                     },
                     tuyenduong: {
                         required: true,
-
                     }
                 },
                 messages: {
                     phuongxa_id: 'Chọn Phường/Xã',
                     thonto_id: 'Chọn Thôn/Tổ',
                     tuyenduong: 'Vui lòng chọn tuyến đường',
-
-
                 }
-
             });
         }
         $('.yearpicker').datepicker({
@@ -1317,6 +1317,9 @@ $item = $this->item;
 
         $('#btn_quaylai').on('click', function() {
             window.location.href = '/index.php/component/dcxddt/?view=biensonha&task=default';
+        });
+        $('#btn_dong').on('click', function() {
+            $('div.modal-backdrop').css('display', 'none');
         });
 
         $('#phuongxa_id').trigger('change');

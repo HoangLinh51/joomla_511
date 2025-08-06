@@ -154,19 +154,17 @@ $item = $this->item;
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalGiaDinhVanHoaLabel">Thêm thông tin thành viên</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                </button>
             </div>
             <div class="modal-body">
                 <form id="frmModalGiaDinhVanHoa">
                     <input type="hidden" id="modal_edit_index" value="">
                     <div class="mb-3">
-                        <label class="form-label">Tìm kiếm thành viên <input type="checkbox" id="modal_search_toggle" checked></label>
+                        <label class="form-label">Tìm kiếm công dân <input type="checkbox" id="modal_search_toggle" checked></label>
                     </div>
                     <div id="search_fields">
                         <div class="mb-3">
-                            <label class="form-label">Chọn thành viên <span class="text-danger"> * </span></label>
-                            <select id="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn thành viên"></select>
+                            <label class="form-label">Chọn công dân <span class="text-danger"> * </span></label>
+                            <select id="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn công dân"></select>
                         </div>
                     </div>
                     <div id="manual_fields">
@@ -252,7 +250,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" id="bnt_dong" data-bs-dismiss="modal" aria-label="Close">X Đóng</button>
                 <input type="hidden" id="modal_nhankhau_id" name="modal_nhankhau_id" value="">
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
             </div>
@@ -285,6 +283,9 @@ $item = $this->item;
             }
         });
 
+        $('#btn_dong').on('click', function() {
+            $('div.modal-backdrop').css('display', 'none');
+        });
 
         $('select.custom-select').on('change.select2 blur', function() {
             $(this).closest('form').validate().element(this);
@@ -522,6 +523,7 @@ $item = $this->item;
 
             $('#modal_search_toggle').prop('checked', true).trigger('change');
             $('#modalGiaDinhVanHoa').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
 
         $('#modal_search_toggle').on('change', function() {
@@ -758,6 +760,7 @@ $item = $this->item;
 
                     updateSTT();
                     $('#modalGiaDinhVanHoa').modal('hide');
+                    $('div.modal-backdrop').css('display', 'none');
                     resetModal();
                     showToast('Lưu thành viên thành công', true);
                 } catch (e) {
@@ -788,7 +791,7 @@ $item = $this->item;
             const phuongxa_id = $row.find('input[name="phuongxa_id[]"]').val() || $('#phuongxa_id').val();
             const thonto_id = $row.find('input[name="thonto_id[]"]').val() || $('#thonto_id').val();
 
-            $('#modalGiaDinhVanHoaLabel').text('Chỉnh sửa Thành Viên');
+            $('#modalGiaDinhVanHoaLabel').text('Hiệu chỉnh thông tin danh hiệu');
             $('#modal_edit_index').val(index);
 
             initializeModalSelect2();
@@ -910,6 +913,7 @@ $item = $this->item;
             });
 
             $('#modalGiaDinhVanHoa').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
 
         $('body').on('click', '.btn_xoa', function() {
@@ -1271,7 +1275,7 @@ $item = $this->item;
         width: 33.33%;
         padding: .75rem 0rem .75rem .75rem;
     }
-    
+
     .table#tblThongtin .form-control,
     .table#tblThongtin .custom-select,
     .table#tblThongtin .input-group {

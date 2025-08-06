@@ -119,7 +119,7 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
   }
 
   //get list danh sách các thành viên đoàn hội đang được phân quyền 
-  public function getListXeOm($filters)
+  public function getListXeOm($filters, $phuongxa)
   {
     // Extract filter parameters
     $page = isset($filters['page']) ? (int)$filters['page'] : 1;
@@ -157,8 +157,20 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
       $query->where($db->quoteName('a.n_cccd') . ' LIKE ' . $db->quote('%' . $db->escape($cccd) . '%'));
     }
 
-    if ($phuongxa_id > 0) {
-      $query->where($db->quoteName('a.n_phuongxa_id') . ' = ' . (int)$phuongxa_id);
+    $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+      ? array_map('intval', array_column($phuongxa, 'id'))
+      : [];
+
+    if (!empty($phuongxa_id)) {
+      $query->where('a.n_phuongxa_id = ' . $phuongxa_id);
+    } else {
+      // Không có phường xã filter → dùng danh sách phân quyền
+      if (!empty($phuongxaIds)) {
+        $query->where('a.n_phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+      } else {
+        // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+        $query->where('a.n_phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      }
     }
 
     if ($thonto_id > 0) {
@@ -312,7 +324,9 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     $query = $db->getQuery(true);
     $query->select('COUNT(*)')
       ->from($db->quoteName('dcxddtmt_xeom'))
-      ->where($db->quoteName('nhankhau_id') . ' = ' . (int)$nhankhau_id);
+      ->where($db->quoteName('nhankhau_id') . ' = ' . (int)$nhankhau_id)
+      ->where('daxoa = 0');
+
 
     // Execute query
     $db->setQuery($query);
@@ -350,11 +364,11 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     if (!empty($formdata['loaixe_id'])) {
       $columns['loaixe_id'] = $formdata['loaixe_id'];
     }
-    if (!empty($formdata['modal_namsinh'])) {
-      $columns['n_namsinh'] = (new \DateTime($formdata['modal_namsinh']))->format('Y-m-d');
+    if (!empty($formdata['namsinh'])) {
+      $columns['n_namsinh'] = (new \DateTime($formdata['namsinh']))->format('Y-m-d');
     }
-    if (!empty($formdata['modal_ngayhethan_thehanhnghe'])) {
-      $columns['thehanhnghe_ngayhethan'] =  (new \DateTime($formdata['modal_ngayhethan_thehanhnghe']))->format('Y-m-d');
+    if (!empty($formdata['ngayhethan_thehanhnghe'])) {
+      $columns['thehanhnghe_ngayhethan'] =  (new \DateTime($formdata['ngayhethan_thehanhnghe']))->format('Y-m-d');
     }
     if (!empty($formdata['tinhtrang_id'])) {
       $columns['tinhtrangthe_id'] = $formdata['tinhtrang_id'];
@@ -482,9 +496,82 @@ class Dcxddt_Model_XeOm extends BaseDatabaseModel
     // echo $query;
     $db->setQuery($query);
     $results = $db->loadAssocList();
-
-
-
     return $results;
+  }
+
+  public function getDanhSachXuatExcel($filters, $phuongxa)
+  {
+    $hoten = isset($filters['hoten']) ? trim($filters['hoten']) : '';
+    $cccd = isset($filters['cccd']) ? trim($filters['cccd']) : '';
+    $gioitinh_id = isset($filters['gioitinh_id']) ? (int)$filters['gioitinh_id'] : 0;
+    $phuongxa_id = isset($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : 0;
+    $thonto_id = isset($filters['thonto_id']) ? (int)$filters['thonto_id'] : 0;
+
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+    // Select fields
+    $query->select([
+      'a.n_hoten',
+      'DATE_FORMAT(a.n_namsinh, "%d/%m/%Y") AS namsinh',
+      'gt.tengioitinh',
+      'a.n_cccd',
+      'DATE_FORMAT(hk.cccd_ngaycap, "%d/%m/%Y") AS cccd_ngaycap',
+      'hk.cccd_coquancap',
+      'a.n_diachi',
+      'tt.tenkhuvuc as thonto',
+      'px.tenkhuvuc as phuongxa',
+      'lx.tenloaixe',
+      'a.biensoxe',
+      'a.thehanhnghe_so',
+      'a.sogiaypheplaixe',
+      'ttt.tentinhtrang',
+    ]);
+
+
+    $query->from('dcxddtmt_xeom as a')
+      ->leftJoin('danhmuc_gioitinh AS gt ON a.n_gioitinh_id = gt.id')
+      ->leftJoin($db->quoteName('vptk_hokhau2nhankhau', 'hk') . ' ON hk.id = a.nhankhau_id AND a.is_ngoai = 0 AND hk.daxoa = 0')
+      ->leftJoin($db->quoteName('danhmuc_khuvuc', 'tt') . ' ON tt.id = a.n_thonto_id AND tt.daxoa = 0')
+      ->leftJoin($db->quoteName('danhmuc_khuvuc', 'px') . ' ON px.id = a.n_phuongxa_id AND px.daxoa = 0')
+      ->leftJoin($db->quoteName('danhmuc_loaixe', 'lx') . ' ON lx.id = a.loaixe_id')
+      ->leftJoin($db->quoteName('danhmuc_tinhtrangthe', 'ttt') . ' ON ttt.id = a.tinhtrangthe_id')
+      ->where('a.daxoa = 0');
+
+    // Apply filters
+    if (!empty($hoten)) {
+      $query->where($db->quoteName('a.n_hoten') . ' LIKE ' . $db->quote('%' . $db->escape($hoten) . '%'));
+    }
+
+    if (!empty($cccd)) {
+      $query->where($db->quoteName('a.n_cccd') . ' LIKE ' . $db->quote('%' . $db->escape($cccd) . '%'));
+    }
+
+    $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
+      ? array_map('intval', array_column($phuongxa, 'id'))
+      : [];
+
+    if (!empty($phuongxa_id)) {
+      $query->where('a.n_phuongxa_id = ' . $phuongxa_id);
+    } else {
+      // Không có phường xã filter → dùng danh sách phân quyền
+      if (!empty($phuongxaIds)) {
+        $query->where('a.n_phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+      } else {
+        // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
+        $query->where('a.n_phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      }
+    }
+
+    if ($thonto_id > 0) {
+      $query->where($db->quoteName('a.n_thonto_id') . ' = ' . (int)$thonto_id);
+    }
+
+    if ($gioitinh_id > 0) {
+      $query->where($db->quoteName('a.n_gioitinh_id') . ' = ' . (int)$gioitinh_id);
+    }
+
+    $query->order($db->quoteName('a.id') . ' DESC');
+    $db->setQuery($query);
+    return $db->loadAssocList();
   }
 }

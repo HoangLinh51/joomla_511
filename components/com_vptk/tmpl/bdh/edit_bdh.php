@@ -165,20 +165,18 @@ $item = $this->item;
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalBanDieuHanhLabel">Thêm thông tin thành viên</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                </button>
+                <h5 class="modal-title" id="modalBanDieuHanhLabel">Thêm thông tin công dân</h5>
             </div>
             <div class="modal-body">
                 <form id="frmModalBanDieuHanh">
                     <input type="hidden" id="modal_edit_index" value="">
                     <div class="mb-3">
-                        <label class="form-label">Tìm kiếm thành viên <input type="checkbox" id="modal_search_toggle" checked></label>
+                        <label class="form-label">Tìm kiếm công dân <input type="checkbox" id="modal_search_toggle" checked></label>
                     </div>
                     <div id="search_fields">
                         <div class="mb-3">
-                            <label class="form-label">Chọn thành viên <span class="text-danger"> * </span></label>
-                            <select id="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn thành viên"></select>
+                            <label class="form-label">Chọn công dân <span class="text-danger">*</span></label>
+                            <select id="modal_nhankhau_search" class="custom-select" data-placeholder="Chọn công dân"></select>
                         </div>
                     </div>
                     <div id="manual_fields">
@@ -261,8 +259,6 @@ $item = $this->item;
                                         <option value="1">Có</option>
                                         <option value="2"> Không</option>
                                     </select>
-
-                                    <!-- <input type="checkbox" id="modal_is_dangvien" name="modal_is_dangvien" value="1"> -->
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -316,18 +312,18 @@ $item = $this->item;
                                     </select>
                                 </div>
                             </div>
-                            <div class="row mb-3" style="margin-left:2px">
-                                <div class="col-md-6">
+                            <div class="col-md-6 d-flex justify-content-between">
+                                <div class="mb-3">
                                     <label class="form-label">Từ ngày</label>
                                     <input type="text" id="modal_thoigian_tungay" name="modal_thoigian_tungay" class="form-control date-picker" placeholder="Từ ngày">
                                 </div>
-                                <div class="col-md-6" style="padding-left:19px;padding-right:10px">
+                                <div class="mb-3">
                                     <label class="form-label">Đến ngày</label>
                                     <input type="text" id="modal_thoigian_denngay" name="modal_thoigian_denngay" class="form-control date-picker" placeholder="Đến ngày">
                                 </div>
                             </div>
 
-                            <div class="col-md-6" style="margin-left:6px">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Tình trạng <span class="text-danger">*</span></label>
                                     <select id="modal_tinhtrang_id" name="modal_tinhtrang_id" class="custom-select" data-placeholder="Chọn tình trạng">
@@ -348,8 +344,6 @@ $item = $this->item;
                                 <div class="mb-3">
                                     <label class="form-label">Lý do kết thúc</label>
                                     <input type="text" id="modal_lydoketthuc" name="modal_lydoketthuc" class="form-control" placeholder="Nhập lý do kết thúc">
-
-
                                 </div>
                             </div>
                         </div>
@@ -357,7 +351,7 @@ $item = $this->item;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <input type="hidden" id="modal_nhankhau_id" name="modal_nhankhau_id" value="">
 
                 <button type="button" class="btn btn-primary" id="btn_luu_nhankhau"><i class="fas fa-save"></i> Lưu</button>
@@ -590,6 +584,7 @@ $item = $this->item;
             $('#modal_search_toggle').prop('checked', true).trigger('change');
             // $('#modal_nhankhau_search').val('').trigger('change.select2');
             $('#modalBanDieuHanh').modal('show');
+            $('div.modal-backdrop').css('display', 'block');
         });
         $('#modal_search_toggle').on('change', function() {
             const isChecked = $(this).is(':checked');
@@ -855,6 +850,7 @@ $item = $this->item;
                     }
                     updateSTT();
                     $('#modalBanDieuHanh').modal('hide');
+                    $('div.modal-backdrop').css('display', 'none');
                     $('#frmModalBanDieuHanh')[0].reset();
                     $('#frmModalBanDieuHanh select').val('').trigger('change.select2');
                     resetModal();
@@ -1025,6 +1021,8 @@ $item = $this->item;
 
             // Show modal
             $('#modalBanDieuHanh').modal('show');
+
+            $('div.modal-backdrop').css('display', 'block');
 
             // Gán dữ liệu vào các input khi modal đã hiển thị
             $('#modalBanDieuHanh').one('shown.bs.modal', function() {

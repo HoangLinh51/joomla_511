@@ -33,13 +33,13 @@ $detailLaoDong = $this->detailLaoDong;
       <h5 style="margin: 0">Thông tin cá nhân</h5>
       <div class="d-flex align-items-center" style="gap:5px">
         <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($detailLaoDong->nhankhau_id) ? 'checked' : ''; ?>>
-        <small>Chọn người lao động từ danh sách nhân khẩu</small>
+        <small>Chọn công dân từ danh sách nhân khẩu</small>
       </div>
     </div>
     <div id="select-container" style="display: <?php echo htmlspecialchars($detailLaoDong->nhankhau_id) ? 'block' : 'none'; ?>;" class="mb-3">
-      <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+      <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
       <select id="select_top" name="select_top" class="select2">
-        <option value="">-- Chọn --</option>
+        <option value="">Chọn công dân</option>
         <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
           <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($detailLaoDong->nhankhau_id) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
         <?php } ?>
@@ -609,7 +609,7 @@ $detailLaoDong = $this->detailLaoDong;
         }
       },
       messages: {
-        select_top: 'Vui lòng chọn nhân khẩu',
+        select_top: 'Vui lòng chọn công dân',
         hoten: 'Vui lòng nhập họ và tên',
         cccd: 'Vui lòng nhập CCCD/CMND',
         namsinh: 'Vui lòng chọn năm sinh',

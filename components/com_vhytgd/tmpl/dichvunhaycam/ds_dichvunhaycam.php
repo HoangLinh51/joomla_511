@@ -27,7 +27,6 @@ defined('_JEXEC') or die('Restricted access');
     <div class="card-header" data-card-widget="collapse">
       <h3 class="card-title"><i class="fas fa-search"></i> Tìm kiếm</h3>
       <div class="card-tools">
-        <button type="button" class="btn btn-tool" data-card-widget="none" data-action="reload"><i class="fas fa-sync-alt"></i></button>
         <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-chevron-up"></i></button>
       </div>
     </div>
@@ -98,12 +97,12 @@ defined('_JEXEC') or die('Restricted access');
     <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
       <thead>
         <tr class="bg-primary">
-          <th style="vertical-align: middle" class="text-center">STT</th>
-          <th style="vertical-align: middle" class="text-center">Tên cơ sở</th>
-          <th style="vertical-align: middle" class="text-center">Địa chỉ</th>
-          <th style="vertical-align: middle; min-width: 185px; max-width: 195px" class="text-center">Thông tin chủ cơ sở</th>
-          <th style="vertical-align: middle; min-width: 140px; max-width: 150px" class="text-center">Trạng thái</th>
-          <th style="vertical-align: middle; min-width: 125px; max-width: 135px" class="text-center">Chức năng </th>
+          <th class="text-center align-middle">STT</th>
+          <th class="text-center align-middle">Tên cơ sở</th>
+          <th class="text-center align-middle">Địa chỉ</th>
+          <th style="min-width: 185px; max-width: 195px" class="text-center align-middle">Thông tin chủ cơ sở</th>
+          <th style="min-width: 140px; max-width: 150px" class="text-center align-middle">Trạng thái</th>
+          <th style="min-width: 125px; max-width: 135px" class="text-center align-middle">Chức năng </th>
         </tr>
       </thead>
       <tbody id="tbody_danhsach">
@@ -153,9 +152,9 @@ defined('_JEXEC') or die('Restricted access');
         <td class="align-middle">
           ${item.coso_ten || ''}
         </td>
-        <td class="align-middle;">${item.coso_diachi || ''}</td>
-        <td class="align-middle;"><strong>${item.chucoso_ten || ''}</strong> <br>CCCD: ${item.chucoso_cccd || ''} <br>SDT: ${item.chucoso_dienthoai || ''}</td>
-        <td class="align-middle;">${renderStatus(item.tentrangthaihoatdong)}</td>
+        <td class="align-middle">${item.coso_diachi || ''}</td>
+        <td class="align-middle"><strong>${item.chucoso_ten || ''}</strong> <br>CCCD: ${item.chucoso_cccd || ''} <br>SDT: ${item.chucoso_dienthoai || ''}</td>
+        <td class="align-middle text-center">${renderStatus(item.tentrangthaihoatdong)}</td>
         <td class="text-center align-middle">
          <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px;" data-idcoso="${item.id}" data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>
@@ -178,7 +177,6 @@ defined('_JEXEC') or die('Restricted access');
       return `<span class="badge bg-danger  ">${status}</span>`;
     }
   }
-
 
   function renderPagination(currentPage, totalPages, totalRecord, take) {
     let html = '<ul class="pagination">';
@@ -374,57 +372,23 @@ defined('_JEXEC') or die('Restricted access');
             });
 
             const data = await response.json();
+            showToast(data.message || 'Xóa thành công', data.success !== false);
 
-            const message = data.message || (data.success !== false ? 'Xóa cơ sở thành công' : 'Xóa thất bại!');
-            const icon = data.success !== false ?
-              '<svg class="success-icon" width="20" height="20" viewBox="0 0 20 20" fill="green"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm-1 15.59L4.41 11l1.42-1.42L9 12.17l5.59-5.58L16 8l-7 7z"/></svg>' :
-              '';
-
-            bootbox.alert({
-              title: icon + '<span class="text-primary" style="font-weight:bold;font-size:20px;">Thông báo</span>',
-              message: '<span style="font-size:20px;">' + message + '</span>',
-              backdrop: true,
-              className: 'small-alert',
-              buttons: {
-                ok: {
-                  label: 'OK',
-                  className: 'hidden' // Ẩn nút OK
-                }
-              },
-              onShown: function() {
-                setTimeout(function() {
-                  bootbox.hideAll();
-                  if (data.success !== false) {
-                    window.location.href = '/index.php/component/dichvunhaycam/?view=dichvunhaycam';
-                  }
-                }, 2000);
-              }
-            });
+            if (data.success !== false) {
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }
 
           } catch (error) {
             console.error('Error:', error);
-            bootbox.alert({
-              title: "<span style='font-weight:bold;font-size:20px;'>Thông báo</span>",
-              message: '<span style="font-size:20px;">Đã xảy ra lỗi khi xóa dữ liệu</span>',
-              className: 'small-alert',
-              buttons: {
-                ok: {
-                  label: 'OK',
-                  className: 'hidden'
-                }
-              },
-              onShown: function() {
-                setTimeout(function() {
-                  bootbox.hideAll();
-                }, 2000);
-              }
-            });
+            showToast(error, false)
           }
         },
         className: 'custom-bootbox'
       });
     });
-    
+
     $('#btn_xuatexcel').on('click', function() {
       let params = {
         option: 'com_vhytgd',

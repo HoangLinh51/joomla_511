@@ -34,13 +34,13 @@ $item = $this->item;
             <h5 style="margin: 0">Thông tin cá nhân</h5>
             <div class="d-flex align-items-center" style="gap:5px">
                 <input type="checkbox" id="checkbox_toggle" style="width: 20px; height: 20px;" <?php echo htmlspecialchars($item[0]['nhanhokhau_id']) ? 'checked' : ''; ?>>
-                <small>Chọn người lao động từ danh sách nhân khẩu</small>
+                <small>Chọn công dân từ danh sách nhân khẩu</small>
             </div>
         </div>
         <div id="select-container" style="display: <?php echo htmlspecialchars($item[0]['nhanhokhau_id']) ? 'block' : 'none'; ?>;margin-bottom: 1rem !important" class="mb-3">
-            <label for="select_top" class="form-label fw-bold">Tìm nhân khẩu</label>
+            <label for="select_top" class="form-label fw-bold">Tìm kiếm công dân</label>
             <select id="select_top" name="select_top" class="custom-select">
-                <option value="">-- Chọn --</option>
+                <option value="">Chọn công dân</option>
                 <?php foreach ($this->danhsach_thanhvien as $tv) { ?>
                     <option value="<?php echo $tv['id']; ?>" <?php echo htmlspecialchars($item[0]['nhanhokhau_id']) == $tv['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($tv['hoten']); ?></option>
                 <?php } ?>
@@ -129,7 +129,7 @@ $item = $this->item;
         <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
             <h5 class="">Thông tin nộp thuế</h5>
             <!-- <button class="btn btn-success btn_themnopthue">Thêm chính sách</button> -->
-            <button type="button" class="btn btn-success" id="btn_themnopthue" data-toggle="modal" data-target="#modalNopThueDat"><i class="fas fa-plus"></i> Thêm mới</button>
+            <button type="button" class="btn btn-primary" id="btn_themnopthue" data-toggle="modal" data-target="#modalNopThueDat"><i class="fas fa-plus"></i> Thêm mới</button>
 
         </div>
         <div class="row g-3 mb-4">
@@ -173,11 +173,11 @@ $item = $this->item;
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['tenmucdich'] ?? ''); ?></td>
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['sotienmiengiam'] ?? ''); ?></td>
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['tongtiennop'] ?? ''); ?></td>
-                                <td class="align-middle">
+                                <td class="align-middle text-center">
                                     <?php if ($nk['tinhtrang'] === 1) { ?>
-                                        <span class="badge bg-success">Đã nộp</span>
-                                    <?php } else if ($nk['tinhtrang'] === 2) { ?>
                                         <span class="badge bg-danger">Chưa nộp</span>
+                                    <?php } else if ($nk['tinhtrang'] === 2) { ?>
+                                        <span class="badge bg-success">Đã nộp</span>
                                     <?php } ?>
                                 </td>
                                 <td class="align-middle"><?php echo htmlspecialchars($nk['ghichu'] ?? ''); ?></td>
@@ -225,9 +225,6 @@ $item = $this->item;
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalNopthuedatLabel">Thêm thông nộp thuế đất</h5>
-                <button type="button" class="btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <form id="frmModalNopThueDat">
@@ -237,7 +234,6 @@ $item = $this->item;
                                 <div class="mb-3">
                                     <label class="form-label">Mã phi nông nghiệp <span class="text-danger">*</span></label>
                                     <input type="text" id="modal_maphinongnghiep" name="modal_maphinongnghiep" class="form-control" placeholder="Nhập mã phi nông nghiệp">
-
                                     <label class="error_modal" for="modal_maphinongnghiep"></label>
                                 </div>
                             </div>
@@ -382,7 +378,6 @@ $item = $this->item;
                 <button type="button" class="btn btn-secondary" class="close" data-bs-dismiss="modal" aria-label="Close">Đóng</button>
                 <input type="hidden" id="modal_trocap_id" name="modal_trocap_id" value="">
                 <input type="hidden" id="modal_id_uudai" name="modal_id_uudai" value="">
-
                 <button type="button" class="btn btn-primary" id="btn_luu_trocap"><i class="fas fa-save"></i> Lưu</button>
             </div>
         </div>
@@ -612,7 +607,7 @@ $item = $this->item;
                     try {
                         $element.select2('destroy');
                     } catch (e) {
-                        console.warn('Lỗi khi hủy Select2:', e);
+                        // console.warn('Lỗi khi hủy Select2:', e);
                     }
                 }
                 $element.select2($.extend({
@@ -741,7 +736,7 @@ $item = $this->item;
             } else {
                 $('#modal_muc_tien_chuan').val('');
                 $('#modal_thuc_nhan').val('').prop('readonly', false);
-                console.warn('sotien không hợp lệ:', sotien);
+                // console.warn('sotien không hợp lệ:', sotien);
             }
 
             if ($form.validate) {
@@ -895,44 +890,49 @@ $item = $this->item;
                 // Get text for select fields
                 const mucdichsudung_text = $('#modal_mucdichsudung option:selected').text() || '';
                 const tenduong_text = $('#modal_tenduong option:selected').text() || '';
-                const tinhtrang_text = $('#modal_tinhtang option:selected').text() || '';
-
+                let stringTrangThai = ''
+                if (data.modal_tinhtang == 1) {
+                    stringTrangThai = '<span class="badge bg-danger">Chưa nộp</span>';
+                } else {
+                    stringTrangThai = '<span class="badge bg-success">Đã nộp</span>';
+                }
                 // Generate table row HTML
                 const html = `
-            <tr>
-                <td class="align-middle text-center stt"></td>
-                <td class="align-middle">${data.modal_maphinongnghiep}</td>
-                <td class="align-middle">${data.modal_diachi}</td>
-                <td class="align-middle"><strong>Số giấy chứng nhận: </strong>${data.modal_sogiaychungnhan}<br><strong>Ngày chứng nhận: </strong>${data.modal_ngaycap}</td>
-                <td class="align-middle"><strong>Tờ bản đồ: </strong>${data.modal_tobando}<br><strong>Thửa đất: </strong>${data.modal_thuadat}</td>
-                <td class="align-middle"><strong>Diện tích có GCN: </strong>${data.modal_dientichcogcn}<br><strong>Diện tích chưa có GCN: </strong>${data.modal_dientichchuacogcn}<br><strong>Diện tích sử dụng:</strong>${data.modal_dientichsd}</td>
-                <td class="align-middle">${mucdichsudung_text}</td>
-                <td class="align-middle">${data.modal_miengiamthue}</td>
-                <td class="align-middle">${formatCurrency(data.modal_tongtien)}</td>
-                <td class="align-middle">${tinhtrang_text}</td>
-                <td class="align-middle">${data.modal_ghichu}</td>
+                    <tr>
+                        <td class="align-middle text-center stt"></td>
+                        <td class="align-middle">${data.modal_maphinongnghiep}</td>
+                        <td class="align-middle">${data.modal_diachi}</td>
+                        <td class="align-middle"><strong>Số giấy chứng nhận: </strong>${data.modal_sogiaychungnhan}<br><strong>Ngày chứng nhận: </strong>${data.modal_ngaycap}</td>
+                        <td class="align-middle"><strong>Tờ bản đồ: </strong>${data.modal_tobando}<br><strong>Thửa đất: </strong>${data.modal_thuadat}</td>
+                        <td class="align-middle"><strong>Diện tích có GCN: </strong>${data.modal_dientichcogcn}<br><strong>Diện tích chưa có GCN: </strong>${data.modal_dientichchuacogcn}<br><strong>Diện tích sử dụng:</strong>${data.modal_dientichsd}</td>
+                        <td class="align-middle">${mucdichsudung_text}</td>
+                        <td class="align-middle">${data.modal_miengiamthue}</td>
+                        <td class="align-middle">${formatCurrency(data.modal_tongtien)}</td>
+                        <td class="align-middle text-center">${stringTrangThai}</td>
+                        <td class="align-middle">${data.modal_ghichu}</td>
 
-                <td class="align-middle text-center" style="min-width:100px">
-                    <input type="hidden" name="chitiet_id[]" value="${data.modal_trocap_id}" />
-                    <input type="hidden" name="maphinongnghiep[]" value="${data.modal_maphinongnghiep}" />
-                    <input type="hidden" name="sogiaychungnhan[]" value="${data.modal_sogiaychungnhan}" />
-                    <input type="hidden" name="diachi[]" value="${data.modal_diachi}" />
-                    <input type="hidden" name="ngaycap[]" value="${data.modal_ngaycap}" />
-                    <input type="hidden" name="tobando[]" value="${data.modal_tobando}" />
-                    <input type="hidden" name="thuadat[]" value="${data.modal_thuadat}" />
-                    <input type="hidden" name="dientichcogcn[]" value="${data.modal_dientichcogcn}" />
-                    <input type="hidden" name="dientichchuacogcn[]" value="${data.modal_dientichchuacogcn}" />
-                    <input type="hidden" name="dientichsd[]" value="${data.modal_dientichsd}" />
-                    <input type="hidden" name="mucdichsudung[]" value="${data.modal_mucdichsudung}" />
-                    <input type="hidden" name="tenduong[]" value="${data.modal_tenduong}" />
-                    <input type="hidden" name="miengiamthue[]" value="${data.modal_miengiamthue}" />
-                    <input type="hidden" name="tongtien[]" value="${data.modal_tongtien}" />
-                    <input type="hidden" name="tinhtrang[]" value="${data.modal_tinhtang}" />
-                    <input type="hidden" name="ghichu[]" value="${data.modal_ghichu}" />
-                    <span class="btn btn-sm btn-warning btn_edit_trocap" data-trocap-id="${data.modal_trocap_id}"><i class="fas fa-edit"></i></span>
-                    <span class="btn btn-sm btn-danger btn_xoa_trocap" data-trocap-id="${data.modal_trocap_id}"><i class="fas fa-trash-alt"></i></span>
-                </td>
-            </tr>`;
+                        <td class="align-middle text-center" style="min-width:100px">
+                            <input type="hidden" name="chitiet_id[]" value="${data.modal_trocap_id}" />
+                            <input type="hidden" name="maphinongnghiep[]" value="${data.modal_maphinongnghiep}" />
+                            <input type="hidden" name="sogiaychungnhan[]" value="${data.modal_sogiaychungnhan}" />
+                            <input type="hidden" name="diachi[]" value="${data.modal_diachi}" />
+                            <input type="hidden" name="ngaycap[]" value="${data.modal_ngaycap}" />
+                            <input type="hidden" name="tobando[]" value="${data.modal_tobando}" />
+                            <input type="hidden" name="thuadat[]" value="${data.modal_thuadat}" />
+                            <input type="hidden" name="dientichcogcn[]" value="${data.modal_dientichcogcn}" />
+                            <input type="hidden" name="dientichchuacogcn[]" value="${data.modal_dientichchuacogcn}" />
+                            <input type="hidden" name="dientichsd[]" value="${data.modal_dientichsd}" />
+                            <input type="hidden" name="mucdichsudung[]" value="${data.modal_mucdichsudung}" />
+                            <input type="hidden" name="tenduong[]" value="${data.modal_tenduong}" />
+                            <input type="hidden" name="miengiamthue[]" value="${data.modal_miengiamthue}" />
+                            <input type="hidden" name="tongtien[]" value="${data.modal_tongtien}" />
+                            <input type="hidden" name="tinhtrang[]" value="${data.modal_tinhtang}" />
+                            <input type="hidden" name="tinhtrang[]" value="${data.modal_tinhtang}" />
+                            <input type="hidden" name="ghichu[]" value="${data.modal_ghichu}" />
+                            <span class="btn btn-sm btn-warning btn_edit_trocap" data-trocap-id="${data.modal_trocap_id}"><i class="fas fa-edit"></i></span>
+                            <span class="btn btn-sm btn-danger btn_xoa_trocap" data-trocap-id="${data.modal_trocap_id}"><i class="fas fa-trash-alt"></i></span>
+                        </td>
+                    </tr>`;
 
                 // Update or append table row
                 if ($('.dsThongtinnopthue .no-data').length) {
@@ -1222,12 +1222,12 @@ $item = $this->item;
                                 }
                             });
                         } else {
-                            console.warn('Không tìm thấy nhân khẩu với nhanhokhau_id:', item[0].nhanhokhau_id);
+                            // console.warn('Không tìm thấy nhân khẩu với nhanhokhau_id:', item[0].nhanhokhau_id);
                             showToast('Không tìm thấy nhân khẩu phù hợp', false);
                             $('#checkbox_toggle').prop('checked', false).trigger('change');
                         }
                     } else {
-                        console.warn('Không có dữ liệu nhân khẩu từ API');
+                        // console.warn('Không có dữ liệu nhân khẩu từ API');
                         showToast('Không tìm thấy thông tin nhân khẩu', false);
                         $('#checkbox_toggle').prop('checked', false).trigger('change');
                     }
@@ -1236,8 +1236,6 @@ $item = $this->item;
                     showToast('Lỗi khi tải thông tin nhân khẩu', false);
                     $('#checkbox_toggle').prop('checked', false).trigger('change');
                 }
-            } else {
-                console.warn('Không có nhanhokhau_id trong item:', item);
             }
         }
 
@@ -1354,7 +1352,7 @@ $item = $this->item;
 
             },
             messages: {
-                select_top: 'Vui lòng chọn nhân khẩu',
+                select_top: 'Vui lòng chọn công dân',
                 hoten: 'Vui lòng nhập họ và tên',
                 cccd: 'Vui lòng nhập CCCD/CMND',
                 select_namsinh: 'Vui lòng chọn năm sinh',
