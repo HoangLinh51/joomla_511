@@ -112,7 +112,6 @@ use Joomla\CMS\HTML\HTMLHelper;
             </div>
 
             <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="">
-            <!-- <input type="hidden" name="modal_gioitinh_id" id="modal_gioitinh_id" value=""> -->
             <div class="row g-3 mb-4">
               <div class="col-md-4 mb-2">
                 <label for="modal_hoten" class="form-label fw-bold">Họ và tên <span class="text-danger">*</span></label>
@@ -192,11 +191,15 @@ use Joomla\CMS\HTML\HTMLHelper;
               <div class="col-md-4">
                 <label for="doanhoi_id" class="form-label fw-bold">Đoàn hội <span class="text-danger">*</span></label>
                 <select id="doanhoi_id" class="select2" data-placeholder="Chọn đoàn hội" disabled>
-                  <?php foreach ($this->doanhoi as $dh) { ?>
-                    <option value="<?php echo $dh['id']; ?>" <?php echo ($this->doanhoiPhanQuyen[0]['is_doanvien'] == $dh['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($dh['tendoanhoi']); ?></option>
+                  <?php if ($this->doanhoiPhanQuyen && !empty($this->doanhoiPhanQuyen['is_doanvien'])) { ?>
+                    <?php foreach ($this->doanhoi as $dh) { ?>
+                      <option value="<?php echo $dh['id']; ?>" <?php echo ($this->doanhoiPhanQuyen['is_doanvien'] == $dh['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($dh['tendoanhoi']); ?></option>
+                    <?php } ?>
+                  <?php } else { ?>
+                    <option value=""></option>
                   <?php } ?>
                 </select>
-                <input type="hidden" name="doanhoi_id" value="<?php echo $this->doanhoiPhanQuyen[0]['is_doanvien']; ?>">
+                <input type="hidden" name="doanhoi_id" value="<?php echo $this->doanhoiPhanQuyen['is_doanvien']; ?>">
               </div>
               <div class="col-md-4">
                 <label for="modal_chucdanh_id" class="form-label fw-bold">Chức vụ đoàn/hội</label>
@@ -246,7 +249,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 
 <script>
   let phuongxa_id = <?= json_encode($this->phuongxa ?? []) ?>;
-  let doanhoiPhanQuyen = <?= json_encode($this->doanhoiPhanQuyen[0]['is_doanvien'] ?? 0) ?>;
+  let doanhoiPhanQuyen = <?= json_encode($this->doanhoiPhanQuyen['is_doanvien'] ?? 0) ?>;
   let isEditMode = false
   let isFetchingFromSelect = false;
 
@@ -473,6 +476,10 @@ use Joomla\CMS\HTML\HTMLHelper;
     $('#select_top').on('select2:select', async function(e) {
       const data = e.params.data;
 
+      if (doanhoiPhanQuyen == 0 || doanhoiPhanQuyen == null) {
+        showToast('Bạn không được phân quyền cho đoàn hội nào', false)
+        return
+      }
       if (!isEditMode) {
         try {
           const response = await $.post('index.php', {
@@ -509,6 +516,11 @@ use Joomla\CMS\HTML\HTMLHelper;
     });
 
     $('#btn_xuatexcel').on('click', function() {
+      if (doanhoiPhanQuyen === 0 || doanhoiPhanQuyen === null || doanhoiPhanQuyen === undefined) {
+        showToast('Bạn không được phân quyền cho đoàn hội nào', false);
+        return;
+      }
+
       let params = {
         option: 'com_vhytgd',
         controller: 'doanhoi',
@@ -519,13 +531,30 @@ use Joomla\CMS\HTML\HTMLHelper;
         thonto_id: $('#thonto_id').val() || '',
         gioitinh_id: $('#gioitinh_id').val() || 0,
         doanhoi: doanhoiPhanQuyen,
-        // daxoa: 0,
-        [Joomla.getOptions('csrf.token')]: 1 
+        [Joomla.getOptions('csrf.token')]: 1
       };
 
-      // Tạo URL đúng
-      let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
-      window.location.href = url;
+      const url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
+
+      // Gọi thử trước bằng AJAX để kiểm tra lỗi
+      $.ajax({
+        url: url,
+        method: 'GET',
+        success: function(data, status, xhr) {
+          const disposition = xhr.getResponseHeader('Content-Disposition');
+
+          // Nếu có header file download thì tiến hành tải
+          if (disposition && disposition.indexOf('attachment') !== -1) {
+            window.location.href = url;
+          } else {
+            showToast('Không có dữ liệu để xuất file.', false);
+          }
+        },
+        error: function(xhr) {
+          console.error('Lỗi khi gọi export:', xhr);
+          showToast('Xuất Excel thất bại. Vui lòng thử lại sau.', false);
+        }
+      });
     });
 
     // Sự kiện bấm hiệu chỉnh

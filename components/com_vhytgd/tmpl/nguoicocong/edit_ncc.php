@@ -51,7 +51,7 @@ $item = $this->item;
                 <input id="hoten" type="text" name="hoten" class="form-control" placeholder="Nhập họ và tên công dân" value="<?php echo htmlspecialchars($item[0]['n_hoten']); ?>">
             </div>
             <div class="col-md-4 mb-2">
-                <label for="select_gioitinh_id" class="form-label fw-bold">Giới tính</label>
+                <label for="select_gioitinh_id" class="form-label fw-bold">Giới tính <span class="text-danger">*</span></label>
                 <input type="hidden" id="input_gioitinh_id" name="input_gioitinh_id" value="<?php echo htmlspecialchars($item[0]['n_gioitinh_id']); ?>">
                 <select id="select_gioitinh_id" name="select_gioitinh_id" class="custom-select" data-placeholder="Chọn giới tính">
                     <option value=""></option>

@@ -194,6 +194,10 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
   {
     // Get the database object
     $db = Factory::getDbo();
+    $formData['chixem'] = 0;
+    if (!empty($formData['chiDuocXem'])){
+      $formData['chixem'] = 1;
+    }
     $formData['chucNang'] = array_map('intval', explode(',', $formData['chucNang']));
     $formData['phuongxa'] =implode(',', $formData['phuongxa']);
     $formData['thonto'] =implode(',', $formData['thonto']);
@@ -226,6 +230,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'block'        => isset($formData['block']) ? (int)$formData['block'] : 0,
       'requireReset' => (int)$formData['requireReset'],
       'groups'       => $formData['chucnang'],
+      'onlyview_viahe'=> $formData['chixem'],
       'lastvisitDate' => '0000-00-00 00:00:00',
       'lastResetTime' => '0000-00-00 00:00:00',
     ];
@@ -299,6 +304,7 @@ class QuanTriHeThong_Model_QuanTriHeThong extends BaseDatabaseModel
       'block'        => isset($formData['block']) ? (int)$formData['block'] : 0,
       'requireReset' => (int)$formData['requireReset'],
       'groups'       => $formData['chucnang'],
+      'onlyview_viahe' => $formData['chixem'],
     ];
 
     // Bind updated data to user

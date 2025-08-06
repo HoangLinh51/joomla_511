@@ -232,26 +232,5 @@ $idUser = Factory::getApplication()->getIdentity()->id;
         $('body').delegate('.btn_hieuchinh', 'click', function() {
             window.location.href = 'index.php?option=com_vptk&view=nhk&task=edit_nhk&id=' + $(this).data('hokhau');
         });
-        $('#btn_xuatexcel').on('click', function() {
-            let params = {
-                option: 'com_vptk',
-                controller: 'vptk',
-                task: 'exportExcel',
-                phuongxa_id: $('#phuongxa_id').val() || '',
-                hoten: $('#hoten').val() || '',
-                gioitinh_id: $('#gioitinh_id').val() || '',
-                is_tamtru: $('#is_tamtru').val() || '',
-                thonto_id: $('#thonto_id').val() || '',
-                hokhau_so: $('#hokhau_so').val() || '',
-                cccd_so: $('#cccd_so').val() || '',
-                diachi: $('#diachi').val() || '',
-                daxoa: 0,
-                [Joomla.getOptions('csrf.token')]: 1 // Thêm CSRF token
-            };
-
-            // Tạo URL đúng
-            let url = Joomla.getOptions('system.paths').base + '/index.php?' + $.param(params);
-            window.location.href = url;
-        });
     });
 </script>

@@ -7,6 +7,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Router\Route;
 
 $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
+var_dump($detailQuanNhanDuBi)
 ?>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="<?php echo Uri::root(true); ?>/media/cbcc/js/bootstrap-datepicker/locales/bootstrap-datepicker.vi.min.js" type="text/javascript"></script>
@@ -441,7 +442,7 @@ $detailQuanNhanDuBi = $this->detailQuanNhanDuBi;
           if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
             const nhankhau = nhankhauResponse.items.find(item => item.id === detailQuanNhanDuBi.nhankhau_id) || nhankhauResponse.items[0];
             if (nhankhau) {
-              const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
+              const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}${nhankhau.canhbao ? ' - ⚠️ ' + nhankhau.canhbao : ''}`;
               const newOption = new Option(optionText, nhankhau.id, true, true);
               $('#select_top').append(newOption).trigger('change');
 

@@ -320,7 +320,7 @@ class DknvqsController extends BaseController
                 'hoten'    => $input->getString('hoten', ''),
                 'cccd'    => $input->getString('cccd', ''),
                 'gioitinh_id'    => $input->getString('gioitinh_id', ''),
-                'tinhtrang_id'    => $input->getString('tinhtrang_id', ''),
+                'doituong_id'    => $input->getString('doituong_id', ''),
             ];
             $modelBase = Core::model('QuanSu/Base');
             $model = Core::model('QuanSu/Dknvqs');

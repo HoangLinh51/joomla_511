@@ -377,7 +377,7 @@ $detailDkTuoi17 = $this->detailDkTuoi17;
           if (nhankhauResponse && nhankhauResponse.items && nhankhauResponse.items.length > 0) {
             const nhankhau = nhankhauResponse.items.find(item => item.id === detailDkTuoi17.nhankhau_id) || nhankhauResponse.items[0];
             if (nhankhau) {
-              const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}`;
+              const optionText = `${nhankhau.hoten} - CCCD: ${nhankhau.cccd_so || ''} - Ngày sinh: ${nhankhau.ngaysinh || ''} - Địa chỉ: ${nhankhau.diachi || ''}${nhankhau.canhbao ? ' - ⚠️ ' + nhankhau.canhbao : ''}`;
               const newOption = new Option(optionText, nhankhau.id, true, true);
               $('#select_top').append(newOption).trigger('change');
 

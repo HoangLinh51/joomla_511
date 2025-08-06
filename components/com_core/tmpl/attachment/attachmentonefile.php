@@ -13,10 +13,6 @@ use Joomla\CMS\Uri\Uri;
 	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/adminltev3.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<?php echo Uri::root(true); ?>/templates/adminlte/dist/css/_all-skins.min.css" media="screen" rel="stylesheet" type="text/css" />
 	<link href="<?php echo Uri::root(true); ?>/templates/adminlte//plugins/fontawesome-free/css/all.min.css" media="screen" rel="stylesheet" type="text/css" />
-
-
-
-
 </head>
 <?php
 /**
@@ -77,7 +73,6 @@ if ($this->isCapnhat == 12) {
 		<input type="hidden" name="id_user" value="<?php echo $this->id_user ?>" />
 	</form>
 <?php } ?>
-<!-- <span class="form-text text-muted">Kích thước tệp tối đa là 1MB và số lượng tệp tối đa là 1.</span> -->
 <span class="form-text text-muted">Kích thước tệp tối đa là 1MB.</span>
 <span id="<?php echo $this->iddiv ?>-error" data-dz-errormessage></span>
 <?php
@@ -100,8 +95,6 @@ if (count($this->data) > $maxFiles) {
 ?>
 		<?php if ($this->isCapnhat == 1) { ?>
 			<input type="hidden" name="idFile-<?php echo $this->iddiv; ?>[]" value="<?php echo $item['id']; ?>">
-			<!-- <input type="hidden" class="fileUploaded" name="idFile-<?php echo $this->iddiv; ?>[]" value=<?php echo $item['code']; ?>> -->
-			<!-- <input checked="checked" type=checkbox class="DELidfiledk<?php echo $this->idObject ?>" name='DELidfiledk<?php echo $this->idObject ?>[]' value='<?php echo $item['code']; ?>'> -->
 		<?php } else
 			echo $stt . ".";
 		?>
@@ -111,13 +104,26 @@ if (count($this->data) > $maxFiles) {
 					<!--begin::File-->
 					<div class="dropzone-file">
 						<div class="dropzone-filename" title="some_image_file_name.jpg">
-							<span data-dz-name class="linkFile"><a target="_blank" href="<?php echo Uri::root(true) ?>/index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>"><?php echo $item['filename']; ?></a></span>
+							<span data-dz-name class="linkFile">
+								<?php if ($item['mime'] == "application/pdf") { ?>
+									<a target="_blank" href="<?php echo Uri::root(true) ?>/index.php?option=com_dungchung&view=hdsd&format=raw&task=viewpdf&file=<?php echo $item['code'] ?>&folder=<?php echo $item['folder'] ?>">
+										<?php echo $item['filename']; ?>
+									</a>
+								<?php } else if ($item['mime'] == "image/jpeg" || $item['mime'] == "image/png") { ?>
+									<a target="_blank" href="<?php echo Uri::root(true) ?>/uploader/get_image.php/<?php echo $item['folder'] ?>?code=<?php echo $item['code'] ?>">
+										<?php echo $item['filename']; ?>
+									</a>
+								<?php } else { ?>
+									<a target="_blank" href="<?php echo Uri::root(true) ?>/index.php?option=com_core&controller=attachment&format=raw&task=download&year=<?php echo $this->year; ?>&code=<?php echo $item['code'] ?>">
+										<?php echo $item['filename']; ?>
+									</a>
+								<?php } ?>
+							</span>
 							<strong>(<span data-dz-size><?php echo $fileSizeMB ?>kb</span>)</strong>
 						</div>
 						<div class="dropzone-error" data-dz-errormessage></div>
 					</div>
 					<!--end::File-->
-
 
 					<!--begin::Toolbar-->
 					<div class="dropzone-toolbar">
@@ -150,7 +156,7 @@ if (count($this->data) > $maxFiles) {
 				var data = {};
 				data['DELidfiledk<?php echo $this->idObject ?>[]'] = code;
 				jQuery.post(url, data, function(resp) {
-					console.log(resp);
+
 					jQuery("#tftemp<?php echo $this->idObject ?>").html(resp);
 				});
 			}

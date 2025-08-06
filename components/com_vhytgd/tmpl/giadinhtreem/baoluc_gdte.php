@@ -352,7 +352,7 @@ $item = $item ?? (object)[
           if (response.success && response.data && Array.isArray(response.data)) {
             $('.dsBaoluc').empty();
             if (response.data.length === 0) {
-              $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+              $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
               return;
             }
 
@@ -393,14 +393,14 @@ $item = $item ?? (object)[
               $('.dsBaoluc').append(html);
             });
           } else {
-            $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+            $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
             showToast('Không tìm thấy dữ liệu bạo lực gia đình', false);
           }
         },
         error: function(xhr, status, error) {
           console.error('Lỗi khi tải danh sách bạo lực:', error);
           showToast('Lỗi khi tải danh sách bạo lực gia đình', false);
-          $('.dsBaoluc').html('<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>');
+          $('.dsBaoluc').html('<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>');
         }
       });
     }
@@ -612,7 +612,7 @@ $item = $item ?? (object)[
               showToast('Xóa thông tin bạo lực gia đình thành công', true);
               if ($('.dsBaoluc tr').length === 0) {
                 $('.dsBaoluc').html(
-                  '<tr class="no-data"><td colspan="9" class="text-center">Không có dữ liệu</td></tr>'
+                  '<tr class="no-data"><td colspan="10" class="text-center">Không có dữ liệu</td></tr>'
                 );
               }
             } else {

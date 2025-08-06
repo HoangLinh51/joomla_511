@@ -277,7 +277,7 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
     }
     return implode(', ', $setParts);
   }
-
+  
   public function getDanhSachNhanKhau($phuongxa = [], $keyword = '', $limit = 10, $offset = 0, $nhankhau_id = 0)
   {
     $db = Factory::getDbo();
@@ -300,16 +300,18 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
       ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
       ->where('nk.daxoa = 0')
       ->where('hk.daxoa = 0')
-      ->where('nk.ngaysinh IS NOT NULL')
-      ->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR)')
-      ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 28 YEAR)');
+      ->where('nk.ngaysinh IS NOT NULL');
 
     if ($nhankhau_id > 0) {
       $query->where('nk.id = ' . (int)$nhankhau_id);
+      // KHÔNG lọc theo tuổi trong trường hợp xem chi tiết
     } else {
+      // Lọc đúng người từ 18 đến 28 tuổi nếu là tìm kiếm danh sách
+      $query->where('nk.ngaysinh <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR)')
+        ->where('nk.ngaysinh > DATE_SUB(CURDATE(), INTERVAL 28 YEAR)');
+
       if (!empty($keyword)) {
         $search = $db->quote('%' . $db->escape($keyword, true) . '%');
-        // Dùng biểu thức có ngoặc để kết hợp OR đúng cách
         $query->where('(' . implode(' OR ', [
           "nk.hoten LIKE $search",
           "nk.cccd_so LIKE $search"
@@ -324,10 +326,10 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
     }
 
     $query->order('nk.hokhau_id DESC');
+
     // Clone query để đếm tổng số
     $countQuery = clone $query;
     $countQuery->clear('select')->select('COUNT(*)');
-
     $db->setQuery($countQuery);
     $total = (int) $db->loadResult();
 
@@ -335,6 +337,19 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
     $query->setLimit($limit, $offset);
     $db->setQuery($query);
     $items = $db->loadObjectList();
+
+    // Kiểm tra và thêm cảnh báo nếu người đó không thuộc độ tuổi yêu cầu
+    foreach ($items as &$item) {
+      $birthday = new DateTime($item->ngaysinh);
+      $today = new DateTime();
+      $age = $today->diff($birthday)->y;
+
+      if ($age < 18 || $age > 28) {
+        $item->canhbao = 'Người này không thuộc độ tuổi từ 18 đến 28';
+      } else {
+        $item->canhbao = '';
+      }
+    }
 
     return [
       'items' => $items,
@@ -457,7 +472,7 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
     $hoten = isset($filters['hoten']) ? trim($filters['hoten']) : '';
     $cccd = isset($filters['cccd']) ? trim($filters['cccd']) : '';
     $gioitinh_id = isset($filters['gioitinh_id']) ? trim($filters['gioitinh_id']) : 0;
-    $tinhtrang_id = isset($filters['tinhtrang_id']) ? trim($filters['tinhtrang_id']) : 0;
+    $doituong_id = isset($filters['doituong_id']) ? trim($filters['doituong_id']) : 0;
     $phuongxa_id = isset($filters['phuongxa_id']) ? (int)$filters['phuongxa_id'] : 0;
     $thonto_id = isset($filters['thonto_id']) ? (int)$filters['thonto_id'] : 0;
 
@@ -508,8 +523,8 @@ class QuanSu_Model_Dknvqs extends BaseDatabaseModel
     if (!empty($cccd)) {
       $query->where('a.n_cccd COLLATE utf8mb4_unicode_ci LIKE ' . $db->quote('%' . $cccd . '%'));
     }
-    if (!empty($tinhtrang_id)) {
-      $query->where('a.trangthaiquansu_id = ' . (int)$tinhtrang_id);
+    if (!empty($doituong_id)) {
+      $query->where('a.trangthaiquansu_id = ' . (int)$doituong_id);
     }
     if (!empty($gioitinh_id)) {
       $query->where('a.n_gioitinh_id = ' . (int)$gioitinh_id);

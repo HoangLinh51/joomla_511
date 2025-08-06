@@ -36,9 +36,7 @@ $detaiCoSo = $this->detailCoSo;
             <strong>Phường xã <span class="text-danger">*</span></strong>
             <select id="phuongxa_id" name="phuongxa_id" class="custom-select select2" data-placeholder="Chọn phường/xã">
               <option value=""></option>
-              <?php if (is_array($this->phuongxa) && count($this->phuongxa) == 1) { ?>
-                <option value="<?php echo $this->phuongxa[0]['id']; ?>" selected><?php echo htmlspecialchars($this->phuongxa[0]['tenkhuvuc']); ?></option>
-              <?php } elseif (is_array($this->phuongxa)) { ?>
+              <?php if (is_array($this->phuongxa)) { ?>
                 <?php foreach ($this->phuongxa as $px) { ?>
                   <option value="<?php echo $px['id']; ?>" <?php echo ($detaiCoSo->phuongxa_id == $px['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($px['tenkhuvuc']); ?></option>
                 <?php } ?>
