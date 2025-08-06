@@ -10,6 +10,10 @@ if(empty($folder) || $folder === null){
     $part = parse_url($uri, PHP_URL_PATH); // /uploader/get_image.php/upload/2025/7
     $parts = explode('/uploader/get_image.php/', $part);
     $folder = isset($parts[1]) ? $parts[1] : null;
+
+    if ($folder && strpos($folder, '/') === 0) {
+        $folder = basename($folder);
+    }
 }
 
 // Loại bỏ phần đầu để chỉ còn "upload/2025/7"
