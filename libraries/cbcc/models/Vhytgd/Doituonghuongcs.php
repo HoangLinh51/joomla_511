@@ -539,7 +539,6 @@ class Vhytgd_Model_Doituonghuongcs extends JModelLegacy
         $query->where('a.daxoa = 0 AND b.daxoa = 0');
         $query->where('a.id = ' . $db->quote($doituong_id));
 
-        // echo $query;exit;
 
         $db->setQuery($query);
         return $db->loadAssocList();

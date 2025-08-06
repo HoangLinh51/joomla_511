@@ -16,6 +16,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Session\Session;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -83,28 +84,31 @@ class ProfileController extends BaseController
     public function save()
     {
         // Check for request forgeries.
-        $this->checkToken();
+        if (!Session::checkToken()) {
+            // Trả lỗi nếu token CSRF không hợp lệ
+            $this->sendJsonResponse(false, Text::_('JINVALID_TOKEN'));
+            return;
+        }
 
         $app    = $this->app;
 
         /** @var \Joomla\Component\Users\Site\Model\ProfileModel $model */
         $model  = $this->getModel('Profile', 'Site');
-        $user   = $this->app->getIdentity();
+        $user   = $app->getIdentity();
         $userId = (int) $user->get('id');
+
         // Get the user data.
         $requestData = $app->getInput()->post->get('jform', [], 'array');
-
-        // Force the ID to this user.
         $requestData['id'] = $userId;
 
-        // Validate the posted data.
+        // Get and validate the form.
         $form = $model->getForm();
-
         if (!$form) {
-            throw new \Exception($model->getError(), 500);
+            $this->sendJsonResponse(false, $model->getError());
+            return;
         }
 
-        // Send an object which can be modified through the plugin event
+        // Plugin event: Normalize data
         $objData = (object) $requestData;
         $this->getDispatcher()->dispatch(
             'onContentNormaliseRequestData',
@@ -116,100 +120,51 @@ class ProfileController extends BaseController
         );
         $requestData = (array) $objData;
 
-        // Validate the posted data.
+        // Validate data
         $data = $model->validate($form, $requestData);
-
-        // Check for errors.
         if ($data === false) {
-            // Get the validation messages.
             $errors = $model->getErrors();
+            $errorMessages = [];
 
-            // Push up to three validation messages out to the user.
-            for ($i = 0, $n = \count($errors); $i < $n && $i < 3; $i++) {
+            for ($i = 0; $i < count($errors) && $i < 3; $i++) {
                 if ($errors[$i] instanceof \Exception) {
-                    $app->enqueueMessage($errors[$i]->getMessage(), CMSWebApplicationInterface::MSG_ERROR);
+                    $errorMessages[] = $errors[$i]->getMessage();
                 } else {
-                    $app->enqueueMessage($errors[$i], CMSWebApplicationInterface::MSG_ERROR);
+                    $errorMessages[] = $errors[$i];
                 }
             }
 
-            // Unset the passwords.
-            unset($requestData['password1'], $requestData['password2']);
-
-            // Save the data in the session.
-            $app->setUserState('com_users.edit.profile.data', $requestData);
-
-            // Redirect back to the edit screen.
-            $userId = (int) $app->getUserState('com_users.edit.profile.id');
-            $this->setRedirect(Route::_('index.php?option=com_users&view=profile&layout=edit&user_id=' . $userId, false));
-
-            return false;
+            $this->sendJsonResponse(false, implode("\n", $errorMessages));
+            return;
         }
 
-        // Attempt to save the data.
+        // Save data
         $return = $model->save($data);
-
-        // Check for errors.
         if ($return === false) {
-            // Save the data in the session.
-            $app->setUserState('com_users.edit.profile.data', $data);
-
-            // Redirect back to the edit screen.
-            $userId = (int) $app->getUserState('com_users.edit.profile.id');
-            $this->setMessage(Text::sprintf('COM_USERS_PROFILE_SAVE_FAILED', $model->getError()), 'warning');
-            $this->setRedirect(Route::_('index.php?option=com_users&view=profile&layout=edit&user_id=' . $userId, false));
-
-            return false;
+            $this->sendJsonResponse(false, Text::sprintf('COM_USERS_PROFILE_SAVE_FAILED', $model->getError()));
+            return;
         }
 
-        // Redirect the user and adjust session state based on the chosen task.
-        switch ($this->getTask()) {
-            case 'apply':
-                // Check out the profile.
-                $app->setUserState('com_users.edit.profile.id', $return);
-
-                // Redirect back to the edit screen.
-                $this->setMessage(Text::_('COM_USERS_PROFILE_SAVE_SUCCESS'));
-
-                $redirect = $app->getUserState('com_users.edit.profile.redirect', '');
-
-                // Don't redirect to an external URL.
-                if (!Uri::isInternal($redirect)) {
-                    $redirect = null;
-                }
-
-                if (!$redirect) {
-                    $redirect = 'index.php?option=com_users&view=profile&layout=edit&hidemainmenu=1';
-                }
-
-                $this->setRedirect(Route::_($redirect, false));
-                break;
-
-            default:
-                // Clear the profile id from the session.
-                $app->setUserState('com_users.edit.profile.id', null);
-
-                $redirect = $app->getUserState('com_users.edit.profile.redirect', '');
-
-                // Don't redirect to an external URL.
-                if (!Uri::isInternal($redirect)) {
-                    $redirect = null;
-                }
-
-                if (!$redirect) {
-                    $redirect = 'index.php?option=com_users&view=profile&user_id=' . $return;
-                }
-
-                // Redirect to the list screen.
-                $this->setMessage(Text::_('COM_USERS_PROFILE_SAVE_SUCCESS'));
-                $this->setRedirect(Route::_($redirect, false));
-                break;
-        }
-
-        // Flush the data from the session.
-        $app->setUserState('com_users.edit.profile.data', null);
+        // Thành công
+        $this->sendJsonResponse(true, Text::_('COM_USERS_PROFILE_SAVE_SUCCESS'));
     }
 
+    private function sendJsonResponse($success, $message, $data = [])
+    {
+        /** @var \Joomla\CMS\Application\CMSWebApplicationInterface $app */
+        $app = $this->app;
+
+        $response = [
+            'success' => $success,
+            'message' => $message,
+            'data'    => $data,
+        ];
+
+        // Đặt header JSON và kết thúc
+        $app->setHeader('Content-Type', 'application/json', true);
+        echo json_encode($response);
+        $app->close();
+    }
     // public function save()
     // {
     //     // Check for request forgeries.

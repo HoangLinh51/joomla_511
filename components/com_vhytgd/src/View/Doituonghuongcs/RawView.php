@@ -118,6 +118,7 @@ class RawView extends BaseHtmlView
         $model = Core::model('Vhytgd/Doituonghuongcs');
 
         $details = $model->getDetailDOITUONGCS($doituong_id);
+        // var_dump($details);
 
         if (!is_array($details) || empty($details)) {
             echo '<p class="text-danger">Không tìm thấy thông tin.</p>';
@@ -152,13 +153,18 @@ class RawView extends BaseHtmlView
 
         foreach ($details as $detail) {
             // Tính toán số tiền
-            $sotien = $detail['muctieuchuan'] * $detail['heso'];
+            $sotien = 0 ;
+            if($detail['sotien'] > 0){
+                $sotien = $detail['sotien'];
+            }else {
+                $sotien = $detail['muctieuchuan'] * $detail['heso'];
+            }
 
             echo '<tr>';
             echo '<td>' . htmlspecialchars($detail['maht']) . '</td>';
             echo '<td>' . htmlspecialchars($detail['tenbiendong']) . '</td>';
             echo '<td>' . htmlspecialchars($detail['tenloaidoituong']) . '</td>';
-            echo '<td>' . htmlspecialchars($detail['muctieuchuan']) . ' * ' . htmlspecialchars($detail['heso']) . ' = ' . htmlspecialchars($sotien) . '</td>'; // Hiển thị rõ ràng
+            echo '<td>' . htmlspecialchars($sotien) . '</td>'; // Hiển thị rõ ràng
             echo '<td>' . 'Số quyết định: ' . htmlspecialchars($detail['soqdhuong']) . '<br>Hưởng từ ngày: ' . htmlspecialchars($detail['tungay']) . '</td>'; // Hiển thị quyết định
             echo '<td>' . htmlspecialchars($detail['tungay']) . '</td>';
             echo '<td>' . htmlspecialchars($detail['tentrangthai']) . '</td>';

@@ -149,7 +149,7 @@ $item = $this->item;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
             setTimeout(() => {
-              // window.location.href = '/index.php/component/dungchung/?view=hdsd&task=ds_hdsd';
+              window.location.href = '/index.php/component/dungchung/?view=hdsd&task=ds_hdsd';
             }, 500);
           }
         },

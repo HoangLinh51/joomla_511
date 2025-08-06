@@ -106,6 +106,64 @@ if (!empty($avatarId)) {
         </form>
     </div>
 </div>
+<script>
+    jQuery(document).ready(function($) {
+        $('#profile-member').on('submit', function(e) {
+            e.preventDefault();
+
+            var $form = $(this);
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    let res = JSON.parse(response)
+                    console.log(res)
+                    console.log(res.success)
+                    if (res.success == true) {
+                        showToast('Lưu thông tin người dùng thành công', true);
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 500);
+                    } else {
+                        showToast('Lỗi: ' + response.message, false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showToast('Lỗi không xác định: ' + error, false);
+                }
+            });
+        });
+    });
+
+    function showToast(message, isSuccess = true) {
+        $('<div></div>')
+            .text(message)
+            .css({
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                background: isSuccess ? '#28a745' : '#dc3545',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                boxShadow: '0 0 10px rgba(0,0,0,0.3)',
+                zIndex: 9999
+            })
+            .appendTo('body')
+            .delay(1000)
+            .fadeOut(500, function() {
+                $(this).remove();
+            });
+    }
+</script>
 <style>
     .profile-edit {
         display: flex;

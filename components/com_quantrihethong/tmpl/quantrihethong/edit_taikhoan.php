@@ -10,7 +10,6 @@ $chucNang = $this->chucNang;
 
 $khuVuc = $this->dmKhuvuc;
 $user = $this->user;
-var_dump($user)
 ?>
 
 <div class="container my-3">
@@ -64,7 +63,7 @@ var_dump($user)
       <div id="chiDuocXemWrapper" style="margin-top: 10px; display: none; ">
         <input type="checkbox" id="chiDuocXem" name="chiDuocXem" style="width: 20px; height: 20px" <?php echo ((int)$user['onlyview_viahe'] > 0) ? 'checked' : ''; ?> />
         <label>
-          Chỉ được xem
+          Chỉ được xem vỉa hè
         </label>
       </div>
 

@@ -25,8 +25,8 @@ class DungChung_Model_Hdsd extends BaseDatabaseModel
         'c.folder'
       ])
       ->from($db->quoteName('hdsd', 'a'))
-      ->innerJoin('hdsd_vanban AS b ON b.hdsd_id = a.id')
-      ->innerJoin('core_attachment AS c ON c.id = b.vanban_id')
+      ->leftJoin('hdsd_vanban AS b ON b.hdsd_id = a.id')
+      ->leftJoin('core_attachment AS c ON c.id = b.vanban_id')
       ->where('daxoa = 0');
 
     $db->setQuery($query);
@@ -87,14 +87,9 @@ class DungChung_Model_Hdsd extends BaseDatabaseModel
 
         $idThongbao = $db->insertid();
       }
-
       // ✅ Thêm các bản ghi liên kết mới
-      if (!empty($idThongbao) && !empty($id_vanban)) {
+      if (!empty($idThongbao) && is_array($id_vanban)) {
         foreach ($id_vanban as $idVanBan) {
-          if (!is_numeric($idVanBan)) {
-            continue;
-          }
-
           $query = $db->getQuery(true)
             ->insert($db->quoteName('hdsd_vanban'))
             ->columns([$db->quoteName('hdsd_id'), $db->quoteName('vanban_id')])

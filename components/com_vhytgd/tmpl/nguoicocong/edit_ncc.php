@@ -27,7 +27,7 @@ $item = $this->item;
         <input type="hidden" name="id_nguoicocong" value="<?php echo htmlspecialchars($item[0]['doituonghuong']); ?>">
 
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($item[0]['id']); ?>">
-        <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($item[0][0]['nhankhau_id']); ?>">
+        <input type="hidden" name="nhankhau_id" id="nhankhau_id" value="<?php echo htmlspecialchars($item[0]['nhankhau_id']); ?>">
 
         <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
             <h5 style="margin: 0">Thông tin cá nhân</h5>

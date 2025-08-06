@@ -138,7 +138,7 @@ class Vptk_Model_Vptk extends JModelLegacy
         $query->from('vptk_hokhau2nhankhau AS a');
         $query->innerJoin('danhmuc_gioitinh AS b ON a.gioitinh_id = b.id');
         $query->innerJoin('vptk_hokhau AS c ON a.hokhau_id = c.id');
-        $query->innerJoin('danhmuc_dantoc AS d ON a.dantoc_id = d.id');
+        $query->leftJoin('danhmuc_dantoc AS d ON a.dantoc_id = d.id');
         $query->leftJoin('danhmuc_tongiao AS e ON a.tongiao_id = e.id');
         $query->innerJoin('danhmuc_khuvuc AS f ON c.phuongxa_id = f.id');
         $query->innerJoin('danhmuc_khuvuc AS g ON c.thonto_id = g.id');

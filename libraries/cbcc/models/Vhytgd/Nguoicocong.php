@@ -81,8 +81,7 @@ class Vhytgd_Model_Nguoicocong extends JModelLegacy
             ->leftJoin($db->quoteName('vptk_hokhau', 'hk') . ' ON nk.hokhau_id = hk.id')
             ->leftJoin($db->quoteName('vhxhytgd_nguoicocong', 'ncc') . ' ON nk.id = ncc.nhankhau_id')
             ->where('nk.daxoa = 0')
-            ->where('hk.daxoa = 0')
-            ->where('ncc.nhankhau_id IS NULL'); // Chỉ lấy người KHÔNG có trong bảng nguoicocong
+            ->where('hk.daxoa = 0');
 
         if ($nhankhau_id > 0) {
             $query->where('nk.id = ' . (int)$nhankhau_id);
