@@ -2,3 +2,4 @@ administrator/components/com_danhmuc/src/Table/DMChucvu.php
 administrator/cache
 uploader/files
 upload
+tmp
