@@ -1,24 +1,8 @@
 <?php
-// defined('_JEXEC') or die('Restricted access');
-// require_once 'vendor/autoload.php'; // Adjust the path if necessary
-
-// use phpCAS;
-use Joomla\CMS\Factory;
-
+defined('_JEXEC') or die('Restricted access');
 class Services_Model_Sso
 {
-	// SSO Đắk Lắk
-	// 1. Tại CBCC, bấm đăng nhập bằng Hệ thống đăng nhập tập trung Đăk Lắk, href sang url authori như ví dụ anh gửi ở trên. Cán bộ đăng nhập bt theo tài khoản tỉnh.
-	// $domain_sso = Core::config('core/sso/domain_sso');
-	// https://xacthuc.sdtech.vn/oauth2/authorize?response_type=code&state=fd28d491e6e86c2111f&client_id=Y9f5lIKIFvPrQfwSVu2hmKpVYJwa&redirect_uri=http://49.156.54.92:8084
-	// client_id: Y9f5lIKIFvPrQfwSVu2hmKpVYJwa
-	// client_secret: 8dKhKrRI1mpJxfNf6QRclpfogN0a
-	// 2. Nếu đăng nhập ok thì Hệ thống xacthuc sẽ chuyển tiếp đến &redirect_uri kèm với param code, state và session_state
-	// http://49.156.54.92:8084/?code=1719a913-18de-389f-a045-a006bf607f64&state=fd28d491e6e86c2111f&session_state=f7d3c1d04619929be8a3918a5141919bbe5f12cb779ab935cfe2fb56ac1fa631.wnIuuSpmP-_9WB7ZvRjq7A
-	// 3. Từ code, lấy token theo API get access token
-	// 4. Phía CBCC sẽ dựa vào token này, gọi lên API get user info để lấy thông tin tài khoản người dùng. Rồi thực hiện việc kiểm tra tài khoản/đăng nhập bên phía CBCC
-	// nguyetntm@kbnn.vn
-	// 12345
+	// SSO VKS
 	// CREATE TABLE `sso_token` (
 	// 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	// 	`user_id` int(11) DEFAULT NULL,
@@ -29,24 +13,38 @@ class Services_Model_Sso
 
 	function sso()
 	{
-		$db = Factory::getDbo();
-		$jinput = Factory::getApplication()->input;
+		// var_dump('uyduydsf');exit;
+
+		$db = JFactory::getDbo();
+		$jinput = JFactory::getApplication()->input;
 		$code = $jinput->get('code', null, 'string');
+		// var_dump($code);exit;
 		$state = $jinput->get('state', null, 'string');
-		$emailCas = $jinput->get('username', null, 'string');
-		$ticket = $jinput->get('ticket', null, 'string');
 		$session_state = $jinput->get('session_state', null, 'string');
-		if (strlen($code) > 0 && strlen($state) > 0 && strlen($session_state) > 0) {
+
+		if (strlen($code) > 0 && strlen($session_state) > 0) {
+
 			$access_token = (array)json_decode($this->apiToken($code));
+			// var_dump($access_token);exit;
+
+			// var_dump($access_token);
 			if (strlen($access_token['access_token']) > 0) {
+				//$type_token = $access_token['token_type'];
+				//$token = $type_token .' '.$access_token['access_token'];
 				$token = $access_token['access_token'];
 				$id_token = $access_token['id_token']; // lưu để gọi api log out
+
 				$sso_user = $this->apiGetUserInfo($token);
+
 				$sso_user = (array)json_decode($sso_user);
-				if (strlen($sso_user['mail']) > 0) {
+				// var_dump($sso_user);exit;
+
+				if (strlen($sso_user['email']) > 0) {
 					// lưu bảng id_token để sau này logout
 					// kiểm tra xem có tồn tại trong db ko, nếu có thì cho đăng nhập
-					$user = Core::loadAssoc('jos_users', '*', 'email=' . $db->quote($sso_user['mail']) . ' OR username = ' . $db->quote($sso_user['mail']));
+					$user = Core::loadAssoc('jos_users', '*', 'username = ' . $db->quote($sso_user['email']));
+					// var_dump($user);
+					// exit;
 					if (strlen($user['username']) > 0) {
 						$username = $user['username'];
 						$form = array();
@@ -58,20 +56,20 @@ class Services_Model_Sso
 						// khởi tạo user với mail và username = mail_sso
 						$form = array();
 						$form['name'] = $sso_user['lastName'] . ' ' . $sso_user['middleName'] . ' ' . $sso_user['firstName'];
-						$form['username'] = $sso_user['mail'];
-						$form['email'] = $sso_user['mail'];
+						$form['username'] = $sso_user['email'];
+						$form['email'] = $sso_user['email'];
 						$form['group_id'] = 15;
 						$form['type'] = 1;
 						$this->saveTk($form);
 						$this->updatetk();
-						$user = Core::loadAssoc('jos_users', '*', 'email=' . $db->quote($sso_user['mail']) . ' OR username = ' . $db->quote($sso_user['mail']));
+						$user = Core::loadAssoc('jos_users', '*', 'email=' . $db->quote($sso_user['mail']) . ' OR username = ' . $db->quote($sso_user['email']));
 						$form = array();
 						$form['user_id'] = $user['id'];
 						$form['id_token'] = $id_token;
 						$form['token'] = $token;
 						$this->updateSsoToken($form);
 					}
-					$app = Factory::getApplication('site');
+					$app = JFactory::getApplication('site');
 					// $user = JUser::getInstance(62);
 
 					echo 'Joomla! Authentication was successful!' . '<br>';
@@ -81,7 +79,7 @@ class Services_Model_Sso
 					// $credentials['username'] = 'dnictsp';
 					// $credentials['password'] = 'alakayam';
 					// $error = $app->login($credentials);
-					// $logged_user = Factory::getUser();
+					// $logged_user = JFactory::getUser();
 
 
 					JPluginHelper::importPlugin('user');
@@ -98,34 +96,27 @@ class Services_Model_Sso
 	}
 	function logout()
 	{
-		$user_id = Factory::getUser()->id;
+		$user_id = JFactory::getUser()->id;
 		$token = Core::loadAssoc('sso_token', '*', 'user_id=' . $user_id);
-	
-		// $form = array();
-		// $form['user_id'] = $user_id;
+		$form = array();
+		$form['user_id'] = $user_id;
 		// $form['id_token'] = '';
-		// $form['token'] = '';
-		// $this->updateSsoToken($form);
-		// // nếu còn id_token trong db thì mới call link logout
-		// if (strlen($token['id_token']) > 0) {
-		// 	$app = Factory::getApplication();
-		// 	$app->logout($user_id);
-		// 	$domain_sso = Core::config('core/sso/domain_sso');
-		// 	$app->redirect($domain_sso . '/oidc/logout?id_token_hint=' . $token['id_token'] . '&post_logout_redirect_uri=' . urlencode(Core::config('core/sso/redirect_uri')));
-		// }
-		// var_dump(($token));exit;
-		if (isset($user_id)) {
-			// Destroy the session and log the user out of the application
-			$session = Core::delete('jos_session',  'userid=' . $user_id);
-			// Optionally redirect after logout
-			echo 'Logged out successfully.';
-			/* header('Location: index.php');  // Or any URL you want to redirect to after logout
-			exit; */
+		$form['token'] = '';
+		$this->updateSsoToken($form);
+		// nếu còn id_token trong db thì mới call link logout
+		if (strlen($token['id_token']) > 0) {
+			$app = JFactory::getApplication();
+			$app->logout($user_id);
+			$domain_sso = Core::config('core/sso/domain_sso');
+			$url_callback  = Core::config('core/sso/redirect_uri');
+			// $url_callback  = 'http://danhgiacbcc.dnict.vn';
+			// $domain_sso = 'https://sso.quangnam.gov.vn';
+			$app->redirect($domain_sso . '/oidc/logout?id_token_hint=' . $token['id_token'] . '&post_logout_redirect_uri=' . $url_callback . '');
 		}
 	}
 	function saveTk($formData)
 	{
-		$db = Factory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$fields = array(
 			$db->quoteName('name') . ' = ' . $db->quote($formData['name']),
@@ -144,11 +135,11 @@ class Services_Model_Sso
 			$query->set($fields);
 		}
 		$db->setQuery($query);
-		return $db->query();
+		return $db->execute();
 	}
 	function updateSsoToken($formData)
 	{
-		$db = Factory::getDbo();
+		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$fields = array(
 			$db->quoteName('user_id') . ' = ' . $db->quote($formData['user_id']),
@@ -165,97 +156,54 @@ class Services_Model_Sso
 			$query->set($fields);
 		}
 		$db->setQuery($query);
-		return $db->query();
+		return $db->execute();
 	}
+	function checkLoginSso() {}
 
-	function updateSsoTokenCas($formData)
+	function apiRevoke()
 	{
-		$db = Factory::getDbo();
-		$query = $db->getQuery(true);
-		$fields = array(
-			$db->quoteName('user_id') . ' = ' . $db->quote($formData['username']),
-			$db->quoteName('token') . ' = ' . $db->quote($formData['token']),
-			$db->quoteName('id_token') . ' = ' . $db->quote($formData['id_token']),
-		);
-
-		if (Core::loadResult('sso_token', 'user_id', 'user_id=' . $db->quote($formData['user_id'])) > 0) {
-			$conditions = array(
-				$db->quoteName('user_id') . '=' . $db->quote($formData['user_id'])
-			);
-			$query->update($db->quoteName('sso_token'))->set($fields)->where($conditions);
-		} else {
-			$query->insert($db->quoteName('sso_token'));
-			$query->set($fields);
-		}
-		$db->setQuery($query);
-		return $db->query();
-	}
-
-	function checkLoginSso()
-	{
-		
-		$db = Factory::getDbo();
-		$ticket = $_GET['ticket'] ?? null; //Nhận ticket từ server trả về khi đăng nhập thành công
-		if ($ticket) {
-			$serviceUrl = "http://10.49.45.84:8082"; // Change to your application's URL
-			$casUrl = "https://dangnhap.danang.gov.vn/cas/serviceValidate?service=" . urlencode($serviceUrl) . "&ticket=" . urlencode($ticket);
-			$response = file_get_contents($casUrl);
-			$dom = new DOMDocument;
-			$dom->loadXML($response);
-			$xpath = new DOMXPath($dom);
-			$xpath->registerNamespace('cas', 'http://www.yale.edu/tp/cas');
-			
-			$userNode = $xpath->query('//cas:user')->item(0);
-			
-			$time = $xpath->query('//cas:authenticationDate')->item(0);
-
-			$user = $userNode ? $userNode->nodeValue : null;
-			
-			$userlocal = Core::loadAssoc('jos_users', '*', 'email=' . $db->quote($user) . ' OR username = ' . $db->quote($user));
-			// echo $userlocal;exit;
-			if (strlen($userlocal['username']) > 0) {
-				$app = Factory::getApplication('site');
-				echo 'Joomla! Authentication was successful!' . '<br>';
-				echo 'Joomla! Token is:' . JHTML::_('form.token');
-				JPluginHelper::importPlugin('user');
-				$options = array();
-				$options['action'] = 'core.login.site';
-				$response = array();
-				$response['language'] = "";
-				$response['username'] = $userlocal['username'];
-				$result = $app->triggerEvent('onUserLogin', array((array)$response, $options));
-				$app->redirect('index.php');
-			}else return false;
-
-		} else {
-			
-				Factory::getSession()->destroy();
-				$user_id = Factory::getUser()->id;
-				Core::delete('jos_session',  'userid=' . $user_id);
-				$app = Factory::getApplication('site');
-				$app->redirect('index.php?option=com_users&view=login','Bạn cần đăng nhập vào phần mềm!!!');
-				/* phpCAS::client(CAS_VERSION_2_0, 'dangnhap.danang.gov.vn', 443, '/cas');
-				phpCAS::setNoCasServerValidation();
-
-				$serviceUrl = "http://10.49.45.172:8089"; // Change to your application's URL
-
-				$casLoginUrl = "https://dangnhap.danang.gov.vn/cas/login?service=" . urlencode($serviceUrl);
-				if (phpCAS::isAuthenticated()) {
-					// Redirect to CAS login
-					header("Location: " . $casLoginUrl);
-					exit;
-				} */
-		}
-	}
-	function apiToken($code)
-	{
-		$url = urlencode(Core::config('core/sso/redirect_uri'));
+		$user_id = JFactory::getUser()->id;
+		$access_token  = Core::loadAssoc('sso_token', '*', 'user_id=' . $user_id);
+		$url_callback  = Core::config('core/sso/redirect_uri');
 		$client_secret = Core::config('core/sso/client_secret');
 		$client_id = Core::config('core/sso/client_id');
 		$domain_sso = Core::config('core/sso/domain_sso');
 		$curl = curl_init();
-		$onoffssl = Core::config('core/sso/onoffssl');
-		if ($onoffssl == 1) {
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => $domain_sso . '/oauth2/revoke?token=' . $access_token . '&id_token_hint=' . $access_token . '&client_id=' . $client_id . '&client_secret=' . $client_secret . '',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_HTTPHEADER => array(
+				'Content-Type: application/x-www-form-urlencoded'
+			),
+		));
+
+		$response = curl_exec($curl);
+
+		curl_close($curl);
+		echo $response;
+	}
+	function apiToken($code)
+	{
+		$url_callback  = Core::config('core/sso/redirect_uri');
+		// var_dump($url_callback);exit;
+		$client_secret = Core::config('core/sso/client_secret');
+		$client_id = Core::config('core/sso/client_id');
+		$domain_sso = 'https://sso.danang.gov.vn';
+		// var_dump($url_callback . '' . $client_secret . '' . $client_id . '' . $domain_sso );exit;
+		/*  $url_callback  = 'http://danhgiacbcc.dnict.vn';
+		$client_id = "pfh5poJlkMYHuc0NoaTHRUCSmeAa";
+		$client_secret = 'c3fu5F1SiNn3Hn4VbsGKTfbby9Ua';
+		$domain_sso = 'https://sso.quangnam.gov.vn'; */
+		$curl = curl_init();
+		$onoffssl = 0;
+		// var_dump($code);exit;
+		if ($onoffssl == 0) {
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 		}
@@ -267,14 +215,18 @@ class Services_Model_Sso
 			CURLOPT_TIMEOUT => 0,
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_POSTFIELDS => "grant_type=authorization_code&code=" . $code . "&redirect_uri=" . $url . "&client_secret=" . $client_secret . "&client_id=" . $client_id,
+			CURLOPT_POSTFIELDS => "grant_type=authorization_code&code=" . $code . "&redirect_uri=" . $url_callback . "&client_id=" . $client_id . "&client_secret=" . $client_secret,
 			CURLOPT_HTTPHEADER => array(
 				"Content-Type: application/x-www-form-urlencoded"
 			),
 		));
+		// var_dump($code);
 
 		$response = curl_exec($curl);
+		// var_dump($response);exit;
 		curl_close($curl);
 		return $response;
 	}
@@ -282,11 +234,14 @@ class Services_Model_Sso
 	{
 		$curl = curl_init();
 		$domain_sso = Core::config('core/sso/domain_sso');
+		// $domain_sso = 'https://sso.quangnam.gov.vn';
 		$onoffssl = Core::config('core/sso/onoffssl');
-		if ($onoffssl == 1) {
+		if ($onoffssl == 0) {
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
 		}
+		// var_dump($domain_sso."oauth2/userinfo");exit;
+
 		curl_setopt_array($curl, array(
 			CURLOPT_URL => $domain_sso . "/oauth2/userinfo",
 			CURLOPT_RETURNTRANSFER => true,
@@ -295,13 +250,16 @@ class Services_Model_Sso
 			CURLOPT_TIMEOUT => 0,
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_CUSTOMREQUEST => "GET",
 			CURLOPT_HTTPHEADER => array(
 				"Authorization: Bearer " . $token,
 			),
 		));
-
 		$response = curl_exec($curl);
+		// var_dump($response);exit;
+
 		curl_close($curl);
 		return $response;
 	}
@@ -320,7 +278,7 @@ class Services_Model_Sso
 	{
 		$flag		=	true;
 		// 	    $data		=	JRequest::get('post');
-		$db			=	Factory::getDbo();
+		$db			=	JFactory::getDbo();
 		$query     =   'SELECT * FROM core_update_tk WHERE active IS NULL';
 		$db->setQuery($query);
 		$data_all  =   $db->loadAssocList();
@@ -398,7 +356,7 @@ class Services_Model_Sso
 	}
 	function update_tk($id)
 	{
-		$db = Factory::getDBO();
+		$db = JFactory::getDBO();
 		$sql_fk = 'UPDATE core_update_tk SET active = 1  WHERE id = (' . $id . ')';
 		$db->setQuery($sql_fk);
 		return 	$db->query();
@@ -418,7 +376,7 @@ class Services_Model_Sso
 				/* if ($id == 150000) {
 					$result	=	150000;
 				}else {
-					$db		=	Factory::getDbo();
+					$db		=	JFactory::getDbo();
 					$query	=	'SELECT id FROM ins_dept WHERE lft = (SELECT MIN(a.lft) FROM ins_dept a 
 						WHERE lft >= (SELECT lft FROM ins_dept WHERE id = 
 						(SELECT parent_id FROM ins_dept WHERE ID ='.$id.'))
@@ -431,7 +389,7 @@ class Services_Model_Sso
 				} */
 				$result = $iddonvi_quanly;
 			} elseif ((int)$type == 2) {
-				$db		=	Factory::getDbo();
+				$db		=	JFactory::getDbo();
 				$query	=	'SELECT id FROM ins_dept where lft = 0';
 				$db->setQuery($query);
 				$result	=	$db->loadResult();
@@ -463,7 +421,7 @@ class Services_Model_Sso
 	public function getAction_Group($ar_group_id)
 	{
 		//		$result		=	array();
-		$db			=	Factory::getDbo();
+		$db			=	JFactory::getDbo();
 		if (is_array($ar_group_id)) {
 			if (count($ar_group_id) > 0) {
 				$group_id = implode(', ', $ar_group_id);

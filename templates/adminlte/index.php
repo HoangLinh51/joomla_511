@@ -12,14 +12,33 @@ $coreTemplate = new CoreTemplate();
 if ($coreTemplate->isLogin() == true) {
 	require_once(JPATH_THEMES . '/adminlte/login.php');
 } else {
-	$user = Factory::getUser();
-	if ($user->id == null) {
-		if ($return == false) {
-			$url = Route::_('index.php?option=com_users&view=login');
-			$message = 'Bạn cần đăng nhập vào hệ thống.';
-			Factory::getApplication()->enqueueMessage($message);
-			Factory::getApplication()->redirect($url);
-			return false;
+	$app = Factory::getApplication();
+	$params = $app->getTemplate(true)->params;
+	$doc = Factory::getDocument();
+	$is_sso = Core::config('core/sso/is_sso');
+	$jinput = Factory::getApplication()->input;
+	$code = $jinput->get('code', null, 'string');
+	$state = $jinput->get('state', null, 'string');
+	$session_state = $jinput->get('session_state', null, 'string');
+	if (strlen($code) > 0 && strlen($session_state) > 0) {
+		$model = Core::model('Services/Sso');
+		$return = $model->sso();
+		// if($return==false){
+		// 	$app->redirect('index.php?option=com_users&view=login','Bạn cần đăng nhập vào phần mềm');
+		// }
+	} else {
+		$user = Factory::getUser();
+		if ($user->id == null) {
+			// check có login trong hệ thống xacthuc sso ko
+			// $model = Core::model('Services/Sso');
+			// $return = $model->checkLoginSso();
+			if ($return == false) {
+				$url = Route::_('index.php?option=com_users&view=login');
+				$message = 'Bạn cần đăng nhập vào hệ thống.';
+				Factory::getApplication()->enqueueMessage($message);
+				Factory::getApplication()->redirect($url);
+				return false;
+			}
 		}
 	}
 	$app = Factory::getApplication();
@@ -123,7 +142,7 @@ if ($coreTemplate->isLogin() == true) {
 
 	<body class="sidebar-mini layout-fixed">
 		<?php foreach (Factory::getApplication()->getMessageQueue() as $message) : ?>
-			<?php var_dump($message) ?> 
+			<?php var_dump($message) ?>
 			<?php if ($message['type'] == 'error') : ?>
 				<div class="alert alert-<?php echo $message['type']; ?>">
 					<?php echo $message['message']; ?>
