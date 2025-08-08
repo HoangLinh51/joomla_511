@@ -38,7 +38,7 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        if ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE' || $task === 'XEMCHITIET' ) {
+        if ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE' || $task === 'XEMCHITIET' || $task === 'ADDLOGO' ) {
             $checkTask = 'default';
         } else {
             $checkTask = $task;
@@ -62,6 +62,11 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('edit_viahe');
                 $this->_getEditViahe();
                 break;
+            case 'ADDLOGO':
+            case 'EDITLOGO':
+                $this->setLayout('edit_logo');
+                $this->_getEditlogo();
+                break;
             case 'XEMCHITIET':
                 $this->setLayout('chitiet_viahe');
                 $this->_getEditViahe();
@@ -82,6 +87,19 @@ class HtmlView extends BaseHtmlView
     private function _initDefaultPage()
     {
         $this->import();
+    }
+
+    private function _getEditlogo()
+    {
+        $this->import();
+        $model = Core::model('Dcxddt/XeOm');
+        $phanquyen = $model->getPhanQuyen();
+        $phuongxa = array();
+        if ($phanquyen['phuongxa_id'] != '') {
+            $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+        }
+        $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc', 'level = 2 AND sudung = 1 AND daxoa = 0');
+        $this->phuongxa = $phuongxa;
     }
 
     private function _getEditViahe()

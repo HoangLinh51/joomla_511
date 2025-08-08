@@ -51,8 +51,8 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
 
   public function getDanhSachViaHe($formdata, $phuongxa)
   {
-    $page = isset($filters['page']) ? (int)$filters['page'] : 1;
-    $take = isset($filters['take']) ? (int)$filters['take'] : 20;
+    $page = isset($formdata['page']) ? (int)$formdata['page'] : 1;
+    $take = isset($formdata['take']) ? (int)$formdata['take'] : 20;
     $diachi = isset($formdata['diachi']) ? trim($formdata['diachi']) : '';
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
@@ -403,6 +403,68 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
       throw new \RuntimeException('Lỗi lưu dữ liệu: ' . $e->getMessage(), 500);
     }
   }
+
+  public function saveLogo($formdata)
+  {
+    $phuongxaId = (int) ($formdata['phuongxa_id'] ?? 0);
+    $logoIds = $formdata['idFile-logophanquyen'] ?? [];
+
+    if (empty($phuongxaId) || empty($logoIds)) {
+      return false;
+    }
+
+    // Lấy logo_id đầu tiên từ mảng
+    $logoId = (int) $logoIds[0];
+
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+
+    // Kiểm tra xem đã tồn tại bản ghi cho phường xã này chưa
+    $query->select('id')
+      ->from($db->quoteName('logo'))
+      ->where($db->quoteName('phuongxa_id') . ' = ' . $db->quote($phuongxaId))
+      ->where('(' . $db->quoteName('daxoa') . ' = 0 OR ' . $db->quoteName('daxoa') . ' IS NULL)');
+
+    $db->setQuery($query);
+    $existingId = (int) $db->loadResult();
+
+    try {
+      if ($existingId) {
+        // Nếu đã tồn tại -> chỉ cập nhật logo_id
+        $query = $db->getQuery(true);
+        $fields = [
+          $db->quoteName('logo_id') . ' = ' . $db->quote($logoId),
+        ];
+        $conditions = [
+          $db->quoteName('id') . ' = ' . $db->quote($existingId)
+        ];
+
+        $query->update($db->quoteName('logo'))
+          ->set($fields)
+          ->where($conditions);
+
+        $db->setQuery($query);
+      } else {
+        // Nếu chưa có -> chèn mới
+        $columns = ['phuongxa_id', 'logo_id', 'daxoa'];
+        $values = [$phuongxaId, $logoId, 0];
+
+        $query = $db->getQuery(true)
+          ->insert($db->quoteName('logo'))
+          ->columns($db->quoteName($columns))
+          ->values(implode(',', $db->quote($values)));
+
+        $db->setQuery($query);
+      }
+
+      $db->execute();
+      return true;
+    } catch (\RuntimeException $e) {
+      Factory::getApplication()->enqueueMessage('Lỗi khi lưu logo: ' . $e->getMessage(), 'error');
+      return false;
+    }
+  }
+
 
   // 👉 Hàm chuyển đổi định dạng dd/mm/yyyy → yyyy-mm-dd
   protected function convertToDate($str)
