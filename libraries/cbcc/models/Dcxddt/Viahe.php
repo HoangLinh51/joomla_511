@@ -49,61 +49,59 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     return $db->loadAssocList();
   }
 
-  public function getDanhSachViaHe($formdata, $phuongxa)
-  {
-    $page = isset($filters['page']) ? (int)$filters['page'] : 1;
-    $take = isset($filters['take']) ? (int)$filters['take'] : 20;
+ public function getDanhSachViaHe($formdata, $phuongxa)
+{
+    $page = isset($formdata['page']) ? (int)$formdata['page'] : 1; // Sửa từ $filters sang $formdata
+    $take = isset($formdata['take']) ? (int)$formdata['take'] : 20; // Sửa từ $filters sang $formdata
     $diachi = isset($formdata['diachi']) ? trim($formdata['diachi']) : '';
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
 
     $query->select([
-      'a.id',
-      'a.hoten',
-      'a.dienthoai',
-      'a.diachi',
-      'gp.sogiayphep',
-      'a.dientichtamthoi',
-      'tthd.id as id_hopdong',
-      'tthd.solan',
-      'tthd.ngayhethan',
+        'a.id',
+        'a.hoten',
+        'a.dienthoai',
+        'a.diachi',
+        'gp.sogiayphep',
+        'a.dientichtamthoi',
+        'tthd.id as id_hopdong',
+        'tthd.solan',
+        'tthd.ngayhethan',
     ]);
     $query->from($db->quoteName('dcxddtmt_viahe_thongtinviahe', 'a'))
-      ->leftJoin($db->quoteName('dcxddtmt_viahe_giayphep', 'gp') . ' ON gp.thongtinviahe_id = a.id')
-      ->leftJoin($db->quoteName('dcxddtmt_viahe_thongtinhopdong', 'tthd') . ' ON tthd.giayphep_id = gp.id')
-      ->leftJoin(
-        '(SELECT MAX(hd.id) AS id
-        FROM dcxddtmt_viahe_thongtinviahe a1
-        LEFT JOIN dcxddtmt_viahe_giayphep gp1 ON gp1.thongtinviahe_id = a1.id
-        LEFT JOIN dcxddtmt_viahe_thongtinhopdong hd ON hd.giayphep_id = gp1.id
-        WHERE hd.daxoa = 0
-        GROUP BY a1.id) AS last_hd
-      ON tthd.id = last_hd.id'
-      )
-      ->where('a.daxoa = 0')
-      ->where('tthd.daxoa = 0')
-      ->where('tthd.id = last_hd.id'); 
+        ->leftJoin($db->quoteName('dcxddtmt_viahe_giayphep', 'gp') . ' ON gp.thongtinviahe_id = a.id')
+        ->leftJoin($db->quoteName('dcxddtmt_viahe_thongtinhopdong', 'tthd') . ' ON tthd.giayphep_id = gp.id')
+        ->leftJoin(
+            '(SELECT MAX(hd.id) AS id
+            FROM dcxddtmt_viahe_thongtinviahe a1
+            LEFT JOIN dcxddtmt_viahe_giayphep gp1 ON gp1.thongtinviahe_id = a1.id
+            LEFT JOIN dcxddtmt_viahe_thongtinhopdong hd ON hd.giayphep_id = gp1.id
+            WHERE hd.daxoa = 0
+            GROUP BY a1.id) AS last_hd
+            ON tthd.id = last_hd.id'
+        )
+        ->where('a.daxoa = 0')
+        ->where('tthd.daxoa = 0')
+        ->where('tthd.id = last_hd.id');
 
     $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
-      ? array_map('intval', array_column($phuongxa, 'id'))
-      : [];
+        ? array_map('intval', array_column($phuongxa, 'id'))
+        : [];
 
     if (!empty($phuongxaIds)) {
-      $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+        $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
     } else {
-      // Nếu không có phân quyền nào thì có thể lấy tất cả hoặc 1=0 tùy yêu cầu
-      $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+        $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
     }
 
     if (!empty($diachi)) {
-      $query->where($db->quoteName('a.diachi') . ' LIKE ' . $db->quote('%' . $db->escape($diachi) . '%'));
+        $query->where($db->quoteName('a.diachi') . ' LIKE ' . $db->quote('%' . $db->escape($diachi) . '%'));
     }
 
     $countQuery = clone $query;
     $countQuery->clear('select')->select('COUNT(DISTINCT a.id)');
     $db->setQuery($countQuery);
     $totalRecord = $db->loadResult();
-
     $offset = ($page - 1) * $take;
     $query->setLimit($take, $offset);
 
@@ -112,14 +110,13 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     $db->setQuery($query);
     $rows = $db->loadObjectList();
 
-    // Prepare response
     return [
-      'data' => $rows,
-      'page' => $page,
-      'take' => $take,
-      'totalrecord' => $totalRecord
+        'data' => $rows,
+        'page' => $page,
+        'take' => $take,
+        'totalrecord' => $totalRecord
     ];
-  }
+}
 
   public function getThongtinViahe($id)
   {
@@ -161,6 +158,7 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
       ->where('ttv.daxoa = 0');
 
     $db->setQuery($query);
+    // echo $query;exit;
     $info = $db->loadAssoc();
 
     if (!$info) return null;

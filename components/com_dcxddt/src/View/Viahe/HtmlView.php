@@ -1,13 +1,5 @@
 <?php
 
-/**
- * @package     Joomla.Site
- * @subpackage  com_dcxddt
- *
- * @copyright   (C) 2025 Your Company Name
- * @license     GNU General Public License version 2 or later; see LICENSE.txt
- */
-
 namespace Joomla\Component\Dcxddt\Site\View\Viahe;
 
 defined('_JEXEC') or die;
@@ -16,33 +8,32 @@ use Core;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Uri\Uri;
-use Exception;
 
-/**
- * The Viahe View
- *
- * @since  5.0
- */
 class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
-        $user = Factory::getUser();
         $input = Factory::getApplication()->input;
-        $component = 'com_dcxddt';
-        $controller = $input->getCmd('view', 'viahe');
         $task = strtoupper($input->getCmd('task', 'default'));
 
+        // Không kiểm tra đăng nhập hoặc quyền cho task XEMCHITIET
+        if ($task === 'XEMCHITIET') {
+            $this->setLayout('chitiet_viahe');
+            $this->_getEditViahe();
+            parent::display($tpl);
+            return;
+        }
+
+        // Kiểm tra đăng nhập cho các task khác
+        $user = Factory::getUser();
         if (!$user->id) {
             echo '<script>window.location.href="index.php?option=com_users&view=login";</script>';
             exit;
         }
 
-        if ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE' || $task === 'XEMCHITIET' ) {
-            $checkTask = 'default';
-        } else {
-            $checkTask = $task;
-        }
+        $component = 'com_dcxddt';
+        $controller = $input->getCmd('view', 'viahe');
+        $checkTask = ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE') ? 'default' : $task;
 
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -60,10 +51,6 @@ class HtmlView extends BaseHtmlView
             case 'ADDVIAHE':
             case 'EDITVIAHE':
                 $this->setLayout('edit_viahe');
-                $this->_getEditViahe();
-                break;
-            case 'XEMCHITIET':
-                $this->setLayout('chitiet_viahe');
                 $this->_getEditViahe();
                 break;
             case 'THONGKE':
@@ -86,13 +73,46 @@ class HtmlView extends BaseHtmlView
 
     private function _getEditViahe()
     {
-        $this->import();
+        $document = Factory::getDocument();
+
+        // CSS
+        $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/style.bundle.css');
+        $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/plugins.bundle.css');
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.toast.css');
+        $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2-bootstrap.css');
+
+        // JS
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.toast.js');
+        $document->addScript(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/pace.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootbox.min.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.gritter.min.js');
         $model = Core::model('Dcxddt/Viahe');
         $input = Factory::getApplication()->input;
         $viahe_id = $input->getInt('id', 0);
         $thongtinthanhphan = [];
         if ($viahe_id) {
             $item = $model->getThongtinViahe($viahe_id);
+            if (!$item) {
+                echo '<div class="alert alert-error">Không tìm thấy dữ liệu vỉa hè.</div>';
+                return;
+            }
+        } else {
+            echo '<div class="alert alert-error">ID không hợp lệ.</div>';
+            return;
         }
         $this->item = $item;
         $this->thongtinthanhphan = $thongtinthanhphan;
@@ -123,24 +143,24 @@ class HtmlView extends BaseHtmlView
     {
         $document = Factory::getDocument();
 
-        // CSS: Framework trước, sau đó đến plugin
+        // CSS
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/style.bundle.css');
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/global/plugins.bundle.css');
-        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');;
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/themes/default/style.min.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.toast.css');
         $document->addStyleSheet(Uri::base(true) . '/templates/adminlte/plugins/pace-progress/themes/blue/pace-theme-flash.css');
-        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css'); // Xóa dòng trùng lặp
+        $document->addStyleSheet(Uri::base(true) . '/media/cbcc/css/jquery.gritter.css');
         $document->addStyleSheet(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2-bootstrap.css');
 
-
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js'); // Chỉ giữ một phiên bản jQuery
-        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js'); // Tải ngay sau jQuery
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js'); // Bootstrap JS
+        // JS
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-3.6.0.min.js');
+        $document->addScript(Uri::base(true) . '/media/legacy/js/jquery-noconflict.js');
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/bootstrap/bootstrap.bundle.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/select2/select2.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree-3.2.1/jstree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/fuelux/fuelux.tree.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/ace-elements.min.js');
-        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js'); // Chỉ giữ phiên bản nén
+        $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.validate.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery-validation/additional-methods.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.inputmask.min.js');
         $document->addScript(Uri::base(true) . '/media/cbcc/js/jstree/jquery.cookie.js');

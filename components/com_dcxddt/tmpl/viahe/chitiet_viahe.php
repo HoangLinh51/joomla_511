@@ -9,7 +9,10 @@ defined('_JEXEC') or die('Restricted access');
 $item = $this->item;
 $idUser = Factory::getUser()->id;
 $detailViaHe = $this->item;
+// var_dump($detailViaHe);exit;
+
 ?>
+
 <div class="card-body">
     <div class="d-flex align-items-center justify-content-between border-bottom mb-3">
         <h2 class="text-primary mb-3">

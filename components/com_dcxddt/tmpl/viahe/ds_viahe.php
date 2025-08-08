@@ -207,44 +207,43 @@ $onlyview = Factory::getUser()->onlyview_viahe
   // hàm get list đoàn hôi
   async function loadMemberList(page = 1, filters, itemsPerPage = 20) {
     try {
-      $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
-      const response = await $.ajax({
-        url: 'index.php?option=com_dcxddt&controller=viahe&task=getListViaHe',
-        method: 'POST',
-        data: {
-          page,
-          take: itemsPerPage,
-          diachi: filters.diachi,
-          [csrfToken]: 1
-        }
-      });
+        console.log('Sending data:', { page, take: itemsPerPage, diachi: filters.diachi }); // Debug
+        $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Đang tải dữ liệu...</td></tr>');
+        const response = await $.ajax({
+            url: 'index.php?option=com_dcxddt&controller=viahe&task=getListViaHe',
+            method: 'POST',
+            data: {
+                page,
+                take: itemsPerPage,
+                diachi: filters.diachi,
+                [csrfToken]: 1
+            }
+        });
 
-      const items = response.data || [];
-      const currentPage = response.page || page;
-      const totalRecords = response.totalrecord || items.length;
-      const totalPages = Math.ceil(totalRecords / itemsPerPage);
-      const startIndex = (currentPage - 1) * itemsPerPage + 1;
+        console.log('Response:', response); // Debug
+        const items = response.data || [];
+        const currentPage = response.page || page;
+        const totalRecords = response.totalrecord || items.length;
+        const totalPages = Math.ceil(totalRecords / itemsPerPage);
+        const startIndex = (currentPage - 1) * itemsPerPage + 1;
 
-      $('#tbody_danhsach').html(renderTableRows(items, startIndex));
-      const {
-        pagination,
-        info
-      } = renderPagination(currentPage, totalPages, totalRecords, itemsPerPage);
-      $('#pagination').html(pagination);
-      $('#pagination-info').text(info);
+        $('#tbody_danhsach').html(renderTableRows(items, startIndex));
+        const { pagination, info } = renderPagination(currentPage, totalPages, totalRecords, itemsPerPage);
+        $('#pagination').html(pagination);
+        $('#pagination-info').text(info);
 
-      history.pushState({}, '', `?view=viahe&task=default&page=${currentPage}`);
-      return {
-        page: currentPage,
-        take: itemsPerPage,
-        totalrecord: totalRecords
-      };
+        history.pushState({}, '', `?view=viahe&task=default&page=${currentPage}`);
+        return {
+            page: currentPage,
+            take: itemsPerPage,
+            totalrecord: totalRecords
+        };
     } catch (error) {
-      console.error('Error loading data:', error);
-      $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
-      showToastDS('Lỗi khi tải dữ liệu', false);
+        console.error('Error loading data:', error);
+        $('#tbody_danhsach').html('<tr><td colspan="8" class="text-center">Lỗi khi tải dữ liệu</td></tr>');
+        showToastDS('Lỗi khi tải dữ liệu', false);
     }
-  }
+}
 
   // hàm get thông tin search 
   function getFilterParams() {
