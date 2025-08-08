@@ -124,7 +124,8 @@ $item = $this->item;
                                     <input type="hidden" name="gioitinh_id[]" value="<?php echo htmlspecialchars($nk['n_gioitinh_id'] ?? ''); ?>" />
                                     <input type="hidden" name="diachi[]" value="<?php echo htmlspecialchars($nk['n_diachi'] ?? ''); ?>" />
 
-                                    <input type="hidden" name="id_giadinhvanhoa[]" value="<?php echo (int)($nk['gdvanhoa2'] ?? '0'); ?>" /> <input type="hidden" name="is_search[]" value="<?php echo ($nk['is_ngoai'] == 1 ? '1' : '0'); ?>" />
+                                    <input type="hidden" name="id_giadinhvanhoa[]" value="<?php echo (int)($nk['gdvanhoa2'] ?? '0'); ?>" /> 
+                                    <input type="hidden" name="is_search[]" value="<?php echo ($nk['is_ngoai'] == 0 ? '1' : '0'); ?>" />
                                     <input type="hidden" name="is_dat[]" value="<?php echo $nk['is_dat'] ?? '0'; ?>" />
                                     <input type="hidden" name="gdvh_tieubieu[]" value="<?php echo $nk['is_giadinhvanhoatieubieu'] ?? ''; ?>" />
                                     <input type="hidden" name="lydokhongdat[]" value="<?php echo htmlspecialchars($nk['lydokhongdat'] ?? ''); ?>" />
@@ -402,8 +403,8 @@ $item = $this->item;
                                     <strong>Giới tính:</strong> ${item.tengioitinh || ''}<br>
                                     <strong>Ngày sinh:</strong> ${item.n_namsinh || ''}
                                 </td>
-                                <td class="align-middle">${is_dat === '1' ? 'Đạt' : 'Không đạt'}</td>
-                                <td class="align-middle">${gdvh_tieubieu === '1' ? 'Có' : 'Không'}</td>
+                                <td class="align-middle">${is_dat == '1' ? 'Đạt' : 'Không đạt'}</td>
+                                <td class="align-middle">${gdvh_tieubieu == '1' ? 'Có' : 'Không'}</td>
                                 <td class="align-middle">${lydokhongdat}</td>
                                 <td class="align-middle">${ghichu}</td>
                                 <td class="align-middle text-center">
@@ -420,7 +421,7 @@ $item = $this->item;
                                     <input type="hidden" name="gdvh_tieubieu[]" value="${gdvh_tieubieu}" />
                                     <input type="hidden" name="lydokhongdat[]" value="${lydokhongdat}" />
                                     <input type="hidden" name="ghichu[]" value="${ghichu}" />
-                                    <input type="hidden" name="is_search[]" value="${item.is_search || '0'}" />
+                                    <input type="hidden" name="is_search[]" value="${item.is_search || '1'}" />
                                     <span class="btn btn-small btn-danger btn_xoa" data-xuly="${bandieuhanhId}"><i class="fas fa-trash-alt"></i></span>
                                 </td>
                             </tr>`;
@@ -591,6 +592,7 @@ $item = $this->item;
                     templateResult: function(result) {
                         return result.text || result.id;
                     }
+
                 });
 
                 if ($('#modal_nhankhau_id').val()) {
@@ -807,11 +809,15 @@ $item = $this->item;
                     return $(this).data('placeholder');
                 }
             });
-
+            console.log(isSearch);
             $('#modal_search_toggle').prop('checked', isSearch);
-            $('#search_fields').toggle(isSearch);
-            $('#modal_hoten, #modal_cccd_so, #modal_dienthoai, #modal_diachi, #modal_gioitinh_id, #modal_ngaysinh').prop('disabled', isSearch);
-
+            if (isSearch) {
+                $('#search_fields').show();
+                $('#modal_hoten, #modal_cccd_so, #modal_dienthoai, #modal_diachi, #modal_gioitinh_id').prop('disabled', true);
+            } else {
+                $('#search_fields').hide();
+                $('#modal_hoten, #modal_cccd_so, #modal_dienthoai, #modal_diachi, #modal_gioitinh_id').prop('disabled', false);
+            }
             $('#modal_nhankhau_id').val(nhankhauId);
 
             if (isSearch) {

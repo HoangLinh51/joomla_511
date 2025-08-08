@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteRule ^viahe/([0-9]+)$ index.php?option=com_dcxddt&view=viahe&task=xemchitiet&id=$1 [QSA,L]
+RewriteCond %{QUERY_STRING} ^id=([0-9]+)$ [NC]
+RewriteRule ^viahe$ index.php?option=com_dcxddt&view=viahe&task=xemchitiet&id=%1 [QSA,L]
