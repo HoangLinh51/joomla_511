@@ -127,7 +127,7 @@ $detailViaHe = $this->item;
           const isSuccess = response.success ?? true;
           showToast(response.message || 'Lưu dữ liệu thành công', isSuccess);
           if (isSuccess) {
-            // setTimeout(() => location.href = "/index.php/component/dcxddt/?view=viahe&task=default", 500);
+            setTimeout(() => location.href = "/index.php/component/dcxddt/?view=viahe&task=default", 500);
           }
         },
         error: function(xhr) {

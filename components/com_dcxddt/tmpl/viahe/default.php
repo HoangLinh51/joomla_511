@@ -4,7 +4,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die('Restricted access');
-$onlyview = Factory::getUser()->onlyview_viahe
+$onlyview = Factory::getUser()->onlyview_viahe;
+$userId = Factory::getUser()->id;
 ?>
 <div class="danhsach" style="background-color:#fff">
 	<div class="content-header">

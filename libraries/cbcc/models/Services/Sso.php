@@ -55,7 +55,7 @@ class Services_Model_Sso
 					} else {
 						// khởi tạo user với mail và username = mail_sso
 						$form = array();
-						$form['name'] = $sso_user['lastName'] . ' ' . $sso_user['middleName'] . ' ' . $sso_user['firstName'];
+						$form['name'] = $sso_user['name'];
 						$form['username'] = $sso_user['email'];
 						$form['email'] = $sso_user['email'];
 						$form['group_id'] = 15;
@@ -312,6 +312,11 @@ class Services_Model_Sso
 					// thêm mới user
 					$object->registerDate	=	date('Y-m-d H:I:s');
 					$object->password		=	md5($data['password']);
+					$object->lastvisitDate = '0000-00-00 00:00:00';
+					$object->lastResetTime = '0000-00-00 00:00:00';
+					$object->block = 0; // Đảm bảo tài khoản không bị khóa
+					$object->params = '';
+					$object->activation = '';
 					$flag = $flag && $db->insertObject('jos_users', $object, 'id');
 					if ($flag) {
 						if ($grname != null) {
@@ -359,7 +364,7 @@ class Services_Model_Sso
 		$db = JFactory::getDBO();
 		$sql_fk = 'UPDATE core_update_tk SET active = 1  WHERE id = (' . $id . ')';
 		$db->setQuery($sql_fk);
-		return 	$db->query();
+		return $db->execute();
 	}
 	public function getChirl_Donvi($id, $type = 0, $iddonvi_quanly)
 	{

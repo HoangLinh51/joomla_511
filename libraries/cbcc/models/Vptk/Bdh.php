@@ -614,6 +614,9 @@ class Vptk_Model_Bdh extends JModelLegacy
 
         // Nhóm và sắp xếp
         $query->group($db->quoteName('a.id'));
+        $query->order('a.level, a.id ASC');
+
+        // echo $query;
         $db->setQuery($query);
         return $db->loadAssocList();
     }

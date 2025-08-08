@@ -9,41 +9,47 @@ use Joomla\CMS\Session\Session;
 require_once(JPATH_THEMES . '/adminlte/CoreTemplate.php');
 $coreTemplate = new CoreTemplate();
 
-if ($coreTemplate->isLogin() == true) {
-	require_once(JPATH_THEMES . '/adminlte/login.php');
+// Kiểm tra nếu là task chitietviahe thì bỏ qua đăng nhập
+$jinput = Factory::getApplication()->input;
+$option = $jinput->get('option', '', 'string');
+$view = $jinput->get('view', '', 'string');
+$task = $jinput->get('task', '', 'string');
+
+if ($option === 'com_dcxddt' && $view === 'viahe' && $task === 'chitietviahe') {
+	$app1 = Factory::getApplication();
+	require_once(JPATH_THEMES . '/adminlte/public.php');
 } else {
+	// Kiểm tra đăng nhập cho các trường hợp khác
+	if ($coreTemplate->isLogin() == true) {
+		require_once(JPATH_THEMES . '/adminlte/login.php');
+		return;
+	}
+
 	$app = Factory::getApplication();
 	$params = $app->getTemplate(true)->params;
 	$doc = Factory::getDocument();
 	$is_sso = Core::config('core/sso/is_sso');
-	$jinput = Factory::getApplication()->input;
 	$code = $jinput->get('code', null, 'string');
 	$state = $jinput->get('state', null, 'string');
 	$session_state = $jinput->get('session_state', null, 'string');
+
 	if (strlen($code) > 0 && strlen($session_state) > 0) {
 		$model = Core::model('Services/Sso');
 		$return = $model->sso();
-		// if($return==false){
-		// 	$app->redirect('index.php?option=com_users&view=login','Bạn cần đăng nhập vào phần mềm');
-		// }
 	} else {
 		$user = Factory::getUser();
 		if ($user->id == null) {
-			// check có login trong hệ thống xacthuc sso ko
-			// $model = Core::model('Services/Sso');
-			// $return = $model->checkLoginSso();
-			if ($return == false) {
-				$url = Route::_('index.php?option=com_users&view=login');
-				$message = 'Bạn cần đăng nhập vào hệ thống.';
-				Factory::getApplication()->enqueueMessage($message);
-				Factory::getApplication()->redirect($url);
-				return false;
-			}
+			$url = Route::_('index.php?option=com_users&view=login');
+			$message = 'Bạn cần đăng nhập vào hệ thống.';
+			Factory::getApplication()->enqueueMessage($message);
+			Factory::getApplication()->redirect($url);
+			return false;
 		}
 	}
-	$app = Factory::getApplication();
-	$doc = Factory::getDocument();
 
+
+	// Load CSS và JS
+	$doc = Factory::getDocument();
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/adminltev3.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/dist/css/_all-skins.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/fontawesome-free/css/all.min.css');
@@ -53,7 +59,6 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/css/select2.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.css');
 	$doc->addStyleSheet(Uri::root(true) . '/media/cbcc/css/jquery.toast.css');
-
 
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/jquery/jquery.min.js');
 	$doc->addScript(Uri::root(true) . '/media/legacy/js/jquery-noconflict.js');
@@ -67,7 +72,7 @@ if ($coreTemplate->isLogin() == true) {
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/chart.js/Chart.min.js');
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/select2/js/select2.min.js');
 	$doc->addScript(Uri::root(true) . '/templates/' . $this->template . '/plugins/toastr/toastr.min.js');
-	$doc->addScript(Uri::base(true) . '/media/cbcc/js/jquery/jquery.toast.js');
+	$doc->addScript(Uri::root(true) . '/media/cbcc/js/jquery/jquery.toast.js');
 	$doc->addScript(Uri::root(true) . '/media/cbcc/js/common.js');
 ?>
 	<!DOCTYPE html>
@@ -81,6 +86,7 @@ if ($coreTemplate->isLogin() == true) {
 		<title>CỞ SỞ DỮ LIỆU PHƯỜNG XÃ DÙNG CHUNG</title>
 		<!-- Google Font: Source Sans Pro -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+		<jdoc:include type="head" />
 		<!-- Font Awesome Icons -->
 		<script>
 			var app = {};

@@ -1,12 +1,15 @@
 <?php
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 defined('_JEXEC') or die('Restricted access');
-$onlyview = Factory::getUser()->onlyview_viahe
+$onlyview = Factory::getUser()->onlyview_viahe;
+$logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] . '?code=' . $this->logo['code'];
 ?>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 <table class="table table-striped table-bordered table-hover" id="tblDanhsach">
   <thead>
     <tr class="bg-primary">
@@ -14,10 +17,8 @@ $onlyview = Factory::getUser()->onlyview_viahe
       <th class="align-middle text-center">Mã QR</th>
       <th class="align-middle text-center">Thông tin khách hàng</th>
       <th class="align-middle text-center">Thông tin giấy phép </th>
-      <!-- <th class="align-middle text-center">Địa chỉ</th> -->
       <th class="align-middle text-center">Số ngày còn lại</th>
       <th class="align-middle text-center">Trạng thái</th>
-
       <?php if ($onlyview == 0) { ?>
         <th class="align-middle text-center">Chức năng</th>
       <?php } ?>
@@ -34,38 +35,8 @@ $onlyview = Factory::getUser()->onlyview_viahe
   <div id="pagination-info" class="pagination-info text-right ml-3"></div>
 </div>
 
-<!-- Modal QR Code -->
-<div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="qrCodeModalLabel">
-          <i class="fas fa-qrcode"></i> QR Code Vỉa Hè
-        </h5>
-      </div>
-      <div class="modal-body text-center">
-        <div id="qrCodeContainer" class="d-flex justify-content-center">
-          <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Đang tạo QR code...</span>
-          </div>
-          <p class="mt-2">Đang tạo QR code...</p>
-        </div>
-        <div id="qrCodeInfo" class="mt-3" style="display: none;">
-          <p class="text-muted mb-2">Quét QR code này để xem chi tiết vỉa hè</p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">X Đóng</button>
-        <button type="button" class="btn btn-primary" id="btnDownloadQR" style="display: none;">
-          <i class="fas fa-download"></i> Tải xuống
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 <script>
+  let logophanquyen = <?php echo json_encode($this->logo); ?>;
   const idUser = <?= (int)Factory::getUser()->id ?>;
   const csrfToken = Joomla.getOptions('csrf.token', '');
   let qr;
@@ -88,7 +59,7 @@ $onlyview = Factory::getUser()->onlyview_viahe
       <tr>
         <td class="text-center align-middle">${startIndex + index}</td>
         <td class="align-middle">
-          <img id="qr-img-${item.id}" src="" style="width:100px;height:100px;" />
+          <div class="qr-container" data-url="${qrUrl}" data-id="${item.id}"></div>
         </td>
         <td class="align-middle">
           <strong>Họ và tên :</strong>
@@ -102,7 +73,7 @@ $onlyview = Factory::getUser()->onlyview_viahe
         <td class="align-middle text-center">${soNgay ?? ''} ngày</td>
         <td class="align-middle text-center">${tinhTrangHTML ?? ''}</td>
         <?php if ($onlyview == 0) { ?>
-        <td class="text-center align-middle">
+        <td class="text-center align-middle text-nowrap">
           <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-viahe="${item.id}"
             data-title="Hiệu chỉnh">
             <i class="fas fa-pencil-alt"></i>
@@ -240,6 +211,8 @@ $onlyview = Factory::getUser()->onlyview_viahe
       const startIndex = (currentPage - 1) * itemsPerPage + 1;
 
       $('#tbody_danhsach').html(renderTableRows(items, startIndex));
+
+      generateAllQRCodes();
       const {
         pagination,
         info
@@ -267,29 +240,70 @@ $onlyview = Factory::getUser()->onlyview_viahe
     };
   }
 
+  // function generateAllQRCodes() {
+  //   $('.btn_downloadqr').each(function() {
+  //     const logoUrl = '<?= $logoUrl ?>';
+  //     const qrUrl = $(this).data('url');
+  //     const id = $(this).data('id');
+  //     const tempDiv = document.createElement('div');
+
+  //     const qrCode = new QRCode(tempDiv, {
+  //       text: qrUrl,
+  //       width: 200,
+  //       height: 200,
+  //       colorDark: "#000000",
+  //       colorLight: "#ffffff",
+  //       correctLevel: QRCode.CorrectLevel.H
+  //     });
+
+  //     setTimeout(() => {
+  //       const canvas = tempDiv.querySelector('canvas');
+  //       if (canvas) {
+  //         const ctx = canvas.getContext('2d');
+
+  //         const logo = new Image();
+  //         logo.src = logoUrl
+
+  //         logo.onload = function() {
+  //           const logoSize = 70; // ✅ Kích thước logo (vuông)
+  //           const x = (canvas.width - logoSize) / 2;
+  //           const y = (canvas.height - logoSize) / 2;
+  //           ctx.drawImage(logo, x, y, logoSize, logoSize);
+
+  //           const imgData = canvas.toDataURL("image/png");
+  //           $(`#qr-img-${id}`).attr('src', imgData).attr('data-img', imgData);
+  //         };
+  //       }
+  //     }, 300); // Delay để QR vẽ xong
+  //   });
+  // }
   function generateAllQRCodes() {
-    $('.btn_downloadqr').each(function() {
-      const qrUrl = $(this).data('url');
-      const id = $(this).data('id');
-      const tempDiv = document.createElement('div');
-      const qrCode = new QRCode(tempDiv, {
+    $('.qr-container').each(function() {
+      const container = $(this);
+      const qrUrl = container.data('url');
+      const id = container.data('id');
+
+      container.empty(); // clear cũ nếu có
+
+      // Tạo QR code vào trong container
+      new QRCode(container[0], {
         text: qrUrl,
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
+        width: 100,
+        height: 100,
+        colorDark: "#007b8b",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
-      console.log(qrCode)
 
-      // Sau khi tạo xong, lấy ảnh base64 từ canvas
-      setTimeout(() => {
-        const canvas = tempDiv.querySelector('canvas');
-        if (canvas) {
-          const imgData = canvas.toDataURL("image/png");
-          $(`#qr-img-${id}`).attr('src', imgData).attr('data-img', imgData);
-        }
-      }, 200); // đợi QRCode vẽ xong
+      // Tạo thẻ <img> để overlay logo
+      const logoUrl = "<?= Uri::root(true) ?>/uploader/get_image.php/<?= $this->logo['folder'] ?>?code=<?= $this->logo['code'] ?>";
+      const logoImg = $('<img>', {
+        class: 'qr-logo',
+        src: logoUrl,
+        alt: 'logo'
+      });
+
+      container.append(logoImg); // chèn logo vào div QR
     });
   }
   $(document).ready(function() {
@@ -308,7 +322,6 @@ $onlyview = Factory::getUser()->onlyview_viahe
     $('body').delegate('.btn_hieuchinh', 'click', function() {
       window.location.href = '/index.php?option=com_dcxddt&view=viahe&task=editviahe&id=' + $(this).data('viahe');
     });
-
 
     // Event handler cho nút tải xuống QR code
     $('body').on('click', '.btn_downloadqr', function() {
@@ -404,9 +417,28 @@ $onlyview = Factory::getUser()->onlyview_viahe
 </script>
 
 <style>
+  .qr-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+  }
+
+  .qr-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    object-fit: cover;
+  }
+
   span.btn_hieuchinh,
   span.btn_xoa,
-  span.btn_scan {
+  span.btn_downloadqr {
     font-size: 18px;
     padding: 10px;
     cursor: pointer;
@@ -416,7 +448,7 @@ $onlyview = Factory::getUser()->onlyview_viahe
 
   .btn_hieuchinh,
   .btn_xoa,
-  .btn_scan {
+  .btn_downloadqr {
     cursor: pointer;
     pointer-events: auto;
     color: #999;
@@ -425,13 +457,13 @@ $onlyview = Factory::getUser()->onlyview_viahe
 
   .btn_hieuchinh:hover i,
   .btn_xoa:hover i,
-  .btn_scan:hover i {
+  .btn_downloadqr:hover i {
     color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,
   .btn_xoa::after,
-  .btn_scan::after {
+  .btn_downloadqr::after {
     content: attr(data-title);
     position: absolute;
     bottom: 72%;
@@ -452,7 +484,7 @@ $onlyview = Factory::getUser()->onlyview_viahe
 
   .btn_hieuchinh:hover::after,
   .btn_xoa:hover::after,
-  .btn_scan:hover::after {
+  .btn_downloadqr:hover::after {
     opacity: 1;
     visibility: visible;
   }

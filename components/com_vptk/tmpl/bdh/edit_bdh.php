@@ -1231,7 +1231,7 @@ $item = $this->item;
                 if ($(this).data('select2')) {
                     $(this).select2('destroy');
                 }
-                if ($(this).attr('id') !== 'modal_chucdanh_id' && $(this).attr('id') !== 'modal_chucdanh_kiemnhiem' && $(this).attr('id') !== 'modal_tinhtrang_id'&& $(this).attr('id') !== 'modal_is_dangvien'&& $(this).attr('id') !== 'modal_trinhdolyluanchinhtri_id'&& $(this).attr('id') !== 'modal_gioitinh_id') {
+                if ($(this).attr('id') !== 'modal_chucdanh_id' && $(this).attr('id') !== 'modal_chucdanh_kiemnhiem' && $(this).attr('id') !== 'modal_tinhtrang_id' && $(this).attr('id') !== 'modal_is_dangvien' && $(this).attr('id') !== 'modal_trinhdolyluanchinhtri_id' && $(this).attr('id') !== 'modal_gioitinh_id') {
                     $(this).val('').html('<option value=""></option>');
                 }
             });
