@@ -21,7 +21,7 @@ class HtmlView extends BaseHtmlView
 
         // Không kiểm tra đăng nhập hoặc quyền cho task CHITIETVIAHE
         if ($task === 'CHITIETVIAHE') {
-            $this->setLayout('chitiet_viahe');
+            $this->setLayout('xemchitiet');
             $this->_getEditViahe();
             parent::display($tpl);
             return;
@@ -137,6 +137,7 @@ class HtmlView extends BaseHtmlView
         $thongtinthanhphan = [];
         if ($viahe_id) {
             $item = $model->getThongtinViahe($viahe_id);
+            $itemNoAuth = $model->getThongTinViaheChuaDangNhap($viahe_id);
             if (!$item) {
                 echo '<div class="alert alert-error">Không tìm thấy dữ liệu vỉa hè.</div>';
                 return;
@@ -146,6 +147,7 @@ class HtmlView extends BaseHtmlView
             return;
         }
         $this->item = $item;
+        $this->itemNoAuth = $itemNoAuth;
         $this->thongtinthanhphan = $thongtinthanhphan;
     }
 

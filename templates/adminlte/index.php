@@ -86,7 +86,7 @@ if ($option === 'com_dcxddt' && $view === 'viahe' && $task === 'chitietviahe') {
 		<title>CỞ SỞ DỮ LIỆU PHƯỜNG XÃ DÙNG CHUNG</title>
 		<!-- Google Font: Source Sans Pro -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-		<jdoc:include type="head" />
+		<!-- <jdoc:include type="head" /> -->
 		<!-- Font Awesome Icons -->
 		<script>
 			var app = {};

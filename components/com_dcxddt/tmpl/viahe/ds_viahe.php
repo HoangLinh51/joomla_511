@@ -53,45 +53,49 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
         soNgay,
         tinhTrangHTML
       } = soNgayConLai(item.ngayhethan);
-      const qrUrl = `${window.location.origin}/index.php/component/dcxddt/?view=viahe&task=xemchitiet&id=${item.id}`;
-
+      const qrUrl = `${window.location.origin}/index.php/component/dcxddt/?view=viahe&task=chitietviahe&id=${item.id}`;
       return `
-      <tr>
-        <td class="text-center align-middle">${startIndex + index}</td>
-        <td class="align-middle">
-          <div class="qr-container" data-url="${qrUrl}" data-id="${item.id}"></div>
-        </td>
-        <td class="align-middle">
-          <strong>Họ và tên :</strong>
-          <a href="/index.php/component/dcxddt/?view=viahe&task=xemchitiet&id=${item.id}">${item.hoten || ''}</a><br>
-          <strong>Số điện thoại :</strong> ${item.dienthoai || ''}
-        </td>
-        <td class="align-middle">
-          <strong>Số giấy phép :</strong>${item.sogiayphep || ''} (lần ${item.solan})<br>
-          <strong>Địa chỉ :</strong>${item.diachi || ''}
-        </td>
-        <td class="align-middle text-center">${soNgay ?? ''} ngày</td>
-        <td class="align-middle text-center">${tinhTrangHTML ?? ''}</td>
-        <?php if ($onlyview == 0) { ?>
-        <td class="text-center align-middle text-nowrap">
-          <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-viahe="${item.id}"
-            data-title="Hiệu chỉnh">
-            <i class="fas fa-pencil-alt"></i>
-          </span>
-          <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-           <span class="btn btn-sm btn_downloadqr" data-id="${item.id}" data-url="${qrUrl}" style="font-size:18px;padding:10px; cursor: pointer;" data-idviahe="${item.id}"
-            data-title="Tải QR">
-            <i class="fas fa-download"></i>
-          </span>
-          <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
-          <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;" data-idviahe="${item.id}"
-            data-title="Xóa">
-            <i class="fas fa-trash-alt"></i>
-          </span>
-        </td>
-        <?php } ?>
-      </tr>
-    `;
+        <tr>
+          <td class="text-center align-middle">${startIndex + index}</td>
+          <td class="align-middle">
+            <img id="qr-img-${item.id}" src="" style="width:150px;height:150px;" />
+          </td>
+          <td class="align-middle">
+            <strong>Họ và tên :</strong>
+            <a href="/index.php/component/dcxddt/?view=viahe&task=xemchitiet&id=${item.id}">${item.hoten || ''}</a><br>
+            <strong>Số điện thoại :</strong> ${item.dienthoai || ''}
+          </td>
+          <td class="align-middle">
+            <strong>Số giấy phép :</strong>${item.sogiayphep || ''} (lần ${item.solan || ''})<br>
+            <strong>Địa chỉ :</strong>${item.diachi || ''}
+          </td>
+          <td class="align-middle text-center">${soNgay ?? ''} ngày</td>
+          <td class="align-middle text-center">${tinhTrangHTML ?? ''}</td>
+          <?php if ($onlyview == 0) { ?>
+          <td class="text-center align-middle text-nowrap">
+            <span class="btn btn-sm btn_hieuchinh" style="font-size:18px;padding:10px; cursor: pointer;" data-viahe="${item.id}"
+              data-title="Hiệu chỉnh">
+              <i class="fas fa-pencil-alt"></i>
+            </span>
+            <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
+            <span class="btn btn-sm btn_downloadqr" data-id="${item.id}" data-url="${qrUrl}" style="font-size:18px;padding:10px; cursor: pointer;" data-idviahe="${item.id}"
+              data-title="Tải QR">
+              <i class="fas fa-download"></i>
+            </span>
+            <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
+            <span class="btn btn-sm btn_copyqr" style="font-size:18px;padding:10px; cursor: pointer;" data-idviahe="${item.id}"
+              data-title="Sao chép QR">
+              <i class="fas fa-copy"></i>
+            </span>
+            <span style="padding: 0 0px;font-size:22px;color:#999">|</span>
+            <span class="btn btn-sm btn_xoa" style="font-size:18px;padding:10px; cursor: pointer;" data-idviahe="${item.id}"
+              data-title="Xóa">
+              <i class="fas fa-trash-alt"></i>
+            </span>
+          </td>
+          <?php } ?>
+        </tr>
+      `;
     }).join('');
   }
 
@@ -240,79 +244,66 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
     };
   }
 
-  // function generateAllQRCodes() {
-  //   $('.btn_downloadqr').each(function() {
-  //     const logoUrl = '<?= $logoUrl ?>';
-  //     const qrUrl = $(this).data('url');
-  //     const id = $(this).data('id');
-  //     const tempDiv = document.createElement('div');
-
-  //     const qrCode = new QRCode(tempDiv, {
-  //       text: qrUrl,
-  //       width: 200,
-  //       height: 200,
-  //       colorDark: "#000000",
-  //       colorLight: "#ffffff",
-  //       correctLevel: QRCode.CorrectLevel.H
-  //     });
-
-  //     setTimeout(() => {
-  //       const canvas = tempDiv.querySelector('canvas');
-  //       if (canvas) {
-  //         const ctx = canvas.getContext('2d');
-
-  //         const logo = new Image();
-  //         logo.src = logoUrl
-
-  //         logo.onload = function() {
-  //           const logoSize = 70; // ✅ Kích thước logo (vuông)
-  //           const x = (canvas.width - logoSize) / 2;
-  //           const y = (canvas.height - logoSize) / 2;
-  //           ctx.drawImage(logo, x, y, logoSize, logoSize);
-
-  //           const imgData = canvas.toDataURL("image/png");
-  //           $(`#qr-img-${id}`).attr('src', imgData).attr('data-img', imgData);
-  //         };
-  //       }
-  //     }, 300); // Delay để QR vẽ xong
-  //   });
-  // }
   function generateAllQRCodes() {
-    $('.qr-container').each(function() {
-      const container = $(this);
-      const qrUrl = container.data('url');
-      const id = container.data('id');
-
-      container.empty(); // clear cũ nếu có
-
-      // Tạo QR code vào trong container
-      new QRCode(container[0], {
+    $('.btn_downloadqr').each(function() {
+      const logoUrl = '<?= $logoUrl ?>';
+      const qrUrl = $(this).data('url');
+      const id = $(this).data('id');
+      const tempDiv = document.createElement('div');
+      const qrCode = new QRCode(tempDiv, {
         text: qrUrl,
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
         colorDark: "#007b8b",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
       });
 
-      // Tạo thẻ <img> để overlay logo
-      const logoUrl = "<?= Uri::root(true) ?>/uploader/get_image.php/<?= $this->logo['folder'] ?>?code=<?= $this->logo['code'] ?>";
-      const logoImg = $('<img>', {
-        class: 'qr-logo',
-        src: logoUrl,
-        alt: 'logo'
-      });
+      setTimeout(() => {
+        const canvas = tempDiv.querySelector('canvas');
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          const logo = new Image();
+          logo.crossOrigin = 'anonymous'; // Để vẽ ảnh từ domain khác nếu cần
+          logo.src = '<?= Uri::root(true) ?>/uploader/get_image.php/<?= $this->logo['folder'] ?>?code=<?= $this->logo['code'] ?>';
+          logo.onload = function() {
+            const logoSize = 40;
+            const x = (canvas.width - logoSize) / 2;
+            const y = (canvas.height - logoSize) / 2;
 
-      container.append(logoImg); // chèn logo vào div QR
+            // Vẽ hình tròn trắng phía dưới
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x + logoSize / 2, y + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            ctx.restore();
+
+            // Tạo clipping vùng tròn
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x + logoSize / 2, y + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+
+            // Vẽ logo vào vùng đã clip
+            ctx.drawImage(logo, x, y, logoSize, logoSize);
+            ctx.restore();
+
+            const imgData = canvas.toDataURL("image/png");
+            $(`#qr-img-${id}`).attr('src', imgData).attr('data-img', imgData);
+          };
+        }
+      }, 300);
     });
   }
+
   $(document).ready(function() {
     // lấy url để gán page trên url 
     const urlParams = new URLSearchParams(window.location.search);
     const initialPage = parseInt(urlParams.get('page')) || 1;
     loadMemberList(initialPage, getFilterParams());
-    generateAllQRCodes()
-
     // hành động search 
     $('#btn_filter').on('click', function(e) {
       e.preventDefault();
@@ -328,7 +319,7 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
       const id = $(this).data('id');
       const imgData = $(`#qr-img-${id}`).attr('data-img');
       if (!imgData) {
-        alert('QR chưa được tạo. Vui lòng thử lại sau.');
+        showToastDS('QR chưa được tạo. Vui lòng thử lại sau.', false);
         return;
       }
       const link = document.createElement('a');
@@ -336,8 +327,35 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
       link.download = `qr_viahe_${id}.png`;
       link.click();
     });
+    $('body').on('click', '.btn_copyqr', async function() {
+      const id = $(this).data('idviahe');
+      const imgData = $(`#qr-img-${id}`).attr('data-img');
 
+      if (!imgData) {
+        showToastDS("QR chưa được tạo. Vui lòng thử lại sau.", false);
+        return;
+      }
 
+      try {
+        const res = await fetch(imgData);
+        const blob = await res.blob();
+
+        if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+          showToastDS("Trình duyệt không hỗ trợ sao chép ảnh vào clipboard. Vui lòng dùng Chrome hoặc Edge mới.", false);
+          return;
+        }
+
+        const item = new ClipboardItem({
+          'image/png': blob
+        });
+        await navigator.clipboard.write([item]);
+        showToastDS("Đã sao chép ảnh QR vào clipboard!", true);
+      } catch (err) {
+        console.error(err);
+        showToastDS("Sao chép ảnh thất bại.", false);
+      }
+    });
+    
     // hành động chuyển trang 
     $('body').on('click', '#pagination .page-link', function(e) {
       e.preventDefault();
@@ -417,26 +435,8 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
 </script>
 
 <style>
-  .qr-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-  }
-
-  .qr-logo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40px;
-    height: 40px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    background: #fff;
-    object-fit: cover;
-  }
-
   span.btn_hieuchinh,
+  span.btn_copyqr,
   span.btn_xoa,
   span.btn_downloadqr {
     font-size: 18px;
@@ -447,6 +447,7 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
   }
 
   .btn_hieuchinh,
+  .btn_copyqr,
   .btn_xoa,
   .btn_downloadqr {
     cursor: pointer;
@@ -456,12 +457,14 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
   }
 
   .btn_hieuchinh:hover i,
+  .btn_copyqr:hover i,
   .btn_xoa:hover i,
   .btn_downloadqr:hover i {
     color: #007b8bb8;
   }
 
   .btn_hieuchinh::after,
+  .btn_copyqr::after,
   .btn_xoa::after,
   .btn_downloadqr::after {
     content: attr(data-title);
@@ -483,56 +486,10 @@ $logoUrl = Uri::root(true) . '/uploader/get_image.php/' . $this->logo['folder'] 
   }
 
   .btn_hieuchinh:hover::after,
+  .btn_copyqr:hover::after,
   .btn_xoa:hover::after,
   .btn_downloadqr:hover::after {
     opacity: 1;
     visibility: visible;
-  }
-
-  /* QR Code Modal Styles */
-  #qrCodeModal .modal-content {
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  }
-
-  #qrCodeModal .modal-header {
-    background: linear-gradient(135deg, #014e58 0%, #048fa17c 100%);
-    color: white;
-    border-radius: 15px 15px 0 0;
-  }
-
-  #qrCodeModal .modal-title {
-    font-weight: 600;
-  }
-
-  #qrCodeModal .modal-body {
-    padding: 30px;
-  }
-
-  #qrCodeModal .modal-footer {
-    border-top: 1px solid #eee;
-    padding: 15px 30px;
-  }
-
-  #qrCodeContainer img {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-  }
-
-  #qrCodeContainer img:hover {
-    transform: scale(1.05);
-  }
-
-  #qrCodeUrl {
-    word-break: break-all;
-    background: #f8f9fa;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #e9ecef;
-  }
-
-  .spinner-border {
-    width: 3rem;
-    height: 3rem;
   }
 </style>

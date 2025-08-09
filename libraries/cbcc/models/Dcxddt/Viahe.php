@@ -48,7 +48,8 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
-  public function getlogoPhanQuyen($idPhuongxa){
+  public function getlogoPhanQuyen($idPhuongxa)
+  {
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
 
@@ -67,7 +68,6 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
       ->where('a.daxoa = 0');
     $db->setQuery($query);
     return $db->loadAssoc();
-
   }
 
   public function getDanhSachViaHe($formdata, $phuongxa)
@@ -126,8 +126,9 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     $offset = ($page - 1) * $take;
     $query->setLimit($take, $offset);
 
-    $query->order($db->quoteName('tthd.giayphep_id') . ' ASC');
-    $query->order($db->quoteName('tthd.id') . ' ASC');
+    $query->order($db->quoteName('tthd.ngayhethan') . ' DESC')
+      ->order($db->quoteName('tthd.giayphep_id') . ' ASC')
+      ->order($db->quoteName('tthd.id') . ' ASC');
     $db->setQuery($query);
     $rows = $db->loadObjectList();
 
@@ -179,7 +180,6 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
       ->where('ttv.daxoa = 0');
 
     $db->setQuery($query);
-    // echo $query;exit;
     $info = $db->loadAssoc();
 
     if (!$info) return null;
@@ -220,6 +220,7 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
         'DATE_FORMAT(hd.ngayky, "%d/%m/%Y") AS ngayky',
         'DATE_FORMAT(hd.ngayhethan, "%d/%m/%Y") AS ngayhethan',
         'hd.sotien',
+      'hd.solan',
         'hd.tinhtrang',
         'hd.ghichu'
       ])
@@ -246,6 +247,7 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
             'id_hopdong' => $row['hopdong_id'],
             'ngayky' => $row['ngayky'],
             'ngayhethan' => $row['ngayhethan'],
+            'solan' => $row['solan'],
             'sotien' => $row['sotien'],
             'tinhtrang' => $row['tinhtrang'],
             'ghichu' => $row['ghichu'],
@@ -255,6 +257,101 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     }
     return $giayphep;
   }
+
+  public function getThongTinViaheChuaDangNhap($id)
+  {
+    $db = Factory::getDbo();
+
+    // --- LẤY THÔNG TIN VỈA HÈ ---
+    $query = $db->getQuery(true)
+      ->select([
+        'ttv.hoten',
+        'ttv.dienthoai',
+        'ttv.diachi',
+        'ttv.dientichtamthoi',
+        'ttv.chieudai',
+        'ttv.chieurong',
+        'ttv.mucdichsudung'
+      ])
+      ->from('dcxddtmt_viahe_thongtinviahe AS ttv')
+      ->where('ttv.id = ' . (int)$id)
+      ->where('ttv.daxoa = 0');
+
+    $db->setQuery($query);
+    $info = $db->loadAssoc();
+    if (!$info) return null;
+
+    // --- LẤY FILE ĐÍNH KÈM ---
+    $query = $db->getQuery(true)
+      ->select([
+        'fd.filedinhkem_id AS id',
+        'att.filename',
+        'att.code',
+        'att.folder',
+        'att.mime'
+      ])
+      ->from('dcxddtmt_viahe_filedinhkem AS fd')
+      ->leftJoin('core_attachment AS att ON att.id = fd.filedinhkem_id')
+      ->where('fd.thongtinviahe_id = ' . (int)$id)
+      ->where('fd.daxoa = 0');
+
+    $db->setQuery($query);
+    $attachments = $db->loadAssocList();
+
+    // --- LẤY GIẤY PHÉP CÓ ID LỚN NHẤT ---
+    $query = $db->getQuery(true)
+      ->select('gp.id')
+      ->from('dcxddtmt_viahe_giayphep AS gp')
+      ->where('gp.thongtinviahe_id = ' . (int)$id)
+      ->where('gp.daxoa = 0')
+      ->order('gp.id DESC')
+      ->setLimit(1);
+
+    $db->setQuery($query);
+    $giayphep_id = $db->loadResult();
+
+    $giayphep = [];
+
+    if ($giayphep_id) {
+      // LẤY THÔNG TIN GIẤY PHÉP VÀ HỢP ĐỒNG MỚI NHẤT TRONG GIẤY PHÉP ĐÓ
+      $query = $db->getQuery(true)
+        ->select([
+          'gp.sogiayphep',
+          'hd.id AS hopdong_id',
+          'DATE_FORMAT(hd.ngayky, "%d/%m/%Y") AS ngayky',
+          'DATE_FORMAT(hd.ngayhethan, "%d/%m/%Y") AS ngayhethan',
+          'hd.solan',
+          'hd.tinhtrang',
+          'hd.ghichu'
+        ])
+        ->from('dcxddtmt_viahe_giayphep AS gp')
+        ->leftJoin('dcxddtmt_viahe_thongtinhopdong AS hd ON hd.giayphep_id = gp.id AND hd.daxoa = 0')
+        ->where('gp.id = ' . (int)$giayphep_id)
+        ->order('hd.id DESC')
+        ->setLimit(1);
+
+      $db->setQuery($query);
+      $row = $db->loadAssoc();
+
+      if (!empty($row)) {
+        $giayphep[$row['sogiayphep']][] = [
+          'id_hopdong' => $row['hopdong_id'],
+          'ngayky' => $row['ngayky'],
+          'ngayhethan' => $row['ngayhethan'],
+          'solan' => $row['solan'],
+          'tinhtrang' => $row['tinhtrang'],
+          'ghichu' => $row['ghichu']
+        ];
+      }
+    }
+
+    return [
+      'thongtin' => $info,
+      'filedinhkem' => $attachments,
+      'giayphep' => $giayphep
+    ];
+  }
+
 
   public function saveThongtinViahe($formdata, $phuongxa)
   {
