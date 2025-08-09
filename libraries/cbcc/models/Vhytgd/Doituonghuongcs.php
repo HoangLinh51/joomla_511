@@ -651,7 +651,7 @@ class Vhytgd_Model_Doituonghuongcs extends JModelLegacy
 
         $query->group(['a.id', 'a.cha_id', 'a.tenkhuvuc', 'a.level']);
         $query->order('a.level, a.id ASC');
-        echo $query;
+        // echo $query;
         $db->setQuery($query);
         $results = $db->loadAssocList();
 

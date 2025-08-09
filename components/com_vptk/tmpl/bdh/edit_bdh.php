@@ -908,7 +908,6 @@ $item = $this->item;
                     return $(this).data('placeholder');
                 }
             });
-            console.log(isSearch);
 
             // Gán trạng thái checkbox tìm kiếm và hiển thị/ẩn #search_fields
             $('#modal_search_toggle').prop('checked', isSearch);

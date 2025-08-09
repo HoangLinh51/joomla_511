@@ -55,7 +55,6 @@ class Services_Model_Sso
 					} else {
 						// khởi tạo user với mail và username = mail_sso
 						$form = array();
-						// var_dump($sso_user['name']);exit;
 						$form['name'] = $sso_user['name'];
 						$form['username'] = $sso_user['email'];
 						$form['email'] = $sso_user['email'];
@@ -119,7 +118,6 @@ class Services_Model_Sso
 	{
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		// var_dump($formData['name']);exit;
 		$fields = array(
 			$db->quoteName('name') . ' = ' . $db->quote($formData['name']),
 			$db->quoteName('username') . ' = ' . $db->quote($formData['username']),
@@ -137,7 +135,6 @@ class Services_Model_Sso
 			$query->set($fields);
 		}
 		$db->setQuery($query);
-		// echo $query;exit;
 		return $db->execute();
 	}
 	function updateSsoToken($formData)
@@ -284,7 +281,6 @@ class Services_Model_Sso
 		$db			=	JFactory::getDbo();
 		$query     =   'SELECT * FROM core_update_tk WHERE active IS NULL';
 		$db->setQuery($query);
-		// echo $query;exit;
 		$data_all  =   $db->loadAssocList();
 		if (count($data_all)) {
 			$grname            =   array();

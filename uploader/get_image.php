@@ -23,7 +23,7 @@ if (!$code) {
 }
 
 // ⚡ Tạo đường dẫn đến file trong tmp
-$filePath = "C:/xampp_joomla5/htdocs/joomla_511/". $folder. "/" . $code;
+$filePath = "C:/xampp/htdocs/joomla_511/". $folder. "/" . $code;
 
 // 🔍 Kiểm tra file tồn tại
 if (!file_exists($filePath)) {
@@ -32,14 +32,15 @@ if (!file_exists($filePath)) {
 
 // 🔥 Lấy MIME Type từ Database (Ví dụ: image/jpeg)
 // $mysqli = new mysqli("10.49.41.247", "pxdnict", "PX@2024!@#", "phuongxa_2025");
-$mysqli = new mysqli("10.196.133.34", "root", "Abc123@@@", "phuongxa_2025");
+// $mysqli = new mysqli("10.196.133.34", "root", "Abc123@@@", "phuongxa_2025");
 // $mysqli = new mysqli("localhost:3306", "pxdnict", "PX@2024!@#", "phuongxa_2025");
+$mysqli = new mysqli("10.49.41.247:7306", "root", "database@Mysql8.0@", "phuongxa_2025");
+
 if ($mysqli->connect_error) {
     die("Kết nối database thất bại: " . $mysqli->connect_error);
 }
 
 $sql = "SELECT mime FROM core_attachment WHERE code = ?";
-// echo $sql;exit;
 $stmt = $mysqli->prepare($sql);
 $stmt->bind_param("s", $code);
 $stmt->execute();

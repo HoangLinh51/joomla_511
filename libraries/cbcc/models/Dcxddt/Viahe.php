@@ -48,54 +48,75 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     $db->setQuery($query);
     return $db->loadAssocList();
   }
+  public function getlogoPhanQuyen($idPhuongxa)
+  {
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
 
- public function getDanhSachViaHe($formdata, $phuongxa)
-{
-    $page = isset($formdata['page']) ? (int)$formdata['page'] : 1; // Sửa từ $filters sang $formdata
-    $take = isset($formdata['take']) ? (int)$formdata['take'] : 20; // Sửa từ $filters sang $formdata
+    $query->select([
+      'a.mahanhchinh',
+      'a.tendonvi',
+      'lg.id as logo_id',
+      'lg.code',
+      'lg.mime',
+      'lg.folder',
+      'lg.filename',
+    ]);
+    $query->from($db->quoteName('logo', 'a'))
+      ->leftJoin($db->quoteName('core_attachment', 'lg') . ' ON lg.id = a.logo_id')
+      ->where('a.phuongxa_id = ' . $db->quote($idPhuongxa))
+      ->where('a.daxoa = 0');
+    $db->setQuery($query);
+    return $db->loadAssoc();
+  }
+
+  public function getDanhSachViaHe($formdata, $phuongxa)
+  {
+    $page = isset($formdata['page']) ? (int)$formdata['page'] : 1;
+    $take = isset($formdata['take']) ? (int)$formdata['take'] : 20;
     $diachi = isset($formdata['diachi']) ? trim($formdata['diachi']) : '';
     $db = Factory::getDbo();
     $query = $db->getQuery(true);
 
     $query->select([
-        'a.id',
-        'a.hoten',
-        'a.dienthoai',
-        'a.diachi',
-        'gp.sogiayphep',
-        'a.dientichtamthoi',
-        'tthd.id as id_hopdong',
-        'tthd.solan',
-        'tthd.ngayhethan',
+      'a.id',
+      'a.hoten',
+      'a.dienthoai',
+      'a.diachi',
+      'gp.sogiayphep',
+      'a.dientichtamthoi',
+      'tthd.id as id_hopdong',
+      'tthd.solan',
+      'tthd.ngayhethan',
     ]);
     $query->from($db->quoteName('dcxddtmt_viahe_thongtinviahe', 'a'))
-        ->leftJoin($db->quoteName('dcxddtmt_viahe_giayphep', 'gp') . ' ON gp.thongtinviahe_id = a.id')
-        ->leftJoin($db->quoteName('dcxddtmt_viahe_thongtinhopdong', 'tthd') . ' ON tthd.giayphep_id = gp.id')
-        ->leftJoin(
-            '(SELECT MAX(hd.id) AS id
+      ->leftJoin($db->quoteName('dcxddtmt_viahe_giayphep', 'gp') . ' ON gp.thongtinviahe_id = a.id')
+      ->leftJoin($db->quoteName('dcxddtmt_viahe_thongtinhopdong', 'tthd') . ' ON tthd.giayphep_id = gp.id')
+      ->leftJoin(
+        '(SELECT MAX(hd.id) AS id
             FROM dcxddtmt_viahe_thongtinviahe a1
             LEFT JOIN dcxddtmt_viahe_giayphep gp1 ON gp1.thongtinviahe_id = a1.id
             LEFT JOIN dcxddtmt_viahe_thongtinhopdong hd ON hd.giayphep_id = gp1.id
             WHERE hd.daxoa = 0
             GROUP BY a1.id) AS last_hd
             ON tthd.id = last_hd.id'
-        )
-        ->where('a.daxoa = 0')
-        ->where('tthd.daxoa = 0')
-        ->where('tthd.id = last_hd.id');
+      )
+      ->where('a.daxoa = 0')
+      ->where('tthd.daxoa = 0')
+      ->where('tthd.id = last_hd.id');
 
     $phuongxaIds = !empty($phuongxa) && is_array($phuongxa)
-        ? array_map('intval', array_column($phuongxa, 'id'))
-        : [];
+      ? array_map('intval', array_column($phuongxa, 'id'))
+      : [];
 
     if (!empty($phuongxaIds)) {
-        $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
+      $query->where('a.phuongxa_id IN (' . implode(',', $phuongxaIds) . ')');
     } else {
-        $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
+      $query->where('a.phuongxa_id IN (SELECT id FROM danhmuc_phuongxa WHERE daxoa = 0)');
     }
 
     if (!empty($diachi)) {
-        $query->where($db->quoteName('a.diachi') . ' LIKE ' . $db->quote('%' . $db->escape($diachi) . '%'));
+      $query->where($db->quoteName('a.diachi') . ' LIKE ' . $db->quote('%' . $db->escape($diachi) . '%'));
     }
 
     $countQuery = clone $query;
@@ -105,18 +126,19 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     $offset = ($page - 1) * $take;
     $query->setLimit($take, $offset);
 
-    $query->order($db->quoteName('tthd.giayphep_id') . ' ASC');
-    $query->order($db->quoteName('tthd.id') . ' ASC');
+    $query->order($db->quoteName('tthd.ngayhethan') . ' DESC')
+      ->order($db->quoteName('tthd.giayphep_id') . ' ASC')
+      ->order($db->quoteName('tthd.id') . ' ASC');
     $db->setQuery($query);
     $rows = $db->loadObjectList();
 
     return [
-        'data' => $rows,
-        'page' => $page,
-        'take' => $take,
-        'totalrecord' => $totalRecord
+      'data' => $rows,
+      'page' => $page,
+      'take' => $take,
+      'totalrecord' => $totalRecord
     ];
-}
+  }
 
   public function getThongtinViahe($id)
   {
@@ -158,7 +180,6 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
       ->where('ttv.daxoa = 0');
 
     $db->setQuery($query);
-    // echo $query;exit;
     $info = $db->loadAssoc();
 
     if (!$info) return null;
@@ -199,6 +220,7 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
         'DATE_FORMAT(hd.ngayky, "%d/%m/%Y") AS ngayky',
         'DATE_FORMAT(hd.ngayhethan, "%d/%m/%Y") AS ngayhethan',
         'hd.sotien',
+      'hd.solan',
         'hd.tinhtrang',
         'hd.ghichu'
       ])
@@ -225,6 +247,7 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
             'id_hopdong' => $row['hopdong_id'],
             'ngayky' => $row['ngayky'],
             'ngayhethan' => $row['ngayhethan'],
+            'solan' => $row['solan'],
             'sotien' => $row['sotien'],
             'tinhtrang' => $row['tinhtrang'],
             'ghichu' => $row['ghichu'],
@@ -234,6 +257,101 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
     }
     return $giayphep;
   }
+
+  public function getThongTinViaheChuaDangNhap($id)
+  {
+    $db = Factory::getDbo();
+
+    // --- LẤY THÔNG TIN VỈA HÈ ---
+    $query = $db->getQuery(true)
+      ->select([
+        'ttv.hoten',
+        'ttv.dienthoai',
+        'ttv.diachi',
+        'ttv.dientichtamthoi',
+        'ttv.chieudai',
+        'ttv.chieurong',
+        'ttv.mucdichsudung'
+      ])
+      ->from('dcxddtmt_viahe_thongtinviahe AS ttv')
+      ->where('ttv.id = ' . (int)$id)
+      ->where('ttv.daxoa = 0');
+
+    $db->setQuery($query);
+    $info = $db->loadAssoc();
+    if (!$info) return null;
+
+    // --- LẤY FILE ĐÍNH KÈM ---
+    $query = $db->getQuery(true)
+      ->select([
+        'fd.filedinhkem_id AS id',
+        'att.filename',
+        'att.code',
+        'att.folder',
+        'att.mime'
+      ])
+      ->from('dcxddtmt_viahe_filedinhkem AS fd')
+      ->leftJoin('core_attachment AS att ON att.id = fd.filedinhkem_id')
+      ->where('fd.thongtinviahe_id = ' . (int)$id)
+      ->where('fd.daxoa = 0');
+
+    $db->setQuery($query);
+    $attachments = $db->loadAssocList();
+
+    // --- LẤY GIẤY PHÉP CÓ ID LỚN NHẤT ---
+    $query = $db->getQuery(true)
+      ->select('gp.id')
+      ->from('dcxddtmt_viahe_giayphep AS gp')
+      ->where('gp.thongtinviahe_id = ' . (int)$id)
+      ->where('gp.daxoa = 0')
+      ->order('gp.id DESC')
+      ->setLimit(1);
+
+    $db->setQuery($query);
+    $giayphep_id = $db->loadResult();
+
+    $giayphep = [];
+
+    if ($giayphep_id) {
+      // LẤY THÔNG TIN GIẤY PHÉP VÀ HỢP ĐỒNG MỚI NHẤT TRONG GIẤY PHÉP ĐÓ
+      $query = $db->getQuery(true)
+        ->select([
+          'gp.sogiayphep',
+          'hd.id AS hopdong_id',
+          'DATE_FORMAT(hd.ngayky, "%d/%m/%Y") AS ngayky',
+          'DATE_FORMAT(hd.ngayhethan, "%d/%m/%Y") AS ngayhethan',
+          'hd.solan',
+          'hd.tinhtrang',
+          'hd.ghichu'
+        ])
+        ->from('dcxddtmt_viahe_giayphep AS gp')
+        ->leftJoin('dcxddtmt_viahe_thongtinhopdong AS hd ON hd.giayphep_id = gp.id AND hd.daxoa = 0')
+        ->where('gp.id = ' . (int)$giayphep_id)
+        ->order('hd.id DESC')
+        ->setLimit(1);
+
+      $db->setQuery($query);
+      $row = $db->loadAssoc();
+
+      if (!empty($row)) {
+        $giayphep[$row['sogiayphep']][] = [
+          'id_hopdong' => $row['hopdong_id'],
+          'ngayky' => $row['ngayky'],
+          'ngayhethan' => $row['ngayhethan'],
+          'solan' => $row['solan'],
+          'tinhtrang' => $row['tinhtrang'],
+          'ghichu' => $row['ghichu']
+        ];
+      }
+    }
+
+    return [
+      'thongtin' => $info,
+      'filedinhkem' => $attachments,
+      'giayphep' => $giayphep
+    ];
+  }
+
 
   public function saveThongtinViahe($formdata, $phuongxa)
   {
@@ -401,6 +519,68 @@ class Dcxddt_Model_Viahe extends BaseDatabaseModel
       throw new \RuntimeException('Lỗi lưu dữ liệu: ' . $e->getMessage(), 500);
     }
   }
+
+  public function saveLogo($formdata)
+  {
+    $phuongxaId = (int) ($formdata['phuongxa_id'] ?? 0);
+    $logoIds = $formdata['idFile-logophanquyen'] ?? [];
+
+    if (empty($phuongxaId) || empty($logoIds)) {
+      return false;
+    }
+
+    // Lấy logo_id đầu tiên từ mảng
+    $logoId = (int) $logoIds[0];
+
+    $db = Factory::getDbo();
+    $query = $db->getQuery(true);
+
+    // Kiểm tra xem đã tồn tại bản ghi cho phường xã này chưa
+    $query->select('id')
+      ->from($db->quoteName('logo'))
+      ->where($db->quoteName('phuongxa_id') . ' = ' . $db->quote($phuongxaId))
+      ->where('(' . $db->quoteName('daxoa') . ' = 0 OR ' . $db->quoteName('daxoa') . ' IS NULL)');
+
+    $db->setQuery($query);
+    $existingId = (int) $db->loadResult();
+
+    try {
+      if ($existingId) {
+        // Nếu đã tồn tại -> chỉ cập nhật logo_id
+        $query = $db->getQuery(true);
+        $fields = [
+          $db->quoteName('logo_id') . ' = ' . $db->quote($logoId),
+        ];
+        $conditions = [
+          $db->quoteName('id') . ' = ' . $db->quote($existingId)
+        ];
+
+        $query->update($db->quoteName('logo'))
+          ->set($fields)
+          ->where($conditions);
+
+        $db->setQuery($query);
+      } else {
+        // Nếu chưa có -> chèn mới
+        $columns = ['phuongxa_id', 'logo_id', 'daxoa'];
+        $values = [$phuongxaId, $logoId, 0];
+
+        $query = $db->getQuery(true)
+          ->insert($db->quoteName('logo'))
+          ->columns($db->quoteName($columns))
+          ->values(implode(',', $db->quote($values)));
+
+        $db->setQuery($query);
+      }
+
+      $db->execute();
+      return true;
+    } catch (\RuntimeException $e) {
+      Factory::getApplication()->enqueueMessage('Lỗi khi lưu logo: ' . $e->getMessage(), 'error');
+      return false;
+    }
+  }
+
 
   // 👉 Hàm chuyển đổi định dạng dd/mm/yyyy → yyyy-mm-dd
   protected function convertToDate($str)

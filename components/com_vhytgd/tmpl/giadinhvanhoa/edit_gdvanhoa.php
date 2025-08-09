@@ -592,7 +592,6 @@ $item = $this->item;
                     templateResult: function(result) {
                         return result.text || result.id;
                     }
-
                 });
 
                 if ($('#modal_nhankhau_id').val()) {
@@ -809,7 +808,6 @@ $item = $this->item;
                     return $(this).data('placeholder');
                 }
             });
-            console.log(isSearch);
             $('#modal_search_toggle').prop('checked', isSearch);
             if (isSearch) {
                 $('#search_fields').show();

@@ -36,7 +36,6 @@ $user = Factory::getUser();
 $db = Factory::getDbo();
 $base_url = Uri::root(true);
 $avatarId = $user->avatar_id;
-// var_dump($user->avatar_id);exit;
 $avatar_url = $base_url . "/uploader/defaultImage.png";
 
 if (!empty($avatarId)) {
@@ -46,7 +45,6 @@ if (!empty($avatarId)) {
         ->where($db->quoteName('id') . ' = ' . $db->quote($avatarId))
         ->order($db->quoteName('created_at') . ' DESC');
     $db->setQuery($query);
-    // echo $query;
     $result = $db->loadObject();
 
     if (!empty($result) && !empty($result->code)) {

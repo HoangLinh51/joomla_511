@@ -8,54 +8,29 @@ use Joomla\CMS\Uri\Uri;
 defined('_JEXEC') or die('Restricted access');
 $item = $this->item;
 $idUser = Factory::getUser()->id;
-$detailViaHe = $this->item;
+$detailViaHe = $this->itemNoAuth;
+$giayphep = $detailViaHe['giayphep'] ?? [];
+
+$sogiayphep = array_key_first($giayphep);
+$hopdong = $giayphep[$sogiayphep][0] ?? null;
 ?>
 <div class="card-body">
     <div class="d-flex align-items-center justify-content-between border-bottom mb-3">
         <h2 class="text-primary mb-3">
-            Xem chi tiết thông tin cấp phép sử dụng tạm thời một phần vỉa hè
+            Giấy phép sử dụng tạm thời một phần vỉa hè
         </h2>
-        <span>
-            <button type="button" id="btn_quaylai" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại</button>
-        </span>
     </div>
     <div class="d-flex align-items-center border-bottom pb-2 mb-4" style="gap:15px">
         <h5 style="margin: 0">Thông tin khách hàng</h5>
     </div>
     <div class="row g-3 mb-4">
         <div class="col-md-8 mb-2">
-            <label for="hoten" class="form-label fw-bold">Họ và tên</label>
-            <input id="hoten" type="text" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['hoten']); ?>" readonly>
+            <label class="form-label fw-bold">Họ và tên</label>
+            <input type="text" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['hoten']); ?>" readonly>
         </div>
         <div class="col-md-4 mb-2">
             <label for="sodienthoai" class="form-label fw-bold">Số điện thoại</label>
             <input id="sodienthoai" type="text" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['dienthoai']); ?>" readonly>
-        </div>
-        <div class="col-md-8 mb-2">
-            <label for="diachi" class="form-label fw-bold">Địa chỉ thường trú</label>
-            <input id="diachi" type="text" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['diachithuongtru']); ?>" readonly>
-        </div>
-        <div class="col-md-4 mb-2">
-            <label for="namsinh" class="form-label fw-bold">Năm sinh</label>
-            <div class="input-group">
-                <input type="text" id="select_namsinh" class="form-control namsinh" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['ngaysinh']); ?>" readonly>
-                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-            </div>
-        </div>
-        <div class="col-md-4 mb-2">
-            <label for="cccd" class="form-label fw-bold">CCCD/CMND</label>
-            <input id="cccd" type="text" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['cccd']); ?>" readonly>
-        </div>
-        <div class="col-md-4 mb-2">
-            <label for="cccd_ngaycap" class="form-label fw-bold">Ngày cấp</label>
-            <div class="input-group">
-                <input type="text" id="cccd_ngaycap" class="form-control namsinh" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['ngaycap_cccd']); ?>" readonly>
-                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-            </div>
-        </div>
-        <div class="col-md-4 mb-2">
-            <label for="cccd_noicap" class="form-label fw-bold">Nơi cấp</label>
-            <input id="cccd_noicap" type="text" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['noicap_cccd']); ?>" readonly>
         </div>
     </div>
 
@@ -80,6 +55,35 @@ $detailViaHe = $this->item;
         <div class="col-md-12 mb-2">
             <label for="mucdichsudung" class="form-label fw-bold">Mục đích sử dụng</label>
             <input id="mucdichsudung" type="text" class="form-control" value="<?php echo htmlspecialchars($detailViaHe['thongtin']['mucdichsudung']); ?>" readonly>
+        </div>
+        <div class="col-md-12 mb-2 mt-2">
+            <label for="mucdichsudung" class="form-label fw-bold">Tình trạng</label>
+            <div class="w-100">
+                <?php
+                $ngayHetHan = DateTime::createFromFormat('d/m/Y', $hopdong['ngayhethan']);
+                $homNay = new DateTime();
+                $ngayHetHan->setTime(0, 0, 0);
+                $homNay->setTime(0, 0, 0);
+
+                $diff = (int)$ngayHetHan->diff($homNay)->format('%r%a'); // %r: dấu âm/dương, %a: số ngày
+
+                // Gán tình trạng dựa trên số ngày còn lại
+                if ($diff < 0) {
+                    // Còn hạn
+                    $daysLeft = abs($diff);
+                    if ($daysLeft < 7) {
+                        echo '<span class="badge bg-warning">Sắp hết hạn</span>';
+                    } else {
+                        echo '<span class="badge bg-success">Còn hạn</span>';
+                    }
+                } elseif ($diff >= 0) {
+                    // Hết hạn
+                    echo '<span class="badge bg-danger">Hết hạn</span>';
+                } else {
+                    echo '<span class="badge bg-secondary">Không xác định</span>';
+                }
+                ?>
+            </div>
         </div>
         <div class="col-md-12 mb-2 vanbancu">
             <?php if (!empty($detailViaHe['filedinhkem'])): ?>
@@ -148,28 +152,30 @@ $detailViaHe = $this->item;
 
         </div>
     </div>
-    <div class="border-bottom pb-2 mb-4 d-flex align-items-center justify-content-between">
-        <h5 class="">Thông tin hợp đồng</h5>
+
+    <h5 class="border-bottom pb-2 mb-4">Thông tin hợp đồng</h5>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 mb-2">
+            <label class="form-label fw-bold">Số giấy phép</label>
+            <input type="text" class="form-control" value="<?php echo htmlspecialchars($sogiayphep); ?>" readonly>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label fw-bold">Số lần</label>
+            <input type="text" class="form-control" value="<?php echo htmlspecialchars($hopdong['solan'] ?? ''); ?>" readonly>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label fw-bold">Ngày ký hợp đồng</label>
+            <input type="text" class="form-control" value="<?php echo htmlspecialchars($hopdong['ngayky'] ?? ''); ?>" readonly>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label fw-bold">Ngày hết hạn</label>
+            <input type="text" class="form-control" value="<?php echo htmlspecialchars($hopdong['ngayhethan'] ?? ''); ?>" readonly>
+        </div>
+        <div class="col-md-12 mb-2">
+            <label class="form-label fw-bold">Ghi chú</label>
+            <input type="text" class="form-control" value="<?php echo htmlspecialchars($hopdong['ghichu'] ?? ''); ?>" readonly>
+        </div>
     </div>
-    <div class="row g-3 mb-4 table-responsive-custom" style="border: 1px solid #d9d9d9; border-radius: 4px;">
-        <table id="table-thannhan" class="table table-striped table-bordered" style="table-layout: fixed; width: 100%; margin: 0px; overflow: auto;">
-            <thead class="table-primary text-white">
-                <tr>
-                    <th class="text-center align-middle">STT</th>
-                    <th class="text-center align-middle">Số giấy phép</th>
-                    <th class="text-center align-middle">Số lần</th>
-                    <th class="text-center align-middle">Ngày ký hợp đồng</th>
-                    <th class="text-center align-middle">Ngày hết hạn</th>
-                    <th class="text-center align-middle">Thời gian</th>
-                    <th class="text-center align-middle">Số tiền</th>
-                    <th class="text-center align-middle">Ghi chú</th>
-                </tr>
-            </thead>
-            <tbody class="dsHopDong">
-            </tbody>
-        </table>
-    </div>
-    <?php echo HTMLHelper::_('form.token'); ?>
 </div>
 <div id="lightboxOverlay">
     <div id="lightboxContent">
@@ -181,7 +187,6 @@ $detailViaHe = $this->item;
 <script>
     let detailViaHe = <?php echo json_encode($detailViaHe ?? []); ?>;
     $(document).ready(function() {
-        renderDanhSachHopDong()
         $('#btn_quaylai').click(() => {
             window.location.href = '<?php echo Route::_('/index.php/component/dcxddt/?view=viahe&task=default'); ?>';
         });
@@ -210,67 +215,6 @@ $detailViaHe = $this->item;
             }
         });
     })
-
-    function renderDanhSachHopDong() {
-        if (!detailViaHe || !detailViaHe.giayphep) return;
-
-        let parentIndex = 1;
-
-        Object.entries(detailViaHe.giayphep).forEach(([sogiayphep, danhSachHopDong]) => {
-            let childCount = 0;
-
-            danhSachHopDong.forEach((hopdong, idx) => {
-                let rowIndex;
-                if (idx === 0) {
-                    // Hợp đồng gốc
-                    rowIndex = parentIndex;
-                } else {
-                    // Các hợp đồng gia hạn
-                    childCount++;
-                    rowIndex = `${parentIndex}.${childCount}`;
-                }
-
-                const newRow = `
-                    <tr data-row="${rowIndex}">
-                    <td class="text-center">${rowIndex}</td>
-                    <input type="hidden" name="id_hopdong[]" value="${hopdong.id_hopdong}">
-                    <td class="text-center">
-                        <input type="text" class="form-control" name="sogiayphep[]" value="${sogiayphep}" readonly>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control" name="solan[]" value="${hopdong.solan ?? ''}" readonly>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control" name="ngayKyStr[]" value="${hopdong.ngayky}" readonly>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control" name="ngayHetHanStr[]" value="${hopdong.ngayhethan}" readonly>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control" name="thoigian[]" value="${tinhSoNgayTuChuoi(hopdong.ngayky, hopdong.ngayhethan)}" readonly>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control" name="sotien[]" value="${hopdong.sotien}" readonly>
-                    </td>
-                    <td class="text-center">
-                        <input type="text" class="form-control" name="ghichu[]" value="${hopdong.ghichu}" readonly>
-                    </td>
-                    </tr>
-                `;
-                $('.dsHopDong').append(newRow);
-            });
-            parentIndex++;
-        });
-    }
-
-    function tinhSoNgayTuChuoi(ngay1, ngay2) {
-        const [d1, m1, y1] = ngay1.split('/');
-        const [d2, m2, y2] = ngay2.split('/');
-        const start = new Date(`${y1}-${m1}-${d1}`);
-        const end = new Date(`${y2}-${m2}-${d2}`);
-        const diff = (end - start) / (1000 * 60 * 60 * 24) + 1;
-        return diff > 0 ? `${diff} ngày` : '';
-    }
 </script>
 
 <style>

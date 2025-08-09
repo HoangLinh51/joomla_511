@@ -142,6 +142,33 @@ class ViaheController extends BaseController
     $this->sendJsonResponse($response);
   }
 
+  public function save_logo()
+  {
+    Session::checkToken() or $this->sendJsonResponse(['success' => false, 'message' => 'Token không hợp lệ'], 403);
+
+    $input = Factory::getApplication()->input;
+    $formData = $input->post->getArray();
+    $json = json_decode(file_get_contents('php://input'), true);
+    $formData = $json ?? $formData;
+
+    $model = Core::model('Dcxddt/Viahe');
+
+    try {
+      // 👈 Gửi formData đã xử lý vào đây
+      $thongtinviahe_id = $model->saveLogo($formData);
+
+      if ($thongtinviahe_id) {
+        $response = ['success' => true, 'message' => 'Đã cập nhật dữ liệu thành công', 'thongtinviahe_id' => $thongtinviahe_id];
+      } else {
+        $response = ['success' => false, 'message' => 'Lưu thông tin vỉa hè thất bại'];
+      }
+    } catch (Exception $e) {
+      $response = ['success' => false, 'message' => 'Lỗi khi lưu dữ liệu: ' . $e->getMessage()];
+    }
+
+    $this->sendJsonResponse($response);
+  }
+
   function formatDate($dateString)
   {
     $date = DateTime::createFromFormat('d/m/Y', $dateString);

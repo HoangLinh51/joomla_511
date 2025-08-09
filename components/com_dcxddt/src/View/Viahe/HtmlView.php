@@ -13,12 +13,15 @@ class HtmlView extends BaseHtmlView
 {
     public function display($tpl = null)
     {
+        $user = Factory::getUser();
         $input = Factory::getApplication()->input;
+        $component = 'com_dcxddt';
+        $controller = $input->getCmd('view', 'viahe');
         $task = strtoupper($input->getCmd('task', 'default'));
 
-        // Không kiểm tra đăng nhập hoặc quyền cho task XEMCHITIET
-        if ($task === 'XEMCHITIET') {
-            $this->setLayout('chitiet_viahe');
+        // Không kiểm tra đăng nhập hoặc quyền cho task CHITIETVIAHE
+        if ($task === 'CHITIETVIAHE') {
+            $this->setLayout('xemchitiet');
             $this->_getEditViahe();
             parent::display($tpl);
             return;
@@ -31,9 +34,11 @@ class HtmlView extends BaseHtmlView
             exit;
         }
 
-        $component = 'com_dcxddt';
-        $controller = $input->getCmd('view', 'viahe');
-        $checkTask = ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE') ? 'default' : $task;
+        if ($task === 'THONGKE' || $task === 'ADDVIAHE' || $task === 'EDITVIAHE' || $task === 'XEMCHITIET' || $task === 'ADDLOGO' ) {
+            $checkTask = 'default';
+        } else {
+            $checkTask = $task;
+        }
 
         if (!Core::checkUserMenuPermission($user->id, $component, $controller, $checkTask)) {
             echo '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -53,6 +58,15 @@ class HtmlView extends BaseHtmlView
                 $this->setLayout('edit_viahe');
                 $this->_getEditViahe();
                 break;
+            case 'ADDLOGO':
+            case 'EDITLOGO':
+                $this->setLayout('edit_logo');
+                $this->_getEditlogo();
+                break;
+            case 'XEMCHITIET':
+                $this->setLayout('chitiet_viahe');
+                $this->_getEditViahe();
+                break;
             case 'THONGKE':
                 $this->setLayout('thongke');
                 $this->_getThongKe();
@@ -69,6 +83,23 @@ class HtmlView extends BaseHtmlView
     private function _initDefaultPage()
     {
         $this->import();
+        $model = Core::model('Dcxddt/Viahe');
+        $phanquyen = $model->getPhanQuyen();
+        $logoPhanQuyen = $model->getlogoPhanQuyen($phanquyen['phuongxa_id']);
+        $this->logo = $logoPhanQuyen;
+    }
+
+    private function _getEditlogo()
+    {
+        $this->import();
+        $model = Core::model('Dcxddt/XeOm');
+        $phanquyen = $model->getPhanQuyen();
+        $phuongxa = array();
+        if ($phanquyen['phuongxa_id'] != '') {
+            $phuongxa = $model->getPhuongXaById($phanquyen['phuongxa_id']);
+        }
+        $phuongxa = Core::loadAssocList('danhmuc_khuvuc', 'id,tenkhuvuc', 'level = 2 AND sudung = 1 AND daxoa = 0');
+        $this->phuongxa = $phuongxa;
     }
 
     private function _getEditViahe()
@@ -106,6 +137,7 @@ class HtmlView extends BaseHtmlView
         $thongtinthanhphan = [];
         if ($viahe_id) {
             $item = $model->getThongtinViahe($viahe_id);
+            $itemNoAuth = $model->getThongTinViaheChuaDangNhap($viahe_id);
             if (!$item) {
                 echo '<div class="alert alert-error">Không tìm thấy dữ liệu vỉa hè.</div>';
                 return;
@@ -115,6 +147,7 @@ class HtmlView extends BaseHtmlView
             return;
         }
         $this->item = $item;
+        $this->itemNoAuth = $itemNoAuth;
         $this->thongtinthanhphan = $thongtinthanhphan;
     }
 

@@ -4,7 +4,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Factory;
 
 defined('_JEXEC') or die('Restricted access');
-$onlyview = Factory::getUser()->onlyview_viahe
+$onlyview = Factory::getUser()->onlyview_viahe;
+$userId = Factory::getUser()->id;
 ?>
 <div class="danhsach" style="background-color:#fff">
 	<div class="content-header">
@@ -16,10 +17,13 @@ $onlyview = Factory::getUser()->onlyview_viahe
 			</div>
 		<?php } else { ?>
 			<div class="row mb-2">
-				<div class="col-sm-10">
+				<div class="col-sm-9">
 					<h3 class="m-0 text-primary"><i class="fas fa-users"></i> Quản lý thông tin cấp phép sử dụng tạm thời một phần vỉa hè</h3>
 				</div>
-				<div class="col-sm-2 text-right" style="padding:0;">
+				<div class="col-sm-3 text-right" style="padding:0;">
+					<a href="<?php echo Route::_('/index.php?option=com_dcxddt&view=viahe&task=addlogo') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
+						<i class="fas fa-plus"></i> Quản lý logo
+					</a>
 					<a href="<?php echo Route::_('/index.php?option=com_dcxddt&view=viahe&task=addviahe') ?>" class="btn btn-primary" style="font-size:16px;width:136px">
 						<i class="fas fa-plus"></i> Thêm mới
 					</a>

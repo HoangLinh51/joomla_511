@@ -9,13 +9,13 @@ use Joomla\CMS\Session\Session;
 require_once(JPATH_THEMES . '/adminlte/CoreTemplate.php');
 $coreTemplate = new CoreTemplate();
 
-// Kiểm tra nếu là task xemchitiet thì bỏ qua đăng nhập
+// Kiểm tra nếu là task chitietviahe thì bỏ qua đăng nhập
 $jinput = Factory::getApplication()->input;
 $option = $jinput->get('option', '', 'string');
 $view = $jinput->get('view', '', 'string');
 $task = $jinput->get('task', '', 'string');
 
-if ($option === 'com_dcxddt' && $view === 'viahe' && $task === 'xemchitiet') {
+if ($option === 'com_dcxddt' && $view === 'viahe' && $task === 'chitietviahe') {
 	$app1 = Factory::getApplication();
 	require_once(JPATH_THEMES . '/adminlte/public.php');
 } else {
@@ -86,7 +86,7 @@ if ($option === 'com_dcxddt' && $view === 'viahe' && $task === 'xemchitiet') {
 		<title>CỞ SỞ DỮ LIỆU PHƯỜNG XÃ DÙNG CHUNG</title>
 		<!-- Google Font: Source Sans Pro -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-		<jdoc:include type="head" />
+		<!-- <jdoc:include type="head" /> -->
 		<!-- Font Awesome Icons -->
 		<script>
 			var app = {};
